@@ -16,6 +16,12 @@
     <span class="live-dot accent"></span>
   </div>
 
+  <div class="top-search-wrap">
+    <span class="top-search-icon">🔍</span>
+    <input type="text" id="top-search" class="top-search-input" placeholder="搜尋股票代號或名稱（2330、台積電、NVDA…）" autocomplete="off">
+    <div class="top-search-results" id="top-search-results"></div>
+  </div>
+
   <div class="summary-strip">
     <div class="ss-cell ss-main">
       <span class="ss-lbl">組合市值</span>
@@ -834,13 +840,59 @@ function setTab(t) {
 document.querySelectorAll('.mt-btn').forEach(btn => {
   btn.addEventListener('click', () => setTab(btn.dataset.tab));
 });
-// Restore from hash
+// Restore from hash (only if matches a tab)
 const initTab = (location.hash || '').replace('#', '');
 if (initTab && document.querySelector(`.mt-btn[data-tab="${initTab}"]`)) setTab(initTab);
+
+// --- Search: autocomplete any stock, navigate to /holdings/<sym>.html ---
+(function() {
+  const INDEX = [{"symbol": "2330", "name": "台積電", "category": "半導體代工", "price": 2030.0, "group": "持股"}, {"symbol": "2303", "name": "聯電", "category": "半導體代工", "price": 73.0, "group": "持股"}, {"symbol": "2454", "name": "聯發科", "category": "IC 設計", "price": 1925.0, "group": "追蹤/全部"}, {"symbol": "2379", "name": "瑞昱", "category": "IC 設計", "price": 531.0, "group": "追蹤/全部"}, {"symbol": "3034", "name": "聯詠", "category": "IC 設計", "price": 415.0, "group": "追蹤/全部"}, {"symbol": "3443", "name": "創意", "category": "IC 設計", "price": 3255.0, "group": "追蹤/全部"}, {"symbol": "5274", "name": "信驊", "category": "IC 設計", "price": 13805.0, "group": "追蹤/全部"}, {"symbol": "2317", "name": "鴻海", "category": "AI 伺服器", "price": 206.0, "group": "追蹤/全部"}, {"symbol": "2382", "name": "廣達", "category": "AI 伺服器", "price": 323.0, "group": "追蹤/全部"}, {"symbol": "3231", "name": "緯創", "category": "AI 伺服器", "price": 136.5, "group": "追蹤/全部"}, {"symbol": "6669", "name": "緯穎", "category": "AI 伺服器", "price": 3805.0, "group": "追蹤/全部"}, {"symbol": "2376", "name": "技嘉", "category": "AI 伺服器", "price": 281.5, "group": "追蹤/全部"}, {"symbol": "2345", "name": "智邦", "category": "網通", "price": 2070.0, "group": "追蹤/全部"}, {"symbol": "3017", "name": "奇鋐", "category": "散熱", "price": 2400.0, "group": "持股"}, {"symbol": "3324", "name": "雙鴻", "category": "散熱", "price": 1035.0, "group": "持股"}, {"symbol": "6230", "name": "超眾", "category": "散熱", "price": 161.0, "group": "追蹤/全部"}, {"symbol": "3081", "name": "聯亞", "category": "光通訊", "price": 2600.0, "group": "持股"}, {"symbol": "4979", "name": "華星光", "category": "光通訊", "price": 644.0, "group": "追蹤/全部"}, {"symbol": "3163", "name": "波若威", "category": "光通訊", "price": 1225.0, "group": "追蹤/全部"}, {"symbol": "3363", "name": "上詮", "category": "光通訊", "price": 899.0, "group": "追蹤/全部"}, {"symbol": "3234", "name": "光環", "category": "光通訊", "price": 115.5, "group": "追蹤/全部"}, {"symbol": "4958", "name": "臻鼎-KY", "category": "PCB", "price": 282.0, "group": "追蹤/全部"}, {"symbol": "2368", "name": "金像電", "category": "PCB", "price": 1175.0, "group": "追蹤/全部"}, {"symbol": "3037", "name": "欣興", "category": "PCB", "price": 643.0, "group": "追蹤/全部"}, {"symbol": "8046", "name": "南電", "category": "PCB", "price": 724.0, "group": "追蹤/全部"}, {"symbol": "2383", "name": "台光電", "category": "PCB", "price": 3800.0, "group": "追蹤/全部"}, {"symbol": "2327", "name": "國巨", "category": "被動元件", "price": 316.5, "group": "追蹤/全部"}, {"symbol": "2492", "name": "華新科", "category": "被動元件", "price": 147.0, "group": "追蹤/全部"}, {"symbol": "6515", "name": "穎崴", "category": "測試", "price": 10305.0, "group": "追蹤/全部"}, {"symbol": "3533", "name": "嘉澤", "category": "測試", "price": 2490.0, "group": "追蹤/全部"}, {"symbol": "0050", "name": "元大台灣50", "category": "ETF", "price": 84.15, "group": "持股"}, {"symbol": "006208", "name": "富邦台50", "category": "ETF", "price": 194.85, "group": "追蹤/全部"}, {"symbol": "00830", "name": "國泰費半", "category": "ETF", "price": 65.1, "group": "追蹤/全部"}, {"symbol": "00687B", "name": "國泰20年美債", "category": "美債 ETF", "price": 27.98, "group": "追蹤/全部"}, {"symbol": "00679B", "name": "元大美債20年", "category": "美債 ETF", "price": 26.91, "group": "追蹤/全部"}, {"symbol": "VOO", "name": "Vanguard S&P 500", "category": "美股 ETF", "price": 652.78, "group": "持股"}, {"symbol": "QQQ", "name": "Invesco QQQ Nasdaq", "category": "美股 ETF", "price": 648.85, "group": "追蹤/全部"}, {"symbol": "TLT", "name": "iShares 20+ Year Bond", "category": "美債 ETF", "price": 87.07, "group": "追蹤/全部"}, {"symbol": "NVDA", "name": "NVIDIA", "category": "美股個股", "price": 201.68, "group": "追蹤/全部"}, {"symbol": "AAPL", "name": "Apple", "category": "美股個股", "price": 270.23, "group": "追蹤/全部"}, {"symbol": "TSLA", "name": "Tesla", "category": "美股個股", "price": 400.62, "group": "追蹤/全部"}, {"symbol": "MSFT", "name": "Microsoft", "category": "美股個股", "price": 422.79, "group": "追蹤/全部"}, {"symbol": "0050", "name": "元大台灣50", "category": "", "price": 84.15, "group": "追蹤/全部"}, {"symbol": "2330", "name": "台積電", "category": "", "price": 2030.0, "group": "追蹤/全部"}, {"symbol": "VOO", "name": "S&P 500 ETF", "category": "", "price": 652.78, "group": "追蹤/全部"}, {"symbol": "2303", "name": "聯電", "category": "", "price": 73.0, "group": "追蹤/全部"}, {"symbol": "3081", "name": "聯亞", "category": "", "price": 2600.0, "group": "追蹤/全部"}, {"symbol": "3324", "name": "雙鴻", "category": "", "price": 1035.0, "group": "追蹤/全部"}, {"symbol": "3017", "name": "奇鋐", "category": "", "price": 2400.0, "group": "追蹤/全部"}];
+  const seen = new Set();
+  const uniq = INDEX.filter(x => !seen.has(x.symbol) && seen.add(x.symbol));
+  const input = document.getElementById('top-search');
+  const results = document.getElementById('top-search-results');
+  if (!input) return;
+  let activeIdx = -1;
+
+  function render(matches) {
+    if (!matches.length) { results.classList.remove('open'); results.innerHTML=''; return; }
+    results.innerHTML = matches.slice(0, 10).map((m, i) => `
+      <a class="search-result${i === activeIdx ? ' active' : ''}" href="holdings/${m.symbol}.html">
+        <span class="search-result-sym">${m.symbol}</span>
+        <span class="search-result-name">${m.name}</span>
+        <span class="search-result-cat">${m.category || m.group}</span>
+      </a>`).join('');
+    results.classList.add('open');
+  }
+
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    if (!q) { results.classList.remove('open'); return; }
+    const matches = uniq.filter(x =>
+      x.symbol.toLowerCase().includes(q) ||
+      (x.name || '').toLowerCase().includes(q) ||
+      (x.category || '').toLowerCase().includes(q)
+    );
+    activeIdx = -1;
+    render(matches);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const items = results.querySelectorAll('.search-result');
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); render(Array.from(items).map(x => ({symbol: x.querySelector('.search-result-sym').textContent, name: x.querySelector('.search-result-name').textContent, category: x.querySelector('.search-result-cat').textContent}))); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); }
+    if (e.key === 'Enter' && items[activeIdx]) { e.preventDefault(); items[activeIdx].click(); }
+    if (e.key === 'Escape') { input.blur(); results.classList.remove('open'); }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.top-search-wrap')) results.classList.remove('open');
+  });
+})();
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 20:12 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 20:25 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>

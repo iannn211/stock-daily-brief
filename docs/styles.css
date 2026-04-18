@@ -1153,6 +1153,123 @@ footer a { color: var(--tx-3); }
 }
 .sim-rule strong { color: var(--amber); margin-right: 8px; font-size: 12px; }
 
+/* ── Deep page: Recommendation card + News section ── */
+.dd-rec-section { margin: 14px auto; }
+.dd-rec-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line-2);
+  border-radius: var(--r);
+  padding: 16px 20px;
+}
+.dd-rec-card.tone-up    { border-left-color: var(--dn); background: linear-gradient(90deg, var(--dn-bg), transparent 40%); }
+.dd-rec-card.tone-dn    { border-left-color: var(--up); background: linear-gradient(90deg, var(--up-bg), transparent 40%); }
+.dd-rec-card.tone-amber { border-left-color: var(--amber); background: linear-gradient(90deg, var(--amber-bg), transparent 40%); }
+.dd-rec-card.tone-flat  { border-left-color: var(--tx-4); }
+.dd-rec-head { margin-bottom: 12px; }
+.dd-rec-action {
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.2px; margin-top: 4px;
+}
+.dd-rec-action.up    { color: var(--dn); }
+.dd-rec-action.dn    { color: var(--up); }
+.dd-rec-action.amber { color: var(--amber); }
+.dd-rec-action.flat  { color: var(--tx-1); }
+.dd-rec-price-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.dd-rec-price-cell {
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.dd-rec-price-cell .muted { font-size: 10px; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 3px; }
+.dd-rec-reason {
+  margin: 8px 0 0;
+  font-size: 13px; line-height: 1.7;
+  color: var(--tx-2);
+}
+
+.dd-news-section { margin: 20px auto 40px; }
+.dd-news-list { list-style: none; padding: 0; margin: 0; }
+.dd-news-item {
+  padding: 12px 16px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+.dd-news-item:hover { border-color: var(--accent); }
+.dd-news-title {
+  font-size: 14px; font-weight: 600;
+  color: var(--tx-1);
+  display: block; line-height: 1.5;
+}
+.dd-news-title:hover { color: var(--accent-2); }
+.dd-news-meta { margin-top: 4px; font-size: 11px; }
+.dd-news-summary {
+  margin-top: 6px;
+  font-size: 12px; line-height: 1.6;
+  color: var(--tx-2);
+}
+
+/* ── Search box in top header ── */
+.top-search-wrap {
+  position: relative;
+  margin-top: 10px;
+  max-width: 420px;
+}
+.top-search-input {
+  width: 100%;
+  padding: 10px 14px 10px 36px;
+  background: var(--bg-1);
+  color: var(--tx-1);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.top-search-input:focus { border-color: var(--accent); background: var(--bg-2); }
+.top-search-icon {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--tx-3); font-size: 14px;
+  pointer-events: none;
+}
+.top-search-results {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--bg-1);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  max-height: 340px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  z-index: 100;
+  display: none;
+}
+.top-search-results.open { display: block; }
+.search-result {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--tx-1);
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover { background: var(--bg-2); }
+.search-result-sym { font-family: var(--font-mono); font-size: 13px; font-weight: 700; min-width: 60px; }
+.search-result-name { flex: 1; font-size: 13px; color: var(--tx-2); }
+.search-result-cat { font-size: 10px; color: var(--tx-3); padding: 2px 7px; background: var(--bg-3); border-radius: 3px; }
+.search-result.active { background: var(--accent-soft); }
+
 /* Entry strategy buttons */
 .sim-entry-group { display: flex; gap: 4px; flex-wrap: wrap; }
 .sim-entry-btn {

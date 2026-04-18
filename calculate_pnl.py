@@ -89,6 +89,105 @@ def _sparkline(history: list[dict], days: int = 30) -> list[dict]:
     return [{"d": r["date"], "c": r["close"]} for r in tail]
 
 
+def compute_recommendation(stock: dict, is_holding: bool = False,
+                           pnl_pct: float | None = None,
+                           stop_dist: float | None = None,
+                           tp_dist: float | None = None) -> dict:
+    """Rule-based buy/sell/hold recommendation based on 52w position + holding state.
+
+    Returns {action, suggested_price, reason, source, tone}.
+    tone: 'up' (good), 'dn' (bad), 'flat' (neutral), 'amber' (warn).
+    """
+    price = stock.get("price") or stock.get("price_twd") or 0
+    pct52 = stock.get("pct_52w")
+
+    # For holdings — different logic (focus on hold/sell/add)
+    if is_holding and pnl_pct is not None:
+        # Near stop-loss
+        if stop_dist is not None and 0 < stop_dist < 5:
+            return {
+                "action": "接近停損 · 警戒",
+                "suggested_price": stock.get("stop_loss") or price * 0.92,
+                "reason": f"距停損 {stop_dist:.1f}%，跌破應執行",
+                "source": "規則", "tone": "dn",
+            }
+        # Hit take-profit
+        if tp_dist is not None and -5 < tp_dist < 0:
+            return {
+                "action": "接近停利 · 考慮分批",
+                "suggested_price": stock.get("take_profit") or price * 1.02,
+                "reason": f"接近停利目標（距 {abs(tp_dist):.1f}%），雪球法應收割部分",
+                "source": "規則", "tone": "up",
+            }
+        # High profit — snowball harvest
+        if pnl_pct > 50:
+            return {
+                "action": "分批獲利了結",
+                "suggested_price": price,
+                "reason": f"已獲利 {pnl_pct:.0f}%，雪球法建議分批收割入 0050",
+                "source": "規則", "tone": "up",
+            }
+        # Red zone: 52w high, no TP set, already up
+        if pct52 and pct52 >= 90 and pnl_pct > 20:
+            return {
+                "action": "鎖利 · 考慮設停利",
+                "suggested_price": price * 1.05,
+                "reason": f"52週位階 {pct52:.0f}%（高檔），已獲利 {pnl_pct:.0f}%",
+                "source": "規則", "tone": "amber",
+            }
+        # Otherwise — continue holding
+        return {
+            "action": "續抱",
+            "suggested_price": price,
+            "reason": f"損益 {pnl_pct:+.1f}%，未觸發調整訊號",
+            "source": "規則", "tone": "flat",
+        }
+
+    # Not a holding — buy/watch decision by 52w position
+    if pct52 is None:
+        return {
+            "action": "觀望",
+            "suggested_price": price,
+            "reason": "資料不足，先觀察",
+            "source": "規則", "tone": "flat",
+        }
+
+    if pct52 < 20:
+        return {
+            "action": "積極買入",
+            "suggested_price": round(price, 2),
+            "reason": f"52週位階 {pct52:.0f}%（低檔），逢低布局好時機",
+            "source": "規則", "tone": "up",
+        }
+    if pct52 < 50:
+        return {
+            "action": "可以買入",
+            "suggested_price": round(price * 0.98, 2),
+            "reason": f"52週位階 {pct52:.0f}%（中低），限價 −2% 建倉",
+            "source": "規則", "tone": "up",
+        }
+    if pct52 < 75:
+        return {
+            "action": "觀望 · 等拉回",
+            "suggested_price": round(price * 0.95, 2),
+            "reason": f"52週位階 {pct52:.0f}%（中段），−5% 以下考慮",
+            "source": "規則", "tone": "flat",
+        }
+    if pct52 < 92:
+        return {
+            "action": "警戒擁擠 · 耐心等",
+            "suggested_price": round(price * 0.92, 2),
+            "reason": f"52週位階 {pct52:.0f}%（偏高），需拉回 8% 以上",
+            "source": "規則", "tone": "amber",
+        }
+    return {
+        "action": "避開追高",
+        "suggested_price": round(price * 0.88, 2),
+        "reason": f"52週位階 {pct52:.0f}%（歷史高檔），絕不追高",
+        "source": "規則", "tone": "dn",
+    }
+
+
 def main() -> int:
     cfg = yaml.safe_load(PORTFOLIO_PATH.read_text(encoding="utf-8"))
     prices = json.loads(PRICES_PATH.read_text(encoding="utf-8"))["prices"]
@@ -137,7 +236,7 @@ def main() -> int:
         hist = history.get(yf_ticker, [])
         spark = _sparkline(hist, 30)
 
-        holdings_out.append({
+        entry = {
             "symbol": h["symbol"],
             "name": h["name"],
             "market": h["market"],
@@ -153,7 +252,6 @@ def main() -> int:
             "day_change": p["day_change"],
             "day_change_pct": p["day_change_pct"],
             "day_contribution": round(day_contribution, 0),
-            # 52w + returns (already in prices.json from fetch_prices.py)
             "high_52w": p.get("high_52w"),
             "low_52w": p.get("low_52w"),
             "pct_52w": p.get("pct_52w"),
@@ -161,18 +259,21 @@ def main() -> int:
             "ret_30d": p.get("ret_30d"),
             "ret_90d": p.get("ret_90d"),
             "ret_ytd": p.get("ret_ytd"),
-            # Rules
             "stop_loss": h.get("stop_loss"),
             "take_profit": h.get("take_profit"),
             "stop_loss_hit": stop_loss_hit,
             "take_profit_hit": take_profit_hit,
             "stop_loss_dist_pct": _pct_distance(h.get("stop_loss")),
             "take_profit_dist_pct": _pct_distance(h.get("take_profit")),
-            # Sparkline
             "sparkline": spark,
-            # yf ticker (for deep-dive links)
             "yf_ticker": p.get("yf_ticker", yf_ticker),
-        })
+        }
+        entry["recommendation"] = compute_recommendation(
+            entry, is_holding=True, pnl_pct=entry["pnl_pct"],
+            stop_dist=entry["stop_loss_dist_pct"],
+            tp_dist=entry["take_profit_dist_pct"],
+        )
+        holdings_out.append(entry)
 
     # -------------------- portfolio-level --------------------
     total_value_incl_cash = total_value + cash_twd
@@ -313,19 +414,27 @@ def main() -> int:
         p = prices.get(yf_ticker)
         if not p:
             continue
-        universe_out.append({
+        entry = {
             "symbol": u["symbol"],
             "name": u["name"],
             "market": u["market"],
             "category": u.get("category", "其他"),
             "price": p["close"],
+            "day_change": p.get("day_change"),
             "day_change_pct": p["day_change_pct"],
             "pct_52w": p.get("pct_52w"),
             "high_52w": p.get("high_52w"),
             "low_52w": p.get("low_52w"),
+            "ret_7d": p.get("ret_7d"),
+            "ret_30d": p.get("ret_30d"),
+            "ret_90d": p.get("ret_90d"),
+            "ret_ytd": p.get("ret_ytd"),
             "currency": p.get("currency"),
             "is_held": u["symbol"] in existing_syms,
-        })
+            "yf_ticker": p.get("yf_ticker", yf_ticker),
+        }
+        entry["recommendation"] = compute_recommendation(entry, is_holding=False)
+        universe_out.append(entry)
 
     # Watchlist enrichment
     watchlist_out: list[dict] = []
@@ -334,21 +443,27 @@ def main() -> int:
         p = prices.get(yf_ticker)
         if not p:
             continue
-        watchlist_out.append({
+        entry = {
             "symbol": w["symbol"],
             "name": w["name"],
             "market": w["market"],
             "pillar": w.get("pillar"),
             "price": p["close"],
+            "day_change": p.get("day_change"),
             "day_change_pct": p["day_change_pct"],
             "ret_7d": p.get("ret_7d"),
             "ret_30d": p.get("ret_30d"),
+            "ret_90d": p.get("ret_90d"),
             "ret_ytd": p.get("ret_ytd"),
             "pct_52w": p.get("pct_52w"),
+            "high_52w": p.get("high_52w"),
+            "low_52w": p.get("low_52w"),
             "currency": p.get("currency"),
             "sparkline": _sparkline(history.get(yf_ticker, []), 30),
             "yf_ticker": p.get("yf_ticker", yf_ticker),
-        })
+        }
+        entry["recommendation"] = compute_recommendation(entry, is_holding=False)
+        watchlist_out.append(entry)
 
     out = {
         "as_of": datetime.now(TAIPEI).isoformat(),

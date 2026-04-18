@@ -187,6 +187,79 @@ def load_history() -> dict:
         return {}
 
 
+def build_news_index(briefs: list[dict], universe: list[dict]) -> dict[str, list[dict]]:
+    """Scan brief markdown content for ticker / name mentions.
+
+    Returns: {symbol: [{date, title, url, source, time, summary}]}
+    """
+    index: dict[str, list[dict]] = {}
+    # Build lookup: {alias: symbol}. Include symbol + name + Chinese company name.
+    alias_to_sym: dict[str, str] = {}
+    for u in universe:
+        sym = u["symbol"]
+        alias_to_sym[sym] = sym
+        if u.get("name"):
+            # Strip "-KY" suffix for matching (common TW convention)
+            alias_to_sym[u["name"]] = sym
+            alias_to_sym[u["name"].replace("-KY", "")] = sym
+
+    # Regex: matches markdown list entries like:  - [TITLE](URL) · SOURCE · MM-DD HH:MM
+    entry_re = re.compile(r"^- \[([^\]]+)\]\(([^)]+)\)\s*·\s*([^·]+?)\s*·\s*(\d{2}-\d{2} \d{2}:\d{2})", re.MULTILINE)
+    summary_re = re.compile(r"^\s*>\s*(.+)", re.MULTILINE)
+
+    for b in briefs:
+        content = b["content"]
+        # Find all article entries with their positions
+        for m in entry_re.finditer(content):
+            title = m.group(1)
+            url = m.group(2)
+            source = m.group(3).strip()
+            time_str = m.group(4)
+            # Grab next line summary if present (bounded to next article or section)
+            end_pos = m.end()
+            next_bound = content.find("\n- [", end_pos)
+            section_bound = content.find("\n## ", end_pos)
+            bound = min(b for b in [next_bound, section_bound] if b > 0) if (next_bound > 0 or section_bound > 0) else len(content)
+            following = content[end_pos:bound]
+            sm = summary_re.search(following)
+            summary = sm.group(1).strip() if sm else ""
+
+            # Check which tickers this article mentions (title + summary)
+            text = f"{title} {summary}"
+            matched = set()
+            for alias, sym in alias_to_sym.items():
+                if len(alias) >= 2 and alias in text:
+                    matched.add(sym)
+
+            for sym in matched:
+                index.setdefault(sym, []).append({
+                    "date": b["date"],
+                    "title": title,
+                    "url": url,
+                    "source": source,
+                    "time": time_str,
+                    "summary": summary[:200],
+                })
+
+    # Dedupe by URL per symbol; cap at 10 most recent
+    for sym in index:
+        seen_urls = set()
+        unique = []
+        for a in index[sym]:
+            if a["url"] in seen_urls:
+                continue
+            seen_urls.add(a["url"])
+            unique.append(a)
+        # Sort by (date desc, time desc)
+        unique.sort(key=lambda a: (a["date"], a["time"]), reverse=True)
+        index[sym] = unique[:10]
+    return index
+
+
+"""Note: compute_recommendation now lives in calculate_pnl.py and is attached
+to every holding / watchlist / universe item as item['recommendation']."""
+
+
 # ---------------------------------------------------------------------------
 # Macro ribbon
 # ---------------------------------------------------------------------------
@@ -2042,6 +2115,12 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     <span class="live-dot accent"></span>
   </div>
 
+  <div class="top-search-wrap">
+    <span class="top-search-icon">🔍</span>
+    <input type="text" id="top-search" class="top-search-input" placeholder="搜尋股票代號或名稱（2330、台積電、NVDA…）" autocomplete="off">
+    <div class="top-search-results" id="top-search-results"></div>
+  </div>
+
   <div class="summary-strip">
     <div class="ss-cell ss-main">
       <span class="ss-lbl">組合市值</span>
@@ -2124,9 +2203,61 @@ function setTab(t) {{
 document.querySelectorAll('.mt-btn').forEach(btn => {{
   btn.addEventListener('click', () => setTab(btn.dataset.tab));
 }});
-// Restore from hash
+// Restore from hash (only if matches a tab)
 const initTab = (location.hash || '').replace('#', '');
 if (initTab && document.querySelector(`.mt-btn[data-tab="${{initTab}}"]`)) setTab(initTab);
+
+// --- Search: autocomplete any stock, navigate to /holdings/<sym>.html ---
+(function() {{
+  const INDEX = {json.dumps([
+      {"symbol": it.get("symbol"), "name": it.get("name", ""),
+       "category": it.get("category", ""), "price": it.get("price"),
+       "group": "持股" if it.get("is_held") else "追蹤/全部"}
+      for it in (pf.get("simulator_universe") or []) + pf.get("holdings", []) + pf.get("watchlist", [])
+      if it.get("symbol")
+  ], ensure_ascii=False)};
+  const seen = new Set();
+  const uniq = INDEX.filter(x => !seen.has(x.symbol) && seen.add(x.symbol));
+  const input = document.getElementById('top-search');
+  const results = document.getElementById('top-search-results');
+  if (!input) return;
+  let activeIdx = -1;
+
+  function render(matches) {{
+    if (!matches.length) {{ results.classList.remove('open'); results.innerHTML=''; return; }}
+    results.innerHTML = matches.slice(0, 10).map((m, i) => `
+      <a class="search-result${{i === activeIdx ? ' active' : ''}}" href="holdings/${{m.symbol}}.html">
+        <span class="search-result-sym">${{m.symbol}}</span>
+        <span class="search-result-name">${{m.name}}</span>
+        <span class="search-result-cat">${{m.category || m.group}}</span>
+      </a>`).join('');
+    results.classList.add('open');
+  }}
+
+  input.addEventListener('input', () => {{
+    const q = input.value.toLowerCase().trim();
+    if (!q) {{ results.classList.remove('open'); return; }}
+    const matches = uniq.filter(x =>
+      x.symbol.toLowerCase().includes(q) ||
+      (x.name || '').toLowerCase().includes(q) ||
+      (x.category || '').toLowerCase().includes(q)
+    );
+    activeIdx = -1;
+    render(matches);
+  }});
+
+  input.addEventListener('keydown', (e) => {{
+    const items = results.querySelectorAll('.search-result');
+    if (e.key === 'ArrowDown') {{ e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); render(Array.from(items).map(x => ({{symbol: x.querySelector('.search-result-sym').textContent, name: x.querySelector('.search-result-name').textContent, category: x.querySelector('.search-result-cat').textContent}}))); }}
+    if (e.key === 'ArrowUp')   {{ e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); }}
+    if (e.key === 'Enter' && items[activeIdx]) {{ e.preventDefault(); items[activeIdx].click(); }}
+    if (e.key === 'Escape') {{ input.blur(); results.classList.remove('open'); }}
+  }});
+
+  document.addEventListener('click', (e) => {{
+    if (!e.target.closest('.top-search-wrap')) results.classList.remove('open');
+  }});
+}})();
 </script>
 '''
     now = datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M")
@@ -2208,7 +2339,13 @@ if (btn) {{
 
 def render_holding_page(holding: dict, pf: dict, history: dict,
                         latest_analysis: dict | None,
-                        is_watchlist: bool = False) -> str:
+                        is_watchlist: bool = False,
+                        news_for_ticker: list[dict] | None = None,
+                        page_kind: str = "holding") -> str:
+    """Render deep-dive page for a stock.
+
+    page_kind: "holding" (user owns), "watchlist" (tracking), "universe" (just available)
+    """
     sym = holding["symbol"]
     name = holding["name"]
     market = holding.get("market", "TW")
@@ -2323,8 +2460,62 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
 '''
                 break
 
+    # Recommendation card (buy/sell/hold with suggested price)
+    rec = data.get("recommendation") or {}
+    rec_html = ""
+    if rec:
+        tone_cls = {"up": "up", "dn": "dn", "amber": "amber", "flat": "flat"}.get(rec.get("tone", "flat"), "flat")
+        rec_html = f'''
+<section class="wrap dd-rec-section">
+  <div class="dd-rec-card tone-{tone_cls}">
+    <div class="dd-rec-head">
+      <div class="muted small mono">建議動作（規則式）</div>
+      <div class="dd-rec-action {tone_cls}">{html.escape(rec.get("action", ""))}</div>
+    </div>
+    <div class="dd-rec-body">
+      <div class="dd-rec-price-row">
+        <div class="dd-rec-price-cell">
+          <div class="muted small">建議價格</div>
+          <div class="mono tnum val-md">{rec.get("suggested_price", "—")}</div>
+        </div>
+        <div class="dd-rec-price-cell">
+          <div class="muted small">預期停利 (+30%)</div>
+          <div class="mono tnum up">{rec.get("suggested_price", 0) * 1.3:.2f}</div>
+        </div>
+        <div class="dd-rec-price-cell">
+          <div class="muted small">預期停損 (−10%)</div>
+          <div class="mono tnum dn">{rec.get("suggested_price", 0) * 0.9:.2f}</div>
+        </div>
+      </div>
+      <p class="dd-rec-reason">{html.escape(rec.get("reason", ""))}</p>
+    </div>
+  </div>
+</section>
+'''
+
+    # Recent news for this ticker
+    news_html = ""
+    if news_for_ticker:
+        rows = []
+        for n in news_for_ticker[:6]:
+            summary_html = f'<div class="dd-news-summary muted small">{html.escape(n["summary"])[:150]}{"…" if len(n.get("summary", "")) > 150 else ""}</div>' if n.get("summary") else ""
+            rows.append(f'''
+            <li class="dd-news-item">
+              <a href="{html.escape(n["url"])}" target="_blank" rel="noopener" class="dd-news-title">{html.escape(n["title"])}</a>
+              <div class="dd-news-meta muted small mono">{html.escape(n["source"])} · {html.escape(n["date"])} {html.escape(n["time"])}</div>
+              {summary_html}
+            </li>''')
+        news_html = f'''
+<section class="wrap dd-news-section">
+  <div class="section-head">
+    <h2>📰 近期相關新聞 <span class="muted small">({len(news_for_ticker)} 則)</span></h2>
+  </div>
+  <ul class="dd-news-list">{"".join(rows)}</ul>
+</section>
+'''
+
     price_str = f"{price:.2f}" if price is not None else "—"
-    status_str = "觀察中" if is_watchlist else "持有中"
+    status_str = {"holding": "持有中", "watchlist": "觀察中", "universe": "可查詢"}.get(page_kind, "—")
     body = f'''
 <header class="brief-header wrap">
   <a href="../index.html" class="back">← 回首頁</a>
@@ -2364,7 +2555,9 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
   {rules_html}
 </section>
 
+{rec_html}
 {ai_html}
+{news_html}
 '''
     now = datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M")
     title = f'{sym} {name} · Stock AI Desk'
@@ -3534,6 +3727,123 @@ footer a { color: var(--tx-3); }
 }
 .sim-rule strong { color: var(--amber); margin-right: 8px; font-size: 12px; }
 
+/* ── Deep page: Recommendation card + News section ── */
+.dd-rec-section { margin: 14px auto; }
+.dd-rec-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line-2);
+  border-radius: var(--r);
+  padding: 16px 20px;
+}
+.dd-rec-card.tone-up    { border-left-color: var(--dn); background: linear-gradient(90deg, var(--dn-bg), transparent 40%); }
+.dd-rec-card.tone-dn    { border-left-color: var(--up); background: linear-gradient(90deg, var(--up-bg), transparent 40%); }
+.dd-rec-card.tone-amber { border-left-color: var(--amber); background: linear-gradient(90deg, var(--amber-bg), transparent 40%); }
+.dd-rec-card.tone-flat  { border-left-color: var(--tx-4); }
+.dd-rec-head { margin-bottom: 12px; }
+.dd-rec-action {
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.2px; margin-top: 4px;
+}
+.dd-rec-action.up    { color: var(--dn); }
+.dd-rec-action.dn    { color: var(--up); }
+.dd-rec-action.amber { color: var(--amber); }
+.dd-rec-action.flat  { color: var(--tx-1); }
+.dd-rec-price-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.dd-rec-price-cell {
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.dd-rec-price-cell .muted { font-size: 10px; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 3px; }
+.dd-rec-reason {
+  margin: 8px 0 0;
+  font-size: 13px; line-height: 1.7;
+  color: var(--tx-2);
+}
+
+.dd-news-section { margin: 20px auto 40px; }
+.dd-news-list { list-style: none; padding: 0; margin: 0; }
+.dd-news-item {
+  padding: 12px 16px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+.dd-news-item:hover { border-color: var(--accent); }
+.dd-news-title {
+  font-size: 14px; font-weight: 600;
+  color: var(--tx-1);
+  display: block; line-height: 1.5;
+}
+.dd-news-title:hover { color: var(--accent-2); }
+.dd-news-meta { margin-top: 4px; font-size: 11px; }
+.dd-news-summary {
+  margin-top: 6px;
+  font-size: 12px; line-height: 1.6;
+  color: var(--tx-2);
+}
+
+/* ── Search box in top header ── */
+.top-search-wrap {
+  position: relative;
+  margin-top: 10px;
+  max-width: 420px;
+}
+.top-search-input {
+  width: 100%;
+  padding: 10px 14px 10px 36px;
+  background: var(--bg-1);
+  color: var(--tx-1);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.top-search-input:focus { border-color: var(--accent); background: var(--bg-2); }
+.top-search-icon {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--tx-3); font-size: 14px;
+  pointer-events: none;
+}
+.top-search-results {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--bg-1);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  max-height: 340px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  z-index: 100;
+  display: none;
+}
+.top-search-results.open { display: block; }
+.search-result {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--tx-1);
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover { background: var(--bg-2); }
+.search-result-sym { font-family: var(--font-mono); font-size: 13px; font-weight: 700; min-width: 60px; }
+.search-result-name { flex: 1; font-size: 13px; color: var(--tx-2); }
+.search-result-cat { font-size: 10px; color: var(--tx-3); padding: 2px 7px; background: var(--bg-3); border-radius: 3px; }
+.search-result.active { background: var(--accent-soft); }
+
 /* Entry strategy buttons */
 .sim-entry-group { display: flex; gap: 4px; flex-wrap: wrap; }
 .sim-entry-btn {
@@ -3832,24 +4142,41 @@ def main() -> int:
         out.write_text(render_brief_page(brief), encoding="utf-8")
     print(f"wrote {len(briefs)} brief pages", file=sys.stderr)
 
-    # Per-holding deep-dive pages
+    # Per-holding + watchlist + universe deep-dive pages
     if pf:
-        holdings_count = 0
+        # Build news index across ALL briefs, keyed by ticker
+        all_items = (pf.get("holdings", []) +
+                     pf.get("watchlist", []) +
+                     pf.get("simulator_universe", []))
+        news_by_ticker = build_news_index(briefs, all_items)
+        written: set[str] = set()
+
+        def _write_page(stock: dict, kind: str):
+            sym = stock["symbol"]
+            out = DOCS_HOLDINGS_DIR / f"{sym}.html"
+            out.write_text(
+                render_holding_page(
+                    stock, pf, history, latest_analysis,
+                    is_watchlist=(kind != "holding"),
+                    news_for_ticker=news_by_ticker.get(sym),
+                    page_kind=kind,
+                ),
+                encoding="utf-8",
+            )
+            written.add(sym)
+
         for h in pf.get("holdings", []):
-            out = DOCS_HOLDINGS_DIR / f"{h['symbol']}.html"
-            out.write_text(
-                render_holding_page(h, pf, history, latest_analysis, is_watchlist=False),
-                encoding="utf-8",
-            )
-            holdings_count += 1
+            _write_page(h, "holding")
         for w in pf.get("watchlist", []):
-            out = DOCS_HOLDINGS_DIR / f"{w['symbol']}.html"
-            out.write_text(
-                render_holding_page(w, pf, history, latest_analysis, is_watchlist=True),
-                encoding="utf-8",
-            )
-            holdings_count += 1
-        print(f"wrote {holdings_count} holding pages", file=sys.stderr)
+            if w["symbol"] not in written:
+                _write_page(w, "watchlist")
+        # Universe — generate pages for everything else
+        for u in pf.get("simulator_universe", []):
+            if u["symbol"] not in written:
+                _write_page(u, "universe")
+
+        print(f"wrote {len(written)} stock pages (holdings + watchlist + universe)",
+              file=sys.stderr)
 
     return 0
 

@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-04-18T20:12:29.645746+08:00",
+  "as_of": "2026-04-18T20:24:17.695632+08:00",
   "fx_usdtwd": 31.464,
   "risk_profile": {
     "style": "snowball-growth",
@@ -234,7 +234,14 @@
           "c": 84.15
         }
       ],
-      "yf_ticker": "0050.TW"
+      "yf_ticker": "0050.TW",
+      "recommendation": {
+        "action": "續抱",
+        "suggested_price": 84.15,
+        "reason": "損益 +17.3%，未觸發調整訊號",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "2330",
@@ -387,7 +394,14 @@
           "c": 2030.0
         }
       ],
-      "yf_ticker": "2330.TW"
+      "yf_ticker": "2330.TW",
+      "recommendation": {
+        "action": "續抱",
+        "suggested_price": 2030.0,
+        "reason": "損益 +5.0%，未觸發調整訊號",
+        "source": "規則",
+        "tone": "flat"
+      }
     }
   ],
   "attribution": {
@@ -544,7 +558,14 @@
             "c": 2030.0
           }
         ],
-        "yf_ticker": "2330.TW"
+        "yf_ticker": "2330.TW",
+        "recommendation": {
+          "action": "續抱",
+          "suggested_price": 2030.0,
+          "reason": "損益 +5.0%，未觸發調整訊號",
+          "source": "規則",
+          "tone": "flat"
+        }
       },
       {
         "symbol": "0050",
@@ -697,7 +718,14 @@
             "c": 84.15
           }
         ],
-        "yf_ticker": "0050.TW"
+        "yf_ticker": "0050.TW",
+        "recommendation": {
+          "action": "續抱",
+          "suggested_price": 84.15,
+          "reason": "損益 +17.3%，未觸發調整訊號",
+          "source": "規則",
+          "tone": "flat"
+        }
       }
     ]
   },
@@ -716,11 +744,15 @@
       "market": "US",
       "pillar": "growth",
       "price": 652.78,
+      "day_change": 7.92,
       "day_change_pct": 1.2282,
       "ret_7d": 4.51,
       "ret_30d": 7.59,
+      "ret_90d": 3.57,
       "ret_ytd": 3.9,
       "pct_52w": 98.88,
+      "high_52w": 654.88,
+      "low_52w": 467.33,
       "currency": "USD",
       "sparkline": [
         {
@@ -844,7 +876,14 @@
           "c": 652.78
         }
       ],
-      "yf_ticker": "VOO"
+      "yf_ticker": "VOO",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 574.45,
+        "reason": "52週位階 99%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "2303",
@@ -852,11 +891,15 @@
       "market": "TW",
       "pillar": "growth",
       "price": 73.0,
+      "day_change": 4.7,
       "day_change_pct": 6.8814,
       "ret_7d": 17.74,
       "ret_30d": 19.48,
+      "ret_90d": 32.49,
       "ret_ytd": 49.9,
       "pct_52w": 83.08,
+      "high_52w": 79.7,
+      "low_52w": 40.1,
       "currency": "TWD",
       "sparkline": [
         {
@@ -980,7 +1023,14 @@
           "c": 73.0
         }
       ],
-      "yf_ticker": "2303.TW"
+      "yf_ticker": "2303.TW",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 67.16,
+        "reason": "52週位階 83%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "3081",
@@ -988,11 +1038,15 @@
       "market": "TW",
       "pillar": "growth",
       "price": 2600.0,
+      "day_change": 235.0,
       "day_change_pct": 9.9366,
       "ret_7d": 12.31,
       "ret_30d": 80.56,
+      "ret_90d": 324.84,
       "ret_ytd": 306.25,
       "pct_52w": 100.0,
+      "high_52w": 2600.0,
+      "low_52w": 220.0,
       "currency": "TWD",
       "sparkline": [
         {
@@ -1116,7 +1170,14 @@
           "c": 2600.0
         }
       ],
-      "yf_ticker": "3081.TWO"
+      "yf_ticker": "3081.TWO",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 2288.0,
+        "reason": "52週位階 100%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3324",
@@ -1124,11 +1185,15 @@
       "market": "TW",
       "pillar": "growth",
       "price": 1035.0,
+      "day_change": -10.0,
       "day_change_pct": -0.9569,
       "ret_7d": 4.55,
       "ret_30d": 0.49,
+      "ret_90d": 7.25,
       "ret_ytd": 3.5,
       "pct_52w": 78.57,
+      "high_52w": 1200.0,
+      "low_52w": 430.0,
       "currency": "TWD",
       "sparkline": [
         {
@@ -1252,7 +1317,14 @@
           "c": 1035.0
         }
       ],
-      "yf_ticker": "3324.TWO"
+      "yf_ticker": "3324.TWO",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 952.2,
+        "reason": "52週位階 79%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "3017",
@@ -1260,11 +1332,15 @@
       "market": "TW",
       "pillar": "growth",
       "price": 2400.0,
+      "day_change": -40.0,
       "day_change_pct": -1.6393,
       "ret_7d": 5.96,
       "ret_30d": 29.73,
+      "ret_90d": 74.55,
       "ret_ytd": 64.95,
       "pct_52w": 94.58,
+      "high_52w": 2515.0,
+      "low_52w": 392.5,
       "currency": "TWD",
       "sparkline": [
         {
@@ -1388,7 +1464,14 @@
           "c": 2400.0
         }
       ],
-      "yf_ticker": "3017.TW"
+      "yf_ticker": "3017.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 2112.0,
+        "reason": "52週位階 95%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     }
   ],
   "simulator_universe": [
@@ -1398,12 +1481,25 @@
       "market": "TW",
       "category": "半導體代工",
       "price": 2030.0,
+      "day_change": -55.0,
       "day_change_pct": -2.6379,
       "pct_52w": 94.55,
       "high_52w": 2100.0,
       "low_52w": 816.0,
+      "ret_7d": 1.5,
+      "ret_30d": 6.56,
+      "ret_90d": 20.83,
+      "ret_ytd": 28.08,
       "currency": "TWD",
-      "is_held": true
+      "is_held": true,
+      "yf_ticker": "2330.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 1786.4,
+        "reason": "52週位階 95%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "2303",
@@ -1411,12 +1507,25 @@
       "market": "TW",
       "category": "半導體代工",
       "price": 73.0,
+      "day_change": 4.7,
       "day_change_pct": 6.8814,
       "pct_52w": 83.08,
       "high_52w": 79.7,
       "low_52w": 40.1,
+      "ret_7d": 17.74,
+      "ret_30d": 19.48,
+      "ret_90d": 32.49,
+      "ret_ytd": 49.9,
       "currency": "TWD",
-      "is_held": true
+      "is_held": true,
+      "yf_ticker": "2303.TW",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 67.16,
+        "reason": "52週位階 83%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "2454",
@@ -1424,12 +1533,25 @@
       "market": "TW",
       "category": "IC 設計",
       "price": 1925.0,
+      "day_change": 30.0,
       "day_change_pct": 1.5831,
       "pct_52w": 94.08,
       "high_52w": 1975.0,
       "low_52w": 1130.0,
+      "ret_7d": 22.22,
+      "ret_30d": 11.27,
+      "ret_90d": 35.56,
+      "ret_ytd": 30.95,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2454.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 1694.0,
+        "reason": "52週位階 94%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "2379",
@@ -1437,12 +1559,25 @@
       "market": "TW",
       "category": "IC 設計",
       "price": 531.0,
+      "day_change": -9.0,
       "day_change_pct": -1.6667,
       "pct_52w": 60.0,
       "high_52w": 593.0,
       "low_52w": 438.0,
+      "ret_7d": 4.53,
+      "ret_30d": 10.17,
+      "ret_90d": 4.12,
+      "ret_ytd": 8.92,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2379.TW",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 504.45,
+        "reason": "52週位階 60%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "3034",
@@ -1450,12 +1585,25 @@
       "market": "TW",
       "category": "IC 設計",
       "price": 415.0,
+      "day_change": 3.0,
       "day_change_pct": 0.7282,
       "pct_52w": 31.5,
       "high_52w": 552.0,
       "low_52w": 352.0,
+      "ret_7d": 5.33,
+      "ret_30d": 8.5,
+      "ret_90d": 9.21,
+      "ret_ytd": 13.08,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3034.TW",
+      "recommendation": {
+        "action": "可以買入",
+        "suggested_price": 406.7,
+        "reason": "52週位階 32%（中低），限價 −2% 建倉",
+        "source": "規則",
+        "tone": "up"
+      }
     },
     {
       "symbol": "3443",
@@ -1463,12 +1611,25 @@
       "market": "TW",
       "category": "IC 設計",
       "price": 3255.0,
+      "day_change": -90.0,
       "day_change_pct": -2.6906,
       "pct_52w": 94.93,
       "high_52w": 3380.0,
       "low_52w": 916.0,
+      "ret_7d": 22.14,
+      "ret_30d": 29.42,
+      "ret_90d": 37.63,
+      "ret_ytd": 48.97,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3443.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 2864.4,
+        "reason": "52週位階 95%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "5274",
@@ -1476,12 +1637,25 @@
       "market": "TW",
       "category": "IC 設計",
       "price": 13805.0,
+      "day_change": -675.0,
       "day_change_pct": -4.6616,
       "pct_52w": 91.07,
       "high_52w": 14890.0,
       "low_52w": 2740.0,
+      "ret_7d": 9.74,
+      "ret_30d": 11.83,
+      "ret_90d": 80.1,
+      "ret_ytd": 90.28,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "5274.TWO",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 12700.6,
+        "reason": "52週位階 91%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "2317",
@@ -1489,12 +1663,25 @@
       "market": "TW",
       "category": "AI 伺服器",
       "price": 206.0,
+      "day_change": -1.0,
       "day_change_pct": -0.4831,
       "pct_52w": 55.81,
       "high_52w": 265.0,
       "low_52w": 131.5,
+      "ret_7d": 2.74,
+      "ret_30d": -1.9,
+      "ret_90d": -10.63,
+      "ret_ytd": -11.21,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2317.TW",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 195.7,
+        "reason": "52週位階 56%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "2382",
@@ -1502,12 +1689,25 @@
       "market": "TW",
       "category": "AI 伺服器",
       "price": 323.0,
+      "day_change": 4.5,
       "day_change_pct": 1.4129,
       "pct_52w": 93.93,
       "high_52w": 329.5,
       "low_52w": 222.5,
+      "ret_7d": 0.47,
+      "ret_30d": 10.24,
+      "ret_90d": 14.13,
+      "ret_ytd": 16.61,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2382.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 284.24,
+        "reason": "52週位階 94%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3231",
@@ -1515,12 +1715,25 @@
       "market": "TW",
       "category": "AI 伺服器",
       "price": 136.5,
+      "day_change": 2.5,
       "day_change_pct": 1.8657,
       "pct_52w": 60.67,
       "high_52w": 161.0,
       "low_52w": 98.7,
+      "ret_7d": 1.11,
+      "ret_30d": 4.6,
+      "ret_90d": -8.39,
+      "ret_ytd": -11.94,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3231.TW",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 129.67,
+        "reason": "52週位階 61%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "6669",
@@ -1528,12 +1741,25 @@
       "market": "TW",
       "category": "AI 伺服器",
       "price": 3805.0,
+      "day_change": 105.0,
       "day_change_pct": 2.8378,
       "pct_52w": 66.4,
       "high_52w": 4850.0,
       "low_52w": 1740.0,
+      "ret_7d": 4.82,
+      "ret_30d": -0.52,
+      "ret_90d": -10.26,
+      "ret_ytd": -15.07,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "6669.TW",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 3614.75,
+        "reason": "52週位階 66%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "2376",
@@ -1541,12 +1767,25 @@
       "market": "TW",
       "category": "AI 伺服器",
       "price": 281.5,
+      "day_change": 0.5,
       "day_change_pct": 0.1779,
       "pct_52w": 67.87,
       "high_52w": 317.0,
       "low_52w": 206.5,
+      "ret_7d": 7.24,
+      "ret_30d": 12.83,
+      "ret_90d": 17.29,
+      "ret_ytd": 8.69,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2376.TW",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 267.43,
+        "reason": "52週位階 68%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "2345",
@@ -1554,12 +1793,25 @@
       "market": "TW",
       "category": "網通",
       "price": 2070.0,
+      "day_change": 35.0,
       "day_change_pct": 1.7199,
       "pct_52w": 97.54,
       "high_52w": 2110.0,
       "low_52w": 482.5,
+      "ret_7d": 12.81,
+      "ret_30d": 29.38,
+      "ret_90d": 70.37,
+      "ret_ytd": 80.79,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2345.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 1821.6,
+        "reason": "52週位階 98%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3017",
@@ -1567,12 +1819,25 @@
       "market": "TW",
       "category": "散熱",
       "price": 2400.0,
+      "day_change": -40.0,
       "day_change_pct": -1.6393,
       "pct_52w": 94.58,
       "high_52w": 2515.0,
       "low_52w": 392.5,
+      "ret_7d": 5.96,
+      "ret_30d": 29.73,
+      "ret_90d": 74.55,
+      "ret_ytd": 64.95,
       "currency": "TWD",
-      "is_held": true
+      "is_held": true,
+      "yf_ticker": "3017.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 2112.0,
+        "reason": "52週位階 95%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3324",
@@ -1580,12 +1845,25 @@
       "market": "TW",
       "category": "散熱",
       "price": 1035.0,
+      "day_change": -10.0,
       "day_change_pct": -0.9569,
       "pct_52w": 78.57,
       "high_52w": 1200.0,
       "low_52w": 430.0,
+      "ret_7d": 4.55,
+      "ret_30d": 0.49,
+      "ret_90d": 7.25,
+      "ret_ytd": 3.5,
       "currency": "TWD",
-      "is_held": true
+      "is_held": true,
+      "yf_ticker": "3324.TWO",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 952.2,
+        "reason": "52週位階 79%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "6230",
@@ -1593,12 +1871,25 @@
       "market": "TW",
       "category": "散熱",
       "price": 161.0,
+      "day_change": 6.0,
       "day_change_pct": 3.871,
       "pct_52w": 65.29,
       "high_52w": 190.5,
       "low_52w": 105.5,
+      "ret_7d": 11.42,
+      "ret_30d": -6.94,
+      "ret_90d": 43.11,
+      "ret_ytd": 38.2,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "6230.TW",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 152.95,
+        "reason": "52週位階 65%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "3081",
@@ -1606,12 +1897,25 @@
       "market": "TW",
       "category": "光通訊",
       "price": 2600.0,
+      "day_change": 235.0,
       "day_change_pct": 9.9366,
       "pct_52w": 100.0,
       "high_52w": 2600.0,
       "low_52w": 220.0,
+      "ret_7d": 12.31,
+      "ret_30d": 80.56,
+      "ret_90d": 324.84,
+      "ret_ytd": 306.25,
       "currency": "TWD",
-      "is_held": true
+      "is_held": true,
+      "yf_ticker": "3081.TWO",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 2288.0,
+        "reason": "52週位階 100%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "4979",
@@ -1619,12 +1923,25 @@
       "market": "TW",
       "category": "光通訊",
       "price": 644.0,
+      "day_change": 58.0,
       "day_change_pct": 9.8976,
       "pct_52w": 100.0,
       "high_52w": 644.0,
       "low_52w": 131.0,
+      "ret_7d": 43.27,
+      "ret_30d": 68.15,
+      "ret_90d": 116.11,
+      "ret_ytd": 96.64,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "4979.TWO",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 566.72,
+        "reason": "52週位階 100%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3163",
@@ -1632,12 +1949,25 @@
       "market": "TW",
       "category": "光通訊",
       "price": 1225.0,
+      "day_change": 90.0,
       "day_change_pct": 7.9295,
       "pct_52w": 96.03,
       "high_52w": 1270.0,
       "low_52w": 136.0,
+      "ret_7d": -2.78,
+      "ret_30d": 37.95,
+      "ret_90d": 229.74,
+      "ret_ytd": 192.71,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3163.TWO",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 1078.0,
+        "reason": "52週位階 96%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3363",
@@ -1645,12 +1975,25 @@
       "market": "TW",
       "category": "光通訊",
       "price": 899.0,
+      "day_change": 69.0,
       "day_change_pct": 8.3133,
       "pct_52w": 98.29,
       "high_52w": 912.0,
       "low_52w": 150.0,
+      "ret_7d": 14.67,
+      "ret_30d": 42.02,
+      "ret_90d": 109.56,
+      "ret_ytd": 98.24,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3363.TWO",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 791.12,
+        "reason": "52週位階 98%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3234",
@@ -1658,12 +2001,25 @@
       "market": "TW",
       "category": "光通訊",
       "price": 115.5,
+      "day_change": 3.0,
       "day_change_pct": 2.6667,
       "pct_52w": 89.99,
       "high_52w": 125.0,
       "low_52w": 30.05,
+      "ret_7d": 1.32,
+      "ret_30d": 35.88,
+      "ret_90d": 161.61,
+      "ret_ytd": 138.14,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3234.TWO",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 106.26,
+        "reason": "52週位階 90%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "4958",
@@ -1671,12 +2027,25 @@
       "market": "TW",
       "category": "PCB",
       "price": 282.0,
+      "day_change": 25.5,
       "day_change_pct": 9.9415,
       "pct_52w": 100.0,
       "high_52w": 282.0,
       "low_52w": 90.5,
+      "ret_7d": 6.42,
+      "ret_30d": 36.23,
+      "ret_90d": 95.16,
+      "ret_ytd": 100.71,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "4958.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 248.16,
+        "reason": "52週位階 100%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "2368",
@@ -1684,12 +2053,25 @@
       "market": "TW",
       "category": "PCB",
       "price": 1175.0,
+      "day_change": 10.0,
       "day_change_pct": 0.8584,
       "pct_52w": 96.61,
       "high_52w": 1210.0,
       "low_52w": 177.0,
+      "ret_7d": 7.8,
+      "ret_30d": 28.14,
+      "ret_90d": 84.46,
+      "ret_ytd": 82.74,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2368.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 1034.0,
+        "reason": "52週位階 97%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3037",
@@ -1697,12 +2079,25 @@
       "market": "TW",
       "category": "PCB",
       "price": 643.0,
+      "day_change": -2.0,
       "day_change_pct": -0.3101,
       "pct_52w": 97.07,
       "high_52w": 660.0,
       "low_52w": 79.3,
+      "ret_7d": 0.78,
+      "ret_30d": 10.86,
+      "ret_90d": 185.14,
+      "ret_ytd": 193.61,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3037.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 565.84,
+        "reason": "52週位階 97%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "8046",
@@ -1710,12 +2105,25 @@
       "market": "TW",
       "category": "PCB",
       "price": 724.0,
+      "day_change": 3.0,
       "day_change_pct": 0.4161,
       "pct_52w": 96.24,
       "high_52w": 749.0,
       "low_52w": 84.2,
+      "ret_7d": 8.55,
+      "ret_30d": 27.69,
+      "ret_90d": 201.04,
+      "ret_ytd": 205.49,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "8046.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 637.12,
+        "reason": "52週位階 96%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "2383",
@@ -1723,12 +2131,25 @@
       "market": "TW",
       "category": "PCB",
       "price": 3800.0,
+      "day_change": -35.0,
       "day_change_pct": -0.9126,
       "pct_52w": 95.66,
       "high_52w": 3950.0,
       "low_52w": 497.0,
+      "ret_7d": 11.11,
+      "ret_30d": 40.74,
+      "ret_90d": 142.81,
+      "ret_ytd": 138.99,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2383.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 3344.0,
+        "reason": "52週位階 96%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "2327",
@@ -1736,12 +2157,25 @@
       "market": "TW",
       "category": "被動元件",
       "price": 316.5,
+      "day_change": -8.5,
       "day_change_pct": -2.6154,
       "pct_52w": 91.25,
       "high_52w": 336.5,
       "low_52w": 108.0,
+      "ret_7d": 11.05,
+      "ret_30d": 12.83,
+      "ret_90d": 31.06,
+      "ret_ytd": 31.33,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2327.TW",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 291.18,
+        "reason": "52週位階 91%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "2492",
@@ -1749,12 +2183,25 @@
       "market": "TW",
       "category": "被動元件",
       "price": 147.0,
+      "day_change": -1.5,
       "day_change_pct": -1.0101,
       "pct_52w": 79.87,
       "high_52w": 165.5,
       "low_52w": 73.6,
+      "ret_7d": 14.4,
+      "ret_30d": 3.89,
+      "ret_90d": 18.55,
+      "ret_ytd": 18.07,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "2492.TW",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 135.24,
+        "reason": "52週位階 80%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "6515",
@@ -1762,12 +2209,25 @@
       "market": "TW",
       "category": "測試",
       "price": 10305.0,
+      "day_change": 485.0,
       "day_change_pct": 4.9389,
       "pct_52w": 96.27,
       "high_52w": 10675.0,
       "low_52w": 749.0,
+      "ret_7d": 29.95,
+      "ret_30d": 42.73,
+      "ret_90d": 195.27,
+      "ret_ytd": 255.96,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "6515.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 9068.4,
+        "reason": "52週位階 96%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "3533",
@@ -1775,12 +2235,25 @@
       "market": "TW",
       "category": "測試",
       "price": 2490.0,
+      "day_change": -20.0,
       "day_change_pct": -0.7968,
       "pct_52w": 97.62,
       "high_52w": 2525.0,
       "low_52w": 1055.0,
+      "ret_7d": 9.69,
+      "ret_30d": 30.03,
+      "ret_90d": 76.6,
+      "ret_ytd": 92.28,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "3533.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 2191.2,
+        "reason": "52週位階 98%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "0050",
@@ -1788,12 +2261,25 @@
       "market": "TW",
       "category": "ETF",
       "price": 84.15,
+      "day_change": -0.85,
       "day_change_pct": -1.0,
       "pct_52w": 97.94,
       "high_52w": 85.1,
       "low_52w": 38.9875,
+      "ret_7d": 4.21,
+      "ret_30d": 8.16,
+      "ret_90d": 20.47,
+      "ret_ytd": 25.69,
       "currency": "TWD",
-      "is_held": true
+      "is_held": true,
+      "yf_ticker": "0050.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 74.05,
+        "reason": "52週位階 98%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "006208",
@@ -1801,12 +2287,25 @@
       "market": "TW",
       "category": "ETF",
       "price": 194.85,
+      "day_change": -1.95,
       "day_change_pct": -0.9909,
       "pct_52w": 97.68,
       "high_52w": 197.3,
       "low_52w": 91.6,
+      "ret_7d": 4.03,
+      "ret_30d": 7.95,
+      "ret_90d": 22.43,
+      "ret_ytd": 27.39,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "006208.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 171.47,
+        "reason": "52週位階 98%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "00830",
@@ -1814,12 +2313,25 @@
       "market": "TW",
       "category": "ETF",
       "price": 65.1,
+      "day_change": 0.55,
       "day_change_pct": 0.852,
       "pct_52w": 99.12,
       "high_52w": 65.4,
       "low_52w": 31.49,
+      "ret_7d": 6.46,
+      "ret_30d": 16.56,
+      "ret_90d": 6.72,
+      "ret_ytd": 11.57,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "00830.TW",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 57.29,
+        "reason": "52週位階 99%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "00687B",
@@ -1827,12 +2339,25 @@
       "market": "TW",
       "category": "美債 ETF",
       "price": 27.98,
+      "day_change": -0.16,
       "day_change_pct": -0.5686,
       "pct_52w": 55.48,
       "high_52w": 29.89,
       "low_52w": 25.6,
+      "ret_7d": -1.1,
+      "ret_30d": -2.1,
+      "ret_90d": -1.72,
+      "ret_ytd": -0.46,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "00687B.TWO",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 26.58,
+        "reason": "52週位階 55%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "00679B",
@@ -1840,12 +2365,25 @@
       "market": "TW",
       "category": "美債 ETF",
       "price": 26.91,
+      "day_change": -0.18,
       "day_change_pct": -0.6645,
       "pct_52w": 56.37,
       "high_52w": 28.76,
       "low_52w": 24.52,
+      "ret_7d": -1.18,
+      "ret_30d": -2.15,
+      "ret_90d": -1.79,
+      "ret_ytd": -0.52,
       "currency": "TWD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "00679B.TWO",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 25.56,
+        "reason": "52週位階 56%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "VOO",
@@ -1853,12 +2391,25 @@
       "market": "US",
       "category": "美股 ETF",
       "price": 652.78,
+      "day_change": 7.92,
       "day_change_pct": 1.2282,
       "pct_52w": 98.88,
       "high_52w": 654.88,
       "low_52w": 467.33,
+      "ret_7d": 4.51,
+      "ret_30d": 7.59,
+      "ret_90d": 3.57,
+      "ret_ytd": 3.9,
       "currency": "USD",
-      "is_held": true
+      "is_held": true,
+      "yf_ticker": "VOO",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 574.45,
+        "reason": "52週位階 99%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "QQQ",
@@ -1866,12 +2417,25 @@
       "market": "US",
       "category": "美股 ETF",
       "price": 648.85,
+      "day_change": 8.38,
       "day_change_pct": 1.3084,
       "pct_52w": 99.48,
       "high_52w": 650.0,
       "low_52w": 427.93,
+      "ret_7d": 6.18,
+      "ret_30d": 9.41,
+      "ret_90d": 5.28,
+      "ret_ytd": 5.83,
       "currency": "USD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "QQQ",
+      "recommendation": {
+        "action": "避開追高",
+        "suggested_price": 570.99,
+        "reason": "52週位階 99%（歷史高檔），絕不追高",
+        "source": "規則",
+        "tone": "dn"
+      }
     },
     {
       "symbol": "TLT",
@@ -1879,12 +2443,25 @@
       "market": "US",
       "category": "美債 ETF",
       "price": 87.07,
+      "day_change": 0.79,
       "day_change_pct": 0.9156,
       "pct_52w": 42.41,
       "high_52w": 92.19,
       "low_52w": 83.3,
+      "ret_7d": 0.67,
+      "ret_30d": -0.48,
+      "ret_90d": -0.27,
+      "ret_ytd": 0.05,
       "currency": "USD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "TLT",
+      "recommendation": {
+        "action": "可以買入",
+        "suggested_price": 85.33,
+        "reason": "52週位階 42%（中低），限價 −2% 建倉",
+        "source": "規則",
+        "tone": "up"
+      }
     },
     {
       "symbol": "NVDA",
@@ -1892,12 +2469,25 @@
       "market": "US",
       "category": "美股個股",
       "price": 201.68,
+      "day_change": 3.33,
       "day_change_pct": 1.6788,
       "pct_52w": 91.03,
       "high_52w": 212.19,
       "low_52w": 95.04,
+      "ret_7d": 6.92,
+      "ret_30d": 12.95,
+      "ret_90d": 10.02,
+      "ret_ytd": 6.79,
       "currency": "USD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "NVDA",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 185.55,
+        "reason": "52週位階 91%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "AAPL",
@@ -1905,12 +2495,25 @@
       "market": "US",
       "category": "美股個股",
       "price": 270.23,
+      "day_change": 6.83,
       "day_change_pct": 2.593,
       "pct_52w": 81.39,
       "high_52w": 288.62,
       "low_52w": 189.81,
+      "ret_7d": 3.74,
+      "ret_30d": 8.54,
+      "ret_90d": 9.12,
+      "ret_ytd": -0.29,
       "currency": "USD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "AAPL",
+      "recommendation": {
+        "action": "警戒擁擠 · 耐心等",
+        "suggested_price": 248.61,
+        "reason": "52週位階 81%（偏高），需拉回 8% 以上",
+        "source": "規則",
+        "tone": "amber"
+      }
     },
     {
       "symbol": "TSLA",
@@ -1918,12 +2521,25 @@
       "market": "US",
       "category": "美股個股",
       "price": 400.62,
+      "day_change": 11.72,
       "day_change_pct": 3.0136,
       "pct_52w": 64.42,
       "high_52w": 498.83,
       "low_52w": 222.79,
+      "ret_7d": 14.81,
+      "ret_30d": 5.34,
+      "ret_90d": -7.14,
+      "ret_ytd": -8.55,
       "currency": "USD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "TSLA",
+      "recommendation": {
+        "action": "觀望 · 等拉回",
+        "suggested_price": 380.59,
+        "reason": "52週位階 64%（中段），−5% 以下考慮",
+        "source": "規則",
+        "tone": "flat"
+      }
     },
     {
       "symbol": "MSFT",
@@ -1931,12 +2547,25 @@
       "market": "US",
       "category": "美股個股",
       "price": 422.79,
+      "day_change": 2.53,
       "day_change_pct": 0.602,
       "pct_52w": 33.6,
       "high_52w": 555.45,
       "low_52w": 355.67,
+      "ret_7d": 14.0,
+      "ret_30d": 8.68,
+      "ret_90d": -4.8,
+      "ret_ytd": -10.6,
       "currency": "USD",
-      "is_held": false
+      "is_held": false,
+      "yf_ticker": "MSFT",
+      "recommendation": {
+        "action": "可以買入",
+        "suggested_price": 414.33,
+        "reason": "52週位階 34%（中低），限價 −2% 建倉",
+        "source": "規則",
+        "tone": "up"
+      }
     }
   ],
   "portfolio_series": [
