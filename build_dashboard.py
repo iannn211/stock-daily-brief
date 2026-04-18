@@ -24,9 +24,13 @@ import markdown as md
 TAIPEI = ZoneInfo("Asia/Taipei")
 ROOT = Path(__file__).resolve().parent
 BRIEFS_DIR = ROOT / "briefs"
+ANALYSES_DIR = ROOT / "analyses"
 DOCS_DIR = ROOT / "docs"
 DOCS_BRIEFS_DIR = DOCS_DIR / "briefs"
 PORTFOLIO_JSON = ROOT / "portfolio.json"
+
+SENTIMENT_CLS = {"正面": "up", "負面": "down", "中性": "flat"}
+SENTIMENT_ICON = {"正面": "🟢", "負面": "🔴", "中性": "⚪"}
 
 DATE_RE = re.compile(r"^# Daily Brief — (\d{4}-\d{2}-\d{2}) \(週(.)\)", re.MULTILINE)
 COUNT_RE = re.compile(r"抓到 (\d+) 則新聞")
@@ -323,18 +327,199 @@ q.addEventListener('input', () => {{
     )
 
 
+def load_analysis(date: str) -> dict | None:
+    path = ANALYSES_DIR / f"{date}.json"
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def render_analysis_section(analysis: dict) -> str:
+    """The main (Claude/Gemini-written) analysis block — the star of the show."""
+    mp = analysis.get("market_pulse", {})
+    topics = analysis.get("topics", [])
+    holdings = analysis.get("holdings_analysis", [])
+    opps = analysis.get("opportunities", [])
+    actions = analysis.get("action_checklist", {"green": [], "yellow": [], "red": []})
+    lp = analysis.get("learning_point", {})
+    model = analysis.get("model", "gemini")
+
+    def sent_badge(sent: str) -> str:
+        cls = SENTIMENT_CLS.get(sent, "flat")
+        icon = SENTIMENT_ICON.get(sent, "⚪")
+        return f'<span class="badge {cls}">{icon} {html.escape(sent)}</span>'
+
+    # --- Market pulse
+    pulse_html = (
+        f'<section class="analysis-section pulse-section">'
+        f'<h2>🌡️ 市場脈搏</h2>'
+        f'<div class="pulse-grid">'
+        f'<div class="pulse-cell">台股 {sent_badge(mp.get("tw_sentiment", "中性"))}</div>'
+        f'<div class="pulse-cell">美股 {sent_badge(mp.get("us_sentiment", "中性"))}</div>'
+        f'</div>'
+        f'<p class="pulse-summary">{html.escape(mp.get("summary", ""))}</p>'
+        f'</section>'
+    )
+
+    # --- Action checklist (pinned at top for beginners)
+    def render_actions(items, color_cls, label, icon):
+        if not items:
+            items_html = '<li class="empty">今日無建議</li>'
+        else:
+            items_html = "".join(
+                f'<li><strong>{html.escape(i["action"])}</strong>'
+                f'<div class="action-reason">{html.escape(i["reason"])}</div></li>'
+                for i in items
+            )
+        return (
+            f'<div class="action-col {color_cls}">'
+            f'<div class="action-header">{icon} {label}</div>'
+            f'<ul>{items_html}</ul></div>'
+        )
+
+    actions_html = (
+        '<section class="analysis-section action-section">'
+        '<h2>🎯 今日行動清單</h2>'
+        '<div class="actions-grid">'
+        + render_actions(actions.get("green", []), "action-green", "可以做", "🟢")
+        + render_actions(actions.get("yellow", []), "action-yellow", "該警戒", "🟡")
+        + render_actions(actions.get("red", []), "action-red", "不要做", "🔴")
+        + '</div></section>'
+    )
+
+    # --- Topics (narratives)
+    topics_html = ""
+    if topics:
+        cards = []
+        for t in topics:
+            tickers_chips = "".join(
+                f'<span class="chip muted">{html.escape(tk)}</span>'
+                for tk in t.get("tickers", [])[:6]
+            )
+            pts = "".join(
+                f'<li>{html.escape(p)}</li>'
+                for p in t.get("key_points", [])
+            )
+            points_block = f'<ul class="topic-points">{pts}</ul>' if pts else ""
+            cards.append(
+                f'<article class="topic-card">'
+                f'<div class="topic-head">'
+                f'<h3>{html.escape(t.get("title", ""))}</h3>'
+                f'{sent_badge(t.get("sentiment", "中性"))}'
+                f'</div>'
+                f'<div class="topic-tickers">{tickers_chips}</div>'
+                f'<p class="topic-narrative">{html.escape(t.get("narrative", ""))}</p>'
+                f'{points_block}'
+                f'</article>'
+            )
+        topics_html = (
+            '<section class="analysis-section">'
+            '<h2>📊 今日主題</h2>'
+            + "".join(cards)
+            + '</section>'
+        )
+
+    # --- Holdings analysis
+    holdings_html = ""
+    if holdings:
+        rows = "".join(
+            f'<article class="holding-card">'
+            f'<div class="holding-head">'
+            f'<h3>{html.escape(h.get("symbol", ""))} {html.escape(h.get("name", ""))}</h3>'
+            f'{sent_badge(h.get("outlook", "中性"))}'
+            f'</div>'
+            f'<p>{html.escape(h.get("commentary", ""))}</p>'
+            f'</article>'
+            for h in holdings
+        )
+        holdings_html = (
+            '<section class="analysis-section">'
+            '<h2>💼 你的持股分析</h2>'
+            + rows
+            + '</section>'
+        )
+
+    # --- Opportunities
+    opps_html = ""
+    if opps:
+        rows = "".join(
+            f'<article class="opp-card">'
+            f'<h3>{html.escape(o.get("symbol", ""))} {html.escape(o.get("name", ""))}</h3>'
+            f'<p><strong>論點：</strong>{html.escape(o.get("thesis", ""))}</p>'
+            f'<p><strong>研究切入點：</strong>{html.escape(o.get("research_angle", ""))}</p>'
+            f'<p class="opp-risk"><strong>⚠️ 風險：</strong>{html.escape(o.get("risk", ""))}</p>'
+            f'</article>'
+            for o in opps
+        )
+        opps_html = (
+            '<section class="analysis-section">'
+            '<h2>🔍 值得研究的個股（非買賣建議）</h2>'
+            + rows
+            + '</section>'
+        )
+
+    # --- Learning point
+    learning_html = ""
+    if lp:
+        learning_html = (
+            '<section class="analysis-section learning-section">'
+            '<h2>📚 新手學習點</h2>'
+            f'<div class="learning-card">'
+            f'<h3>{html.escape(lp.get("term", ""))}</h3>'
+            f'<p>{html.escape(lp.get("explanation", ""))}</p>'
+            f'</div></section>'
+        )
+
+    # --- Disclaimer
+    disclaimer = (
+        '<section class="analysis-section disclaimer">'
+        f'<p>📄 分析由 <code>{html.escape(model)}</code> 產生，僅供研究參考，'
+        '決策責任在你自己。所有持倉、停損、停利價格為當下計算，不保證準確。</p>'
+        '</section>'
+    )
+
+    return pulse_html + actions_html + topics_html + holdings_html + opps_html + learning_html + disclaimer
+
+
 def render_brief_page(brief: dict) -> str:
     _, copyable = split_prompt(brief["content"])
-    html_body = md.markdown(
-        copyable,
-        extensions=["tables", "fenced_code", "sane_lists"],
-    )
 
     weekday_map = {"一": "Mon", "二": "Tue", "三": "Wed", "四": "Thu",
                    "五": "Fri", "六": "Sat", "日": "Sun"}
     day_en = weekday_map.get(brief["weekday"], "")
 
-    # The prompt text to put on clipboard — full copyable section.
+    analysis = load_analysis(brief["date"])
+    if analysis:
+        # v2 mode: Gemini analysis is the star; raw news collapsed below.
+        analysis_html = render_analysis_section(analysis)
+        raw_news_html = md.markdown(copyable, extensions=["tables", "fenced_code", "sane_lists"])
+        main_html = (
+            f'<section class="brief-intro">'
+            f'<h2>🗞️ 今日分析</h2>'
+            f'<p class="intro-sub">由 AI 依據 {brief["count"]} 則新聞 + 你的持倉自動生成</p>'
+            f'</section>'
+            f'{analysis_html}'
+            f'<details class="raw-news">'
+            f'<summary>📰 展開原始新聞（按產業分類）</summary>'
+            f'<div class="raw-news-body">{raw_news_html}</div>'
+            f'</details>'
+        )
+        actions_bar = ""  # no copy button needed
+    else:
+        # v1 fallback: copy-prompt flow.
+        html_body = md.markdown(copyable, extensions=["tables", "fenced_code", "sane_lists"])
+        main_html = f'<div class="brief-body wrap">{html_body}</div>'
+        actions_bar = f'''
+  <div class="actions">
+    <button id="copy-btn" class="btn-primary">📋 複製 Prompt 貼到 Claude.ai</button>
+    <a href="https://claude.ai/new" target="_blank" class="btn-secondary">🚀 開 Claude.ai</a>
+  </div>
+  <p class="hint">AI 分析尚未生成（Gemini API 未設或失敗），改用手動貼 Claude.ai 流程。</p>
+'''
+
     prompt_for_clipboard = copyable
 
     body = f'''
@@ -342,31 +527,27 @@ def render_brief_page(brief: dict) -> str:
   <a href="../index.html" class="back">← 回首頁</a>
   <h1>Daily Brief · {brief["date"]}</h1>
   <p class="meta">週{brief["weekday"]} · {day_en} · {brief["count"]} 則新聞</p>
-  <div class="actions">
-    <button id="copy-btn" class="btn-primary">📋 複製完整 Prompt 貼到 Claude.ai</button>
-    <a href="https://claude.ai/new" target="_blank" class="btn-secondary">🚀 開 Claude.ai</a>
-  </div>
-  <p class="hint">流程：① 按複製按鈕 → ② 開 Claude.ai 新對話 → ③ 貼上送出 → 拿到 7 點分析（含今日行動清單）</p>
+  {actions_bar}
 </header>
-<main class="brief-body wrap">
-{html_body}
+<main class="wrap">
+{main_html}
 </main>
 <div id="prompt-source" hidden>{html.escape(prompt_for_clipboard)}</div>
 <script>
 const btn = document.getElementById('copy-btn');
-const src = document.getElementById('prompt-source');
-btn.addEventListener('click', async () => {{
-  const text = src.textContent;
-  try {{
-    await navigator.clipboard.writeText(text);
-    const orig = btn.textContent;
-    btn.textContent = '✅ 已複製！去 Claude.ai 貼上（Cmd+V）';
-    btn.classList.add('ok');
-    setTimeout(() => {{ btn.textContent = orig; btn.classList.remove('ok'); }}, 4000);
-  }} catch (e) {{
-    alert('複製失敗：' + e.message + '\\n可以手動全選下方內容複製。');
-  }}
-}});
+if (btn) {{
+  const src = document.getElementById('prompt-source');
+  btn.addEventListener('click', async () => {{
+    const text = src.textContent;
+    try {{
+      await navigator.clipboard.writeText(text);
+      const orig = btn.textContent;
+      btn.textContent = '✅ 已複製！';
+      btn.classList.add('ok');
+      setTimeout(() => {{ btn.textContent = orig; btn.classList.remove('ok'); }}, 3000);
+    }} catch (e) {{ alert('複製失敗：' + e.message); }}
+  }});
+}}
 </script>
 '''
     now = datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M")
@@ -678,6 +859,233 @@ footer a { color: #8a95a5; }
 .pf-details td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .pf-details td.muted { color: #5a6374; font-size: 11px; }
 
+/* ---- analysis sections (Gemini-generated) ---- */
+.brief-intro {
+  padding: 28px 0 12px;
+}
+.brief-intro h2 { margin: 0 0 4px; font-size: 22px; }
+.brief-intro .intro-sub { margin: 0; color: #8a95a5; font-size: 13px; }
+
+.analysis-section {
+  padding: 20px 0 14px;
+  border-top: 1px solid #1f2530;
+  margin-top: 4px;
+}
+.analysis-section > h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  letter-spacing: 0.3px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background: #141920;
+}
+.badge.up   { color: #ff8585; background: #2a1414; border-color: #4a2020; }
+.badge.down { color: #40c99d; background: #0f2620; border-color: #20443a; }
+.badge.flat { color: #8a95a5; background: #141920; border-color: #222a36; }
+
+/* Pulse */
+.pulse-section { }
+.pulse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.pulse-cell {
+  padding: 10px 14px;
+  background: #141920;
+  border: 1px solid #1f2530;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pulse-summary {
+  font-size: 15px;
+  color: #d0d4db;
+  line-height: 1.7;
+  margin: 0;
+  padding: 12px 14px;
+  background: #0f141a;
+  border-radius: 10px;
+}
+
+/* Action checklist */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.action-col {
+  padding: 14px 14px 10px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+.action-green  { background: #0f2620; border-color: #20443a; }
+.action-yellow { background: #2a2414; border-color: #4a3c20; }
+.action-red    { background: #2a1414; border-color: #4a2020; }
+.action-header {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+.action-col ul { margin: 0; padding-left: 18px; font-size: 13px; }
+.action-col li { margin: 8px 0; line-height: 1.55; }
+.action-col li.empty { color: #5a6374; font-style: italic; }
+.action-col strong { color: #e6e6e6; font-weight: 600; }
+.action-reason {
+  color: #b4bcc7;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Topics */
+.topic-card {
+  background: #141920;
+  border: 1px solid #1f2530;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+.topic-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.topic-head h3 { margin: 0; font-size: 17px; color: #9fd8c1; }
+.topic-tickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.topic-narrative {
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: #d0d4db;
+  margin: 0 0 10px;
+}
+.topic-points {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #b4bcc7;
+}
+.topic-points li { margin: 4px 0; line-height: 1.6; }
+
+/* Holdings */
+.holding-card {
+  background: #141920;
+  border: 1px solid #1f2530;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+.holding-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.holding-head h3 { margin: 0; font-size: 16px; }
+.holding-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #d0d4db;
+  line-height: 1.7;
+}
+
+/* Opportunities */
+.opp-card {
+  background: #0f141a;
+  border: 1px solid #1f2530;
+  border-left: 3px solid #2ab687;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.opp-card h3 { margin: 0 0 8px; font-size: 15px; color: #9fd8c1; }
+.opp-card p { margin: 6px 0; font-size: 13.5px; line-height: 1.65; color: #d0d4db; }
+.opp-card strong { color: #f4c669; font-weight: 600; }
+.opp-risk { font-size: 13px; color: #b4bcc7; }
+.opp-risk strong { color: #ff8585; }
+
+/* Learning */
+.learning-card {
+  background: linear-gradient(135deg, #1b2028 0%, #141920 100%);
+  border: 1px solid #233041;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.learning-card h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  color: #f4c669;
+}
+.learning-card p {
+  margin: 0;
+  font-size: 14.5px;
+  color: #d0d4db;
+  line-height: 1.8;
+}
+
+/* Disclaimer */
+.disclaimer {
+  border-top: none !important;
+  padding: 20px 0 0 !important;
+  margin-top: 24px !important;
+}
+.disclaimer p {
+  font-size: 12px;
+  color: #5a6374;
+  margin: 0;
+  line-height: 1.6;
+}
+.disclaimer code {
+  background: #141920;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #8a95a5;
+}
+
+/* Raw news (collapsed) */
+.raw-news {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #1f2530;
+}
+.raw-news > summary {
+  cursor: pointer;
+  font-size: 14px;
+  color: #8a95a5;
+  padding: 6px 0;
+  user-select: none;
+}
+.raw-news > summary:hover { color: #2ab687; }
+.raw-news-body { margin-top: 16px; font-size: 14px; color: #b4bcc7; }
+.raw-news-body h2 { font-size: 16px; color: #8a95a5; margin-top: 24px; }
+.raw-news-body h3 { font-size: 14px; color: #9fd8c1; margin-top: 16px; }
+.raw-news-body a { color: #6ac8ff; word-break: break-word; }
+.raw-news-body blockquote {
+  margin: 4px 0 8px;
+  padding: 4px 0 4px 12px;
+  border-left: 2px solid #233041;
+  color: #8a95a5;
+  font-size: 12.5px;
+}
+
 /* ---- mobile ---- */
 @media (max-width: 540px) {
   .site-header { padding: 24px 0 20px; }
@@ -690,6 +1098,10 @@ footer a { color: #8a95a5; }
   .pf-val { font-size: 17px; }
   .pf-details table { font-size: 11px; }
   .pf-details th, .pf-details td { padding: 6px 3px; }
+  .topic-narrative { font-size: 14px; }
+  .topic-card, .holding-card, .opp-card, .learning-card { padding: 14px 14px; }
+  .actions-grid { gap: 8px; }
+  .action-col { padding: 12px 12px 8px; }
 }
 """
 

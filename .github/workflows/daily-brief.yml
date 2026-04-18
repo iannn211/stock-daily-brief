@@ -38,6 +38,12 @@ jobs:
       - name: Calculate portfolio P&L
         run: python calculate_pnl.py
 
+      - name: Generate narrative analysis (Gemini)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FORCE_ANALYZE: "1"
+        run: python analyze.py
+
       - name: Build HTML dashboard
         run: python build_dashboard.py
 
@@ -45,7 +51,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add briefs/ docs/ prices.json portfolio.json
+          git add briefs/ docs/ prices.json portfolio.json analyses/
           if git diff --staged --quiet; then
             echo "no changes"
           else

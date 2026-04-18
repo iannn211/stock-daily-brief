@@ -12,14 +12,16 @@
   <a href="../index.html" class="back">← 回首頁</a>
   <h1>Daily Brief · 2026-04-18</h1>
   <p class="meta">週六 · Sat · 350 則新聞</p>
+  
   <div class="actions">
-    <button id="copy-btn" class="btn-primary">📋 複製完整 Prompt 貼到 Claude.ai</button>
+    <button id="copy-btn" class="btn-primary">📋 複製 Prompt 貼到 Claude.ai</button>
     <a href="https://claude.ai/new" target="_blank" class="btn-secondary">🚀 開 Claude.ai</a>
   </div>
-  <p class="hint">流程：① 按複製按鈕 → ② 開 Claude.ai 新對話 → ③ 貼上送出 → 拿到 7 點分析（含今日行動清單）</p>
+  <p class="hint">AI 分析尚未生成（Gemini API 未設或失敗），改用手動貼 Claude.ai 流程。</p>
+
 </header>
-<main class="brief-body wrap">
-<p>你是我的股市研究助理。我是台灣散戶，目前持有：
+<main class="wrap">
+<div class="brief-body wrap"><p>你是我的股市研究助理。我是台灣散戶，目前持有：
 - 元大台灣50 (0050) × 1,200 股
 - 台積電 (2330) × 20 股
 - 還在考慮要不要定期定額 VOO (S&amp;P 500 ETF)</p>
@@ -338,7 +340,7 @@ AI應用持續擴展，智慧穿戴裝置成為新一波成長動能，AI眼鏡�
 - <a href="https://finance.yahoo.com/markets/stocks/articles/netflix-stock-down-could-worse-024100404.html">Netflix Stock Is Down, and It Could Get Worse. Here's Why Shares Could Fall Even More.</a> · Yahoo Finance · 04-17 10:41
 - <a href="https://finance.yahoo.com/markets/stocks/articles/private-markets-supposed-fit-dc-040300505.html">How Are Private Markets Supposed to Fit into DC Plans?</a> · Yahoo Finance · 04-17 12:03</p>
 <hr />
-<p><em>Brief generated at 2026-04-18 15:56 Taipei time.</em></p>
+<p><em>Brief generated at 2026-04-18 15:56 Taipei time.</em></p></div>
 </main>
 <div id="prompt-source" hidden>你是我的股市研究助理。我是台灣散戶，目前持有：
 - 元大台灣50 (0050) × 1,200 股
@@ -546,23 +548,23 @@ _這些沒對上任何關鍵字，但可能是總經/大盤/海外重要消息�
 _Brief generated at 2026-04-18 15:56 Taipei time._</div>
 <script>
 const btn = document.getElementById('copy-btn');
-const src = document.getElementById('prompt-source');
-btn.addEventListener('click', async () => {
-  const text = src.textContent;
-  try {
-    await navigator.clipboard.writeText(text);
-    const orig = btn.textContent;
-    btn.textContent = '✅ 已複製！去 Claude.ai 貼上（Cmd+V）';
-    btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 4000);
-  } catch (e) {
-    alert('複製失敗：' + e.message + '\n可以手動全選下方內容複製。');
-  }
-});
+if (btn) {
+  const src = document.getElementById('prompt-source');
+  btn.addEventListener('click', async () => {
+    const text = src.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      const orig = btn.textContent;
+      btn.textContent = '✅ 已複製！';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 3000);
+    } catch (e) { alert('複製失敗：' + e.message); }
+  });
+}
 </script>
 
 <footer>
-  <p>生成於 2026-04-18 16:32 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">原始碼</a></p>
+  <p>生成於 2026-04-18 16:52 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">原始碼</a></p>
 </footer>
 </body>
 </html>
