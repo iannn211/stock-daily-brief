@@ -1640,6 +1640,279 @@
       </div>
     </div>
     
+  
+    <div class="pfv2-section cov-section">
+      
+<div class="sec-head">
+  <span class="sec-tick"></span>
+  <h2 class="sec-title">覆蓋範圍 · 主動佈局</h2>
+  <span class="sec-en mono">COVERAGE · PROACTIVE CURATION</span><span class="sec-meta mono">9 條供應鏈 · 14 個缺口</span>
+</div>
+
+      <div class="cov-lede muted small">
+        這個區塊是「你不用每次提醒，系統就先替你做功課」的成果。Gemini 掃新聞、
+        audit_coverage.py 掃供應鏈，每天主動提出該加入追蹤的票。
+      </div>
+      
+      
+        <div class="cov-sub">
+          <div class="cov-sub-head">
+            <span class="mono small">GAP RADAR · 新聞提到但追蹤池缺的票</span>
+            <span class="muted mono small">14 檔 · 最近 7 日</span>
+          </div>
+          <div class="cov-gap-intro muted small">
+            這些 ticker 在最近 7 日新聞裡被多次提到，但不在任何供應鏈分類內。
+            值得人工檢查：是否該加進 supply_chains.yaml 的某條鏈（或開一條新鏈）。
+          </div>
+          <table class="cov-gap-table">
+            <thead>
+              <tr>
+                <th class="left">TICKER</th>
+                <th class="right">提及次數</th>
+                <th class="right">狀態</th>
+              </tr>
+            </thead>
+            <tbody>
+        <tr>
+          <td><strong class="mono">5607</strong>
+              <span class="muted">遠雄港</span></td>
+          <td class="mono tnum right">18</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">6173</strong>
+              <span class="muted">信昌電</span></td>
+          <td class="mono tnum right">8</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">3702</strong>
+              <span class="muted">大聯大</span></td>
+          <td class="mono tnum right">4</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">4566</strong>
+              <span class="muted">時碩工業</span></td>
+          <td class="mono tnum right">4</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">2029</strong>
+              <span class="muted">盛餘</span></td>
+          <td class="mono tnum right">3</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">2883</strong>
+              <span class="muted">凱基金</span></td>
+          <td class="mono tnum right">2</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">2890</strong>
+              <span class="muted">永豐金</span></td>
+          <td class="mono tnum right">2</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">3715</strong>
+              <span class="muted">定穎投控</span></td>
+          <td class="mono tnum right">2</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">3665</strong>
+              <span class="muted">貿聯-KY</span></td>
+          <td class="mono tnum right">2</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">3289</strong>
+              <span class="muted">宜特</span></td>
+          <td class="mono tnum right">2</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">2340</strong>
+              <span class="muted">台亞</span></td>
+          <td class="mono tnum right">2</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr>
+        <tr>
+          <td><strong class="mono">3380</strong>
+              <span class="muted">明泰</span></td>
+          <td class="mono tnum right">2</td>
+          <td class="right"><span class="cov-gap-badge-out mono small">未納入</span></td>
+        </tr></tbody>
+          </table>
+        </div>
+      
+        <div class="cov-sub">
+          <div class="cov-sub-head">
+            <span class="mono small">SUPPLY-CHAIN ATLAS</span>
+            <span class="muted mono small">9 條鏈 · 來源 supply_chains.yaml</span>
+          </div>
+          <div class="cov-chain-grid">
+            
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">AI 基建 · PCB / 載板 / 封測 / 探針</div>
+          <div class="cov-chain-stats mono small">
+            <span>19 檔</span>
+            <span class="muted">·</span>
+            <span>6 層</span>
+            <span class="muted">·</span>
+            <span class="amber">最近 7 日 6 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill amber" style="width:32%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">光通訊 / CPO · 2026 夢階段題材</div>
+          <div class="cov-chain-stats mono small">
+            <span>6 檔</span>
+            <span class="muted">·</span>
+            <span>2 層</span>
+            <span class="muted">·</span>
+            <span class="up">最近 7 日 3 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill up" style="width:50%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">AI 散熱 · 氣冷 → 水冷 → 浸沒</div>
+          <div class="cov-chain-stats mono small">
+            <span>5 檔</span>
+            <span class="muted">·</span>
+            <span>2 層</span>
+            <span class="muted">·</span>
+            <span class="amber">最近 7 日 2 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill amber" style="width:40%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">AI 伺服器 · ODM / 系統組裝</div>
+          <div class="cov-chain-stats mono small">
+            <span>8 檔</span>
+            <span class="muted">·</span>
+            <span>3 層</span>
+            <span class="muted">·</span>
+            <span class="muted">最近 7 日 1 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill muted" style="width:12%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">AI 連接器 · 高速互連</div>
+          <div class="cov-chain-stats mono small">
+            <span>3 檔</span>
+            <span class="muted">·</span>
+            <span>1 層</span>
+            <span class="muted">·</span>
+            <span class="muted">最近 7 日 0 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill muted" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">AI 被動元件 · MLCC / 電感 / 電阻</div>
+          <div class="cov-chain-stats mono small">
+            <span>3 檔</span>
+            <span class="muted">·</span>
+            <span>2 層</span>
+            <span class="muted">·</span>
+            <span class="up">最近 7 日 2 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill up" style="width:67%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">HBM / 記憶體 · 堆疊封裝題材</div>
+          <div class="cov-chain-stats mono small">
+            <span>5 檔</span>
+            <span class="muted">·</span>
+            <span>2 層</span>
+            <span class="muted">·</span>
+            <span class="muted">最近 7 日 0 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill muted" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">機器人 / 自動化 · 人形 + 產業自動化</div>
+          <div class="cov-chain-stats mono small">
+            <span>5 檔</span>
+            <span class="muted">·</span>
+            <span>2 層</span>
+            <span class="muted">·</span>
+            <span class="up">最近 7 日 4 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill up" style="width:80%"></div>
+          </div>
+        </div>
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">半導體設備 · 晶圓廠資本支出鏈</div>
+          <div class="cov-chain-stats mono small">
+            <span>4 檔</span>
+            <span class="muted">·</span>
+            <span>2 層</span>
+            <span class="muted">·</span>
+            <span class="up">最近 7 日 2 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill up" style="width:50%"></div>
+          </div>
+        </div>
+          </div>
+        </div>
+      
+        <div class="cov-sub">
+          <div class="cov-sub-head">
+            <span class="mono small">JUST ADDED · 今日自動加入追蹤池</span>
+            <span class="muted mono small">20 檔 · audit_coverage.py</span>
+          </div>
+          <div class="cov-added-intro muted small">
+            這些是 supply_chains.yaml 有但 portfolio.yaml 還沒收的票，今天跑 audit 時自動補進 simulator_universe。
+          </div>
+          <div class="cov-added-list">
+            
+            <div class="cov-added-row">
+              <div class="cov-added-chain mono small muted">AI 基建 · PCB / 載板 / 封測 / 探針</div>
+              <div class="cov-added-syms"><span class="mono small">6213 聯茂</span> · <span class="mono small">6274 台燿</span> · <span class="mono small">8358 金居</span> · <span class="mono small">3044 健鼎</span> · <span class="mono small">6239 力成</span> · <span class="mono small">3711 日月光投控</span> · <span class="mono small">6147 頎邦</span> · <span class="mono small">8150 南茂</span> · <span class="mono small">6510 精測</span> · <span class="mono small">5608 雍智</span> · <span class="mono small">2360 致茂</span> · <span class="mono small">3583 辛耘</span></div>
+            </div>
+            <div class="cov-added-row">
+              <div class="cov-added-chain mono small muted">光通訊 / CPO · 2026 夢階段題材</div>
+              <div class="cov-added-syms"><span class="mono small">3202 光聖</span></div>
+            </div>
+            <div class="cov-added-row">
+              <div class="cov-added-chain mono small muted">AI 散熱 · 氣冷 → 水冷 → 浸沒</div>
+              <div class="cov-added-syms"><span class="mono small">3296 勝麗</span> · <span class="mono small">6196 帆宣</span></div>
+            </div>
+            <div class="cov-added-row">
+              <div class="cov-added-chain mono small muted">AI 伺服器 · ODM / 系統組裝</div>
+              <div class="cov-added-syms"><span class="mono small">3515 華擎</span> · <span class="mono small">2308 台達電</span></div>
+            </div>
+            <div class="cov-added-row">
+              <div class="cov-added-chain mono small muted">AI 連接器 · 高速互連</div>
+              <div class="cov-added-syms"><span class="mono small">6269 台郡</span></div>
+            </div>
+            <div class="cov-added-row">
+              <div class="cov-added-chain mono small muted">HBM / 記憶體 · 堆疊封裝題材</div>
+              <div class="cov-added-syms"><span class="mono small">3006 晶豪科</span> · <span class="mono small">5269 祥碩</span></div>
+            </div>
+          </div>
+        </div>
+    </div>
+    
 </div>
 
       </div>
@@ -3168,7 +3441,7 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 22:35 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 23:06 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>

@@ -3137,3 +3137,255 @@ footer a { color: var(--tx-3); }
   .dd-chip-grid { grid-template-columns: 1fr; }
   .dd-chip-card-stats { grid-template-columns: 1fr 1fr; }
 }
+
+/* ─────────────────────────────────────────
+   COVERAGE section (PORT tab)
+   主動佈局 — supply_chains.yaml + audit_coverage + Gemini coverage_suggestions
+   ───────────────────────────────────────── */
+.cov-section { margin-top: 28px; }
+.cov-lede {
+  padding: 14px 16px; margin-bottom: 22px;
+  background: var(--bg-2); border-left: 3px solid var(--accent);
+  border-radius: 4px; line-height: 1.7;
+}
+.cov-sub { margin-bottom: 28px; }
+.cov-sub-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  letter-spacing: 0.6px;
+}
+
+/* Atlas */
+.cov-chain-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.cov-chain-card {
+  padding: 12px 14px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+}
+.cov-chain-title {
+  font-size: 13px; font-weight: 700; color: var(--tx-1);
+  letter-spacing: 0.3px; margin-bottom: 6px;
+}
+.cov-chain-stats {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 8px; color: var(--tx-2);
+}
+.cov-chain-bar-bg {
+  height: 4px; background: var(--bg-0); border-radius: 2px;
+  overflow: hidden;
+}
+.cov-chain-bar-fill {
+  height: 100%; background: var(--tx-3); border-radius: 2px;
+}
+.cov-chain-bar-fill.up     { background: var(--up); }
+.cov-chain-bar-fill.amber  { background: var(--amber); }
+.cov-chain-bar-fill.muted  { background: var(--line-2); }
+
+/* AI picks */
+.cov-pick-intro {
+  padding: 10px 12px; margin-bottom: 12px;
+  background: var(--bg-2); border-radius: 4px; line-height: 1.7;
+}
+.cov-pick-intro code {
+  background: var(--bg-0); padding: 1px 6px; border-radius: 3px;
+  color: var(--tx-1);
+}
+.cov-pick-list {
+  display: grid; grid-template-columns: 1fr; gap: 10px;
+}
+.cov-pick-row {
+  padding: 14px 16px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+  border-left: 3px solid var(--accent);
+}
+.cov-pick-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px;
+}
+.cov-pick-sym strong { font-size: 15px; color: var(--tx-1); margin-right: 8px; letter-spacing: 0.4px; }
+.cov-pick-priority {
+  padding: 2px 10px; border-radius: 12px;
+  background: var(--bg-0); border: 1px solid var(--line);
+  letter-spacing: 0.6px;
+}
+.cov-pick-priority.dn    { color: var(--dn); border-color: rgba(255,59,59,0.4); }
+.cov-pick-priority.amber { color: var(--amber); border-color: rgba(255,181,71,0.4); }
+.cov-pick-chain { margin-bottom: 6px; }
+.cov-pick-why {
+  font-size: 14px; line-height: 1.75; color: var(--tx-1);
+  margin-top: 4px;
+}
+
+/* Gap radar */
+.cov-gap-intro {
+  padding: 10px 12px; margin-bottom: 10px;
+  background: var(--bg-2); border-radius: 4px; line-height: 1.7;
+}
+.cov-gap-table {
+  width: 100%; border-collapse: collapse;
+  background: var(--bg-2); border-radius: 4px; overflow: hidden;
+}
+.cov-gap-table thead th {
+  padding: 8px 12px; font-size: 10px; letter-spacing: 1px; font-weight: 600;
+  color: var(--tx-3); text-transform: uppercase;
+  border-bottom: 1px solid var(--line); background: var(--bg-1);
+}
+.cov-gap-table tbody td {
+  padding: 8px 12px; border-bottom: 1px solid var(--line);
+  color: var(--tx-2);
+}
+.cov-gap-table tbody td strong { color: var(--tx-1); margin-right: 8px; }
+.cov-gap-table tbody tr:hover { background: var(--bg-1); }
+.cov-gap-badge-in {
+  padding: 1px 8px; border-radius: 10px;
+  background: rgba(27,217,124,0.1); color: var(--up);
+  border: 1px solid rgba(27,217,124,0.3);
+}
+.cov-gap-badge-out {
+  padding: 1px 8px; border-radius: 10px;
+  background: rgba(255,181,71,0.1); color: var(--amber);
+  border: 1px solid rgba(255,181,71,0.3);
+}
+
+/* Just added */
+.cov-added-intro {
+  padding: 10px 12px; margin-bottom: 10px;
+  background: var(--bg-2); border-radius: 4px; line-height: 1.7;
+}
+.cov-added-list {
+  display: grid; grid-template-columns: 1fr; gap: 8px;
+}
+.cov-added-row {
+  padding: 10px 14px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+  display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap;
+}
+.cov-added-chain { min-width: 120px; color: var(--tx-3); letter-spacing: 0.4px; }
+.cov-added-syms {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  color: var(--tx-1);
+}
+.cov-added-syms span { color: var(--tx-1); }
+
+@media (max-width: 720px) {
+  .cov-chain-grid { grid-template-columns: 1fr; }
+  .cov-added-row { flex-direction: column; gap: 6px; }
+  .cov-added-chain { min-width: auto; }
+}
+
+/* ─────────────────────────────────────────
+   SUPPLY CHAIN MAP (theme page)
+   Full vertical ecosystem: 上游 → 中游 → 下游
+   ───────────────────────────────────────── */
+.sc-map-section { margin-top: 36px; }
+.sc-map-intro {
+  padding: 16px 18px; margin: 10px 0 20px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+.sc-map-title {
+  font-size: 16px; font-weight: 700; color: var(--tx-1);
+  margin-bottom: 10px; letter-spacing: 0.4px;
+}
+.sc-map-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 12px;
+}
+.sc-map-tag {
+  padding: 2px 10px; border-radius: 12px;
+  background: var(--bg-0); border: 1px solid var(--line);
+  color: var(--tx-2); letter-spacing: 0.4px;
+}
+.sc-map-narrative {
+  color: var(--tx-1); line-height: 1.75;
+  margin-bottom: 10px; font-size: 13px;
+}
+.sc-map-legend {
+  padding: 8px 10px; background: var(--bg-0);
+  border-radius: 3px; line-height: 1.65;
+}
+.sc-map-legend code {
+  background: var(--bg-1); padding: 1px 6px; border-radius: 3px;
+  color: var(--tx-1);
+}
+
+.sc-map-layers {
+  display: flex; flex-direction: column; gap: 18px;
+}
+.sc-map-layer {
+  padding: 16px 18px; background: var(--bg-1);
+  border: 1px solid var(--line); border-radius: 6px;
+  position: relative;
+}
+.sc-map-layer-head {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1px dashed var(--line);
+}
+.sc-map-layer-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent); color: var(--bg-0);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; letter-spacing: 0;
+}
+.sc-map-layer-title { flex: 1; }
+.sc-map-layer-name {
+  font-size: 15px; font-weight: 700; color: var(--tx-1);
+  letter-spacing: 0.3px; margin-bottom: 3px;
+}
+.sc-map-layer-role {
+  line-height: 1.65; color: var(--tx-2);
+}
+.sc-map-layer-stocks {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.sc-map-stock {
+  padding: 10px 12px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+  transition: border-color 0.15s;
+}
+.sc-map-stock:hover { border-color: var(--accent); }
+.sc-map-stock-lead {
+  background: linear-gradient(180deg, rgba(255,181,71,0.08), var(--bg-2));
+  border-color: rgba(255,181,71,0.3);
+}
+.sc-map-stock-lead:hover { border-color: var(--amber); }
+.sc-map-stock-head {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.sc-map-stock-head strong {
+  color: var(--tx-1); font-size: 13px; letter-spacing: 0.3px;
+}
+.sc-map-sym-link {
+  color: inherit; text-decoration: none;
+  border-bottom: 1px dotted var(--line-2);
+}
+.sc-map-sym-link:hover { border-bottom-color: var(--accent); }
+.sc-map-name { color: var(--tx-2); font-size: 13px; }
+.sc-map-lead-badge {
+  padding: 1px 6px; border-radius: 8px;
+  background: rgba(255,181,71,0.15); color: var(--amber);
+  border: 1px solid rgba(255,181,71,0.35);
+  letter-spacing: 0.4px; margin-left: auto;
+}
+.sc-map-stock-role {
+  line-height: 1.55; margin-bottom: 6px;
+  color: var(--tx-2);
+}
+.sc-map-price {
+  display: flex; gap: 10px; align-items: baseline;
+  padding-top: 4px; border-top: 1px dashed var(--line);
+  color: var(--tx-1);
+}
+
+@media (max-width: 720px) {
+  .sc-map-layer-stocks { grid-template-columns: 1fr; }
+  .sc-map-layer { padding: 12px 14px; }
+}

@@ -288,6 +288,31 @@ def load_analysis(date: str) -> dict | None:
         return None
 
 
+def load_coverage_report() -> dict | None:
+    """Load coverage_report.json from audit_coverage.py run. Returns None
+    if unavailable (first run / workflow error)."""
+    path = ROOT / "coverage_report.json"
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def load_supply_chains() -> dict:
+    """Load supply_chains.yaml; returns chain metadata keyed by slug."""
+    import yaml
+    path = ROOT / "supply_chains.yaml"
+    if not path.exists():
+        return {}
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        return data.get("chains") or {}
+    except Exception:
+        return {}
+
+
 def load_portfolio() -> dict | None:
     if not PORTFOLIO_JSON.exists():
         return None
@@ -1451,13 +1476,205 @@ def _chips_mini_spark(daily: list[dict], key: str = "foreign", width: int = 80,
     )
 
 
+def _match_chain_for_theme(opp: dict, chains: dict) -> str | None:
+    """Map an AI opportunity's category_tag / theme / lead_stocks to a
+    supply_chains.yaml slug. Returns slug or None if no match found.
+
+    Matching strategy (in priority order):
+      1. category_tag stripped of "#" appears in chain.tags
+      2. theme title substring match in chain.title or tags
+      3. any lead stock symbol appears in chain's stocks
+    """
+    if not chains:
+        return None
+
+    tag = (opp.get("category_tag") or "").lstrip("#").strip()
+    theme = (opp.get("theme") or "").strip()
+    theme_norm = _strip_leading_emoji(theme)
+    leads = opp.get("lead_stocks") or []
+    lead_syms = {(ls.get("symbol") or "").strip() for ls in leads if ls.get("symbol")}
+
+    # Priority 1: exact tag match
+    if tag:
+        for slug, chain in chains.items():
+            tags = chain.get("tags") or []
+            for t in tags:
+                if t == tag or t in tag or tag in t:
+                    return slug
+
+    # Priority 2: theme title keyword match
+    if theme_norm:
+        for slug, chain in chains.items():
+            title = chain.get("title", "")
+            if any(t for t in (chain.get("tags") or [])
+                   if t and t in theme_norm):
+                return slug
+            # Also match slug keywords in title
+            if theme_norm in title or title in theme_norm:
+                return slug
+
+    # Priority 3: lead-stock overlap
+    if lead_syms:
+        best_slug = None
+        best_overlap = 0
+        for slug, chain in chains.items():
+            chain_syms = {
+                s["symbol"] for layer in (chain.get("layers") or [])
+                for s in (layer.get("stocks") or []) if s.get("symbol")
+            }
+            overlap = len(lead_syms & chain_syms)
+            if overlap > best_overlap:
+                best_overlap = overlap
+                best_slug = slug
+        if best_overlap >= 1:
+            return best_slug
+
+    return None
+
+
+def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
+                            lead_syms: set[str]) -> str:
+    """Render a supply_chains.yaml chain's layers + stocks as a vertical
+    map on the theme page. Stocks already in AI lead_stocks get highlighted
+    (so the user can see "this is what AI picked" vs "this is what's
+    canonically in the chain"). Links to holdings/SYMBOL.html when available."""
+    chain = chains.get(slug)
+    if not chain:
+        return ""
+
+    title = chain.get("title", slug)
+    narrative = chain.get("narrative", "").strip()
+    tags = chain.get("tags") or []
+    tag_pills = " ".join(
+        f'<span class="sc-map-tag mono small">{html.escape(t)}</span>'
+        for t in tags
+    )
+
+    layer_html: list[str] = []
+    total_stocks = 0
+    for i, layer in enumerate(chain.get("layers") or []):
+        name = layer.get("name", "")
+        role = layer.get("role", "")
+        stocks = layer.get("stocks") or []
+        stock_cards: list[str] = []
+        for st in stocks:
+            sym = (st.get("symbol") or "").strip()
+            if not sym:
+                continue
+            total_stocks += 1
+            nm = st.get("name", "")
+            sub_role = st.get("role", "")
+            pillar = st.get("pillar", "growth")
+            rec = lookup.get(sym) or {}
+            price = rec.get("price")
+            day_pct = rec.get("day_change_pct")
+            pct_52w = rec.get("pct_52w")
+            is_lead = sym in lead_syms
+            has_page = sym in _TICKER_ALIAS
+
+            # Highlight if AI picked this stock as a lead
+            card_cls = "sc-map-stock"
+            if is_lead:
+                card_cls += " sc-map-stock-lead"
+            badge = ""
+            if is_lead:
+                badge = '<span class="sc-map-lead-badge mono small">AI 選</span>'
+
+            # Link to holding page if exists
+            sym_html = (
+                f'<a href="../holdings/{sym}.html" class="sc-map-sym-link">'
+                f'<strong class="mono">{html.escape(sym)}</strong></a>'
+                if has_page else
+                f'<strong class="mono">{html.escape(sym)}</strong>'
+            )
+
+            # Price line (if we have it)
+            price_html = ""
+            if price is not None:
+                day_cls = _cls(day_pct)
+                day_str = _fmt_pct(day_pct) if day_pct is not None else "—"
+                p52_str = f'<span class="muted small">52w {pct_52w:.0f}%</span>' if pct_52w is not None else ""
+                price_html = f'''
+                <div class="sc-map-price">
+                  <span class="mono tnum">{price:.2f}</span>
+                  <span class="mono tnum small {day_cls}">{day_str}</span>
+                  {p52_str}
+                </div>'''
+
+            pillar_cls = PILLAR_CLS.get(pillar, "")
+            stock_cards.append(f'''
+            <div class="{card_cls}">
+              <div class="sc-map-stock-head">
+                <span class="pillar-dot {pillar_cls}"></span>
+                {sym_html}
+                <span class="sc-map-name">{html.escape(nm)}</span>
+                {badge}
+              </div>
+              <div class="sc-map-stock-role muted small">{html.escape(sub_role)}</div>
+              {price_html}
+            </div>''')
+
+        layer_html.append(f'''
+        <div class="sc-map-layer">
+          <div class="sc-map-layer-head">
+            <span class="sc-map-layer-num mono">{i + 1}</span>
+            <div class="sc-map-layer-title">
+              <div class="sc-map-layer-name">{html.escape(name)}</div>
+              {(f'<div class="sc-map-layer-role muted small">{html.escape(role)}</div>' if role else "")}
+            </div>
+          </div>
+          <div class="sc-map-layer-stocks">
+            {"".join(stock_cards)}
+          </div>
+        </div>''')
+
+    return f'''
+    <section class="th-section sc-map-section">
+      <div class="th-section-head mono">
+        <span>SUPPLY CHAIN · 完整供應鏈地圖</span>
+        <span class="muted small"> · {len(chain.get("layers") or [])} 層 · {total_stocks} 檔</span>
+      </div>
+      <div class="sc-map-intro">
+        <div class="sc-map-title mono">{html.escape(title)}</div>
+        <div class="sc-map-tags">{tag_pills}</div>
+        {(f'<div class="sc-map-narrative">{html.escape(narrative)}</div>' if narrative else "")}
+        <div class="sc-map-legend muted small">
+          🟡 有底色 = AI 今天挑中的領先股（lead_stock）·
+          ○ 灰色框 = 這條供應鏈上的其他同層標的，值得一起比較。
+          來源：<code class="mono">supply_chains.yaml</code>（人工策畫）
+        </div>
+      </div>
+      <div class="sc-map-layers">
+        {"".join(layer_html)}
+      </div>
+    </section>
+    '''
+
+
 def render_theme_page(opp: dict, pf: dict, history: dict,
                       analysis: dict | None, slug: str) -> str:
     """Full deep-dive page for one AI-identified theme.
-    Shows all lead stocks with price + fundamentals + 冷熱排行 (cold-to-hot)."""
+    Shows all lead stocks with price + fundamentals + 冷熱排行 (cold-to-hot).
+    Adds a SUPPLY CHAIN MAP section when the theme matches a chain in
+    supply_chains.yaml (canonical coverage, not just AI lead_stocks)."""
     history = history or {}
     init_ticker_alias(pf)
     lookup = _pf_lookup(pf)
+
+    # Match theme → supply chain. Rendered as a full vertical map right
+    # after the stock table, so users can see the entire ecosystem not
+    # just AI's 5-7 picks.
+    chains_yaml = load_supply_chains()
+    chain_slug = _match_chain_for_theme(opp, chains_yaml)
+    lead_syms = {
+        (ls.get("symbol") or "").strip()
+        for ls in (opp.get("lead_stocks") or [])
+        if ls.get("symbol")
+    }
+    supply_chain_html = (
+        render_supply_chain_map(chain_slug, chains_yaml, lookup, lead_syms)
+        if chain_slug else ""
+    )
 
     # --- Basic theme fields ---
     theme = _strip_leading_emoji(opp.get("theme") or "未命名題材")
@@ -1716,6 +1933,8 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
     <div class="th-section-head mono">題材內股票 · 冷熱排行（位階低在上）</div>
     {table_html}
   </section>
+
+  {supply_chain_html}
 
   {callouts_html}
 
@@ -2950,9 +3169,12 @@ def _risk_grade(val: float, thresholds: list[tuple[float, str]]) -> str:
     return thresholds[-1][1]
 
 
-def render_portfolio_tab(pf: dict) -> str:
+def render_portfolio_tab(pf: dict, analysis: dict | None = None,
+                         coverage: dict | None = None) -> str:
     """GUSHI-style Portfolio tab: 4 big KPI cards + full holdings table +
-    weekly attribution bars + risk metrics panel. No emojis, all mono."""
+    weekly attribution bars + risk metrics panel + COVERAGE section
+    (proactive curation grounded in supply_chains.yaml + audit_coverage.py
+    + Gemini's coverage_suggestions). No emojis, all mono."""
     if not pf:
         return '<p class="muted" style="padding:20px">無組合資料。</p>'
 
@@ -3127,6 +3349,8 @@ def render_portfolio_tab(pf: dict) -> str:
     </div>
     '''
 
+    coverage_html = render_coverage_section(pf, analysis, coverage)
+
     return f'''
 <div class="pfv2-wrap">
   {kpi_cards}
@@ -3134,8 +3358,210 @@ def render_portfolio_tab(pf: dict) -> str:
   {positions_html}
   {weekly_html}
   {risk_html}
+  {coverage_html}
 </div>
 '''
+
+
+def render_coverage_section(pf: dict, analysis: dict | None,
+                            coverage: dict | None) -> str:
+    """Proactive coverage panel shown inside PORT tab.
+
+    Three sub-blocks:
+      1. SUPPLY-CHAIN ATLAS — 9 chains, ticker count + news mention count
+      2. AI PICKS — coverage_suggestions from Gemini (today's new candidates
+         grounded in today's news)
+      3. GAP RADAR — missing_from_chains (tickers news talks about that aren't
+         in any chain — human curation candidates)
+      4. JUST ADDED — added_from_chains from today's audit run (transparency
+         so the user can see what got auto-appended)
+    """
+    if not coverage and not (analysis and analysis.get("coverage_suggestions")):
+        return ""
+
+    chains_yaml = load_supply_chains()
+    chain_totals = (coverage or {}).get("chain_totals") or {}
+    suggestions = (analysis or {}).get("coverage_suggestions") or []
+    gaps = (coverage or {}).get("missing_from_chains") or []
+    added = (coverage or {}).get("added_from_chains") or []
+    window_days = (coverage or {}).get("window_days", 7)
+
+    # -- 1. SUPPLY-CHAIN ATLAS --
+    atlas_cells: list[str] = []
+    for slug, t in chain_totals.items():
+        title = t.get("title", slug)
+        count = t.get("unique_count", 0)
+        layers = t.get("layer_count", 0)
+        hot = t.get("mentioned_in_window", 0)
+        pct = (hot / count * 100) if count else 0
+        bar_cls = "up" if pct >= 50 else ("amber" if pct >= 25 else "muted")
+        atlas_cells.append(f'''
+        <div class="cov-chain-card">
+          <div class="cov-chain-title mono">{html.escape(title)}</div>
+          <div class="cov-chain-stats mono small">
+            <span>{count} 檔</span>
+            <span class="muted">·</span>
+            <span>{layers} 層</span>
+            <span class="muted">·</span>
+            <span class="{bar_cls}">最近 {window_days} 日 {hot} 檔上新聞</span>
+          </div>
+          <div class="cov-chain-bar-bg">
+            <div class="cov-chain-bar-fill {bar_cls}" style="width:{min(pct, 100):.0f}%"></div>
+          </div>
+        </div>''')
+    atlas_block = ""
+    if atlas_cells:
+        atlas_block = f'''
+        <div class="cov-sub">
+          <div class="cov-sub-head">
+            <span class="mono small">SUPPLY-CHAIN ATLAS</span>
+            <span class="muted mono small">{len(chain_totals)} 條鏈 · 來源 supply_chains.yaml</span>
+          </div>
+          <div class="cov-chain-grid">
+            {"".join(atlas_cells)}
+          </div>
+        </div>'''
+
+    # -- 2. AI PICKS (coverage_suggestions) --
+    PRIORITY_CLS = {"high": "dn", "medium": "amber", "low": "muted"}
+    PRIORITY_LABEL = {"high": "高優先", "medium": "中優先", "low": "觀察中"}
+    picks_rows: list[str] = []
+    for s in suggestions:
+        sym = s.get("symbol", "")
+        name = s.get("name", "")
+        chain = s.get("chain_slug", "")
+        layer = s.get("layer_name", "")
+        why = s.get("why_now", "")
+        pri = (s.get("priority") or "medium").lower()
+        pri_cls = PRIORITY_CLS.get(pri, "muted")
+        pri_label = PRIORITY_LABEL.get(pri, pri)
+        chain_title = chains_yaml.get(chain, {}).get("title", chain) if chain != "new" else "新題材（需新增鏈）"
+        picks_rows.append(f'''
+        <div class="cov-pick-row">
+          <div class="cov-pick-head">
+            <div class="cov-pick-sym">
+              <strong class="mono">{html.escape(sym)}</strong>
+              <span class="muted">{html.escape(name)}</span>
+            </div>
+            <span class="cov-pick-priority {pri_cls} mono small">{pri_label}</span>
+          </div>
+          <div class="cov-pick-chain mono small muted">
+            歸類 → {html.escape(chain_title)} / {html.escape(layer)}
+          </div>
+          <div class="cov-pick-why">{html.escape(why)}</div>
+        </div>''')
+    picks_block = ""
+    if picks_rows:
+        picks_block = f'''
+        <div class="cov-sub">
+          <div class="cov-sub-head">
+            <span class="mono small">AI COVERAGE PICKS · 今日新增追蹤候選</span>
+            <span class="muted mono small">{len(picks_rows)} 檔 · Gemini 主動提議</span>
+          </div>
+          <div class="cov-pick-intro muted small">
+            以下是 AI 掃過今日新聞後，覺得你該放進追蹤池但還沒納入的票。
+            編輯 <code class="mono">supply_chains.yaml</code> 把認同的加進去，下次 build 就會自動進 simulator。
+          </div>
+          <div class="cov-pick-list">
+            {"".join(picks_rows)}
+          </div>
+        </div>'''
+
+    # -- 3. GAP RADAR --
+    gap_rows: list[str] = []
+    for g in gaps[:12]:
+        sym = g.get("symbol", "")
+        name = g.get("name", "")
+        mentions = g.get("mentions", 0)
+        in_pf = g.get("in_portfolio", False)
+        badge = '<span class="cov-gap-badge-in mono small">已在追蹤池</span>' if in_pf else '<span class="cov-gap-badge-out mono small">未納入</span>'
+        gap_rows.append(f'''
+        <tr>
+          <td><strong class="mono">{html.escape(sym)}</strong>
+              <span class="muted">{html.escape(name)}</span></td>
+          <td class="mono tnum right">{mentions}</td>
+          <td class="right">{badge}</td>
+        </tr>''')
+    gap_block = ""
+    if gap_rows:
+        gap_block = f'''
+        <div class="cov-sub">
+          <div class="cov-sub-head">
+            <span class="mono small">GAP RADAR · 新聞提到但追蹤池缺的票</span>
+            <span class="muted mono small">{len(gaps)} 檔 · 最近 {window_days} 日</span>
+          </div>
+          <div class="cov-gap-intro muted small">
+            這些 ticker 在最近 {window_days} 日新聞裡被多次提到，但不在任何供應鏈分類內。
+            值得人工檢查：是否該加進 supply_chains.yaml 的某條鏈（或開一條新鏈）。
+          </div>
+          <table class="cov-gap-table">
+            <thead>
+              <tr>
+                <th class="left">TICKER</th>
+                <th class="right">提及次數</th>
+                <th class="right">狀態</th>
+              </tr>
+            </thead>
+            <tbody>{"".join(gap_rows)}</tbody>
+          </table>
+        </div>'''
+
+    # -- 4. JUST ADDED --
+    added_block = ""
+    if added:
+        # Group by chain for tidy display
+        by_chain: dict[str, list[dict]] = {}
+        for a in added:
+            by_chain.setdefault(a.get("chain", ""), []).append(a)
+        added_chain_cards: list[str] = []
+        for slug, items in by_chain.items():
+            chain_title = chains_yaml.get(slug, {}).get("title", slug)
+            item_html = " · ".join(
+                f'<span class="mono small">{html.escape(i["symbol"])} {html.escape(i["name"])}</span>'
+                for i in items
+            )
+            added_chain_cards.append(f'''
+            <div class="cov-added-row">
+              <div class="cov-added-chain mono small muted">{html.escape(chain_title)}</div>
+              <div class="cov-added-syms">{item_html}</div>
+            </div>''')
+        added_block = f'''
+        <div class="cov-sub">
+          <div class="cov-sub-head">
+            <span class="mono small">JUST ADDED · 今日自動加入追蹤池</span>
+            <span class="muted mono small">{len(added)} 檔 · audit_coverage.py</span>
+          </div>
+          <div class="cov-added-intro muted small">
+            這些是 supply_chains.yaml 有但 portfolio.yaml 還沒收的票，今天跑 audit 時自動補進 simulator_universe。
+          </div>
+          <div class="cov-added-list">
+            {"".join(added_chain_cards)}
+          </div>
+        </div>'''
+
+    # Assembly
+    meta_parts: list[str] = []
+    if chain_totals:
+        meta_parts.append(f"{len(chain_totals)} 條供應鏈")
+    if suggestions:
+        meta_parts.append(f"{len(suggestions)} 個 AI 候選")
+    if gaps:
+        meta_parts.append(f"{len(gaps)} 個缺口")
+    meta_str = " · ".join(meta_parts) if meta_parts else "supply_chains.yaml"
+
+    return f'''
+    <div class="pfv2-section cov-section">
+      {_sec_head("覆蓋範圍 · 主動佈局", "COVERAGE · PROACTIVE CURATION", meta=meta_str)}
+      <div class="cov-lede muted small">
+        這個區塊是「你不用每次提醒，系統就先替你做功課」的成果。Gemini 掃新聞、
+        audit_coverage.py 掃供應鏈，每天主動提出該加入追蹤的票。
+      </div>
+      {picks_block}
+      {gap_block}
+      {atlas_block}
+      {added_block}
+    </div>
+    '''
 
 
 # ── Macro tab ────────────────────────────────────────────────────────────
@@ -4379,6 +4805,7 @@ def render_index(briefs: list[dict], pf: dict | None,
 
     latest_brief = briefs[0] if briefs else None
     latest_analysis = load_analysis(latest_brief["date"]) if latest_brief else None
+    coverage_report = load_coverage_report()
     # Build ticker alias map for linkification across all rendered text
     init_ticker_alias(pf)
 
@@ -4404,7 +4831,7 @@ def render_index(briefs: list[dict], pf: dict | None,
     radar_tab = render_radar_tab(latest_analysis, pf, history)
     sim_html, _ = render_simulator(pf, latest_analysis)
     # New GUSHI-style tabs
-    portfolio_tab = render_portfolio_tab(pf)
+    portfolio_tab = render_portfolio_tab(pf, latest_analysis, coverage_report)
     macro_tab = render_macro_tab(pf, latest_analysis, history)
     news_tab = render_news_tab(briefs, pf)
     screen_tab = render_screen_tab(pf)
@@ -8530,6 +8957,258 @@ footer a { color: var(--tx-3); }
   .th-table { min-width: 1100px; }
   .dd-chip-grid { grid-template-columns: 1fr; }
   .dd-chip-card-stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─────────────────────────────────────────
+   COVERAGE section (PORT tab)
+   主動佈局 — supply_chains.yaml + audit_coverage + Gemini coverage_suggestions
+   ───────────────────────────────────────── */
+.cov-section { margin-top: 28px; }
+.cov-lede {
+  padding: 14px 16px; margin-bottom: 22px;
+  background: var(--bg-2); border-left: 3px solid var(--accent);
+  border-radius: 4px; line-height: 1.7;
+}
+.cov-sub { margin-bottom: 28px; }
+.cov-sub-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  letter-spacing: 0.6px;
+}
+
+/* Atlas */
+.cov-chain-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.cov-chain-card {
+  padding: 12px 14px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+}
+.cov-chain-title {
+  font-size: 13px; font-weight: 700; color: var(--tx-1);
+  letter-spacing: 0.3px; margin-bottom: 6px;
+}
+.cov-chain-stats {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 8px; color: var(--tx-2);
+}
+.cov-chain-bar-bg {
+  height: 4px; background: var(--bg-0); border-radius: 2px;
+  overflow: hidden;
+}
+.cov-chain-bar-fill {
+  height: 100%; background: var(--tx-3); border-radius: 2px;
+}
+.cov-chain-bar-fill.up     { background: var(--up); }
+.cov-chain-bar-fill.amber  { background: var(--amber); }
+.cov-chain-bar-fill.muted  { background: var(--line-2); }
+
+/* AI picks */
+.cov-pick-intro {
+  padding: 10px 12px; margin-bottom: 12px;
+  background: var(--bg-2); border-radius: 4px; line-height: 1.7;
+}
+.cov-pick-intro code {
+  background: var(--bg-0); padding: 1px 6px; border-radius: 3px;
+  color: var(--tx-1);
+}
+.cov-pick-list {
+  display: grid; grid-template-columns: 1fr; gap: 10px;
+}
+.cov-pick-row {
+  padding: 14px 16px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+  border-left: 3px solid var(--accent);
+}
+.cov-pick-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px;
+}
+.cov-pick-sym strong { font-size: 15px; color: var(--tx-1); margin-right: 8px; letter-spacing: 0.4px; }
+.cov-pick-priority {
+  padding: 2px 10px; border-radius: 12px;
+  background: var(--bg-0); border: 1px solid var(--line);
+  letter-spacing: 0.6px;
+}
+.cov-pick-priority.dn    { color: var(--dn); border-color: rgba(255,59,59,0.4); }
+.cov-pick-priority.amber { color: var(--amber); border-color: rgba(255,181,71,0.4); }
+.cov-pick-chain { margin-bottom: 6px; }
+.cov-pick-why {
+  font-size: 14px; line-height: 1.75; color: var(--tx-1);
+  margin-top: 4px;
+}
+
+/* Gap radar */
+.cov-gap-intro {
+  padding: 10px 12px; margin-bottom: 10px;
+  background: var(--bg-2); border-radius: 4px; line-height: 1.7;
+}
+.cov-gap-table {
+  width: 100%; border-collapse: collapse;
+  background: var(--bg-2); border-radius: 4px; overflow: hidden;
+}
+.cov-gap-table thead th {
+  padding: 8px 12px; font-size: 10px; letter-spacing: 1px; font-weight: 600;
+  color: var(--tx-3); text-transform: uppercase;
+  border-bottom: 1px solid var(--line); background: var(--bg-1);
+}
+.cov-gap-table tbody td {
+  padding: 8px 12px; border-bottom: 1px solid var(--line);
+  color: var(--tx-2);
+}
+.cov-gap-table tbody td strong { color: var(--tx-1); margin-right: 8px; }
+.cov-gap-table tbody tr:hover { background: var(--bg-1); }
+.cov-gap-badge-in {
+  padding: 1px 8px; border-radius: 10px;
+  background: rgba(27,217,124,0.1); color: var(--up);
+  border: 1px solid rgba(27,217,124,0.3);
+}
+.cov-gap-badge-out {
+  padding: 1px 8px; border-radius: 10px;
+  background: rgba(255,181,71,0.1); color: var(--amber);
+  border: 1px solid rgba(255,181,71,0.3);
+}
+
+/* Just added */
+.cov-added-intro {
+  padding: 10px 12px; margin-bottom: 10px;
+  background: var(--bg-2); border-radius: 4px; line-height: 1.7;
+}
+.cov-added-list {
+  display: grid; grid-template-columns: 1fr; gap: 8px;
+}
+.cov-added-row {
+  padding: 10px 14px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+  display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap;
+}
+.cov-added-chain { min-width: 120px; color: var(--tx-3); letter-spacing: 0.4px; }
+.cov-added-syms {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  color: var(--tx-1);
+}
+.cov-added-syms span { color: var(--tx-1); }
+
+@media (max-width: 720px) {
+  .cov-chain-grid { grid-template-columns: 1fr; }
+  .cov-added-row { flex-direction: column; gap: 6px; }
+  .cov-added-chain { min-width: auto; }
+}
+
+/* ─────────────────────────────────────────
+   SUPPLY CHAIN MAP (theme page)
+   Full vertical ecosystem: 上游 → 中游 → 下游
+   ───────────────────────────────────────── */
+.sc-map-section { margin-top: 36px; }
+.sc-map-intro {
+  padding: 16px 18px; margin: 10px 0 20px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+.sc-map-title {
+  font-size: 16px; font-weight: 700; color: var(--tx-1);
+  margin-bottom: 10px; letter-spacing: 0.4px;
+}
+.sc-map-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 12px;
+}
+.sc-map-tag {
+  padding: 2px 10px; border-radius: 12px;
+  background: var(--bg-0); border: 1px solid var(--line);
+  color: var(--tx-2); letter-spacing: 0.4px;
+}
+.sc-map-narrative {
+  color: var(--tx-1); line-height: 1.75;
+  margin-bottom: 10px; font-size: 13px;
+}
+.sc-map-legend {
+  padding: 8px 10px; background: var(--bg-0);
+  border-radius: 3px; line-height: 1.65;
+}
+.sc-map-legend code {
+  background: var(--bg-1); padding: 1px 6px; border-radius: 3px;
+  color: var(--tx-1);
+}
+
+.sc-map-layers {
+  display: flex; flex-direction: column; gap: 18px;
+}
+.sc-map-layer {
+  padding: 16px 18px; background: var(--bg-1);
+  border: 1px solid var(--line); border-radius: 6px;
+  position: relative;
+}
+.sc-map-layer-head {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1px dashed var(--line);
+}
+.sc-map-layer-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent); color: var(--bg-0);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; letter-spacing: 0;
+}
+.sc-map-layer-title { flex: 1; }
+.sc-map-layer-name {
+  font-size: 15px; font-weight: 700; color: var(--tx-1);
+  letter-spacing: 0.3px; margin-bottom: 3px;
+}
+.sc-map-layer-role {
+  line-height: 1.65; color: var(--tx-2);
+}
+.sc-map-layer-stocks {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.sc-map-stock {
+  padding: 10px 12px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 4px;
+  transition: border-color 0.15s;
+}
+.sc-map-stock:hover { border-color: var(--accent); }
+.sc-map-stock-lead {
+  background: linear-gradient(180deg, rgba(255,181,71,0.08), var(--bg-2));
+  border-color: rgba(255,181,71,0.3);
+}
+.sc-map-stock-lead:hover { border-color: var(--amber); }
+.sc-map-stock-head {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.sc-map-stock-head strong {
+  color: var(--tx-1); font-size: 13px; letter-spacing: 0.3px;
+}
+.sc-map-sym-link {
+  color: inherit; text-decoration: none;
+  border-bottom: 1px dotted var(--line-2);
+}
+.sc-map-sym-link:hover { border-bottom-color: var(--accent); }
+.sc-map-name { color: var(--tx-2); font-size: 13px; }
+.sc-map-lead-badge {
+  padding: 1px 6px; border-radius: 8px;
+  background: rgba(255,181,71,0.15); color: var(--amber);
+  border: 1px solid rgba(255,181,71,0.35);
+  letter-spacing: 0.4px; margin-left: auto;
+}
+.sc-map-stock-role {
+  line-height: 1.55; margin-bottom: 6px;
+  color: var(--tx-2);
+}
+.sc-map-price {
+  display: flex; gap: 10px; align-items: baseline;
+  padding-top: 4px; border-top: 1px dashed var(--line);
+  color: var(--tx-1);
+}
+
+@media (max-width: 720px) {
+  .sc-map-layer-stocks { grid-template-columns: 1fr; }
+  .sc-map-layer { padding: 12px 14px; }
 }
 """
 

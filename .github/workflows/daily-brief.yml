@@ -32,6 +32,10 @@ jobs:
           echo "DATE=$(TZ=Asia/Taipei date +%Y-%m-%d)" >> "$GITHUB_ENV"
           echo "DAY=$(TZ=Asia/Taipei date +%A)" >> "$GITHUB_ENV"
 
+      - name: Audit coverage (auto-expand universe from supply_chains.yaml)
+        run: python audit_coverage.py
+        continue-on-error: true  # Don't block the build if audit hits an edge case
+
       - name: Fetch prices
         run: python fetch_prices.py
 
@@ -55,7 +59,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add briefs/ docs/ prices.json portfolio.json analyses/ chips.json
+          git add briefs/ docs/ prices.json portfolio.json portfolio.yaml analyses/ chips.json coverage_report.json
           if git diff --staged --quiet; then
             echo "no changes"
           else

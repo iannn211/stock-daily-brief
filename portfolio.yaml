@@ -220,3 +220,32 @@ simulator_universe:
   - { symbol: "1504", name: "東元",             market: "TW", category: "重電" }
   - { symbol: "1519", name: "華城",             market: "TW", category: "重電" }
   - { symbol: "1503", name: "士電",             market: "TW", category: "重電" }
+
+  # ── Auto-added by audit_coverage.py on 2026-04-18 ──
+  # Source: supply_chains.yaml. Edit there, not here.
+  # ai_pcb → PCB供應鏈
+  - { symbol: "6213", name: "聯茂", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "6274", name: "台燿", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "8358", name: "金居", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "3044", name: "健鼎", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "6239", name: "力成", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "3711", name: "日月光投控", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "6147", name: "頎邦", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "8150", name: "南茂", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "6510", name: "精測", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "5608", name: "雍智", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "2360", name: "致茂", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "3583", name: "辛耘", market: "TW", category: "PCB供應鏈" }
+  # optics_cpo → 光通訊
+  - { symbol: "3202", name: "光聖", market: "TW", category: "光通訊" }
+  # thermal → 散熱
+  - { symbol: "3296", name: "勝麗", market: "TW", category: "散熱" }
+  - { symbol: "6196", name: "帆宣", market: "TW", category: "散熱" }
+  # ai_server → AI 伺服器
+  - { symbol: "3515", name: "華擎", market: "TW", category: "AI 伺服器" }
+  - { symbol: "2308", name: "台達電", market: "TW", category: "AI 伺服器" }
+  # connectors → 連接器
+  - { symbol: "6269", name: "台郡", market: "TW", category: "連接器" }
+  # hbm_memory → HBM 記憶體
+  - { symbol: "3006", name: "晶豪科", market: "TW", category: "HBM 記憶體" }
+  - { symbol: "5269", name: "祥碩", market: "TW", category: "HBM 記憶體" }

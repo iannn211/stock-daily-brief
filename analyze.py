@@ -281,6 +281,22 @@ RESPONSE_SCHEMA = {
                 "required": ["q", "a", "tag"],
             },
         },
+        "coverage_suggestions": {
+            "type": "array",
+            "description": "3–5 TW tickers the user should ADD to simulator_universe or supply_chains.yaml based on today's news. Proactive curation — don't wait for the user to ask.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "symbol":    {"type": "string", "description": "TW ticker, numbers only (e.g. '6515'). Must be a real TWSE/TPEx listed stock."},
+                    "name":      {"type": "string", "description": "Chinese company name."},
+                    "chain_slug": {"type": "string", "description": "Which supply_chains.yaml chain it belongs to (ai_pcb / optics_cpo / thermal / ai_server / connectors / passives / hbm_memory / robotics / semiconductor_eq / OR 'new' if it needs a new chain)."},
+                    "layer_name": {"type": "string", "description": "Which layer within that chain (e.g. '下游 · 封測 OSAT' or '新題材/需要新分類')."},
+                    "why_now":   {"type": "string", "description": "2–3 sentences tying this ticker to TODAY's news + why it's a gap in current coverage. Must cite concrete catalyst."},
+                    "priority":  {"type": "string", "description": "One of: high / medium / low"},
+                },
+                "required": ["symbol", "name", "chain_slug", "layer_name", "why_now", "priority"],
+            },
+        },
     },
     "required": ["market_pulse", "morning_brief", "macro_context", "portfolio_diagnosis",
                  "topics", "action_checklist", "learning_point", "budget_allocation"],
@@ -626,17 +642,86 @@ plan_summary：一句 30-50 字總結（例：「今日建議用 NT$5,000 試水
 - Q: 該怎麼挑股票？（太空泛）
 - A: 挑股票要看基本面、技術面、籌碼面…（教科書答案，沒連結到今日新聞）
 
+---
+
+**coverage_suggestions 生成指引（3-5 檔，主動佈局用）：**
+
+使用者明確說過：「我其實不想要每次都是我說了你才補上去 這樣沒有發揮你幫我先去搜尋並且協助我佈局的初衷」。所以每天你都要主動提出「該加進追蹤池的新票」。
+
+**規則：**
+1. 每天 3-5 檔，**必須是台股 4-6 位數 ticker**（不要美股、不要 ETF、不要已經在 portfolio.yaml 的票）
+2. 每一檔都要綁定「今日新聞的具體催化劑」——不是因為它是好公司，而是因為今天發生了事情讓它相關
+3. chain_slug 盡量對應到 supply_chains.yaml 已有的 9 條鏈（ai_pcb / optics_cpo / thermal / ai_server / connectors / passives / hbm_memory / robotics / semiconductor_eq）；真的都不符才填 "new"
+4. layer_name 要具體（例「下游 · 封測 OSAT」而不只是「半導體」）；如果是 "new" chain，用 "新題材/需要新分類"
+5. priority：high = 今日多則新聞直接提到且與熱門題材連動；medium = 題材相關但需要驗證；low = 值得觀察但現在還沒動
+6. why_now 2-3 句，要點出「為什麼這檔還沒在追蹤池，但它應該在」——特別是如果 coverage_report.json 的 missing_from_chains 有指出它
+
+**coverage_report.json 參考：**
+如果下方 context 裡給了 coverage report，優先從 `missing_from_chains` 挑（那些是新聞已經在講但追蹤池沒有的），其次從 `news_frequency` top 10 裡挑沒在 chain 的。不要重複推 portfolio 已經有的票。
+
+**好範例：**
+- symbol: "3149", name: "正達", chain_slug: "optics_cpo", layer_name: "周邊 / 檢測", priority: "medium"
+  why_now: "今日新聞提到台積電 2.5D 封裝產能全滿，探針卡+光學檢測連動受惠；正達切入 CPO 光學玻璃基板認證中，但目前追蹤池光通訊沒有玻璃基板這層。法人近 3 日連買。"
+
+**壞範例：**
+- symbol: "VOO" ❌（美股不收）
+- symbol: "2330" ❌（已在 portfolio）
+- why_now: "AI 受惠股" ❌（沒有具體催化）
+
 """
+
+
+def build_coverage_context() -> str:
+    """Inject audit_coverage.py output so Gemini can propose coverage_suggestions
+    grounded in actual gaps rather than hallucinating tickers."""
+    path = ROOT / "coverage_report.json"
+    if not path.exists():
+        return ""
+    try:
+        rpt = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+
+    lines = ["## 追蹤池覆蓋現況（audit_coverage.py 的輸出）", ""]
+
+    gaps = rpt.get("missing_from_chains") or []
+    if gaps:
+        lines.append("### 🔥 新聞提到但追蹤池缺的票（最近 7 日）")
+        lines.append("這些是 Gemini 應該優先納入 coverage_suggestions 的候選：")
+        for g in gaps[:15]:
+            lines.append(f"- {g['symbol']} {g.get('name', '')} — 最近 7 日提到 {g.get('mentions', 0)} 次")
+        lines.append("")
+
+    freq = rpt.get("news_frequency") or {}
+    if freq:
+        lines.append("### 新聞提及次數 TOP 15（供佐證熱度）")
+        items = list(freq.items())[:15]
+        lines.append(" · ".join(f"{s} ×{c}" for s, c in items))
+        lines.append("")
+
+    totals = rpt.get("chain_totals") or {}
+    if totals:
+        lines.append("### 目前追蹤的供應鏈（supply_chains.yaml）")
+        for slug, t in totals.items():
+            lines.append(f"- {slug} ({t.get('title', slug)}): "
+                         f"{t.get('unique_count', 0)} 檔 × {t.get('layer_count', 0)} 層 · "
+                         f"最近 7 日有 {t.get('mentioned_in_window', 0)} 檔被新聞提及")
+        lines.append("")
+
+    return "\n".join(lines)
 
 
 def build_prompt(brief_markdown: str) -> str:
     trimmed = trim_brief(brief_markdown)
     portfolio_ctx = build_portfolio_context()
+    coverage_ctx = build_coverage_context()
 
     # Today / key upcoming dates — prevents AI from misreading forward dates as past.
     now = datetime.now(TAIPEI)
     weekday_zh = "一二三四五六日"[now.weekday()]
     today_str = f"{now:%Y-%m-%d} (週{weekday_zh})"
+
+    coverage_block = f"\n---\n\n{coverage_ctx}\n" if coverage_ctx else ""
 
     return f"""【今日日期】{today_str}
 
@@ -649,7 +734,7 @@ def build_prompt(brief_markdown: str) -> str:
 ## 今日新聞彙整（從 RSS 抓取，已按產業/持股分類）
 
 {trimmed}
-
+{coverage_block}
 ---
 
 請輸出符合 schema 的 JSON。檢核清單：
@@ -659,7 +744,8 @@ def build_prompt(brief_markdown: str) -> str:
 - [ ] 每個 topic 都連結到使用者持倉的影響
 - [ ] action_checklist 的每項都是具體可執行的觀察/條件單
 - [ ] learning_point 是今天新聞裡真的出現過的名詞
-- [ ] faq 有 5-8 題，每題都連結到今日新聞或使用者持倉，答案有具體 ticker/數字"""
+- [ ] faq 有 5-8 題，每題都連結到今日新聞或使用者持倉，答案有具體 ticker/數字
+- [ ] coverage_suggestions 有 3-5 檔台股新票，每檔綁定今日新聞催化劑 + 對應 supply_chains.yaml 的某條鏈某層"""
 
 
 def call_gemini(prompt: str) -> tuple[dict | None, str | None]:
