@@ -1384,6 +1384,73 @@ def _fmt_pct_fund(v: float | None, digits: int = 1) -> str:
     return f"{v * 100:.{digits}f}%"
 
 
+# ---------- 籌碼 (chips) formatting helpers ----------
+# TW convention: 紅=net buy (up), 綠=net sell (down). Values are in 股 (shares);
+# we display in 張 (lots of 1000 shares) for readability.
+
+def _fmt_lots(shares: int | None, digits: int = 0) -> str:
+    """Convert shares → 張 (1000 shares). Returns '—' if None/0."""
+    if shares is None or shares == 0:
+        return "—"
+    lots = shares / 1000.0
+    if abs(lots) >= 10000:
+        return f"{lots / 10000:+.{max(1, digits)}f}萬"
+    return f"{lots:+,.{digits}f}"
+
+
+def _chips_cell(shares: int | None, with_unit: bool = False) -> str:
+    """Render a signed shares cell with TW color convention (紅/綠)."""
+    if shares is None or shares == 0:
+        return '<span class="muted mono tnum small">—</span>'
+    cls = "up" if shares > 0 else "dn"
+    label = _fmt_lots(shares)
+    unit = '<span class="muted small"> 張</span>' if with_unit else ""
+    return f'<span class="mono tnum {cls}">{label}</span>{unit}'
+
+
+def _streak_badge(streak: int | None, label_buy: str = "連買", label_sell: str = "連賣") -> str:
+    """Render a ±N streak as a badge. 0/None returns dash."""
+    if not streak:
+        return '<span class="muted small">—</span>'
+    if streak > 0:
+        return f'<span class="chip-streak chip-streak-buy mono small">{label_buy}{streak}日</span>'
+    return f'<span class="chip-streak chip-streak-sell mono small">{label_sell}{abs(streak)}日</span>'
+
+
+def _chips_mini_spark(daily: list[dict], key: str = "foreign", width: int = 80,
+                      height: int = 24) -> str:
+    """Tiny bar sparkline of last-5-day net-buy values (signed)."""
+    if not daily:
+        return ""
+    vals = [d.get(key, 0) or 0 for d in daily][::-1]  # oldest → newest (left → right)
+    if not any(vals):
+        return ""
+    n = len(vals)
+    peak = max(abs(v) for v in vals) or 1
+    bar_w = max(2, (width - (n - 1) * 2) / n)
+    mid = height / 2
+    bars = []
+    for i, v in enumerate(vals):
+        x = i * (bar_w + 2)
+        h = abs(v) / peak * (mid - 1)
+        if v >= 0:
+            y = mid - h
+            cls = "chip-spark-buy"
+        else:
+            y = mid
+            cls = "chip-spark-sell"
+        bars.append(
+            f'<rect class="{cls}" x="{x:.1f}" y="{y:.1f}" '
+            f'width="{bar_w:.1f}" height="{max(1, h):.1f}" rx="0.5"/>'
+        )
+    # Zero line
+    bars.append(f'<line class="chip-spark-mid" x1="0" y1="{mid}" x2="{width}" y2="{mid}"/>')
+    return (
+        f'<svg class="chip-spark" viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+        f'xmlns="http://www.w3.org/2000/svg">{"".join(bars)}</svg>'
+    )
+
+
 def render_theme_page(opp: dict, pf: dict, history: dict,
                       analysis: dict | None, slug: str) -> str:
     """Full deep-dive page for one AI-identified theme.
@@ -1416,6 +1483,7 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
         name = ls.get("name", "")
         rec = lookup.get(sym, {})
         fund = rec.get("fundamentals") or {}
+        chips = rec.get("chips") or {}
         row = {
             "symbol": sym,
             "name": name,
@@ -1434,6 +1502,12 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
             "sector": fund.get("sector") or "",
             "has_page": sym in _TICKER_ALIAS,
             "currency": rec.get("currency", "TWD"),
+            "foreign_5d": chips.get("foreign_5d"),
+            "foreign_20d": chips.get("foreign_20d"),
+            "foreign_streak": chips.get("foreign_streak"),
+            "trust_5d": chips.get("trust_5d"),
+            "trust_streak": chips.get("trust_streak"),
+            "has_chips": bool(chips),
         }
         rows.append(row)
 
@@ -1488,6 +1562,9 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
             "unknown": '<span class="th-temp mono muted">—</span>',
         }[temp]
         price_str = f"{r['price']:.2f}" if r["price"] is not None else "—"
+        f5 = _chips_cell(r["foreign_5d"])
+        f20 = _chips_cell(r["foreign_20d"])
+        fstreak = _streak_badge(r["foreign_streak"])
         table_rows.append(f'''
         <tr class="th-row th-{temp}">
           <td class="th-rank mono tnum">{i+1:02d}</td>
@@ -1504,6 +1581,9 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
           <td class="mono tnum">{_cell(r["pe"], 1)}</td>
           <td class="mono tnum">{_cell(r["eps"], 2)}</td>
           <td class="mono tnum">{_fmt_pct_fund(r["roe"], 1)}</td>
+          <td class="th-chips-cell">{f5}</td>
+          <td class="th-chips-cell">{f20}</td>
+          <td class="th-chips-cell">{fstreak}</td>
           <td class="muted small">{html.escape(r["sector"] or "—")}</td>
           <td>{_link_cell(r)}</td>
         </tr>''')
@@ -1529,12 +1609,18 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
                 <th class="mono small">P/E</th>
                 <th class="mono small">EPS</th>
                 <th class="mono small">ROE</th>
+                <th class="mono small" title="外資 5 日買賣超（張）">外資5日</th>
+                <th class="mono small" title="外資 20 日買賣超（張）">外資20日</th>
+                <th class="mono small" title="外資連續買/賣天數">外資連續</th>
                 <th class="mono small">產業</th>
                 <th class="mono small"></th>
               </tr>
             </thead>
             <tbody>{"".join(table_rows)}</tbody>
           </table>
+        </div>
+        <div class="th-chips-legend muted small">
+          外資欄位：正值（<span class="up">紅</span>）= 買超、負值（<span class="dn">綠</span>）= 賣超。數字單位為「張」（1 張 = 1,000 股）。資料來自 TWSE + TPEx 三大法人統計，滯後 1 個交易日。
         </div>'''
 
     # --- Temperature callouts ---
@@ -3536,88 +3622,747 @@ def render_news_tab(briefs: list[dict], pf: dict | None) -> str:
 '''
 
 
+# ── Screener tab ────────────────────────────────────────────────────────
+
+def render_screen_tab(pf: dict) -> str:
+    """Client-side stock screener. Pulls all symbols from portfolio.yaml
+    (holdings + watchlist + simulator_universe) and lets the user filter
+    by price / returns / fundamentals / chips with live preset buttons."""
+    init_ticker_alias(pf)
+
+    # Collect unique tickers across collections
+    seen: set[str] = set()
+    rows: list[dict] = []
+    for coll in ("holdings", "watchlist", "simulator_universe"):
+        for it in pf.get(coll, []) or []:
+            sym = it.get("symbol", "")
+            if not sym or sym in seen:
+                continue
+            seen.add(sym)
+            fund = it.get("fundamentals") or {}
+            chips = it.get("chips") or {}
+            rows.append({
+                "symbol": sym,
+                "name": it.get("name", ""),
+                "market": it.get("market", "TW"),
+                "pillar": it.get("pillar", ""),
+                "source": coll,
+                "price": it.get("price"),
+                "day_pct": it.get("day_change_pct"),
+                "pct_52w": it.get("pct_52w"),
+                "ret_7d": it.get("ret_7d"),
+                "ret_30d": it.get("ret_30d"),
+                "ret_90d": it.get("ret_90d"),
+                "ret_ytd": it.get("ret_ytd"),
+                "pe": fund.get("pe_ttm"),
+                "pe_fwd": fund.get("pe_forward"),
+                "eps": fund.get("eps_ttm"),
+                "eps_growth": fund.get("earnings_growth"),
+                "rev_growth": fund.get("rev_growth"),
+                "roe": fund.get("roe"),
+                "profit_margin": fund.get("profit_margin"),
+                "pb": fund.get("pb"),
+                "market_cap": fund.get("market_cap"),
+                "sector": fund.get("sector") or "",
+                "industry": fund.get("industry") or "",
+                "foreign_5d": chips.get("foreign_5d"),
+                "foreign_20d": chips.get("foreign_20d"),
+                "foreign_streak": chips.get("foreign_streak"),
+                "trust_5d": chips.get("trust_5d"),
+                "trust_streak": chips.get("trust_streak"),
+                "has_page": sym in _TICKER_ALIAS,
+            })
+
+    # Build unique list of sectors for the sector filter dropdown
+    sectors = sorted({r["sector"] for r in rows if r["sector"]})
+
+    # Embed as JSON so JS can filter/sort without a round-trip
+    import json as _json
+    data_json = _json.dumps(rows, ensure_ascii=False)
+
+    # Server-render a default table (shows everything at first)
+    def _num_attr(v):
+        # JS uses data-attrs as strings; empty = no value = excluded from filter
+        if v is None:
+            return ""
+        return f"{v}"
+
+    def _fmt_pct_cell(v, digits=2):
+        if v is None:
+            return '<span class="muted small">—</span>'
+        cls = "up" if v > 0 else ("dn" if v < 0 else "")
+        return f'<span class="mono tnum {cls}">{v:+.{digits}f}%</span>'
+
+    def _fmt_num(v, digits=1):
+        if v is None:
+            return '<span class="muted small">—</span>'
+        return f'<span class="mono tnum">{v:.{digits}f}</span>'
+
+    def _fmt_ratio_pct(v, digits=1):
+        if v is None:
+            return '<span class="muted small">—</span>'
+        return f'<span class="mono tnum">{v*100:+.{digits}f}%</span>'
+
+    def _link(r):
+        if r["has_page"]:
+            return f'<a class="sc-link mono" href="holdings/{r["symbol"]}.html">DEEP →</a>'
+        return '<span class="muted small">—</span>'
+
+    table_rows = []
+    for r in rows:
+        sym = r["symbol"]
+        src_chip = {"holdings": "H", "watchlist": "W", "simulator_universe": "U"}.get(r["source"], "")
+        src_cls = {"holdings": "sc-src-h", "watchlist": "sc-src-w", "simulator_universe": "sc-src-u"}.get(r["source"], "")
+        price_str = f"{r['price']:.2f}" if r["price"] is not None else "—"
+        table_rows.append(
+            f'<tr class="sc-row" '
+            f'data-sym="{html.escape(sym)}" '
+            f'data-name="{html.escape(r["name"])}" '
+            f'data-sector="{html.escape(r["sector"])}" '
+            f'data-source="{r["source"]}" '
+            f'data-day="{_num_attr(r["day_pct"])}" '
+            f'data-52w="{_num_attr(r["pct_52w"])}" '
+            f'data-ret7="{_num_attr(r["ret_7d"])}" '
+            f'data-ret30="{_num_attr(r["ret_30d"])}" '
+            f'data-ret90="{_num_attr(r["ret_90d"])}" '
+            f'data-retytd="{_num_attr(r["ret_ytd"])}" '
+            f'data-pe="{_num_attr(r["pe"])}" '
+            f'data-eps="{_num_attr(r["eps"])}" '
+            f'data-epsg="{_num_attr(r["eps_growth"])}" '
+            f'data-revg="{_num_attr(r["rev_growth"])}" '
+            f'data-roe="{_num_attr(r["roe"])}" '
+            f'data-pm="{_num_attr(r["profit_margin"])}" '
+            f'data-f5="{_num_attr(r["foreign_5d"])}" '
+            f'data-f20="{_num_attr(r["foreign_20d"])}" '
+            f'data-fstreak="{_num_attr(r["foreign_streak"])}" '
+            f'data-tstreak="{_num_attr(r["trust_streak"])}" '
+            f'>'
+            f'<td><span class="sc-src {src_cls} mono small" title="H=持有 W=觀察 U=Universe">{src_chip}</span></td>'
+            f'<td><div class="sc-sym mono">{html.escape(sym)}</div>'
+            f'<div class="sc-name muted small">{html.escape(r["name"])}</div></td>'
+            f'<td class="mono tnum small">{price_str}</td>'
+            f'<td>{_fmt_pct_cell(r["day_pct"])}</td>'
+            f'<td>{_fmt_num(r["pct_52w"], 0) if r["pct_52w"] is not None else _fmt_num(None)}</td>'
+            f'<td>{_fmt_pct_cell(r["ret_7d"])}</td>'
+            f'<td>{_fmt_pct_cell(r["ret_30d"])}</td>'
+            f'<td>{_fmt_pct_cell(r["ret_90d"])}</td>'
+            f'<td>{_fmt_pct_cell(r["ret_ytd"])}</td>'
+            f'<td>{_fmt_num(r["pe"])}</td>'
+            f'<td>{_fmt_ratio_pct(r["eps_growth"])}</td>'
+            f'<td>{_fmt_ratio_pct(r["roe"])}</td>'
+            f'<td>{_chips_cell(r["foreign_5d"])}</td>'
+            f'<td>{_streak_badge(r["foreign_streak"])}</td>'
+            f'<td class="muted small">{html.escape(r["sector"] or "—")}</td>'
+            f'<td>{_link(r)}</td>'
+            f'</tr>'
+        )
+
+    sector_options = "".join(
+        f'<option value="{html.escape(s)}">{html.escape(s)}</option>' for s in sectors
+    )
+
+    total = len(rows)
+
+    # Preset buttons — each has data-filters JSON that JS applies directly
+    presets = [
+        {
+            "key": "growth",
+            "label": "成長小將",
+            "desc": "EPS 成長 >15% · ROE >15% · P/E <30",
+            "filters": {"eps_growth_min": 15, "roe_min": 15, "pe_max": 30},
+        },
+        {
+            "key": "dip",
+            "label": "逢低布局",
+            "desc": "52 週位階 <40% · ROE >10% · EPS 成長 >0%",
+            "filters": {"pct_52w_max": 40, "roe_min": 10, "eps_growth_min": 0},
+        },
+        {
+            "key": "foreign",
+            "label": "外資進場",
+            "desc": "外資 5 日買超 · 連續買超 ≥2 日",
+            "filters": {"foreign_5d_min": 0, "foreign_streak_min": 2},
+        },
+        {
+            "key": "strong",
+            "label": "強者恆強",
+            "desc": "90 日漲 >10% · YTD >0 · 52週位階 >60%",
+            "filters": {"ret_90d_min": 10, "ret_ytd_min": 0, "pct_52w_min": 60},
+        },
+        {
+            "key": "quality",
+            "label": "品質好公司",
+            "desc": "ROE >15% · 淨利率 >15% · EPS >0",
+            "filters": {"roe_min": 15, "profit_margin_min": 15, "eps_min": 0},
+        },
+    ]
+    preset_html = "".join(
+        f'<button class="sc-preset" data-preset=\'{html.escape(_json.dumps(p["filters"]))}\'>'
+        f'<span class="sc-preset-label mono">{html.escape(p["label"])}</span>'
+        f'<span class="sc-preset-desc muted small">{html.escape(p["desc"])}</span>'
+        f'</button>'
+        for p in presets
+    )
+
+    return f'''
+<section class="sc-wrap" aria-label="選股 Screener">
+  <div class="sc-head">
+    <div>
+      <h2 class="sc-title">SCREENER · 選股過濾器</h2>
+      <div class="muted small">{total} 檔來自你的 Portfolio + Watchlist + Universe · 資料來自 yfinance + TWSE/TPEx 三大法人</div>
+    </div>
+    <div class="sc-actions">
+      <button id="sc-save" class="sc-btn mono" title="儲存當前過濾條件">SAVE</button>
+      <button id="sc-load" class="sc-btn mono" title="載入最後儲存的條件">LOAD</button>
+      <button id="sc-reset" class="sc-btn sc-btn-ghost mono">RESET</button>
+    </div>
+  </div>
+
+  <div class="sc-presets">
+    <div class="sc-presets-label mono small muted">快速套用 · QUICK PRESETS</div>
+    <div class="sc-preset-row">{preset_html}</div>
+  </div>
+
+  <div class="sc-filters">
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">搜尋</label>
+      <input type="text" id="sc-search" class="sc-input" placeholder="代號 / 名稱">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">52W 位階</label>
+      <div class="sc-range">
+        <input type="number" id="sc-52w-min" class="sc-input-num" placeholder="min" min="0" max="100">
+        <span class="muted small">–</span>
+        <input type="number" id="sc-52w-max" class="sc-input-num" placeholder="max" min="0" max="100">
+      </div>
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">YTD % 至少</label>
+      <input type="number" id="sc-ytd-min" class="sc-input-num" placeholder="-20">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">90日 % 至少</label>
+      <input type="number" id="sc-90d-min" class="sc-input-num" placeholder="0">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">P/E 最大</label>
+      <input type="number" id="sc-pe-max" class="sc-input-num" placeholder="30">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">EPS % 至少</label>
+      <input type="number" id="sc-epsg-min" class="sc-input-num" placeholder="15">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">ROE % 至少</label>
+      <input type="number" id="sc-roe-min" class="sc-input-num" placeholder="15">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">淨利率 % 至少</label>
+      <input type="number" id="sc-pm-min" class="sc-input-num" placeholder="10">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">外資 5 日</label>
+      <select id="sc-f5" class="sc-input">
+        <option value="">不限</option>
+        <option value="buy">買超</option>
+        <option value="sell">賣超</option>
+      </select>
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">外資連續 (≥)</label>
+      <input type="number" id="sc-fstreak-min" class="sc-input-num" placeholder="2">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">產業</label>
+      <select id="sc-sector" class="sc-input">
+        <option value="">所有產業</option>
+        {sector_options}
+      </select>
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">清單</label>
+      <select id="sc-source" class="sc-input">
+        <option value="">全部</option>
+        <option value="holdings">持股</option>
+        <option value="watchlist">觀察清單</option>
+        <option value="simulator_universe">Universe</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="sc-count-row">
+    <span class="sc-count mono" id="sc-count">{total} 檔</span>
+    <span class="sc-sort-lbl mono small muted">點擊欄位標題可排序</span>
+  </div>
+
+  <div class="sc-table-wrap">
+    <table class="sc-table">
+      <thead>
+        <tr>
+          <th class="mono small" title="H=持有 W=觀察 U=Universe">來源</th>
+          <th class="mono small" data-sort="name">STOCK</th>
+          <th class="mono small" data-sort="price">價格</th>
+          <th class="mono small" data-sort="day">今日</th>
+          <th class="mono small" data-sort="52w">52W</th>
+          <th class="mono small" data-sort="ret7">7D</th>
+          <th class="mono small" data-sort="ret30">30D</th>
+          <th class="mono small" data-sort="ret90">90D</th>
+          <th class="mono small" data-sort="retytd">YTD</th>
+          <th class="mono small" data-sort="pe">P/E</th>
+          <th class="mono small" data-sort="epsg">EPS%</th>
+          <th class="mono small" data-sort="roe">ROE</th>
+          <th class="mono small" data-sort="f5">外資5日</th>
+          <th class="mono small" data-sort="fstreak">連續</th>
+          <th class="mono small" data-sort="sector">產業</th>
+          <th class="mono small"></th>
+        </tr>
+      </thead>
+      <tbody id="sc-tbody">{"".join(table_rows)}</tbody>
+    </table>
+    <div id="sc-empty" class="sc-empty muted" style="display:none">
+      沒有符合條件的個股。試試放寬條件或 RESET。
+    </div>
+  </div>
+
+  <div class="sc-foot muted small">
+    <strong>怎麼用這個工具？</strong>先用 Preset 測試一組條件，看哪些股票被篩出來。點 DEEP → 進深度頁看 AI 評分 / 基本面 / 籌碼面。
+    篩選器是「研究候選清單」不是「買進訊號」；基本面數字來自 yfinance，TW 個股有時會延遲或缺漏。
+  </div>
+</section>
+
+<script>
+(function() {{
+  const tbody = document.getElementById('sc-tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr.sc-row'));
+  const countEl = document.getElementById('sc-count');
+  const emptyEl = document.getElementById('sc-empty');
+  const controls = {{
+    search: document.getElementById('sc-search'),
+    p52_min: document.getElementById('sc-52w-min'),
+    p52_max: document.getElementById('sc-52w-max'),
+    ytd_min: document.getElementById('sc-ytd-min'),
+    r90_min: document.getElementById('sc-90d-min'),
+    pe_max:  document.getElementById('sc-pe-max'),
+    epsg_min: document.getElementById('sc-epsg-min'),
+    roe_min: document.getElementById('sc-roe-min'),
+    pm_min:  document.getElementById('sc-pm-min'),
+    f5:      document.getElementById('sc-f5'),
+    fstreak_min: document.getElementById('sc-fstreak-min'),
+    sector:  document.getElementById('sc-sector'),
+    source:  document.getElementById('sc-source'),
+  }};
+  const STORAGE_KEY = 'screener_filters_v1';
+
+  function num(attr) {{ return attr === '' ? null : Number(attr); }}
+
+  function filterRow(tr) {{
+    const d = tr.dataset;
+    const q = controls.search.value.trim().toLowerCase();
+    if (q) {{
+      const hay = (d.sym + ' ' + d.name).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }}
+    const p52 = num(d['52w']);
+    if (controls.p52_min.value !== '' && (p52 === null || p52 < Number(controls.p52_min.value))) return false;
+    if (controls.p52_max.value !== '' && (p52 === null || p52 > Number(controls.p52_max.value))) return false;
+
+    const ytd = num(d.retytd);
+    if (controls.ytd_min.value !== '' && (ytd === null || ytd < Number(controls.ytd_min.value))) return false;
+
+    const r90 = num(d.ret90);
+    if (controls.r90_min.value !== '' && (r90 === null || r90 < Number(controls.r90_min.value))) return false;
+
+    const pe = num(d.pe);
+    if (controls.pe_max.value !== '' && (pe === null || pe > Number(controls.pe_max.value))) return false;
+
+    // EPS growth is stored as ratio (0.15 = 15%) — user enters 15
+    const epsg = num(d.epsg);
+    if (controls.epsg_min.value !== '' && (epsg === null || epsg * 100 < Number(controls.epsg_min.value))) return false;
+
+    const roe = num(d.roe);
+    if (controls.roe_min.value !== '' && (roe === null || roe * 100 < Number(controls.roe_min.value))) return false;
+
+    const pm = num(d.pm);
+    if (controls.pm_min.value !== '' && (pm === null || pm * 100 < Number(controls.pm_min.value))) return false;
+
+    const f5 = num(d.f5);
+    if (controls.f5.value === 'buy'  && !(f5 !== null && f5 > 0)) return false;
+    if (controls.f5.value === 'sell' && !(f5 !== null && f5 < 0)) return false;
+
+    const fstreak = num(d.fstreak);
+    if (controls.fstreak_min.value !== '' && (fstreak === null || fstreak < Number(controls.fstreak_min.value))) return false;
+
+    if (controls.sector.value && d.sector !== controls.sector.value) return false;
+    if (controls.source.value && d.source !== controls.source.value) return false;
+
+    return true;
+  }}
+
+  function applyFilters() {{
+    let visible = 0;
+    for (const tr of rows) {{
+      if (filterRow(tr)) {{ tr.style.display = ''; visible++; }}
+      else tr.style.display = 'none';
+    }}
+    countEl.textContent = visible + ' / ' + rows.length + ' 檔';
+    emptyEl.style.display = visible === 0 ? '' : 'none';
+  }}
+
+  Object.values(controls).forEach(el => {{
+    el.addEventListener('input', applyFilters);
+    el.addEventListener('change', applyFilters);
+  }});
+
+  // Presets — apply JSON filters to inputs
+  document.querySelectorAll('.sc-preset').forEach(btn => {{
+    btn.addEventListener('click', () => {{
+      const f = JSON.parse(btn.dataset.preset);
+      // Clear first
+      for (const k in controls) {{
+        if (controls[k].tagName === 'SELECT') controls[k].value = '';
+        else controls[k].value = '';
+      }}
+      if (f.pct_52w_min  != null) controls.p52_min.value = f.pct_52w_min;
+      if (f.pct_52w_max  != null) controls.p52_max.value = f.pct_52w_max;
+      if (f.ret_ytd_min  != null) controls.ytd_min.value = f.ret_ytd_min;
+      if (f.ret_90d_min  != null) controls.r90_min.value = f.ret_90d_min;
+      if (f.pe_max       != null) controls.pe_max.value = f.pe_max;
+      if (f.eps_growth_min != null) controls.epsg_min.value = f.eps_growth_min;
+      if (f.roe_min      != null) controls.roe_min.value = f.roe_min;
+      if (f.profit_margin_min != null) controls.pm_min.value = f.profit_margin_min;
+      if (f.foreign_5d_min != null) controls.f5.value = f.foreign_5d_min >= 0 ? 'buy' : 'sell';
+      if (f.foreign_streak_min != null) controls.fstreak_min.value = f.foreign_streak_min;
+      // Visual feedback
+      document.querySelectorAll('.sc-preset').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }});
+  }});
+
+  // Save / Load / Reset
+  document.getElementById('sc-save').addEventListener('click', () => {{
+    const state = {{}};
+    for (const k in controls) state[k] = controls[k].value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    alert('已儲存過濾條件。');
+  }});
+  document.getElementById('sc-load').addEventListener('click', () => {{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {{ alert('沒有已儲存的過濾條件。'); return; }}
+    try {{
+      const state = JSON.parse(raw);
+      for (const k in state) if (controls[k]) controls[k].value = state[k];
+      applyFilters();
+    }} catch (e) {{ alert('儲存的條件無法讀取。'); }}
+  }});
+  document.getElementById('sc-reset').addEventListener('click', () => {{
+    for (const k in controls) controls[k].value = '';
+    document.querySelectorAll('.sc-preset.active').forEach(b => b.classList.remove('active'));
+    applyFilters();
+  }});
+
+  // Sortable columns — click TH to toggle asc/desc
+  const ths = document.querySelectorAll('.sc-table thead th[data-sort]');
+  const sortState = {{ col: null, dir: 1 }};
+  function numericKey(tr, key) {{
+    const v = tr.dataset[key];
+    if (v === undefined || v === '') return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }}
+  ths.forEach(th => {{
+    th.addEventListener('click', () => {{
+      const k = th.dataset.sort;
+      if (sortState.col === k) sortState.dir *= -1;
+      else {{ sortState.col = k; sortState.dir = 1; }}
+      ths.forEach(x => x.classList.remove('sc-sort-asc', 'sc-sort-desc'));
+      th.classList.add(sortState.dir > 0 ? 'sc-sort-asc' : 'sc-sort-desc');
+      const sorted = [...rows].sort((a, b) => {{
+        if (k === 'name' || k === 'sector') {{
+          const av = (a.dataset[k] || a.dataset.name || '').toLowerCase();
+          const bv = (b.dataset[k] || b.dataset.name || '').toLowerCase();
+          return av.localeCompare(bv) * sortState.dir;
+        }}
+        const av = numericKey(a, k);
+        const bv = numericKey(b, k);
+        // null goes to bottom regardless of direction
+        if (av === null && bv === null) return 0;
+        if (av === null) return 1;
+        if (bv === null) return -1;
+        return (av - bv) * sortState.dir;
+      }});
+      sorted.forEach(tr => tbody.appendChild(tr));
+    }});
+  }});
+}})();
+</script>
+'''
+
+
 # ── Chat tab (stub) ─────────────────────────────────────────────────────
 
 def render_chat_tab(pf: dict | None, analysis: dict | None) -> str:
-    """Multi-model chat layout stub — no live backend yet, but functional UI
-    with prefilled thread list + suggested questions."""
-    threads = [
-        {"title": "組合今天有什麼需要注意的？", "time": "剛剛", "preview": "AI 正在分析 TSMC 法說會前的倉位…"},
-        {"title": "0050 vs 006208 哪個比較適合存股？", "time": "昨天", "preview": "費用率 / 流動性 / 追蹤誤差比較…"},
-        {"title": "我能在 5000 元內切進光通訊嗎？", "time": "3 天前", "preview": "雪球法 · 第一筆 3081 試水…"},
-    ]
-    thread_html = "".join(
-        f'''<a class="chat-thread{"" if i else " active"}" href="#">
-          <div class="chat-thread-title">{html.escape(t["title"])}</div>
-          <div class="chat-thread-meta muted small mono">{html.escape(t["time"])}</div>
-          <div class="chat-thread-preview muted small">{html.escape(t["preview"])}</div>
-        </a>''' for i, t in enumerate(threads)
-    )
-    suggestions = [
-        "我的組合目前最大風險是什麼？",
-        "下一筆 NT$5,000 怎麼配？",
-        "0050 比重會不會太高？",
-        "台積電現在可以加碼嗎？",
-        "光通訊這個題材還能追嗎？",
-    ]
-    suggestion_html = "".join(
-        f'<button class="chat-suggest-chip mono">{html.escape(s)}</button>'
-        for s in suggestions
-    )
-    # Sample conversation
-    sample_narrative = ""
-    if analysis:
-        mp = analysis.get("market_pulse", {})
-        sample_narrative = mp.get("summary", "") or (analysis.get("morning_brief") or {}).get("one_liner", "")
-    sample_narrative = sample_narrative or "今天台股震盪，TSMC 法說會前的 AI 產業鏈做反覆整理。"
+    """Honest chat tab — this dashboard has NO live LLM backend.
 
+    Shows:
+      1. Big CTA to ask Claude Code (the tool Ian built this with) directly
+      2. Daily FAQ — pre-generated Q&A from analysis.faq (if provided by analyze.py)
+         fallback: derive questions from holdings / today's opportunities
+      3. Context bundle copy-buttons — one-click copy a prompt with
+         portfolio + today's analysis JSON for pasting into external LLMs
+    """
+    import json as _json
+    init_ticker_alias(pf)
+    pf = pf or {}
+    analysis = analysis or {}
+
+    # ---- FAQ items ----
+    # Preferred: AI-generated faq array in analysis.json with {q, a} dicts.
+    faq: list[dict] = list(analysis.get("faq") or [])
+
+    # Fallback: synthesize a handful from available data if empty.
+    if not faq:
+        holdings = pf.get("holdings") or []
+        opps = analysis.get("opportunities") or []
+        mb = analysis.get("morning_brief") or {}
+
+        if mb.get("one_liner") or mb.get("summary"):
+            faq.append({
+                "q": "今天市場的一句話摘要？",
+                "a": mb.get("one_liner") or mb.get("summary") or "",
+                "tag": "市場",
+            })
+        # Biggest holding by value
+        top = sorted(holdings, key=lambda h: h.get("value", 0), reverse=True)[:1]
+        for h in top:
+            faq.append({
+                "q": f"{h['symbol']} {h.get('name','')} 今天表現如何？",
+                "a": (
+                    f"今日 {h.get('day_change_pct', 0):+.2f}%，目前市值 "
+                    f"${h.get('value', 0):,.0f}，累計損益 "
+                    f"{h.get('pnl_pct', 0):+.2f}%。"
+                    f" 52 週位階 {h.get('pct_52w', 0):.0f}%。"
+                ),
+                "tag": "個股",
+            })
+        # Top opportunity
+        for o in opps[:1]:
+            faq.append({
+                "q": f"{_strip_leading_emoji(o.get('theme','題材'))} 這個題材怎麼看？",
+                "a": (
+                    o.get("headline") or o.get("thesis")
+                    or o.get("why") or ""
+                )[:280],
+                "tag": "題材",
+            })
+        # Risk
+        risks = analysis.get("top_risks") or []
+        if risks:
+            r = risks[0]
+            if isinstance(r, dict):
+                faq.append({
+                    "q": "今天要注意什麼風險？",
+                    "a": r.get("description") or r.get("summary") or r.get("title") or "",
+                    "tag": "風險",
+                })
+            else:
+                faq.append({"q": "今天要注意什麼風險？", "a": str(r), "tag": "風險"})
+
+    # Cap to 8 for readability
+    faq = faq[:8]
+
+    # ---- Context bundle (copyable prompt) ----
+    # Trim to essentials for paste-ability
+    summary = pf.get("summary") or {}
+    ctx = {
+        "date": pf.get("as_of", ""),
+        "portfolio_summary": {
+            "total_value_twd": summary.get("total_value_twd"),
+            "day_pnl_pct": summary.get("day_pnl_pct"),
+            "total_pnl_pct": summary.get("total_pnl_pct"),
+            "alpha_vs_benchmark_pct": summary.get("alpha_vs_benchmark_pct"),
+        },
+        "holdings": [
+            {
+                "symbol": h.get("symbol"),
+                "name": h.get("name"),
+                "shares": h.get("shares"),
+                "cost_basis": h.get("cost_basis"),
+                "price": h.get("price"),
+                "pnl_pct": h.get("pnl_pct"),
+                "day_change_pct": h.get("day_change_pct"),
+                "pct_52w": h.get("pct_52w"),
+            }
+            for h in (pf.get("holdings") or [])
+        ],
+        "today_one_liner": (analysis.get("morning_brief") or {}).get("one_liner", ""),
+        "opportunities_top3": [
+            {
+                "theme": _strip_leading_emoji(o.get("theme", "")),
+                "stage": o.get("stage"),
+                "confidence_pct": o.get("confidence_pct"),
+                "crowding_pct": o.get("crowding_pct"),
+                "lead_stocks": [ls.get("symbol") for ls in (o.get("lead_stocks") or [])[:5]],
+            }
+            for o in (analysis.get("opportunities") or [])[:3]
+        ],
+    }
+    ctx_json = _json.dumps(ctx, ensure_ascii=False, indent=2)
+
+    prompt_templates = [
+        {
+            "key": "risk",
+            "title": "問：組合風險 & 下一筆怎麼配",
+            "body": (
+                "我是 Taiwan 的小白投資者，偏好雪球式滾存（先累積小部位→有信心再放大）。"
+                "以下是我今天的組合快照與 AI 分析。請幫我回答：\n"
+                "1. 我的組合目前最大風險是什麼？\n"
+                "2. 下一筆 NT$5,000–10,000 建議怎麼配？\n"
+                "3. 有哪一檔已偏離我的「雪球」策略（例如漲太多／位階太高）？\n\n"
+                "請直接點名 ticker，不要給籠統建議。"
+            ),
+        },
+        {
+            "key": "theme",
+            "title": "問：某個題材值不值得跟",
+            "body": (
+                "我看到今天 AI 分析有列出這些題材機會。我想深入了解：\n"
+                "【填你有興趣的題材名稱】\n"
+                "請幫我判斷：\n"
+                "1. 這個題材目前在什麼階段（夢階段 / 營收驗證 / 本夢比）？\n"
+                "2. 領先股 vs. 落後股分別是誰？為什麼？\n"
+                "3. 如果我要跟，哪一檔位階最合理？哪一檔最貴？\n"
+                "4. 最大風險是什麼（退潮時會跌多少）？"
+            ),
+        },
+        {
+            "key": "learn",
+            "title": "問：把一個財報術語講給我懂",
+            "body": (
+                "我是小白，請用「具體例子＋我熟悉的公司（TSMC / 0050 等）」解釋下面這個概念，"
+                "不要只給定義。\n\n"
+                "【填你想懂的詞：P/E、ROE、EPS 成長、本益比成長比 PEG、毛利率、營業利益率 …】\n\n"
+                "最後請告訴我：這個指標是「越高越好」還是「要看情境」？什麼時候會誤判？"
+            ),
+        },
+    ]
+
+    # Encode templates + context into data-* for clipboard JS
+    prompt_cards = "".join(
+        f'''<div class="ch-card">
+          <div class="ch-card-head">
+            <span class="ch-card-title mono">{html.escape(t["title"])}</span>
+            <button class="ch-copy-btn mono small" data-prompt-key="{t["key"]}">COPY →</button>
+          </div>
+          <textarea class="ch-card-body mono" id="ch-prompt-{t["key"]}" readonly>{html.escape(t["body"])}
+
+---
+以下是今日組合 + 分析資料（JSON）：
+{html.escape(ctx_json)}</textarea>
+        </div>''' for t in prompt_templates
+    )
+
+    # FAQ cards
+    if faq:
+        faq_cards = "".join(
+            f'''<details class="ch-faq">
+              <summary>
+                <span class="ch-faq-tag mono small">{html.escape(item.get("tag","Q"))}</span>
+                <span class="ch-faq-q">{html.escape(item.get("q",""))}</span>
+              </summary>
+              <div class="ch-faq-a">{_link_tickers(item.get("a",""))}</div>
+            </details>'''
+            for item in faq
+        )
+    else:
+        faq_cards = '<div class="muted small">今日 AI 尚未生成 FAQ。排程執行後會出現 5–8 題常見問題。</div>'
+
+    # "Ask Claude Code" CTA
     return f'''
-<div class="chat-shell">
-  <aside class="chat-sidebar">
-    <div class="chat-sidebar-head">
-      <span class="mono">對話歷史</span>
-      <button class="chat-new-btn mono">+ 新對話</button>
-    </div>
-    <div class="chat-thread-list">{thread_html}</div>
-  </aside>
-  <main class="chat-main">
-    <div class="chat-main-head">
+<div class="ch-shell">
+
+  <section class="ch-cta-box">
+    <div class="ch-cta-head">
+      <div class="ch-cta-icon">{_icon("ai", 28)}</div>
       <div>
-        <h2 class="chat-title">組合今天有什麼需要注意的？</h2>
-        <span class="muted small mono">CLAUDE 4.5 · GPT-5 · INTERNAL QUANT v3.2 · 多模型協作</span>
-      </div>
-      <div class="chat-model-chips">
-        <span class="chat-model-chip mono">CLAUDE 4.5</span>
-        <span class="chat-model-chip mono">GPT-5</span>
-        <span class="chat-model-chip mono">QUANT v3.2</span>
-      </div>
-    </div>
-    <div class="chat-feed">
-      <div class="chat-msg chat-msg-user">
-        <div class="chat-msg-body">組合今天有什麼需要注意的？</div>
-      </div>
-      <div class="chat-msg chat-msg-ai">
-        <div class="chat-msg-meta mono small"><span class="live-dot accent"></span> QUANT v3.2 · 剛剛</div>
-        <div class="chat-msg-body">{_link_tickers(sample_narrative)}</div>
-        <div class="chat-sources">
-          <span class="mono small muted">來源 · SOURCES</span>
-          <a class="chat-source-chip mono" href="#">analysis.json</a>
-          <a class="chat-source-chip mono" href="#">portfolio.json</a>
-          <a class="chat-source-chip mono" href="#">今日 Brief</a>
-        </div>
-      </div>
-      <div class="chat-empty-note muted small">
-        * 本頁為 UI 原型。多模型對話整合將透過 serverless endpoint 啟動；
-        目前你可以用今日 Brief 的 "Copy Prompt" 按鈕貼到 Claude.ai / ChatGPT。
+        <h2 class="ch-cta-title">要「對話」請回 Claude Code</h2>
+        <p class="ch-cta-sub muted">
+          這個 dashboard 是一份「每日快照」，不是 chatbot。
+          真正的分析對話發生在 <strong>Claude Code</strong>（你 build 這個 repo 的地方）。
+          那裡能讀你的全部資料、跑程式、改你的 portfolio.yaml —— 比這裡的靜態 UI 強很多。
+        </p>
       </div>
     </div>
-    <div class="chat-suggest-bar">{suggestion_html}</div>
-    <form class="chat-input-bar" onsubmit="event.preventDefault();">
-      <input type="text" class="chat-input mono" placeholder="問問組合 / 題材 / 風險 … (enter 送出)" disabled>
-      <button class="chat-send mono" disabled>送出</button>
-    </form>
-  </main>
+    <div class="ch-cta-buttons">
+      <a class="ch-cta-btn ch-cta-btn-primary mono" href="https://claude.ai/code" target="_blank" rel="noopener">
+        打開 Claude Code →
+      </a>
+      <a class="ch-cta-btn mono" href="https://claude.ai/new" target="_blank" rel="noopener">
+        或用 Claude.ai（貼下面 prompt）
+      </a>
+      <a class="ch-cta-btn mono" href="https://chatgpt.com" target="_blank" rel="noopener">
+        或 ChatGPT
+      </a>
+    </div>
+  </section>
+
+  <section class="ch-section">
+    <div class="ch-section-head">
+      <h3 class="ch-section-title mono">TODAY'S FAQ · 今日重點 Q&amp;A</h3>
+      <span class="muted small mono">由今日 AI 分析自動抽取</span>
+    </div>
+    <div class="ch-faq-list">{faq_cards}</div>
+  </section>
+
+  <section class="ch-section">
+    <div class="ch-section-head">
+      <h3 class="ch-section-title mono">CONTEXT PROMPTS · 一鍵複製去問 AI</h3>
+      <span class="muted small mono">自動打包你的組合 + 今日分析</span>
+    </div>
+    <p class="muted small ch-section-sub">
+      複製 → 貼到 Claude / ChatGPT → 你會得到「有你資料」的具體答案，不是空泛回答。
+      【方括號】裡的地方改成你的問題再送出。
+    </p>
+    <div class="ch-card-grid">{prompt_cards}</div>
+  </section>
+
+  <section class="ch-section ch-why">
+    <div class="ch-section-head">
+      <h3 class="ch-section-title mono">WHY NO LIVE CHAT · 為什麼這裡不做即時對話</h3>
+    </div>
+    <ul class="ch-why-list">
+      <li><strong>成本</strong>：LLM API 按 token 計費，每次問答要完整吃一次 portfolio 的 context，穩定訪客下每日 $2–10 美金，不值得。</li>
+      <li><strong>時效</strong>：dashboard 是靜態站（GitHub Pages 每日排程重 build），沒有 backend 可以即時呼叫 API。</li>
+      <li><strong>品質</strong>：Claude Code 能執行程式、讀你的原始 JSON、修改你的 portfolio.yaml，那才是你最需要的互動 —— 做到這邊就夠了。</li>
+    </ul>
+  </section>
+
 </div>
+
+<script>
+(function() {{
+  document.querySelectorAll('.ch-copy-btn').forEach(btn => {{
+    btn.addEventListener('click', () => {{
+      const key = btn.dataset.promptKey;
+      const ta = document.getElementById('ch-prompt-' + key);
+      if (!ta) return;
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      try {{
+        navigator.clipboard.writeText(ta.value).then(() => {{
+          const orig = btn.textContent;
+          btn.textContent = 'COPIED ✓';
+          btn.classList.add('ch-copy-success');
+          setTimeout(() => {{ btn.textContent = orig; btn.classList.remove('ch-copy-success'); }}, 1800);
+        }});
+      }} catch (e) {{
+        document.execCommand('copy');
+        btn.textContent = 'COPIED ✓';
+      }}
+    }});
+  }});
+}})();
+</script>
 '''
 
 
@@ -3662,6 +4407,7 @@ def render_index(briefs: list[dict], pf: dict | None,
     portfolio_tab = render_portfolio_tab(pf)
     macro_tab = render_macro_tab(pf, latest_analysis, history)
     news_tab = render_news_tab(briefs, pf)
+    screen_tab = render_screen_tab(pf)
     chat_tab = render_chat_tab(pf, latest_analysis)
 
     # Thin portfolio summary strip values
@@ -3684,6 +4430,9 @@ def render_index(briefs: list[dict], pf: dict | None,
     </button>
     <button class="sn-btn" data-tab="radar" title="Opportunity Radar">
       {_icon("radar")}<span class="sn-label">RADAR</span>
+    </button>
+    <button class="sn-btn" data-tab="screen" title="Screener · 選股">
+      {_icon("search")}<span class="sn-label">SCREEN</span>
     </button>
     <button class="sn-btn" data-tab="sim" title="Simulator">
       {_icon("sim")}<span class="sn-label">SIM</span>
@@ -3747,6 +4496,9 @@ def render_index(briefs: list[dict], pf: dict | None,
       <div class="tab-panel" data-panel="radar">
         {radar_tab}
       </div>
+      <div class="tab-panel" data-panel="screen">
+        {screen_tab}
+      </div>
       <div class="tab-panel" data-panel="sim">
         {sim_html}
       </div>
@@ -3790,7 +4542,7 @@ def render_index(briefs: list[dict], pf: dict | None,
 (function() {{
   const clock = document.getElementById('sb-clock');
   const viewEl = document.getElementById('sb-view');
-  const viewMap = {{ai: 'AI', radar: 'RADAR', sim: 'SIM', portfolio: 'PORT', macro: 'MACRO', briefs: 'NEWS', chat: 'CHAT', positions: 'HOLD'}};
+  const viewMap = {{ai: 'AI', radar: 'RADAR', screen: 'SCREEN', sim: 'SIM', portfolio: 'PORT', macro: 'MACRO', briefs: 'NEWS', chat: 'CHAT', positions: 'HOLD'}};
   function tick() {{
     const d = new Date();
     const hh = String(d.getHours()).padStart(2, '0');
@@ -4390,15 +5142,162 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
           </div>
         </section>
         '''
-    stub_hold = '''
-    <section class="wrap dd-stub" data-dd-panel="hold">
-      <div class="dd-stub-box">
-        <div class="dd-stub-icon">''' + _icon("case", 22) + '''</div>
-        <div class="dd-stub-title">Holders · 股東結構（規劃中）</div>
-        <div class="muted small">大股東持股比例 / 法人買賣超 / 融資券餘額 — 需串券商 API。</div>
-      </div>
-    </section>
-    '''
+    # --- HOLDERS panel: 三大法人籌碼面 ---
+    chips = data.get("chips") or {}
+    if chips:
+        f5 = chips.get("foreign_5d", 0) or 0
+        f20 = chips.get("foreign_20d", 0) or 0
+        fstr = chips.get("foreign_streak", 0) or 0
+        t5 = chips.get("trust_5d", 0) or 0
+        t20 = chips.get("trust_20d", 0) or 0
+        tstr = chips.get("trust_streak", 0) or 0
+        d5 = chips.get("dealer_5d", 0) or 0
+        d20 = chips.get("dealer_20d", 0) or 0
+        tot5 = chips.get("total_5d", 0) or 0
+        tot20 = chips.get("total_20d", 0) or 0
+        days_inc = chips.get("days_included", 0)
+        daily = chips.get("daily", []) or []
+
+        def _card(title: str, val_5d: int, val_20d: int, streak: int, spark_key: str) -> str:
+            tone_5 = "up" if val_5d > 0 else ("dn" if val_5d < 0 else "muted")
+            tone_20 = "up" if val_20d > 0 else ("dn" if val_20d < 0 else "muted")
+            spark = _chips_mini_spark(daily, key=spark_key, width=120, height=30)
+            return f'''
+            <div class="dd-chip-card">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">{html.escape(title)}</span>
+                {_streak_badge(streak)}
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md {tone_5}">{_fmt_lots(val_5d)}<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md {tone_20}">{_fmt_lots(val_20d)}<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                {spark}
+                <div class="muted small mono">近 5 日每日買賣超</div>
+              </div>
+            </div>'''
+
+        # Total card: combined three-investor
+        tot_tone5 = "up" if tot5 > 0 else ("dn" if tot5 < 0 else "muted")
+        tot_tone20 = "up" if tot20 > 0 else ("dn" if tot20 < 0 else "muted")
+
+        # Daily table (last 5 days)
+        daily_rows = []
+        for d in daily[:5]:
+            daily_rows.append(f'''
+            <tr>
+              <td class="mono small">{html.escape(d.get("d", ""))}</td>
+              <td>{_chips_cell(d.get("foreign"))}</td>
+              <td>{_chips_cell(d.get("trust"))}</td>
+              <td>{_chips_cell(d.get("dealer"))}</td>
+              <td>{_chips_cell(d.get("total"))}</td>
+            </tr>''')
+        daily_table = ""
+        if daily_rows:
+            daily_table = f'''
+            <div class="dd-chip-section">
+              <div class="dd-chip-section-head mono small muted">每日買賣超明細 · 最近 5 日</div>
+              <div class="dd-chip-daily-wrap">
+                <table class="dd-chip-daily">
+                  <thead>
+                    <tr>
+                      <th class="mono small">日期</th>
+                      <th class="mono small">外資</th>
+                      <th class="mono small">投信</th>
+                      <th class="mono small">自營商</th>
+                      <th class="mono small">三大法人</th>
+                    </tr>
+                  </thead>
+                  <tbody>{"".join(daily_rows)}</tbody>
+                </table>
+              </div>
+            </div>'''
+
+        # Headline summary — pick dominant signal
+        summary_bits = []
+        if fstr >= 3:
+            summary_bits.append(f"外資連{fstr}日買超")
+        elif fstr <= -3:
+            summary_bits.append(f"外資連{abs(fstr)}日賣超")
+        if tstr >= 3:
+            summary_bits.append(f"投信連{tstr}日買超")
+        elif tstr <= -3:
+            summary_bits.append(f"投信連{abs(tstr)}日賣超")
+        if f20 > 0 and t20 > 0:
+            summary_bits.append("20 日外資＋投信同步買超")
+        elif f20 < 0 and t20 < 0:
+            summary_bits.append("20 日外資＋投信同步賣超")
+
+        summary_html = ""
+        if summary_bits:
+            summary_html = (
+                f'<div class="dd-chip-summary mono small">'
+                f'{" · ".join(html.escape(s) for s in summary_bits)}'
+                f'</div>'
+            )
+
+        stub_hold = f'''
+        <section class="wrap dd-chip-panel" data-dd-panel="hold">
+          <div class="dd-chip-head">
+            <div>
+              <div class="dd-chip-title mono">三大法人買賣超 · HOLDERS</div>
+              <div class="muted small mono">過去 {days_inc} 個交易日 · 單位：張 · 正值（<span class="up">紅</span>）買超、負值（<span class="dn">綠</span>）賣超</div>
+            </div>
+            {summary_html}
+          </div>
+
+          <div class="dd-chip-grid">
+            {_card("外資", f5, f20, fstr, "foreign")}
+            {_card("投信", t5, t20, tstr, "trust")}
+            {_card("自營商", d5, d20, 0, "dealer")}
+            <div class="dd-chip-card dd-chip-card-total">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">三大法人合計</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md {tot_tone5}">{_fmt_lots(tot5)}<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md {tot_tone20}">{_fmt_lots(tot20)}<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                {_chips_mini_spark(daily, key="total", width=120, height=30)}
+                <div class="muted small mono">近 5 日三大法人合計</div>
+              </div>
+            </div>
+          </div>
+
+          {daily_table}
+
+          <div class="dd-chip-disclaimer muted small">
+            <strong>怎麼看：</strong>外資＋投信同步買超（且連續多日），通常代表機構認同，但短線可能已漲多；
+            反之外資連續賣超可能是風險訊號，但也可能只是匯率避險或 ETF 調整。籌碼面只是拼圖的一片，
+            搭配基本面（AI 評分／FINANCIALS 分頁）與位階（52 週區間）一起看。
+            資料來自 TWSE + TPEx 三大法人統計，滯後 1 個交易日。
+          </div>
+        </section>
+        '''
+    else:
+        stub_hold = '''
+        <section class="wrap dd-stub" data-dd-panel="hold">
+          <div class="dd-stub-box">
+            <div class="dd-stub-icon">''' + _icon("case", 22) + '''</div>
+            <div class="dd-stub-title">Holders · 籌碼資料暫缺</div>
+            <div class="muted small">尚未抓到這檔的三大法人買賣超資料（可能是 ETF 成分以外 / 新上市 / 資料延遲）。</div>
+          </div>
+        </section>
+        '''
 
     price_str = f"{price:.2f}" if price is not None else "—"
     status_str = {"holding": "持有中", "watchlist": "觀察中", "universe": "可查詢"}.get(page_kind, "—")
@@ -6958,6 +7857,139 @@ footer a { color: var(--tx-3); }
 }
 .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* ── NEW Chat tab (rebuild v8) · honest FAQ + Claude Code CTA ── */
+.ch-shell {
+  max-width: 1100px; margin: 0 auto;
+  padding: 24px 24px 60px; display: flex; flex-direction: column; gap: 24px;
+}
+
+.ch-cta-box {
+  padding: 24px 28px; background: linear-gradient(120deg, var(--bg-1), var(--bg-2));
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  position: relative; overflow: hidden;
+}
+.ch-cta-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--up), var(--amber));
+  opacity: 0.8;
+}
+.ch-cta-head { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 18px; }
+.ch-cta-icon {
+  color: var(--accent); flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(108,180,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(108,180,255,0.3);
+}
+.ch-cta-title { margin: 0 0 6px; font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.ch-cta-sub { font-size: 13.5px; line-height: 1.6; margin: 0; }
+.ch-cta-sub strong { color: var(--tx-1); font-weight: 700; }
+
+.ch-cta-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+.ch-cta-btn {
+  padding: 11px 20px; background: var(--bg-2); color: var(--tx-1);
+  border: 1px solid var(--line-2); border-radius: var(--r-sm);
+  text-decoration: none; font-size: 13px; font-weight: 600;
+  letter-spacing: 0.3px; transition: all 0.15s;
+}
+.ch-cta-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.ch-cta-btn-primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.ch-cta-btn-primary:hover {
+  background: var(--accent-2, var(--accent)); color: #fff;
+  opacity: 0.92; transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(108,180,255,0.3);
+}
+
+.ch-section { display: flex; flex-direction: column; gap: 12px; }
+.ch-section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-bottom: 6px; border-bottom: 1px solid var(--line);
+  gap: 12px; flex-wrap: wrap;
+}
+.ch-section-title {
+  font-size: 12.5px; letter-spacing: 1px; font-weight: 700; margin: 0;
+  color: var(--tx-1); text-transform: uppercase;
+}
+.ch-section-sub { margin: -4px 0 4px; line-height: 1.55; }
+
+.ch-faq-list { display: flex; flex-direction: column; gap: 6px; }
+.ch-faq {
+  padding: 12px 16px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  transition: border-color 0.15s;
+}
+.ch-faq:hover { border-color: var(--line-2); }
+.ch-faq[open] { border-color: var(--accent); background: rgba(108,180,255,0.04); }
+.ch-faq summary {
+  cursor: pointer; list-style: none; display: flex;
+  align-items: center; gap: 10px;
+}
+.ch-faq summary::-webkit-details-marker { display: none; }
+.ch-faq summary::after {
+  content: '＋'; margin-left: auto;
+  color: var(--tx-3); font-weight: 700; font-size: 16px;
+  transition: transform 0.15s;
+}
+.ch-faq[open] summary::after { content: '−'; color: var(--accent); }
+.ch-faq-tag {
+  padding: 2px 8px; background: var(--bg); color: var(--tx-3);
+  border: 1px solid var(--line-2); border-radius: 3px;
+  font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0;
+}
+.ch-faq-q { font-size: 14px; color: var(--tx-1); font-weight: 600; flex: 1; }
+.ch-faq-a {
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 13.5px; line-height: 1.7; color: var(--tx-2);
+}
+
+.ch-card-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+}
+.ch-card {
+  padding: 14px 16px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ch-card-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.ch-card-title { font-size: 12.5px; color: var(--tx-1); font-weight: 700; letter-spacing: 0.3px; }
+.ch-copy-btn {
+  padding: 4px 10px; background: var(--accent); color: #fff;
+  border: none; border-radius: 3px; cursor: pointer; font-weight: 700;
+  letter-spacing: 0.5px; transition: all 0.15s;
+}
+.ch-copy-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+.ch-copy-btn.ch-copy-success { background: var(--dn); }
+.ch-card-body {
+  width: 100%; min-height: 120px; max-height: 180px;
+  padding: 10px 12px; background: var(--bg);
+  border: 1px solid var(--line-2); border-radius: 3px;
+  color: var(--tx-2); font-size: 11.5px; line-height: 1.55;
+  resize: vertical; font-family: var(--font-mono);
+  white-space: pre-wrap; word-break: break-word;
+}
+.ch-card-body:focus { outline: none; border-color: var(--accent); }
+
+.ch-why {
+  padding: 16px 20px; background: var(--bg-2);
+  border-radius: var(--r-sm); border-left: 3px solid var(--amber);
+}
+.ch-why .ch-section-head { border-bottom: none; padding-bottom: 0; margin-bottom: 8px; }
+.ch-why-list {
+  margin: 0; padding-left: 22px; color: var(--tx-2);
+  font-size: 13px; line-height: 1.7; list-style: disc;
+}
+.ch-why-list li { margin: 6px 0; }
+.ch-why-list strong { color: var(--tx-1); font-weight: 700; }
+
+@media (max-width: 720px) {
+  .ch-shell { padding: 16px 16px 40px; }
+  .ch-cta-title { font-size: 18px; }
+  .ch-card-grid { grid-template-columns: 1fr; }
+}
+
 /* ── Stock deep page · AI VERDICT + tabs ─────────────────── */
 .dd-verdict-card {
   display: grid;
@@ -7291,10 +8323,213 @@ footer a { color: var(--tx-3); }
   background: var(--bg-2); padding: 2px 6px; border-radius: 3px;
 }
 
+/* ---------- Screener ---------- */
+.sc-wrap { padding: 18px 24px 40px; }
+.sc-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 14px; flex-wrap: wrap; gap: 12px;
+}
+.sc-title { font-size: 20px; font-weight: 700; letter-spacing: 0.4px; margin: 0 0 4px; }
+.sc-actions { display: flex; gap: 8px; }
+.sc-btn {
+  padding: 6px 14px; border: 1px solid var(--line-2); background: var(--bg-2);
+  color: var(--tx-1); font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.5px; cursor: pointer; border-radius: 3px;
+  transition: all 0.15s;
+}
+.sc-btn:hover { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+.sc-btn-ghost { background: transparent; color: var(--tx-3); }
+
+.sc-presets { margin-bottom: 16px; }
+.sc-presets-label { letter-spacing: 0.6px; margin-bottom: 8px; }
+.sc-preset-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+.sc-preset {
+  padding: 10px 12px; background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm); cursor: pointer; text-align: left;
+  color: var(--tx-1); transition: all 0.15s;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.sc-preset:hover { border-color: var(--accent); background: var(--accent-bg); }
+.sc-preset.active { border-color: var(--accent); background: rgba(108,180,255,0.12); }
+.sc-preset-label { font-size: 12.5px; font-weight: 700; letter-spacing: 0.3px; }
+.sc-preset-desc { line-height: 1.4; }
+
+.sc-filters {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px 12px; padding: 14px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  margin-bottom: 14px;
+}
+.sc-filter-group { display: flex; flex-direction: column; gap: 4px; }
+.sc-filter-label { letter-spacing: 0.4px; color: var(--tx-3); }
+.sc-input, .sc-input-num {
+  padding: 6px 8px; background: var(--bg); border: 1px solid var(--line-2);
+  color: var(--tx-1); font-family: var(--font-mono); font-size: 12px;
+  border-radius: 3px; width: 100%; box-sizing: border-box;
+}
+.sc-input:focus, .sc-input-num:focus { outline: none; border-color: var(--accent); }
+.sc-range { display: flex; align-items: center; gap: 4px; }
+.sc-range .sc-input-num { width: 0; flex: 1; }
+
+.sc-count-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 4px; margin-bottom: 6px;
+}
+.sc-count { color: var(--tx-1); font-weight: 700; font-size: 13px; }
+
+.sc-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-sm); }
+.sc-table {
+  width: 100%; border-collapse: collapse; font-size: 12.5px;
+  min-width: 1300px;
+}
+.sc-table thead th {
+  position: sticky; top: 0; background: var(--bg-2); z-index: 1;
+  padding: 10px 10px; border-bottom: 1px solid var(--line);
+  color: var(--tx-3); letter-spacing: 0.5px; text-align: right;
+  cursor: pointer; user-select: none;
+}
+.sc-table thead th:hover { color: var(--accent); }
+.sc-table thead th[data-sort]::after {
+  content: ' ↕'; opacity: 0.3; font-size: 10px;
+}
+.sc-table thead th.sc-sort-asc::after  { content: ' ↑'; opacity: 1; color: var(--accent); }
+.sc-table thead th.sc-sort-desc::after { content: ' ↓'; opacity: 1; color: var(--accent); }
+.sc-table thead th:nth-child(1),
+.sc-table thead th:nth-child(2) { text-align: left; }
+.sc-table tbody td {
+  padding: 8px 10px; border-bottom: 1px solid var(--line);
+  text-align: right; white-space: nowrap;
+}
+.sc-table tbody td:first-child,
+.sc-table tbody td:nth-child(2) { text-align: left; }
+.sc-table tbody tr:hover { background: var(--bg-2); }
+
+.sc-sym { font-weight: 700; }
+.sc-name { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+.sc-src {
+  display: inline-block; width: 20px; height: 20px; text-align: center;
+  line-height: 20px; border-radius: 3px; font-weight: 700;
+  border: 1px solid currentColor;
+}
+.sc-src-h { color: var(--up);     background: rgba(255,59,59,0.06); }
+.sc-src-w { color: var(--accent); background: rgba(108,180,255,0.06); }
+.sc-src-u { color: var(--tx-3);   background: var(--bg-2); }
+
+.sc-link {
+  color: var(--accent); text-decoration: none; font-size: 11px;
+  letter-spacing: 0.4px; font-weight: 700;
+}
+.sc-link:hover { text-decoration: underline; }
+
+.sc-empty { padding: 40px; text-align: center; font-size: 14px; }
+.sc-foot {
+  margin-top: 14px; padding: 12px 14px; line-height: 1.65;
+  background: var(--bg-2); border-left: 3px solid var(--amber);
+  border-radius: 3px;
+}
+.sc-foot strong { color: var(--tx-1); }
+
+/* ---------- 籌碼 chips (三大法人) ---------- */
+.chip-streak {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-weight: 700; letter-spacing: 0.3px; font-size: 10.5px;
+  border: 1px solid currentColor;
+}
+.chip-streak-buy  { color: var(--up); background: rgba(255,59,59,0.08); }
+.chip-streak-sell { color: var(--dn); background: rgba(27,217,124,0.08); }
+
+.chip-spark { display: block; }
+.chip-spark .chip-spark-buy  { fill: var(--up); opacity: 0.85; }
+.chip-spark .chip-spark-sell { fill: var(--dn); opacity: 0.85; }
+.chip-spark .chip-spark-mid  { stroke: var(--line-2); stroke-width: 0.8; stroke-dasharray: 2 2; }
+
+.th-chips-cell { text-align: right; white-space: nowrap; padding: 6px 10px; }
+.th-chips-legend {
+  margin-top: 10px; padding: 10px 14px;
+  background: var(--bg-2); border-radius: 4px;
+  line-height: 1.6;
+}
+
+/* HOLDERS panel */
+.dd-chip-panel { padding: 22px 0 40px; }
+.dd-chip-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 18px; gap: 16px; flex-wrap: wrap;
+}
+.dd-chip-title {
+  font-size: 13px; letter-spacing: 0.8px; font-weight: 700;
+  color: var(--tx-1); margin-bottom: 4px;
+}
+.dd-chip-summary {
+  padding: 6px 12px; background: var(--bg-2);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px; color: var(--tx-1);
+  letter-spacing: 0.3px;
+}
+.dd-chip-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px; margin-bottom: 20px;
+}
+.dd-chip-card {
+  padding: 14px 16px; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+}
+.dd-chip-card-total { border-color: var(--accent); background: rgba(108,180,255,0.04); }
+.dd-chip-card-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.dd-chip-card-title {
+  font-size: 11px; letter-spacing: 0.6px; font-weight: 700;
+  color: var(--tx-2);
+}
+.dd-chip-card-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-bottom: 10px;
+}
+.dd-chip-stat .val-md { font-size: 15px; font-weight: 700; }
+.dd-chip-spark-wrap {
+  display: flex; align-items: center; gap: 10px;
+  padding-top: 8px; border-top: 1px solid var(--line);
+}
+.dd-chip-section { margin-top: 18px; }
+.dd-chip-section-head {
+  letter-spacing: 0.6px; padding: 0 0 8px; border-bottom: 1px solid var(--line);
+  margin-bottom: 10px; text-transform: uppercase;
+}
+.dd-chip-daily-wrap { overflow-x: auto; }
+.dd-chip-daily {
+  width: 100%; border-collapse: collapse; font-size: 12.5px;
+  min-width: 520px;
+}
+.dd-chip-daily thead th {
+  text-align: right; padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--tx-3); letter-spacing: 0.4px;
+}
+.dd-chip-daily thead th:first-child { text-align: left; }
+.dd-chip-daily tbody td {
+  padding: 8px 10px; border-bottom: 1px solid var(--line);
+  text-align: right; white-space: nowrap;
+}
+.dd-chip-daily tbody td:first-child { text-align: left; color: var(--tx-2); }
+.dd-chip-daily tbody tr:hover { background: var(--bg-2); }
+.dd-chip-disclaimer {
+  margin-top: 18px; padding: 12px 14px;
+  background: var(--bg-2); border-left: 3px solid var(--amber);
+  border-radius: 3px; line-height: 1.65;
+}
+.dd-chip-disclaimer strong { color: var(--tx-1); font-weight: 700; }
+
 @media (max-width: 720px) {
   .th-stats { grid-template-columns: 1fr; }
   .th-title { font-size: 22px; }
-  .th-table { min-width: 900px; }
+  .th-table { min-width: 1100px; }
+  .dd-chip-grid { grid-template-columns: 1fr; }
+  .dd-chip-card-stats { grid-template-columns: 1fr 1fr; }
 }
 """
 

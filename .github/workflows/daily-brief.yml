@@ -35,6 +35,10 @@ jobs:
       - name: Fetch prices
         run: python fetch_prices.py
 
+      - name: Fetch 三大法人 chips (TWSE + TPEx)
+        run: python fetch_chips.py
+        continue-on-error: true  # Chips are optional — don't fail the whole run if TWSE is down
+
       - name: Calculate portfolio P&L
         run: python calculate_pnl.py
 
@@ -51,7 +55,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add briefs/ docs/ prices.json portfolio.json analyses/
+          git add briefs/ docs/ prices.json portfolio.json analyses/ chips.json
           if git diff --staged --quiet; then
             echo "no changes"
           else

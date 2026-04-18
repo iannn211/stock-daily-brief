@@ -18,6 +18,9 @@
     <button class="sn-btn" data-tab="radar" title="Opportunity Radar">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M12 12 L20 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="sn-label">RADAR</span>
     </button>
+    <button class="sn-btn" data-tab="screen" title="Screener · 選股">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16" y1="16" x2="20" y2="20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="sn-label">SCREEN</span>
+    </button>
     <button class="sn-btn" data-tab="sim" title="Simulator">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="7" y="6" width="10" height="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="0.8" fill="currentColor"/><circle cx="12" cy="13" r="0.8" fill="currentColor"/><circle cx="15.5" cy="13" r="0.8" fill="currentColor"/><circle cx="8.5" cy="17" r="0.8" fill="currentColor"/><circle cx="12" cy="17" r="0.8" fill="currentColor"/><circle cx="15.5" cy="17" r="0.8" fill="currentColor"/></svg><span class="sn-label">SIM</span>
     </button>
@@ -835,6 +838,301 @@
     });
   });
   apply();
+})();
+</script>
+
+      </div>
+      <div class="tab-panel" data-panel="screen">
+        
+<section class="sc-wrap" aria-label="選股 Screener">
+  <div class="sc-head">
+    <div>
+      <h2 class="sc-title">SCREENER · 選股過濾器</h2>
+      <div class="muted small">82 檔來自你的 Portfolio + Watchlist + Universe · 資料來自 yfinance + TWSE/TPEx 三大法人</div>
+    </div>
+    <div class="sc-actions">
+      <button id="sc-save" class="sc-btn mono" title="儲存當前過濾條件">SAVE</button>
+      <button id="sc-load" class="sc-btn mono" title="載入最後儲存的條件">LOAD</button>
+      <button id="sc-reset" class="sc-btn sc-btn-ghost mono">RESET</button>
+    </div>
+  </div>
+
+  <div class="sc-presets">
+    <div class="sc-presets-label mono small muted">快速套用 · QUICK PRESETS</div>
+    <div class="sc-preset-row"><button class="sc-preset" data-preset='{&quot;eps_growth_min&quot;: 15, &quot;roe_min&quot;: 15, &quot;pe_max&quot;: 30}'><span class="sc-preset-label mono">成長小將</span><span class="sc-preset-desc muted small">EPS 成長 &gt;15% · ROE &gt;15% · P/E &lt;30</span></button><button class="sc-preset" data-preset='{&quot;pct_52w_max&quot;: 40, &quot;roe_min&quot;: 10, &quot;eps_growth_min&quot;: 0}'><span class="sc-preset-label mono">逢低布局</span><span class="sc-preset-desc muted small">52 週位階 &lt;40% · ROE &gt;10% · EPS 成長 &gt;0%</span></button><button class="sc-preset" data-preset='{&quot;foreign_5d_min&quot;: 0, &quot;foreign_streak_min&quot;: 2}'><span class="sc-preset-label mono">外資進場</span><span class="sc-preset-desc muted small">外資 5 日買超 · 連續買超 ≥2 日</span></button><button class="sc-preset" data-preset='{&quot;ret_90d_min&quot;: 10, &quot;ret_ytd_min&quot;: 0, &quot;pct_52w_min&quot;: 60}'><span class="sc-preset-label mono">強者恆強</span><span class="sc-preset-desc muted small">90 日漲 &gt;10% · YTD &gt;0 · 52週位階 &gt;60%</span></button><button class="sc-preset" data-preset='{&quot;roe_min&quot;: 15, &quot;profit_margin_min&quot;: 15, &quot;eps_min&quot;: 0}'><span class="sc-preset-label mono">品質好公司</span><span class="sc-preset-desc muted small">ROE &gt;15% · 淨利率 &gt;15% · EPS &gt;0</span></button></div>
+  </div>
+
+  <div class="sc-filters">
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">搜尋</label>
+      <input type="text" id="sc-search" class="sc-input" placeholder="代號 / 名稱">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">52W 位階</label>
+      <div class="sc-range">
+        <input type="number" id="sc-52w-min" class="sc-input-num" placeholder="min" min="0" max="100">
+        <span class="muted small">–</span>
+        <input type="number" id="sc-52w-max" class="sc-input-num" placeholder="max" min="0" max="100">
+      </div>
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">YTD % 至少</label>
+      <input type="number" id="sc-ytd-min" class="sc-input-num" placeholder="-20">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">90日 % 至少</label>
+      <input type="number" id="sc-90d-min" class="sc-input-num" placeholder="0">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">P/E 最大</label>
+      <input type="number" id="sc-pe-max" class="sc-input-num" placeholder="30">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">EPS % 至少</label>
+      <input type="number" id="sc-epsg-min" class="sc-input-num" placeholder="15">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">ROE % 至少</label>
+      <input type="number" id="sc-roe-min" class="sc-input-num" placeholder="15">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">淨利率 % 至少</label>
+      <input type="number" id="sc-pm-min" class="sc-input-num" placeholder="10">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">外資 5 日</label>
+      <select id="sc-f5" class="sc-input">
+        <option value="">不限</option>
+        <option value="buy">買超</option>
+        <option value="sell">賣超</option>
+      </select>
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">外資連續 (≥)</label>
+      <input type="number" id="sc-fstreak-min" class="sc-input-num" placeholder="2">
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">產業</label>
+      <select id="sc-sector" class="sc-input">
+        <option value="">所有產業</option>
+        <option value="Basic Materials">Basic Materials</option><option value="Consumer Cyclical">Consumer Cyclical</option><option value="Consumer Defensive">Consumer Defensive</option><option value="Financial Services">Financial Services</option><option value="Industrials">Industrials</option><option value="Technology">Technology</option>
+      </select>
+    </div>
+    <div class="sc-filter-group">
+      <label class="sc-filter-label mono small">清單</label>
+      <select id="sc-source" class="sc-input">
+        <option value="">全部</option>
+        <option value="holdings">持股</option>
+        <option value="watchlist">觀察清單</option>
+        <option value="simulator_universe">Universe</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="sc-count-row">
+    <span class="sc-count mono" id="sc-count">82 檔</span>
+    <span class="sc-sort-lbl mono small muted">點擊欄位標題可排序</span>
+  </div>
+
+  <div class="sc-table-wrap">
+    <table class="sc-table">
+      <thead>
+        <tr>
+          <th class="mono small" title="H=持有 W=觀察 U=Universe">來源</th>
+          <th class="mono small" data-sort="name">STOCK</th>
+          <th class="mono small" data-sort="price">價格</th>
+          <th class="mono small" data-sort="day">今日</th>
+          <th class="mono small" data-sort="52w">52W</th>
+          <th class="mono small" data-sort="ret7">7D</th>
+          <th class="mono small" data-sort="ret30">30D</th>
+          <th class="mono small" data-sort="ret90">90D</th>
+          <th class="mono small" data-sort="retytd">YTD</th>
+          <th class="mono small" data-sort="pe">P/E</th>
+          <th class="mono small" data-sort="epsg">EPS%</th>
+          <th class="mono small" data-sort="roe">ROE</th>
+          <th class="mono small" data-sort="f5">外資5日</th>
+          <th class="mono small" data-sort="fstreak">連續</th>
+          <th class="mono small" data-sort="sector">產業</th>
+          <th class="mono small"></th>
+        </tr>
+      </thead>
+      <tbody id="sc-tbody"><tr class="sc-row" data-sym="0050" data-name="元大台灣50" data-sector="" data-source="holdings" data-day="-1.0" data-52w="97.94" data-ret7="4.21" data-ret30="8.16" data-ret90="20.47" data-retytd="25.69" data-pe="27.535418" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="96897072" data-f20="-243086751" data-fstreak="-1" data-tstreak="0" ><td><span class="sc-src sc-src-h mono small" title="H=持有 W=觀察 U=Universe">H</span></td><td><div class="sc-sym mono">0050</div><div class="sc-name muted small">元大台灣50</div></td><td class="mono tnum small">84.15</td><td><span class="mono tnum dn">-1.00%</span></td><td><span class="mono tnum">98</span></td><td><span class="mono tnum up">+4.21%</span></td><td><span class="mono tnum up">+8.16%</span></td><td><span class="mono tnum up">+20.47%</span></td><td><span class="mono tnum up">+25.69%</span></td><td><span class="mono tnum">27.5</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum up">+9.7萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/0050.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2330" data-name="台積電" data-sector="Technology" data-source="holdings" data-day="-2.6379" data-52w="94.55" data-ret7="1.5" data-ret30="6.56" data-ret90="20.83" data-retytd="28.08" data-pe="27.547834" data-eps="73.69" data-epsg="0.584" data-revg="0.351" data-roe="0.3621" data-pm="0.46505" data-f5="10732628" data-f20="-61103728" data-fstreak="-2" data-tstreak="-1" ><td><span class="sc-src sc-src-h mono small" title="H=持有 W=觀察 U=Universe">H</span></td><td><div class="sc-sym mono">2330</div><div class="sc-name muted small">台積電</div></td><td class="mono tnum small">2030.00</td><td><span class="mono tnum dn">-2.64%</span></td><td><span class="mono tnum">95</span></td><td><span class="mono tnum up">+1.50%</span></td><td><span class="mono tnum up">+6.56%</span></td><td><span class="mono tnum up">+20.83%</span></td><td><span class="mono tnum up">+28.08%</span></td><td><span class="mono tnum">27.5</span></td><td><span class="mono tnum">+58.4%</span></td><td><span class="mono tnum">+36.2%</span></td><td><span class="mono tnum up">+1.1萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2330.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="VOO" data-name="S&amp;P 500 ETF" data-sector="" data-source="watchlist" data-day="1.2282" data-52w="98.88" data-ret7="4.51" data-ret30="7.59" data-ret90="3.57" data-retytd="3.9" data-pe="28.18386" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="" data-f20="" data-fstreak="" data-tstreak="" ><td><span class="sc-src sc-src-w mono small" title="H=持有 W=觀察 U=Universe">W</span></td><td><div class="sc-sym mono">VOO</div><div class="sc-name muted small">S&amp;P 500 ETF</div></td><td class="mono tnum small">652.78</td><td><span class="mono tnum up">+1.23%</span></td><td><span class="mono tnum">99</span></td><td><span class="mono tnum up">+4.51%</span></td><td><span class="mono tnum up">+7.59%</span></td><td><span class="mono tnum up">+3.57%</span></td><td><span class="mono tnum up">+3.90%</span></td><td><span class="mono tnum">28.2</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="muted mono tnum small">—</span></td><td><span class="muted small">—</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/VOO.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2303" data-name="聯電" data-sector="Technology" data-source="watchlist" data-day="6.8814" data-52w="83.08" data-ret7="17.74" data-ret30="19.48" data-ret90="32.49" data-retytd="49.9" data-pe="22.05438" data-eps="3.31" data-epsg="0.182" data-revg="0.024" data-roe="0.10958" data-pm="0.17561" data-f5="71782838" data-f20="53804429" data-fstreak="3" data-tstreak="2" ><td><span class="sc-src sc-src-w mono small" title="H=持有 W=觀察 U=Universe">W</span></td><td><div class="sc-sym mono">2303</div><div class="sc-name muted small">聯電</div></td><td class="mono tnum small">73.00</td><td><span class="mono tnum up">+6.88%</span></td><td><span class="mono tnum">83</span></td><td><span class="mono tnum up">+17.74%</span></td><td><span class="mono tnum up">+19.48%</span></td><td><span class="mono tnum up">+32.49%</span></td><td><span class="mono tnum up">+49.90%</span></td><td><span class="mono tnum">22.1</span></td><td><span class="mono tnum">+18.2%</span></td><td><span class="mono tnum">+11.0%</span></td><td><span class="mono tnum up">+7.2萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買3日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2303.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3081" data-name="聯亞" data-sector="Technology" data-source="watchlist" data-day="9.9366" data-52w="100.0" data-ret7="12.31" data-ret30="80.56" data-ret90="324.84" data-retytd="306.25" data-pe="555.5556" data-eps="4.68" data-epsg="22.162" data-revg="1.224" data-roe="0.107609995" data-pm="0.19448" data-f5="-106324" data-f20="127457" data-fstreak="3" data-tstreak="-4" ><td><span class="sc-src sc-src-w mono small" title="H=持有 W=觀察 U=Universe">W</span></td><td><div class="sc-sym mono">3081</div><div class="sc-name muted small">聯亞</div></td><td class="mono tnum small">2600.00</td><td><span class="mono tnum up">+9.94%</span></td><td><span class="mono tnum">100</span></td><td><span class="mono tnum up">+12.31%</span></td><td><span class="mono tnum up">+80.56%</span></td><td><span class="mono tnum up">+324.84%</span></td><td><span class="mono tnum up">+306.25%</span></td><td><span class="mono tnum">555.6</span></td><td><span class="mono tnum">+2216.2%</span></td><td><span class="mono tnum">+10.8%</span></td><td><span class="mono tnum dn">-106</span></td><td><span class="chip-streak chip-streak-buy mono small">連買3日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3081.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3324" data-name="雙鴻" data-sector="Technology" data-source="watchlist" data-day="-0.9569" data-52w="78.57" data-ret7="4.55" data-ret30="0.49" data-ret90="7.25" data-retytd="3.5" data-pe="37.459286" data-eps="27.63" data-epsg="0.966" data-revg="0.842" data-roe="0.25961" data-pm="0.1105" data-f5="2705847" data-f20="-27300" data-fstreak="-1" data-tstreak="2" ><td><span class="sc-src sc-src-w mono small" title="H=持有 W=觀察 U=Universe">W</span></td><td><div class="sc-sym mono">3324</div><div class="sc-name muted small">雙鴻</div></td><td class="mono tnum small">1035.00</td><td><span class="mono tnum dn">-0.96%</span></td><td><span class="mono tnum">79</span></td><td><span class="mono tnum up">+4.55%</span></td><td><span class="mono tnum up">+0.49%</span></td><td><span class="mono tnum up">+7.25%</span></td><td><span class="mono tnum up">+3.50%</span></td><td><span class="mono tnum">37.5</span></td><td><span class="mono tnum">+96.6%</span></td><td><span class="mono tnum">+26.0%</span></td><td><span class="mono tnum up">+2,706</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3324.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3017" data-name="奇鋐" data-sector="Technology" data-source="watchlist" data-day="-1.6393" data-52w="94.58" data-ret7="5.96" data-ret30="29.73" data-ret90="74.55" data-retytd="64.95" data-pe="49.751244" data-eps="48.24" data-epsg="1.86" data-revg="1.285" data-roe="0.4986" data-pm="0.1374" data-f5="-1979448" data-f20="879566" data-fstreak="-3" data-tstreak="5" ><td><span class="sc-src sc-src-w mono small" title="H=持有 W=觀察 U=Universe">W</span></td><td><div class="sc-sym mono">3017</div><div class="sc-name muted small">奇鋐</div></td><td class="mono tnum small">2400.00</td><td><span class="mono tnum dn">-1.64%</span></td><td><span class="mono tnum">95</span></td><td><span class="mono tnum up">+5.96%</span></td><td><span class="mono tnum up">+29.73%</span></td><td><span class="mono tnum up">+74.55%</span></td><td><span class="mono tnum up">+64.95%</span></td><td><span class="mono tnum">49.8</span></td><td><span class="mono tnum">+186.0%</span></td><td><span class="mono tnum">+49.9%</span></td><td><span class="mono tnum dn">-1,979</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣3日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3017.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2454" data-name="聯發科" data-sector="Technology" data-source="simulator_universe" data-day="1.5831" data-52w="94.08" data-ret7="22.22" data-ret30="11.27" data-ret90="35.56" data-retytd="30.95" data-pe="29.153416" data-eps="66.03" data-epsg="-0.037" data-revg="0.088" data-roe="0.26065" data-pm="0.17672001" data-f5="11571669" data-f20="-2714512" data-fstreak="5" data-tstreak="4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2454</div><div class="sc-name muted small">聯發科</div></td><td class="mono tnum small">1925.00</td><td><span class="mono tnum up">+1.58%</span></td><td><span class="mono tnum">94</span></td><td><span class="mono tnum up">+22.22%</span></td><td><span class="mono tnum up">+11.27%</span></td><td><span class="mono tnum up">+35.56%</span></td><td><span class="mono tnum up">+30.95%</span></td><td><span class="mono tnum">29.2</span></td><td><span class="mono tnum">-3.7%</span></td><td><span class="mono tnum">+26.1%</span></td><td><span class="mono tnum up">+1.2萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買5日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2454.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2379" data-name="瑞昱" data-sector="Technology" data-source="simulator_universe" data-day="-1.6667" data-52w="60.0" data-ret7="4.53" data-ret30="10.17" data-ret90="4.12" data-retytd="8.92" data-pe="18.937231" data-eps="28.04" data-epsg="-0.245" data-revg="-0.003" data-roe="0.28056" data-pm="0.12023" data-f5="9088498" data-f20="22500848" data-fstreak="7" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2379</div><div class="sc-name muted small">瑞昱</div></td><td class="mono tnum small">531.00</td><td><span class="mono tnum dn">-1.67%</span></td><td><span class="mono tnum">60</span></td><td><span class="mono tnum up">+4.53%</span></td><td><span class="mono tnum up">+10.17%</span></td><td><span class="mono tnum up">+4.12%</span></td><td><span class="mono tnum up">+8.92%</span></td><td><span class="mono tnum">18.9</span></td><td><span class="mono tnum">-24.5%</span></td><td><span class="mono tnum">+28.1%</span></td><td><span class="mono tnum up">+9,088</span></td><td><span class="chip-streak chip-streak-buy mono small">連買7日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2379.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3034" data-name="聯詠" data-sector="Technology" data-source="simulator_universe" data-day="0.7282" data-52w="31.5" data-ret7="5.33" data-ret30="8.5" data-ret90="9.21" data-retytd="13.08" data-pe="15.456238" data-eps="26.85" data-epsg="-0.231" data-revg="-0.097" data-roe="0.24101" data-pm="0.16239999" data-f5="2978471" data-f20="23823059" data-fstreak="4" data-tstreak="-8" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3034</div><div class="sc-name muted small">聯詠</div></td><td class="mono tnum small">415.00</td><td><span class="mono tnum up">+0.73%</span></td><td><span class="mono tnum">32</span></td><td><span class="mono tnum up">+5.33%</span></td><td><span class="mono tnum up">+8.50%</span></td><td><span class="mono tnum up">+9.21%</span></td><td><span class="mono tnum up">+13.08%</span></td><td><span class="mono tnum">15.5</span></td><td><span class="mono tnum">-23.1%</span></td><td><span class="mono tnum">+24.1%</span></td><td><span class="mono tnum up">+2,978</span></td><td><span class="chip-streak chip-streak-buy mono small">連買4日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3034.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3443" data-name="創意" data-sector="Technology" data-source="simulator_universe" data-day="-2.6906" data-52w="94.93" data-ret7="22.14" data-ret30="29.42" data-ret90="37.63" data-retytd="48.97" data-pe="116.291534" data-eps="27.99" data-epsg="0.379" data-revg="1.059" data-roe="0.31144" data-pm="0.110410005" data-f5="127043" data-f20="468987" data-fstreak="-1" data-tstreak="7" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3443</div><div class="sc-name muted small">創意</div></td><td class="mono tnum small">3255.00</td><td><span class="mono tnum dn">-2.69%</span></td><td><span class="mono tnum">95</span></td><td><span class="mono tnum up">+22.14%</span></td><td><span class="mono tnum up">+29.42%</span></td><td><span class="mono tnum up">+37.63%</span></td><td><span class="mono tnum up">+48.97%</span></td><td><span class="mono tnum">116.3</span></td><td><span class="mono tnum">+37.9%</span></td><td><span class="mono tnum">+31.1%</span></td><td><span class="mono tnum up">+127</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3443.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="5274" data-name="信驊" data-sector="Technology" data-source="simulator_universe" data-day="-4.6616" data-52w="91.07" data-ret7="9.74" data-ret30="11.83" data-ret90="80.1" data-retytd="90.28" data-pe="133.33011" data-eps="103.54" data-epsg="0.278" data-revg="0.161" data-roe="0.59467" data-pm="0.43235" data-f5="-345519" data-f20="-614045" data-fstreak="-2" data-tstreak="5" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">5274</div><div class="sc-name muted small">信驊</div></td><td class="mono tnum small">13805.00</td><td><span class="mono tnum dn">-4.66%</span></td><td><span class="mono tnum">91</span></td><td><span class="mono tnum up">+9.74%</span></td><td><span class="mono tnum up">+11.83%</span></td><td><span class="mono tnum up">+80.10%</span></td><td><span class="mono tnum up">+90.28%</span></td><td><span class="mono tnum">133.3</span></td><td><span class="mono tnum">+27.8%</span></td><td><span class="mono tnum">+59.5%</span></td><td><span class="mono tnum dn">-346</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/5274.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2317" data-name="鴻海" data-sector="Technology" data-source="simulator_universe" data-day="-0.4831" data-52w="55.81" data-ret7="2.74" data-ret30="-1.9" data-ret90="-10.63" data-retytd="-11.21" data-pe="15.384615" data-eps="13.39" data-epsg="-0.003" data-revg="0.223" data-roe="0.11251" data-pm="0.02337" data-f5="18547779" data-f20="-93687604" data-fstreak="-2" data-tstreak="-10" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2317</div><div class="sc-name muted small">鴻海</div></td><td class="mono tnum small">206.00</td><td><span class="mono tnum dn">-0.48%</span></td><td><span class="mono tnum">56</span></td><td><span class="mono tnum up">+2.74%</span></td><td><span class="mono tnum dn">-1.90%</span></td><td><span class="mono tnum dn">-10.63%</span></td><td><span class="mono tnum dn">-11.21%</span></td><td><span class="mono tnum">15.4</span></td><td><span class="mono tnum">-0.3%</span></td><td><span class="mono tnum">+11.3%</span></td><td><span class="mono tnum up">+1.9萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2317.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2382" data-name="廣達" data-sector="Technology" data-source="simulator_universe" data-day="1.4129" data-52w="93.93" data-ret7="0.47" data-ret30="10.24" data-ret90="14.13" data-retytd="16.61" data-pe="17.089947" data-eps="18.9" data-epsg="0.379" data-revg="0.53" data-roe="0.31184998" data-pm="0.03531" data-f5="10930781" data-f20="67998456" data-fstreak="2" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2382</div><div class="sc-name muted small">廣達</div></td><td class="mono tnum small">323.00</td><td><span class="mono tnum up">+1.41%</span></td><td><span class="mono tnum">94</span></td><td><span class="mono tnum up">+0.47%</span></td><td><span class="mono tnum up">+10.24%</span></td><td><span class="mono tnum up">+14.13%</span></td><td><span class="mono tnum up">+16.61%</span></td><td><span class="mono tnum">17.1</span></td><td><span class="mono tnum">+37.9%</span></td><td><span class="mono tnum">+31.2%</span></td><td><span class="mono tnum up">+1.1萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2382.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3231" data-name="緯創" data-sector="Technology" data-source="simulator_universe" data-day="1.8657" data-52w="60.67" data-ret7="1.11" data-ret30="4.6" data-ret90="-8.39" data-retytd="-11.94" data-pe="16.269367" data-eps="8.39" data-epsg="0.149" data-revg="1.426" data-roe="0.26256" data-pm="0.01254" data-f5="23529393" data-f20="51603261" data-fstreak="1" data-tstreak="-7" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3231</div><div class="sc-name muted small">緯創</div></td><td class="mono tnum small">136.50</td><td><span class="mono tnum up">+1.87%</span></td><td><span class="mono tnum">61</span></td><td><span class="mono tnum up">+1.11%</span></td><td><span class="mono tnum up">+4.60%</span></td><td><span class="mono tnum dn">-8.39%</span></td><td><span class="mono tnum dn">-11.94%</span></td><td><span class="mono tnum">16.3</span></td><td><span class="mono tnum">+14.9%</span></td><td><span class="mono tnum">+26.3%</span></td><td><span class="mono tnum up">+2.4萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3231.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="6669" data-name="緯穎" data-sector="Technology" data-source="simulator_universe" data-day="2.8378" data-52w="66.4" data-ret7="4.82" data-ret30="-0.52" data-ret90="-10.26" data-retytd="-15.07" data-pe="14.326593" data-eps="265.59" data-epsg="0.957" data-revg="1.529" data-roe="0.48031" data-pm="0.05377" data-f5="261904" data-f20="-1376574" data-fstreak="1" data-tstreak="1" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">6669</div><div class="sc-name muted small">緯穎</div></td><td class="mono tnum small">3805.00</td><td><span class="mono tnum up">+2.84%</span></td><td><span class="mono tnum">66</span></td><td><span class="mono tnum up">+4.82%</span></td><td><span class="mono tnum dn">-0.52%</span></td><td><span class="mono tnum dn">-10.26%</span></td><td><span class="mono tnum dn">-15.07%</span></td><td><span class="mono tnum">14.3</span></td><td><span class="mono tnum">+95.7%</span></td><td><span class="mono tnum">+48.0%</span></td><td><span class="mono tnum up">+262</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/6669.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2376" data-name="技嘉" data-sector="Technology" data-source="simulator_universe" data-day="0.1779" data-52w="67.87" data-ret7="7.24" data-ret30="12.83" data-ret90="17.29" data-retytd="8.69" data-pe="16.394875" data-eps="17.17" data-epsg="0.032" data-revg="0.362" data-roe="0.22850001" data-pm="0.03618" data-f5="16427295" data-f20="30092447" data-fstreak="8" data-tstreak="14" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2376</div><div class="sc-name muted small">技嘉</div></td><td class="mono tnum small">281.50</td><td><span class="mono tnum up">+0.18%</span></td><td><span class="mono tnum">68</span></td><td><span class="mono tnum up">+7.24%</span></td><td><span class="mono tnum up">+12.83%</span></td><td><span class="mono tnum up">+17.29%</span></td><td><span class="mono tnum up">+8.69%</span></td><td><span class="mono tnum">16.4</span></td><td><span class="mono tnum">+3.2%</span></td><td><span class="mono tnum">+22.9%</span></td><td><span class="mono tnum up">+1.6萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買8日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2376.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2345" data-name="智邦" data-sector="Technology" data-source="simulator_universe" data-day="1.7199" data-52w="97.54" data-ret7="12.81" data-ret30="29.38" data-ret90="70.37" data-retytd="80.79" data-pe="44.24968" data-eps="46.78" data-epsg="0.838" data-revg="0.848" data-roe="0.55928004" data-pm="0.106079996" data-f5="760016" data-f20="-2365385" data-fstreak="3" data-tstreak="8" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2345</div><div class="sc-name muted small">智邦</div></td><td class="mono tnum small">2070.00</td><td><span class="mono tnum up">+1.72%</span></td><td><span class="mono tnum">98</span></td><td><span class="mono tnum up">+12.81%</span></td><td><span class="mono tnum up">+29.38%</span></td><td><span class="mono tnum up">+70.37%</span></td><td><span class="mono tnum up">+80.79%</span></td><td><span class="mono tnum">44.2</span></td><td><span class="mono tnum">+83.8%</span></td><td><span class="mono tnum">+55.9%</span></td><td><span class="mono tnum up">+760</span></td><td><span class="chip-streak chip-streak-buy mono small">連買3日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2345.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="6230" data-name="超眾" data-sector="Technology" data-source="simulator_universe" data-day="3.871" data-52w="65.29" data-ret7="11.42" data-ret30="-6.94" data-ret90="43.11" data-retytd="38.2" data-pe="" data-eps="-2.45" data-epsg="" data-revg="0.137" data-roe="-0.035889998" data-pm="-0.02315" data-f5="3214" data-f20="119249" data-fstreak="1" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">6230</div><div class="sc-name muted small">超眾</div></td><td class="mono tnum small">161.00</td><td><span class="mono tnum up">+3.87%</span></td><td><span class="mono tnum">65</span></td><td><span class="mono tnum up">+11.42%</span></td><td><span class="mono tnum dn">-6.94%</span></td><td><span class="mono tnum up">+43.11%</span></td><td><span class="mono tnum up">+38.20%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">-3.6%</span></td><td><span class="mono tnum up">+3</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/6230.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="4979" data-name="華星光" data-sector="Technology" data-source="simulator_universe" data-day="9.8976" data-52w="100.0" data-ret7="43.27" data-ret30="68.15" data-ret90="116.11" data-retytd="96.64" data-pe="121.96969" data-eps="5.28" data-epsg="0.523" data-revg="0.101" data-roe="0.20718001" data-pm="0.17429" data-f5="5452649" data-f20="8452974" data-fstreak="3" data-tstreak="2" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">4979</div><div class="sc-name muted small">華星光</div></td><td class="mono tnum small">644.00</td><td><span class="mono tnum up">+9.90%</span></td><td><span class="mono tnum">100</span></td><td><span class="mono tnum up">+43.27%</span></td><td><span class="mono tnum up">+68.15%</span></td><td><span class="mono tnum up">+116.11%</span></td><td><span class="mono tnum up">+96.64%</span></td><td><span class="mono tnum">122.0</span></td><td><span class="mono tnum">+52.3%</span></td><td><span class="mono tnum">+20.7%</span></td><td><span class="mono tnum up">+5,453</span></td><td><span class="chip-streak chip-streak-buy mono small">連買3日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/4979.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3163" data-name="波若威" data-sector="Technology" data-source="simulator_universe" data-day="7.9295" data-52w="96.03" data-ret7="-2.78" data-ret30="37.95" data-ret90="229.74" data-retytd="192.71" data-pe="196.0" data-eps="6.25" data-epsg="0.603" data-revg="0.307" data-roe="0.16958" data-pm="0.22517" data-f5="97399" data-f20="-1470" data-fstreak="1" data-tstreak="1" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3163</div><div class="sc-name muted small">波若威</div></td><td class="mono tnum small">1225.00</td><td><span class="mono tnum up">+7.93%</span></td><td><span class="mono tnum">96</span></td><td><span class="mono tnum dn">-2.78%</span></td><td><span class="mono tnum up">+37.95%</span></td><td><span class="mono tnum up">+229.74%</span></td><td><span class="mono tnum up">+192.71%</span></td><td><span class="mono tnum">196.0</span></td><td><span class="mono tnum">+60.3%</span></td><td><span class="mono tnum">+17.0%</span></td><td><span class="mono tnum up">+97</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3163.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3363" data-name="上詮" data-sector="Technology" data-source="simulator_universe" data-day="8.3133" data-52w="98.29" data-ret7="14.67" data-ret30="42.02" data-ret90="109.56" data-retytd="98.24" data-pe="4994.4443" data-eps="0.18" data-epsg="" data-revg="0.086" data-roe="0.00638" data-pm="0.00856" data-f5="-225658" data-f20="174920" data-fstreak="1" data-tstreak="1" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3363</div><div class="sc-name muted small">上詮</div></td><td class="mono tnum small">899.00</td><td><span class="mono tnum up">+8.31%</span></td><td><span class="mono tnum">98</span></td><td><span class="mono tnum up">+14.67%</span></td><td><span class="mono tnum up">+42.02%</span></td><td><span class="mono tnum up">+109.56%</span></td><td><span class="mono tnum up">+98.24%</span></td><td><span class="mono tnum">4994.4</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">+0.6%</span></td><td><span class="mono tnum dn">-226</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3363.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3234" data-name="光環" data-sector="Technology" data-source="simulator_universe" data-day="2.6667" data-52w="89.99" data-ret7="1.32" data-ret30="35.88" data-ret90="161.61" data-retytd="138.14" data-pe="" data-eps="-1.4" data-epsg="" data-revg="0.175" data-roe="-0.19198" data-pm="-0.22784" data-f5="-2085305" data-f20="1862631" data-fstreak="-1" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3234</div><div class="sc-name muted small">光環</div></td><td class="mono tnum small">115.50</td><td><span class="mono tnum up">+2.67%</span></td><td><span class="mono tnum">90</span></td><td><span class="mono tnum up">+1.32%</span></td><td><span class="mono tnum up">+35.88%</span></td><td><span class="mono tnum up">+161.61%</span></td><td><span class="mono tnum up">+138.14%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">-19.2%</span></td><td><span class="mono tnum dn">-2,085</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3234.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="4958" data-name="臻鼎-KY" data-sector="Technology" data-source="simulator_universe" data-day="9.9415" data-52w="100.0" data-ret7="6.42" data-ret30="36.23" data-ret90="95.16" data-retytd="100.71" data-pe="41.654358" data-eps="6.77" data-epsg="-0.399" data-revg="0.013" data-roe="0.06572" data-pm="0.0372" data-f5="-7550582" data-f20="1883522" data-fstreak="1" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">4958</div><div class="sc-name muted small">臻鼎-KY</div></td><td class="mono tnum small">282.00</td><td><span class="mono tnum up">+9.94%</span></td><td><span class="mono tnum">100</span></td><td><span class="mono tnum up">+6.42%</span></td><td><span class="mono tnum up">+36.23%</span></td><td><span class="mono tnum up">+95.16%</span></td><td><span class="mono tnum up">+100.71%</span></td><td><span class="mono tnum">41.7</span></td><td><span class="mono tnum">-39.9%</span></td><td><span class="mono tnum">+6.6%</span></td><td><span class="mono tnum dn">-7,551</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/4958.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2368" data-name="金像電" data-sector="Technology" data-source="simulator_universe" data-day="0.8584" data-52w="96.61" data-ret7="7.8" data-ret30="28.14" data-ret90="84.46" data-retytd="82.74" data-pe="61.71218" data-eps="19.04" data-epsg="1.237" data-revg="0.665" data-roe="0.35064998" data-pm="0.1601" data-f5="1038463" data-f20="-7892406" data-fstreak="-2" data-tstreak="-1" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2368</div><div class="sc-name muted small">金像電</div></td><td class="mono tnum small">1175.00</td><td><span class="mono tnum up">+0.86%</span></td><td><span class="mono tnum">97</span></td><td><span class="mono tnum up">+7.80%</span></td><td><span class="mono tnum up">+28.14%</span></td><td><span class="mono tnum up">+84.46%</span></td><td><span class="mono tnum up">+82.74%</span></td><td><span class="mono tnum">61.7</span></td><td><span class="mono tnum">+123.7%</span></td><td><span class="mono tnum">+35.1%</span></td><td><span class="mono tnum up">+1,038</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2368.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3037" data-name="欣興" data-sector="Technology" data-source="simulator_universe" data-day="-0.3101" data-52w="97.07" data-ret7="0.78" data-ret30="10.86" data-ret90="185.14" data-retytd="193.61" data-pe="149.18794" data-eps="4.31" data-epsg="77.372" data-revg="0.181" data-roe="0.07309" data-pm="0.05085" data-f5="-23190924" data-f20="-14235982" data-fstreak="4" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3037</div><div class="sc-name muted small">欣興</div></td><td class="mono tnum small">643.00</td><td><span class="mono tnum dn">-0.31%</span></td><td><span class="mono tnum">97</span></td><td><span class="mono tnum up">+0.78%</span></td><td><span class="mono tnum up">+10.86%</span></td><td><span class="mono tnum up">+185.14%</span></td><td><span class="mono tnum up">+193.61%</span></td><td><span class="mono tnum">149.2</span></td><td><span class="mono tnum">+7737.2%</span></td><td><span class="mono tnum">+7.3%</span></td><td><span class="mono tnum dn">-2.3萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買4日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3037.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="8046" data-name="南電" data-sector="Technology" data-source="simulator_universe" data-day="0.4161" data-52w="96.24" data-ret7="8.55" data-ret30="27.69" data-ret90="201.04" data-retytd="205.49" data-pe="238.1579" data-eps="3.04" data-epsg="5.727" data-revg="0.419" data-roe="0.042519998" data-pm="0.048460003" data-f5="-644606" data-f20="4039690" data-fstreak="-1" data-tstreak="3" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">8046</div><div class="sc-name muted small">南電</div></td><td class="mono tnum small">724.00</td><td><span class="mono tnum up">+0.42%</span></td><td><span class="mono tnum">96</span></td><td><span class="mono tnum up">+8.55%</span></td><td><span class="mono tnum up">+27.69%</span></td><td><span class="mono tnum up">+201.04%</span></td><td><span class="mono tnum up">+205.49%</span></td><td><span class="mono tnum">238.2</span></td><td><span class="mono tnum">+572.7%</span></td><td><span class="mono tnum">+4.3%</span></td><td><span class="mono tnum dn">-645</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/8046.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2383" data-name="台光電" data-sector="Technology" data-source="simulator_universe" data-day="-0.9126" data-52w="95.66" data-ret7="11.11" data-ret30="40.74" data-ret90="142.81" data-retytd="138.99" data-pe="93.45795" data-eps="40.66" data-epsg="0.42" data-revg="0.343" data-roe="0.34245" data-pm="0.15541" data-f5="204831" data-f20="115357" data-fstreak="-2" data-tstreak="-5" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2383</div><div class="sc-name muted small">台光電</div></td><td class="mono tnum small">3800.00</td><td><span class="mono tnum dn">-0.91%</span></td><td><span class="mono tnum">96</span></td><td><span class="mono tnum up">+11.11%</span></td><td><span class="mono tnum up">+40.74%</span></td><td><span class="mono tnum up">+142.81%</span></td><td><span class="mono tnum up">+138.99%</span></td><td><span class="mono tnum">93.5</span></td><td><span class="mono tnum">+42.0%</span></td><td><span class="mono tnum">+34.2%</span></td><td><span class="mono tnum up">+205</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2383.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2327" data-name="國巨" data-sector="Technology" data-source="simulator_universe" data-day="-2.6154" data-52w="91.25" data-ret7="11.05" data-ret30="12.83" data-ret90="31.06" data-retytd="31.33" data-pe="27.545692" data-eps="11.49" data-epsg="0.451" data-revg="0.227" data-roe="0.15875" data-pm="0.18648" data-f5="42066031" data-f20="85286822" data-fstreak="-1" data-tstreak="5" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2327</div><div class="sc-name muted small">國巨</div></td><td class="mono tnum small">316.50</td><td><span class="mono tnum dn">-2.62%</span></td><td><span class="mono tnum">91</span></td><td><span class="mono tnum up">+11.05%</span></td><td><span class="mono tnum up">+12.83%</span></td><td><span class="mono tnum up">+31.06%</span></td><td><span class="mono tnum up">+31.33%</span></td><td><span class="mono tnum">27.5</span></td><td><span class="mono tnum">+45.1%</span></td><td><span class="mono tnum">+15.9%</span></td><td><span class="mono tnum up">+4.2萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2327.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2492" data-name="華新科" data-sector="Technology" data-source="simulator_universe" data-day="-1.0101" data-52w="79.87" data-ret7="14.4" data-ret30="3.89" data-ret90="18.55" data-retytd="18.07" data-pe="31.078224" data-eps="4.73" data-epsg="-0.049" data-revg="0.047" data-roe="0.04961" data-pm="0.06303" data-f5="15173166" data-f20="4532944" data-fstreak="4" data-tstreak="11" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2492</div><div class="sc-name muted small">華新科</div></td><td class="mono tnum small">147.00</td><td><span class="mono tnum dn">-1.01%</span></td><td><span class="mono tnum">80</span></td><td><span class="mono tnum up">+14.40%</span></td><td><span class="mono tnum up">+3.89%</span></td><td><span class="mono tnum up">+18.55%</span></td><td><span class="mono tnum up">+18.07%</span></td><td><span class="mono tnum">31.1</span></td><td><span class="mono tnum">-4.9%</span></td><td><span class="mono tnum">+5.0%</span></td><td><span class="mono tnum up">+1.5萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買4日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2492.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="6515" data-name="穎崴" data-sector="Technology" data-source="simulator_universe" data-day="4.9389" data-52w="96.27" data-ret7="29.95" data-ret30="42.73" data-ret90="195.27" data-retytd="255.96" data-pe="222.2342" data-eps="46.37" data-epsg="0.346" data-revg="0.451" data-roe="0.27916" data-pm="0.21291" data-f5="12085" data-f20="500294" data-fstreak="1" data-tstreak="5" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">6515</div><div class="sc-name muted small">穎崴</div></td><td class="mono tnum small">10305.00</td><td><span class="mono tnum up">+4.94%</span></td><td><span class="mono tnum">96</span></td><td><span class="mono tnum up">+29.95%</span></td><td><span class="mono tnum up">+42.73%</span></td><td><span class="mono tnum up">+195.27%</span></td><td><span class="mono tnum up">+255.96%</span></td><td><span class="mono tnum">222.2</span></td><td><span class="mono tnum">+34.6%</span></td><td><span class="mono tnum">+27.9%</span></td><td><span class="mono tnum up">+12</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/6515.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3533" data-name="嘉澤" data-sector="Technology" data-source="simulator_universe" data-day="-0.7968" data-52w="97.62" data-ret7="9.69" data-ret30="30.03" data-ret90="76.6" data-retytd="92.28" data-pe="35.586678" data-eps="69.97" data-epsg="-0.129" data-revg="0.116" data-roe="0.2028" data-pm="0.23284" data-f5="-331840" data-f20="1743195" data-fstreak="-4" data-tstreak="3" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3533</div><div class="sc-name muted small">嘉澤</div></td><td class="mono tnum small">2490.00</td><td><span class="mono tnum dn">-0.80%</span></td><td><span class="mono tnum">98</span></td><td><span class="mono tnum up">+9.69%</span></td><td><span class="mono tnum up">+30.03%</span></td><td><span class="mono tnum up">+76.60%</span></td><td><span class="mono tnum up">+92.28%</span></td><td><span class="mono tnum">35.6</span></td><td><span class="mono tnum">-12.9%</span></td><td><span class="mono tnum">+20.3%</span></td><td><span class="mono tnum dn">-332</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣4日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3533.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="006208" data-name="富邦台50" data-sector="" data-source="simulator_universe" data-day="-0.9909" data-52w="97.68" data-ret7="4.03" data-ret30="7.95" data-ret90="22.43" data-retytd="27.39" data-pe="27.435064" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="2155515" data-f20="4495217" data-fstreak="-1" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">006208</div><div class="sc-name muted small">富邦台50</div></td><td class="mono tnum small">194.85</td><td><span class="mono tnum dn">-0.99%</span></td><td><span class="mono tnum">98</span></td><td><span class="mono tnum up">+4.03%</span></td><td><span class="mono tnum up">+7.95%</span></td><td><span class="mono tnum up">+22.43%</span></td><td><span class="mono tnum up">+27.39%</span></td><td><span class="mono tnum">27.4</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum up">+2,156</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/006208.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="00830" data-name="國泰費半" data-sector="" data-source="simulator_universe" data-day="0.852" data-52w="99.12" data-ret7="6.46" data-ret30="16.56" data-ret90="6.72" data-retytd="11.57" data-pe="44.592903" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="31414647" data-f20="91770362" data-fstreak="11" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">00830</div><div class="sc-name muted small">國泰費半</div></td><td class="mono tnum small">65.10</td><td><span class="mono tnum up">+0.85%</span></td><td><span class="mono tnum">99</span></td><td><span class="mono tnum up">+6.46%</span></td><td><span class="mono tnum up">+16.56%</span></td><td><span class="mono tnum up">+6.72%</span></td><td><span class="mono tnum up">+11.57%</span></td><td><span class="mono tnum">44.6</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum up">+3.1萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買11日</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/00830.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="00687B" data-name="國泰20年美債" data-sector="" data-source="simulator_universe" data-day="-0.5686" data-52w="55.48" data-ret7="-1.1" data-ret30="-2.1" data-ret90="-1.72" data-retytd="-0.46" data-pe="" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="-3829955" data-f20="69573655" data-fstreak="-2" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">00687B</div><div class="sc-name muted small">國泰20年美債</div></td><td class="mono tnum small">27.98</td><td><span class="mono tnum dn">-0.57%</span></td><td><span class="mono tnum">55</span></td><td><span class="mono tnum dn">-1.10%</span></td><td><span class="mono tnum dn">-2.10%</span></td><td><span class="mono tnum dn">-1.72%</span></td><td><span class="mono tnum dn">-0.46%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum dn">-3,830</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/00687B.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="00679B" data-name="元大美債20年" data-sector="" data-source="simulator_universe" data-day="-0.6645" data-52w="56.37" data-ret7="-1.18" data-ret30="-2.15" data-ret90="-1.79" data-retytd="-0.52" data-pe="" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="-24093014" data-f20="-15706491" data-fstreak="-2" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">00679B</div><div class="sc-name muted small">元大美債20年</div></td><td class="mono tnum small">26.91</td><td><span class="mono tnum dn">-0.66%</span></td><td><span class="mono tnum">56</span></td><td><span class="mono tnum dn">-1.18%</span></td><td><span class="mono tnum dn">-2.15%</span></td><td><span class="mono tnum dn">-1.79%</span></td><td><span class="mono tnum dn">-0.52%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum dn">-2.4萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/00679B.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="QQQ" data-name="Invesco QQQ Nasdaq" data-sector="" data-source="simulator_universe" data-day="1.3084" data-52w="99.48" data-ret7="6.18" data-ret30="9.41" data-ret90="5.28" data-retytd="5.83" data-pe="34.27903" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="" data-f20="" data-fstreak="" data-tstreak="" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">QQQ</div><div class="sc-name muted small">Invesco QQQ Nasdaq</div></td><td class="mono tnum small">648.85</td><td><span class="mono tnum up">+1.31%</span></td><td><span class="mono tnum">99</span></td><td><span class="mono tnum up">+6.18%</span></td><td><span class="mono tnum up">+9.41%</span></td><td><span class="mono tnum up">+5.28%</span></td><td><span class="mono tnum up">+5.83%</span></td><td><span class="mono tnum">34.3</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="muted mono tnum small">—</span></td><td><span class="muted small">—</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/QQQ.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="TLT" data-name="iShares 20+ Year Bond" data-sector="" data-source="simulator_universe" data-day="0.9156" data-52w="42.41" data-ret7="0.67" data-ret30="-0.48" data-ret90="-0.27" data-retytd="0.05" data-pe="" data-eps="" data-epsg="" data-revg="" data-roe="" data-pm="" data-f5="" data-f20="" data-fstreak="" data-tstreak="" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">TLT</div><div class="sc-name muted small">iShares 20+ Year Bond</div></td><td class="mono tnum small">87.07</td><td><span class="mono tnum up">+0.92%</span></td><td><span class="mono tnum">42</span></td><td><span class="mono tnum up">+0.67%</span></td><td><span class="mono tnum dn">-0.48%</span></td><td><span class="mono tnum dn">-0.27%</span></td><td><span class="mono tnum up">+0.05%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="muted mono tnum small">—</span></td><td><span class="muted small">—</span></td><td class="muted small">—</td><td><a class="sc-link mono" href="holdings/TLT.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="NVDA" data-name="NVIDIA" data-sector="Technology" data-source="simulator_universe" data-day="1.6788" data-52w="91.03" data-ret7="6.92" data-ret30="12.95" data-ret90="10.02" data-retytd="6.79" data-pe="41.15918" data-eps="4.9" data-epsg="0.956" data-revg="0.732" data-roe="1.01485" data-pm="0.55603004" data-f5="" data-f20="" data-fstreak="" data-tstreak="" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">NVDA</div><div class="sc-name muted small">NVIDIA</div></td><td class="mono tnum small">201.68</td><td><span class="mono tnum up">+1.68%</span></td><td><span class="mono tnum">91</span></td><td><span class="mono tnum up">+6.92%</span></td><td><span class="mono tnum up">+12.95%</span></td><td><span class="mono tnum up">+10.02%</span></td><td><span class="mono tnum up">+6.79%</span></td><td><span class="mono tnum">41.2</span></td><td><span class="mono tnum">+95.6%</span></td><td><span class="mono tnum">+101.5%</span></td><td><span class="muted mono tnum small">—</span></td><td><span class="muted small">—</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/NVDA.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="AAPL" data-name="Apple" data-sector="Technology" data-source="simulator_universe" data-day="2.593" data-52w="81.39" data-ret7="3.74" data-ret30="8.54" data-ret90="9.12" data-retytd="-0.29" data-pe="34.249683" data-eps="7.89" data-epsg="0.183" data-revg="0.157" data-roe="1.5202099" data-pm="0.27037" data-f5="" data-f20="" data-fstreak="" data-tstreak="" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">AAPL</div><div class="sc-name muted small">Apple</div></td><td class="mono tnum small">270.23</td><td><span class="mono tnum up">+2.59%</span></td><td><span class="mono tnum">81</span></td><td><span class="mono tnum up">+3.74%</span></td><td><span class="mono tnum up">+8.54%</span></td><td><span class="mono tnum up">+9.12%</span></td><td><span class="mono tnum dn">-0.29%</span></td><td><span class="mono tnum">34.2</span></td><td><span class="mono tnum">+18.3%</span></td><td><span class="mono tnum">+152.0%</span></td><td><span class="muted mono tnum small">—</span></td><td><span class="muted small">—</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/AAPL.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="TSLA" data-name="Tesla" data-sector="Consumer Cyclical" data-source="simulator_universe" data-day="3.0136" data-52w="64.42" data-ret7="14.81" data-ret30="5.34" data-ret90="-7.14" data-retytd="-8.55" data-pe="370.94443" data-eps="1.08" data-epsg="-0.606" data-revg="-0.031" data-roe="0.049250003" data-pm="0.040009998" data-f5="" data-f20="" data-fstreak="" data-tstreak="" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">TSLA</div><div class="sc-name muted small">Tesla</div></td><td class="mono tnum small">400.62</td><td><span class="mono tnum up">+3.01%</span></td><td><span class="mono tnum">64</span></td><td><span class="mono tnum up">+14.81%</span></td><td><span class="mono tnum up">+5.34%</span></td><td><span class="mono tnum dn">-7.14%</span></td><td><span class="mono tnum dn">-8.55%</span></td><td><span class="mono tnum">370.9</span></td><td><span class="mono tnum">-60.6%</span></td><td><span class="mono tnum">+4.9%</span></td><td><span class="muted mono tnum small">—</span></td><td><span class="muted small">—</span></td><td class="muted small">Consumer Cyclical</td><td><a class="sc-link mono" href="holdings/TSLA.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="MSFT" data-name="Microsoft" data-sector="Technology" data-source="simulator_universe" data-day="0.602" data-52w="33.6" data-ret7="14.0" data-ret30="8.68" data-ret90="-4.8" data-retytd="-10.6" data-pe="26.457449" data-eps="15.98" data-epsg="0.598" data-revg="0.167" data-roe="0.34390998" data-pm="0.39044" data-f5="" data-f20="" data-fstreak="" data-tstreak="" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">MSFT</div><div class="sc-name muted small">Microsoft</div></td><td class="mono tnum small">422.79</td><td><span class="mono tnum up">+0.60%</span></td><td><span class="mono tnum">34</span></td><td><span class="mono tnum up">+14.00%</span></td><td><span class="mono tnum up">+8.68%</span></td><td><span class="mono tnum dn">-4.80%</span></td><td><span class="mono tnum dn">-10.60%</span></td><td><span class="mono tnum">26.5</span></td><td><span class="mono tnum">+59.8%</span></td><td><span class="mono tnum">+34.4%</span></td><td><span class="muted mono tnum small">—</span></td><td><span class="muted small">—</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/MSFT.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2409" data-name="友達" data-sector="Technology" data-source="simulator_universe" data-day="-4.1063" data-52w="81.9" data-ret7="9.37" data-ret30="22.53" data-ret90="36.9" data-retytd="57.54" data-pe="22.055557" data-eps="0.9" data-epsg="0.804" data-revg="0.021" data-roe="0.04319" data-pm="0.024319999" data-f5="4016866" data-f20="124264184" data-fstreak="-2" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2409</div><div class="sc-name muted small">友達</div></td><td class="mono tnum small">19.85</td><td><span class="mono tnum dn">-4.11%</span></td><td><span class="mono tnum">82</span></td><td><span class="mono tnum up">+9.37%</span></td><td><span class="mono tnum up">+22.53%</span></td><td><span class="mono tnum up">+36.90%</span></td><td><span class="mono tnum up">+57.54%</span></td><td><span class="mono tnum">22.1</span></td><td><span class="mono tnum">+80.4%</span></td><td><span class="mono tnum">+4.3%</span></td><td><span class="mono tnum up">+4,017</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2409.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3481" data-name="群創" data-sector="Technology" data-source="simulator_universe" data-day="-4.9541" data-52w="66.82" data-ret7="-0.38" data-ret30="-7.33" data-ret90="29.5" data-retytd="43.09" data-pe="863.3333" data-eps="0.03" data-epsg="" data-revg="0.057" data-roe="0.00291" data-pm="0.0011" data-f5="37457886" data-f20="-151674023" data-fstreak="-2" data-tstreak="-3" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3481</div><div class="sc-name muted small">群創</div></td><td class="mono tnum small">25.90</td><td><span class="mono tnum dn">-4.95%</span></td><td><span class="mono tnum">67</span></td><td><span class="mono tnum dn">-0.38%</span></td><td><span class="mono tnum dn">-7.33%</span></td><td><span class="mono tnum up">+29.50%</span></td><td><span class="mono tnum up">+43.09%</span></td><td><span class="mono tnum">863.3</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">+0.3%</span></td><td><span class="mono tnum up">+3.7萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3481.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="4960" data-name="誠美材" data-sector="Technology" data-source="simulator_universe" data-day="9.7245" data-52w="99.77" data-ret7="47.17" data-ret30="25.37" data-ret90="154.51" data-retytd="153.56" data-pe="" data-eps="-2.58" data-epsg="" data-revg="0.035" data-roe="-0.18003" data-pm="-0.16923" data-f5="22108232" data-f20="15762581" data-fstreak="3" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">4960</div><div class="sc-name muted small">誠美材</div></td><td class="mono tnum small">33.85</td><td><span class="mono tnum up">+9.72%</span></td><td><span class="mono tnum">100</span></td><td><span class="mono tnum up">+47.17%</span></td><td><span class="mono tnum up">+25.37%</span></td><td><span class="mono tnum up">+154.51%</span></td><td><span class="mono tnum up">+153.56%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">-18.0%</span></td><td><span class="mono tnum up">+2.2萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買3日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/4960.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3008" data-name="大立光" data-sector="Technology" data-source="simulator_universe" data-day="-7.6241" data-52w="64.29" data-ret7="12.77" data-ret30="6.76" data-ret90="2.96" data-retytd="0.77" data-pe="16.583906" data-eps="157.08" data-epsg="-0.225" data-revg="-0.054" data-roe="0.1146" data-pm="0.34792998" data-f5="1631771" data-f20="2745283" data-fstreak="2" data-tstreak="-8" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3008</div><div class="sc-name muted small">大立光</div></td><td class="mono tnum small">2605.00</td><td><span class="mono tnum dn">-7.62%</span></td><td><span class="mono tnum">64</span></td><td><span class="mono tnum up">+12.77%</span></td><td><span class="mono tnum up">+6.76%</span></td><td><span class="mono tnum up">+2.96%</span></td><td><span class="mono tnum up">+0.77%</span></td><td><span class="mono tnum">16.6</span></td><td><span class="mono tnum">-22.5%</span></td><td><span class="mono tnum">+11.5%</span></td><td><span class="mono tnum up">+1,632</span></td><td><span class="chip-streak chip-streak-buy mono small">連買2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3008.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3406" data-name="玉晶光" data-sector="Technology" data-source="simulator_universe" data-day="-1.5656" data-52w="79.19" data-ret7="10.43" data-ret30="12.28" data-ret90="10.31" data-retytd="14.97" data-pe="15.335366" data-eps="32.8" data-epsg="0.37" data-revg="0.307" data-roe="0.14471" data-pm="0.14815" data-f5="1258992" data-f20="2291144" data-fstreak="-1" data-tstreak="-2" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3406</div><div class="sc-name muted small">玉晶光</div></td><td class="mono tnum small">503.00</td><td><span class="mono tnum dn">-1.57%</span></td><td><span class="mono tnum">79</span></td><td><span class="mono tnum up">+10.43%</span></td><td><span class="mono tnum up">+12.28%</span></td><td><span class="mono tnum up">+10.31%</span></td><td><span class="mono tnum up">+14.97%</span></td><td><span class="mono tnum">15.3</span></td><td><span class="mono tnum">+37.0%</span></td><td><span class="mono tnum">+14.5%</span></td><td><span class="mono tnum up">+1,259</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3406.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="8069" data-name="元太" data-sector="Technology" data-source="simulator_universe" data-day="0.0" data-52w="12.67" data-ret7="8.39" data-ret30="4.38" data-ret90="-9.09" data-retytd="-22.89" data-pe="17.070484" data-eps="9.08" data-epsg="-0.683" data-revg="-0.275" data-roe="0.16461" data-pm="0.29114" data-f5="2826760" data-f20="-4900880" data-fstreak="-1" data-tstreak="11" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">8069</div><div class="sc-name muted small">元太</div></td><td class="mono tnum small">155.00</td><td><span class="mono tnum ">+0.00%</span></td><td><span class="mono tnum">13</span></td><td><span class="mono tnum up">+8.39%</span></td><td><span class="mono tnum up">+4.38%</span></td><td><span class="mono tnum dn">-9.09%</span></td><td><span class="mono tnum dn">-22.89%</span></td><td><span class="mono tnum">17.1</span></td><td><span class="mono tnum">-68.3%</span></td><td><span class="mono tnum">+16.5%</span></td><td><span class="mono tnum up">+2,827</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/8069.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2603" data-name="長榮" data-sector="Industrials" data-source="simulator_universe" data-day="-1.737" data-52w="25.56" data-ret7="-2.22" data-ret30="-9.17" data-ret90="2.33" data-retytd="2.59" data-pe="6.2579017" data-eps="31.64" data-epsg="-0.724" data-revg="-0.26" data-roe="0.118190005" data-pm="0.18091999" data-f5="-7413097" data-f20="-19301453" data-fstreak="-2" data-tstreak="-10" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2603</div><div class="sc-name muted small">長榮</div></td><td class="mono tnum small">198.00</td><td><span class="mono tnum dn">-1.74%</span></td><td><span class="mono tnum">26</span></td><td><span class="mono tnum dn">-2.22%</span></td><td><span class="mono tnum dn">-9.17%</span></td><td><span class="mono tnum up">+2.33%</span></td><td><span class="mono tnum up">+2.59%</span></td><td><span class="mono tnum">6.3</span></td><td><span class="mono tnum">-72.4%</span></td><td><span class="mono tnum">+11.8%</span></td><td><span class="mono tnum dn">-7,413</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣2日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/2603.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2609" data-name="陽明" data-sector="Industrials" data-source="simulator_universe" data-day="-0.5882" data-52w="1.59" data-ret7="-1.17" data-ret30="-13.04" data-ret90="-9.79" data-retytd="-9.46" data-pe="10.368098" data-eps="4.89" data-epsg="-0.817" data-revg="-0.303" data-roe="0.05204" data-pm="0.10453" data-f5="-21862281" data-f20="-72301814" data-fstreak="-10" data-tstreak="-9" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2609</div><div class="sc-name muted small">陽明</div></td><td class="mono tnum small">50.70</td><td><span class="mono tnum dn">-0.59%</span></td><td><span class="mono tnum">2</span></td><td><span class="mono tnum dn">-1.17%</span></td><td><span class="mono tnum dn">-13.04%</span></td><td><span class="mono tnum dn">-9.79%</span></td><td><span class="mono tnum dn">-9.46%</span></td><td><span class="mono tnum">10.4</span></td><td><span class="mono tnum">-81.7%</span></td><td><span class="mono tnum">+5.2%</span></td><td><span class="mono tnum dn">-2.2萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣10日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/2609.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2618" data-name="長榮航" data-sector="Industrials" data-source="simulator_universe" data-day="0.1418" data-52w="25.1" data-ret7="1.29" data-ret30="-0.56" data-ret90="-3.42" data-retytd="-3.29" data-pe="7.354166" data-eps="4.8" data-epsg="0.021" data-revg="0.019" data-roe="0.19729" data-pm="0.118669994" data-f5="11154615" data-f20="64278123" data-fstreak="-1" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2618</div><div class="sc-name muted small">長榮航</div></td><td class="mono tnum small">35.30</td><td><span class="mono tnum up">+0.14%</span></td><td><span class="mono tnum">25</span></td><td><span class="mono tnum up">+1.29%</span></td><td><span class="mono tnum dn">-0.56%</span></td><td><span class="mono tnum dn">-3.42%</span></td><td><span class="mono tnum dn">-3.29%</span></td><td><span class="mono tnum">7.4</span></td><td><span class="mono tnum">+2.1%</span></td><td><span class="mono tnum">+19.7%</span></td><td><span class="mono tnum up">+1.1萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/2618.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2207" data-name="和泰車" data-sector="Consumer Cyclical" data-source="simulator_universe" data-day="-0.1938" data-52w="23.5" data-ret7="1.38" data-ret30="2.79" data-ret90="-5.33" data-retytd="-5.68" data-pe="15.196223" data-eps="33.89" data-epsg="0.141" data-revg="-0.002" data-roe="0.18891001" data-pm="0.06703" data-f5="272784" data-f20="276488" data-fstreak="-1" data-tstreak="-6" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2207</div><div class="sc-name muted small">和泰車</div></td><td class="mono tnum small">515.00</td><td><span class="mono tnum dn">-0.19%</span></td><td><span class="mono tnum">24</span></td><td><span class="mono tnum up">+1.38%</span></td><td><span class="mono tnum up">+2.79%</span></td><td><span class="mono tnum dn">-5.33%</span></td><td><span class="mono tnum dn">-5.68%</span></td><td><span class="mono tnum">15.2</span></td><td><span class="mono tnum">+14.1%</span></td><td><span class="mono tnum">+18.9%</span></td><td><span class="mono tnum up">+273</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Consumer Cyclical</td><td><a class="sc-link mono" href="holdings/2207.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1476" data-name="儒鴻" data-sector="Consumer Cyclical" data-source="simulator_universe" data-day="1.0116" data-52w="22.01" data-ret7="6.39" data-ret30="-10.84" data-ret90="-13.81" data-retytd="-8.15" data-pe="17.38806" data-eps="20.1" data-epsg="-0.074" data-revg="-0.032" data-roe="0.18836" data-pm="0.14517" data-f5="-652423" data-f20="-2452043" data-fstreak="-1" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1476</div><div class="sc-name muted small">儒鴻</div></td><td class="mono tnum small">349.50</td><td><span class="mono tnum up">+1.01%</span></td><td><span class="mono tnum">22</span></td><td><span class="mono tnum up">+6.39%</span></td><td><span class="mono tnum dn">-10.84%</span></td><td><span class="mono tnum dn">-13.81%</span></td><td><span class="mono tnum dn">-8.15%</span></td><td><span class="mono tnum">17.4</span></td><td><span class="mono tnum">-7.4%</span></td><td><span class="mono tnum">+18.8%</span></td><td><span class="mono tnum dn">-652</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Consumer Cyclical</td><td><a class="sc-link mono" href="holdings/1476.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="9914" data-name="美利達" data-sector="Consumer Cyclical" data-source="simulator_universe" data-day="-2.2472" data-52w="4.16" data-ret7="2.53" data-ret30="-10.7" data-ret90="-24.81" data-retytd="-22.42" data-pe="15.225" data-eps="4.0" data-epsg="" data-revg="-0.145" data-roe="0.06066" data-pm="0.04486" data-f5="1533371" data-f20="-4423033" data-fstreak="-1" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">9914</div><div class="sc-name muted small">美利達</div></td><td class="mono tnum small">60.90</td><td><span class="mono tnum dn">-2.25%</span></td><td><span class="mono tnum">4</span></td><td><span class="mono tnum up">+2.53%</span></td><td><span class="mono tnum dn">-10.70%</span></td><td><span class="mono tnum dn">-24.81%</span></td><td><span class="mono tnum dn">-22.42%</span></td><td><span class="mono tnum">15.2</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">+6.1%</span></td><td><span class="mono tnum up">+1,533</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Consumer Cyclical</td><td><a class="sc-link mono" href="holdings/9914.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="9921" data-name="巨大" data-sector="Consumer Cyclical" data-source="simulator_universe" data-day="-3.0812" data-52w="3.07" data-ret7="2.82" data-ret30="-3.76" data-ret90="-22.25" data-retytd="-21.9" data-pe="37.608692" data-eps="1.84" data-epsg="" data-revg="-0.095" data-roe="0.02349" data-pm="0.012" data-f5="812472" data-f20="-458534" data-fstreak="-1" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">9921</div><div class="sc-name muted small">巨大</div></td><td class="mono tnum small">69.20</td><td><span class="mono tnum dn">-3.08%</span></td><td><span class="mono tnum">3</span></td><td><span class="mono tnum up">+2.82%</span></td><td><span class="mono tnum dn">-3.76%</span></td><td><span class="mono tnum dn">-22.25%</span></td><td><span class="mono tnum dn">-21.90%</span></td><td><span class="mono tnum">37.6</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">+2.3%</span></td><td><span class="mono tnum up">+812</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Consumer Cyclical</td><td><a class="sc-link mono" href="holdings/9921.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2881" data-name="富邦金" data-sector="Financial Services" data-source="simulator_universe" data-day="0.1138" data-52w="54.94" data-ret7="0.46" data-ret30="-1.68" data-ret90="-7.85" data-retytd="-7.95" data-pe="10.51374" data-eps="8.37" data-epsg="0.018" data-revg="0.24" data-roe="0.12322" data-pm="0.124639995" data-f5="-2813169" data-f20="-88473515" data-fstreak="-1" data-tstreak="-5" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2881</div><div class="sc-name muted small">富邦金</div></td><td class="mono tnum small">88.00</td><td><span class="mono tnum up">+0.11%</span></td><td><span class="mono tnum">55</span></td><td><span class="mono tnum up">+0.46%</span></td><td><span class="mono tnum dn">-1.68%</span></td><td><span class="mono tnum dn">-7.85%</span></td><td><span class="mono tnum dn">-7.95%</span></td><td><span class="mono tnum">10.5</span></td><td><span class="mono tnum">+1.8%</span></td><td><span class="mono tnum">+12.3%</span></td><td><span class="mono tnum dn">-2,813</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Financial Services</td><td><a class="sc-link mono" href="holdings/2881.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2882" data-name="國泰金" data-sector="Financial Services" data-source="simulator_universe" data-day="1.0782" data-52w="77.7" data-ret7="2.88" data-ret30="2.18" data-ret90="-1.19" data-retytd="-0.27" data-pe="10.62323" data-eps="7.06" data-epsg="3.347" data-revg="1.129" data-roe="" data-pm="0.07718" data-f5="-3373523" data-f20="-57189681" data-fstreak="-1" data-tstreak="-5" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2882</div><div class="sc-name muted small">國泰金</div></td><td class="mono tnum small">75.00</td><td><span class="mono tnum up">+1.08%</span></td><td><span class="mono tnum">78</span></td><td><span class="mono tnum up">+2.88%</span></td><td><span class="mono tnum up">+2.18%</span></td><td><span class="mono tnum dn">-1.19%</span></td><td><span class="mono tnum dn">-0.27%</span></td><td><span class="mono tnum">10.6</span></td><td><span class="mono tnum">+334.7%</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum dn">-3,374</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Financial Services</td><td><a class="sc-link mono" href="holdings/2882.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2886" data-name="兆豐金" data-sector="Financial Services" data-source="simulator_universe" data-day="-1.1264" data-52w="39.34" data-ret7="-0.88" data-ret30="0.51" data-ret90="-2.83" data-retytd="-1.99" data-pe="16.73729" data-eps="2.36" data-epsg="0.24" data-revg="0.124" data-roe="0.09264" data-pm="0.45675" data-f5="3729506" data-f20="78918386" data-fstreak="-1" data-tstreak="-6" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2886</div><div class="sc-name muted small">兆豐金</div></td><td class="mono tnum small">39.50</td><td><span class="mono tnum dn">-1.13%</span></td><td><span class="mono tnum">39</span></td><td><span class="mono tnum dn">-0.88%</span></td><td><span class="mono tnum up">+0.51%</span></td><td><span class="mono tnum dn">-2.83%</span></td><td><span class="mono tnum dn">-1.99%</span></td><td><span class="mono tnum">16.7</span></td><td><span class="mono tnum">+24.0%</span></td><td><span class="mono tnum">+9.3%</span></td><td><span class="mono tnum up">+3,730</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Financial Services</td><td><a class="sc-link mono" href="holdings/2886.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2891" data-name="中信金" data-sector="Financial Services" data-source="simulator_universe" data-day="-0.5618" data-52w="82.16" data-ret7="-1.67" data-ret30="-0.38" data-ret90="6.84" data-retytd="4.53" data-pe="13.078817" data-eps="4.06" data-epsg="0.483" data-revg="0.433" data-roe="0.15539" data-pm="0.14152999" data-f5="-35070211" data-f20="-102135313" data-fstreak="-1" data-tstreak="-5" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2891</div><div class="sc-name muted small">中信金</div></td><td class="mono tnum small">53.10</td><td><span class="mono tnum dn">-0.56%</span></td><td><span class="mono tnum">82</span></td><td><span class="mono tnum dn">-1.67%</span></td><td><span class="mono tnum dn">-0.38%</span></td><td><span class="mono tnum up">+6.84%</span></td><td><span class="mono tnum up">+4.53%</span></td><td><span class="mono tnum">13.1</span></td><td><span class="mono tnum">+48.3%</span></td><td><span class="mono tnum">+15.5%</span></td><td><span class="mono tnum dn">-3.5萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Financial Services</td><td><a class="sc-link mono" href="holdings/2891.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2884" data-name="玉山金" data-sector="Financial Services" data-source="simulator_universe" data-day="-0.7576" data-52w="68.09" data-ret7="1.55" data-ret30="1.55" data-ret90="-0.3" data-retytd="-3.96" data-pe="15.448114" data-eps="2.12" data-epsg="0.562" data-revg="0.306" data-roe="0.13055" data-pm="0.40241" data-f5="25123963" data-f20="20441006" data-fstreak="5" data-tstreak="-8" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2884</div><div class="sc-name muted small">玉山金</div></td><td class="mono tnum small">32.75</td><td><span class="mono tnum dn">-0.76%</span></td><td><span class="mono tnum">68</span></td><td><span class="mono tnum up">+1.55%</span></td><td><span class="mono tnum up">+1.55%</span></td><td><span class="mono tnum dn">-0.30%</span></td><td><span class="mono tnum dn">-3.96%</span></td><td><span class="mono tnum">15.4</span></td><td><span class="mono tnum">+56.2%</span></td><td><span class="mono tnum">+13.1%</span></td><td><span class="mono tnum up">+2.5萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買5日</span></td><td class="muted small">Financial Services</td><td><a class="sc-link mono" href="holdings/2884.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1301" data-name="台塑" data-sector="Basic Materials" data-source="simulator_universe" data-day="-2.0183" data-52w="87.58" data-ret7="13.74" data-ret30="12.9" data-ret90="30.24" data-retytd="38.88" data-pe="" data-eps="-1.58" data-epsg="" data-revg="-0.183" data-roe="-0.03081" data-pm="-0.057290003" data-f5="147676169" data-f20="139017933" data-fstreak="5" data-tstreak="3" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1301</div><div class="sc-name muted small">台塑</div></td><td class="mono tnum small">53.40</td><td><span class="mono tnum dn">-2.02%</span></td><td><span class="mono tnum">88</span></td><td><span class="mono tnum up">+13.74%</span></td><td><span class="mono tnum up">+12.90%</span></td><td><span class="mono tnum up">+30.24%</span></td><td><span class="mono tnum up">+38.88%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">-3.1%</span></td><td><span class="mono tnum up">+14.8萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買5日</span></td><td class="muted small">Basic Materials</td><td><a class="sc-link mono" href="holdings/1301.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1303" data-name="南亞" data-sector="Basic Materials" data-source="simulator_universe" data-day="-3.0939" data-52w="87.47" data-ret7="7.48" data-ret30="1.74" data-ret90="41.68" data-retytd="53.86" data-pe="153.85965" data-eps="0.57" data-epsg="15.519" data-revg="-0.054" data-roe="0.0138" data-pm="0.01739" data-f5="112271656" data-f20="107671997" data-fstreak="-1" data-tstreak="-3" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1303</div><div class="sc-name muted small">南亞</div></td><td class="mono tnum small">87.70</td><td><span class="mono tnum dn">-3.09%</span></td><td><span class="mono tnum">87</span></td><td><span class="mono tnum up">+7.48%</span></td><td><span class="mono tnum up">+1.74%</span></td><td><span class="mono tnum up">+41.68%</span></td><td><span class="mono tnum up">+53.86%</span></td><td><span class="mono tnum">153.9</span></td><td><span class="mono tnum">+1551.9%</span></td><td><span class="mono tnum">+1.4%</span></td><td><span class="mono tnum up">+11.2萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Basic Materials</td><td><a class="sc-link mono" href="holdings/1303.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2002" data-name="中鋼" data-sector="Basic Materials" data-source="simulator_universe" data-day="0.7519" data-52w="53.76" data-ret7="0.25" data-ret30="4.15" data-ret90="5.79" data-retytd="7.2" data-pe="" data-eps="-0.29" data-epsg="" data-revg="-0.13" data-roe="-0.01045" data-pm="-0.013710001" data-f5="70966198" data-f20="115242874" data-fstreak="2" data-tstreak="-1" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2002</div><div class="sc-name muted small">中鋼</div></td><td class="mono tnum small">20.10</td><td><span class="mono tnum up">+0.75%</span></td><td><span class="mono tnum">54</span></td><td><span class="mono tnum up">+0.25%</span></td><td><span class="mono tnum up">+4.15%</span></td><td><span class="mono tnum up">+5.79%</span></td><td><span class="mono tnum up">+7.20%</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">-1.0%</span></td><td><span class="mono tnum up">+7.1萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買2日</span></td><td class="muted small">Basic Materials</td><td><a class="sc-link mono" href="holdings/2002.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1216" data-name="統一" data-sector="Consumer Defensive" data-source="simulator_universe" data-day="0.6849" data-52w="24.31" data-ret7="2.37" data-ret30="2.94" data-ret90="-2.39" data-retytd="-5.04" data-pe="21.36628" data-eps="3.44" data-epsg="-0.055" data-revg="-0.001" data-roe="0.14859" data-pm="0.02917" data-f5="12292688" data-f20="-7019149" data-fstreak="4" data-tstreak="-8" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1216</div><div class="sc-name muted small">統一</div></td><td class="mono tnum small">73.50</td><td><span class="mono tnum up">+0.68%</span></td><td><span class="mono tnum">24</span></td><td><span class="mono tnum up">+2.37%</span></td><td><span class="mono tnum up">+2.94%</span></td><td><span class="mono tnum dn">-2.39%</span></td><td><span class="mono tnum dn">-5.04%</span></td><td><span class="mono tnum">21.4</span></td><td><span class="mono tnum">-5.5%</span></td><td><span class="mono tnum">+14.9%</span></td><td><span class="mono tnum up">+1.2萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買4日</span></td><td class="muted small">Consumer Defensive</td><td><a class="sc-link mono" href="holdings/1216.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2912" data-name="統一超" data-sector="Consumer Defensive" data-source="simulator_universe" data-day="1.4957" data-52w="49.59" data-ret7="4.4" data-ret30="8.2" data-ret90="7.47" data-retytd="7.22" data-pe="22.07249" data-eps="10.76" data-epsg="0.023" data-revg="0.042" data-roe="0.25410998" data-pm="0.03196" data-f5="2522491" data-f20="22695767" data-fstreak="4" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2912</div><div class="sc-name muted small">統一超</div></td><td class="mono tnum small">237.50</td><td><span class="mono tnum up">+1.50%</span></td><td><span class="mono tnum">50</span></td><td><span class="mono tnum up">+4.40%</span></td><td><span class="mono tnum up">+8.20%</span></td><td><span class="mono tnum up">+7.47%</span></td><td><span class="mono tnum up">+7.22%</span></td><td><span class="mono tnum">22.1</span></td><td><span class="mono tnum">+2.3%</span></td><td><span class="mono tnum">+25.4%</span></td><td><span class="mono tnum up">+2,522</span></td><td><span class="chip-streak chip-streak-buy mono small">連買4日</span></td><td class="muted small">Consumer Defensive</td><td><a class="sc-link mono" href="holdings/2912.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2395" data-name="研華" data-sector="Technology" data-source="simulator_universe" data-day="3.0986" data-52w="89.62" data-ret7="5.78" data-ret30="4.87" data-ret90="26.86" data-retytd="27.75" data-pe="30.123457" data-eps="12.15" data-epsg="0.159" data-revg="0.099" data-roe="0.19655001" data-pm="0.14944" data-f5="6300773" data-f20="10083059" data-fstreak="9" data-tstreak="-9" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2395</div><div class="sc-name muted small">研華</div></td><td class="mono tnum small">366.00</td><td><span class="mono tnum up">+3.10%</span></td><td><span class="mono tnum">90</span></td><td><span class="mono tnum up">+5.78%</span></td><td><span class="mono tnum up">+4.87%</span></td><td><span class="mono tnum up">+26.86%</span></td><td><span class="mono tnum up">+27.75%</span></td><td><span class="mono tnum">30.1</span></td><td><span class="mono tnum">+15.9%</span></td><td><span class="mono tnum">+19.7%</span></td><td><span class="mono tnum up">+6,301</span></td><td><span class="chip-streak chip-streak-buy mono small">連買9日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2395.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="6414" data-name="樺漢" data-sector="Technology" data-source="simulator_universe" data-day="1.3333" data-52w="65.62" data-ret7="7.42" data-ret30="8.96" data-ret90="5.56" data-retytd="6.29" data-pe="15.222835" data-eps="19.97" data-epsg="" data-revg="" data-roe="0.14172" data-pm="0.02258" data-f5="3663990" data-f20="3470502" data-fstreak="6" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">6414</div><div class="sc-name muted small">樺漢</div></td><td class="mono tnum small">304.00</td><td><span class="mono tnum up">+1.33%</span></td><td><span class="mono tnum">66</span></td><td><span class="mono tnum up">+7.42%</span></td><td><span class="mono tnum up">+8.96%</span></td><td><span class="mono tnum up">+5.56%</span></td><td><span class="mono tnum up">+6.29%</span></td><td><span class="mono tnum">15.2</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">+14.2%</span></td><td><span class="mono tnum up">+3,664</span></td><td><span class="chip-streak chip-streak-buy mono small">連買6日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/6414.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2049" data-name="上銀" data-sector="Industrials" data-source="simulator_universe" data-day="4.3011" data-52w="95.0" data-ret7="20.25" data-ret30="25.16" data-ret90="47.72" data-retytd="48.47" data-pe="67.5174" data-eps="4.31" data-epsg="0.399" data-revg="0.02" data-roe="0.03783" data-pm="0.06289" data-f5="2781339" data-f20="10011691" data-fstreak="3" data-tstreak="0" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2049</div><div class="sc-name muted small">上銀</div></td><td class="mono tnum small">291.00</td><td><span class="mono tnum up">+4.30%</span></td><td><span class="mono tnum">95</span></td><td><span class="mono tnum up">+20.25%</span></td><td><span class="mono tnum up">+25.16%</span></td><td><span class="mono tnum up">+47.72%</span></td><td><span class="mono tnum up">+48.47%</span></td><td><span class="mono tnum">67.5</span></td><td><span class="mono tnum">+39.9%</span></td><td><span class="mono tnum">+3.8%</span></td><td><span class="mono tnum up">+2,781</span></td><td><span class="chip-streak chip-streak-buy mono small">連買3日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/2049.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1590" data-name="亞德客-KY" data-sector="Industrials" data-source="simulator_universe" data-day="2.449" data-52w="96.25" data-ret7="12.56" data-ret30="22.44" data-ret90="25.5" data-retytd="31.28" data-pe="29.937979" data-eps="41.92" data-epsg="0.294" data-revg="0.182" data-roe="0.16718" data-pm="0.24469" data-f5="-141213" data-f20="-432858" data-fstreak="2" data-tstreak="-2" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1590</div><div class="sc-name muted small">亞德客-KY</div></td><td class="mono tnum small">1255.00</td><td><span class="mono tnum up">+2.45%</span></td><td><span class="mono tnum">96</span></td><td><span class="mono tnum up">+12.56%</span></td><td><span class="mono tnum up">+22.44%</span></td><td><span class="mono tnum up">+25.50%</span></td><td><span class="mono tnum up">+31.28%</span></td><td><span class="mono tnum">29.9</span></td><td><span class="mono tnum">+29.4%</span></td><td><span class="mono tnum">+16.7%</span></td><td><span class="mono tnum dn">-141</span></td><td><span class="chip-streak chip-streak-buy mono small">連買2日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/1590.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2357" data-name="華碩" data-sector="Technology" data-source="simulator_universe" data-day="1.6978" data-52w="42.75" data-ret7="3.63" data-ret30="0.84" data-ret90="13.23" data-retytd="7.93" data-pe="10.070612" data-eps="59.48" data-epsg="5.905" data-revg="0.318" data-roe="0.16214001" data-pm="0.060300004" data-f5="-898262" data-f20="-6662197" data-fstreak="1" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2357</div><div class="sc-name muted small">華碩</div></td><td class="mono tnum small">599.00</td><td><span class="mono tnum up">+1.70%</span></td><td><span class="mono tnum">43</span></td><td><span class="mono tnum up">+3.63%</span></td><td><span class="mono tnum up">+0.84%</span></td><td><span class="mono tnum up">+13.23%</span></td><td><span class="mono tnum up">+7.93%</span></td><td><span class="mono tnum">10.1</span></td><td><span class="mono tnum">+590.5%</span></td><td><span class="mono tnum">+16.2%</span></td><td><span class="mono tnum dn">-898</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2357.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="4938" data-name="和碩" data-sector="Technology" data-source="simulator_universe" data-day="3.6205" data-52w="71.1" data-ret7="2.85" data-ret30="6.14" data-ret90="19.6" data-retytd="20.46" data-pe="15.543071" data-eps="5.34" data-epsg="0.398" data-revg="-0.023" data-roe="0.074200004" data-pm="0.01289" data-f5="13501561" data-f20="36627613" data-fstreak="4" data-tstreak="-7" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">4938</div><div class="sc-name muted small">和碩</div></td><td class="mono tnum small">83.00</td><td><span class="mono tnum up">+3.62%</span></td><td><span class="mono tnum">71</span></td><td><span class="mono tnum up">+2.85%</span></td><td><span class="mono tnum up">+6.14%</span></td><td><span class="mono tnum up">+19.60%</span></td><td><span class="mono tnum up">+20.46%</span></td><td><span class="mono tnum">15.5</span></td><td><span class="mono tnum">+39.8%</span></td><td><span class="mono tnum">+7.4%</span></td><td><span class="mono tnum up">+1.4萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買4日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/4938.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2356" data-name="英業達" data-sector="Technology" data-source="simulator_universe" data-day="1.6667" data-52w="43.77" data-ret7="3.27" data-ret30="3.16" data-ret90="6.64" data-retytd="2.69" data-pe="18.983402" data-eps="2.41" data-epsg="-0.136" data-revg="-0.134" data-roe="0.12645" data-pm="0.01258" data-f5="43893585" data-f20="54925759" data-fstreak="8" data-tstreak="-6" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2356</div><div class="sc-name muted small">英業達</div></td><td class="mono tnum small">45.75</td><td><span class="mono tnum up">+1.67%</span></td><td><span class="mono tnum">44</span></td><td><span class="mono tnum up">+3.27%</span></td><td><span class="mono tnum up">+3.16%</span></td><td><span class="mono tnum up">+6.64%</span></td><td><span class="mono tnum up">+2.69%</span></td><td><span class="mono tnum">19.0</span></td><td><span class="mono tnum">-13.6%</span></td><td><span class="mono tnum">+12.6%</span></td><td><span class="mono tnum up">+4.4萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買8日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2356.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2353" data-name="宏碁" data-sector="Technology" data-source="simulator_universe" data-day="1.0563" data-52w="31.09" data-ret7="5.51" data-ret30="-0.69" data-ret90="9.33" data-retytd="8.71" data-pe="22.960001" data-eps="1.25" data-epsg="-0.265" data-revg="0.126" data-roe="0.06353" data-pm="0.01372" data-f5="27930206" data-f20="-4774980" data-fstreak="5" data-tstreak="-10" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2353</div><div class="sc-name muted small">宏碁</div></td><td class="mono tnum small">28.70</td><td><span class="mono tnum up">+1.06%</span></td><td><span class="mono tnum">31</span></td><td><span class="mono tnum up">+5.51%</span></td><td><span class="mono tnum dn">-0.69%</span></td><td><span class="mono tnum up">+9.33%</span></td><td><span class="mono tnum up">+8.71%</span></td><td><span class="mono tnum">23.0</span></td><td><span class="mono tnum">-26.5%</span></td><td><span class="mono tnum">+6.4%</span></td><td><span class="mono tnum up">+2.8萬</span></td><td><span class="chip-streak chip-streak-buy mono small">連買5日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2353.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2408" data-name="南亞科" data-sector="Technology" data-source="simulator_universe" data-day="-1.6393" data-52w="60.49" data-ret7="-2.33" data-ret30="-23.91" data-ret90="-3.45" data-retytd="1.45" data-pe="100.00001" data-eps="2.1" data-epsg="" data-revg="5.829" data-roe="" data-pm="0.31905" data-f5="-26673434" data-f20="-93633408" data-fstreak="-1" data-tstreak="-3" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2408</div><div class="sc-name muted small">南亞科</div></td><td class="mono tnum small">210.00</td><td><span class="mono tnum dn">-1.64%</span></td><td><span class="mono tnum">60</span></td><td><span class="mono tnum dn">-2.33%</span></td><td><span class="mono tnum dn">-23.91%</span></td><td><span class="mono tnum dn">-3.45%</span></td><td><span class="mono tnum up">+1.45%</span></td><td><span class="mono tnum">100.0</span></td><td><span class="muted small">—</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum dn">-2.7萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2408.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="6488" data-name="環球晶" data-sector="Technology" data-source="simulator_universe" data-day="-6.4815" data-52w="81.85" data-ret7="2.96" data-ret30="4.99" data-ret90="17.58" data-retytd="25.31" data-pe="33.114754" data-eps="15.25" data-epsg="3.712" data-revg="-0.113" data-roe="0.07934" data-pm="0.12066" data-f5="5040931" data-f20="8096251" data-fstreak="-1" data-tstreak="-1" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">6488</div><div class="sc-name muted small">環球晶</div></td><td class="mono tnum small">505.00</td><td><span class="mono tnum dn">-6.48%</span></td><td><span class="mono tnum">82</span></td><td><span class="mono tnum up">+2.96%</span></td><td><span class="mono tnum up">+4.99%</span></td><td><span class="mono tnum up">+17.58%</span></td><td><span class="mono tnum up">+25.31%</span></td><td><span class="mono tnum">33.1</span></td><td><span class="mono tnum">+371.2%</span></td><td><span class="mono tnum">+7.9%</span></td><td><span class="mono tnum up">+5,041</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/6488.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="6415" data-name="矽力-KY" data-sector="Technology" data-source="simulator_universe" data-day="9.9174" data-52w="55.54" data-ret7="18.96" data-ret30="14.85" data-ret90="40.59" data-retytd="79.25" data-pe="52.945858" data-eps="6.28" data-epsg="-0.096" data-revg="0.055" data-roe="0.06895" data-pm="0.13172" data-f5="4058130" data-f20="6789417" data-fstreak="3" data-tstreak="-10" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">6415</div><div class="sc-name muted small">矽力-KY</div></td><td class="mono tnum small">332.50</td><td><span class="mono tnum up">+9.92%</span></td><td><span class="mono tnum">56</span></td><td><span class="mono tnum up">+18.96%</span></td><td><span class="mono tnum up">+14.85%</span></td><td><span class="mono tnum up">+40.59%</span></td><td><span class="mono tnum up">+79.25%</span></td><td><span class="mono tnum">52.9</span></td><td><span class="mono tnum">-9.6%</span></td><td><span class="mono tnum">+6.9%</span></td><td><span class="mono tnum up">+4,058</span></td><td><span class="chip-streak chip-streak-buy mono small">連買3日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/6415.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2449" data-name="京元電子" data-sector="Technology" data-source="simulator_universe" data-day="-2.9982" data-52w="77.14" data-ret7="-0.9" data-ret30="-14.86" data-ret90="4.36" data-retytd="2.8" data-pe="42.177914" data-eps="6.52" data-epsg="0.121" data-revg="0.366" data-roe="0.16826001" data-pm="0.31533" data-f5="-13220794" data-f20="-66070876" data-fstreak="-1" data-tstreak="-4" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2449</div><div class="sc-name muted small">京元電子</div></td><td class="mono tnum small">275.00</td><td><span class="mono tnum dn">-3.00%</span></td><td><span class="mono tnum">77</span></td><td><span class="mono tnum dn">-0.90%</span></td><td><span class="mono tnum dn">-14.86%</span></td><td><span class="mono tnum up">+4.36%</span></td><td><span class="mono tnum up">+2.80%</span></td><td><span class="mono tnum">42.2</span></td><td><span class="mono tnum">+12.1%</span></td><td><span class="mono tnum">+16.8%</span></td><td><span class="mono tnum dn">-1.3萬</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣1日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/2449.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="2474" data-name="可成" data-sector="Industrials" data-source="simulator_universe" data-day="9.8734" data-52w="78.1" data-ret7="13.02" data-ret30="15.73" data-ret90="6.37" data-retytd="5.6" data-pe="19.18656" data-eps="11.31" data-epsg="-0.288" data-revg="-0.059" data-roe="0.04719" data-pm="0.38305" data-f5="1638287" data-f20="-6365228" data-fstreak="1" data-tstreak="-10" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">2474</div><div class="sc-name muted small">可成</div></td><td class="mono tnum small">217.00</td><td><span class="mono tnum up">+9.87%</span></td><td><span class="mono tnum">78</span></td><td><span class="mono tnum up">+13.02%</span></td><td><span class="mono tnum up">+15.73%</span></td><td><span class="mono tnum up">+6.37%</span></td><td><span class="mono tnum up">+5.60%</span></td><td><span class="mono tnum">19.2</span></td><td><span class="mono tnum">-28.8%</span></td><td><span class="mono tnum">+4.7%</span></td><td><span class="mono tnum up">+1,638</span></td><td><span class="chip-streak chip-streak-buy mono small">連買1日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/2474.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="3105" data-name="穩懋" data-sector="Technology" data-source="simulator_universe" data-day="9.8879" data-52w="100.0" data-ret7="16.16" data-ret30="67.13" data-ret90="148.96" data-retytd="201.12" data-pe="135.08772" data-eps="3.99" data-epsg="" data-revg="0.294" data-roe="0.026870001" data-pm="0.1018" data-f5="5809891" data-f20="-1761335" data-fstreak="2" data-tstreak="2" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">3105</div><div class="sc-name muted small">穩懋</div></td><td class="mono tnum small">539.00</td><td><span class="mono tnum up">+9.89%</span></td><td><span class="mono tnum">100</span></td><td><span class="mono tnum up">+16.16%</span></td><td><span class="mono tnum up">+67.13%</span></td><td><span class="mono tnum up">+148.96%</span></td><td><span class="mono tnum up">+201.12%</span></td><td><span class="mono tnum">135.1</span></td><td><span class="muted small">—</span></td><td><span class="mono tnum">+2.7%</span></td><td><span class="mono tnum up">+5,810</span></td><td><span class="chip-streak chip-streak-buy mono small">連買2日</span></td><td class="muted small">Technology</td><td><a class="sc-link mono" href="holdings/3105.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1504" data-name="東元" data-sector="Industrials" data-source="simulator_universe" data-day="-0.4747" data-52w="20.64" data-ret7="5.36" data-ret30="-11.53" data-ret90="-24.58" data-retytd="-25.39" data-pe="25.991735" data-eps="2.42" data-epsg="-0.198" data-revg="0.134" data-roe="0.062459998" data-pm="0.08871" data-f5="-6027567" data-f20="-8190413" data-fstreak="-4" data-tstreak="-7" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1504</div><div class="sc-name muted small">東元</div></td><td class="mono tnum small">62.90</td><td><span class="mono tnum dn">-0.47%</span></td><td><span class="mono tnum">21</span></td><td><span class="mono tnum up">+5.36%</span></td><td><span class="mono tnum dn">-11.53%</span></td><td><span class="mono tnum dn">-24.58%</span></td><td><span class="mono tnum dn">-25.39%</span></td><td><span class="mono tnum">26.0</span></td><td><span class="mono tnum">-19.8%</span></td><td><span class="mono tnum">+6.2%</span></td><td><span class="mono tnum dn">-6,028</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣4日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/1504.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1519" data-name="華城" data-sector="Industrials" data-source="simulator_universe" data-day="0.0" data-52w="68.76" data-ret7="7.13" data-ret30="-6.14" data-ret90="10.94" data-retytd="17.2" data-pe="62.50896" data-eps="13.95" data-epsg="0.075" data-revg="0.13" data-roe="0.44576" data-pm="0.18094999" data-f5="-2672578" data-f20="-2014797" data-fstreak="-3" data-tstreak="-3" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1519</div><div class="sc-name muted small">華城</div></td><td class="mono tnum small">872.00</td><td><span class="mono tnum ">+0.00%</span></td><td><span class="mono tnum">69</span></td><td><span class="mono tnum up">+7.13%</span></td><td><span class="mono tnum dn">-6.14%</span></td><td><span class="mono tnum up">+10.94%</span></td><td><span class="mono tnum up">+17.20%</span></td><td><span class="mono tnum">62.5</span></td><td><span class="mono tnum">+7.5%</span></td><td><span class="mono tnum">+44.6%</span></td><td><span class="mono tnum dn">-2,673</span></td><td><span class="chip-streak chip-streak-sell mono small">連賣3日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/1519.html">DEEP →</a></td></tr><tr class="sc-row" data-sym="1503" data-name="士電" data-sector="Industrials" data-source="simulator_universe" data-day="0.7653" data-52w="54.01" data-ret7="6.18" data-ret30="-5.28" data-ret90="13.51" data-retytd="16.86" data-pe="31.54952" data-eps="6.26" data-epsg="-0.033" data-revg="0.086" data-roe="0.08948" data-pm="0.0879" data-f5="240443" data-f20="-2251402" data-fstreak="2" data-tstreak="-2" ><td><span class="sc-src sc-src-u mono small" title="H=持有 W=觀察 U=Universe">U</span></td><td><div class="sc-sym mono">1503</div><div class="sc-name muted small">士電</div></td><td class="mono tnum small">197.50</td><td><span class="mono tnum up">+0.77%</span></td><td><span class="mono tnum">54</span></td><td><span class="mono tnum up">+6.18%</span></td><td><span class="mono tnum dn">-5.28%</span></td><td><span class="mono tnum up">+13.51%</span></td><td><span class="mono tnum up">+16.86%</span></td><td><span class="mono tnum">31.5</span></td><td><span class="mono tnum">-3.3%</span></td><td><span class="mono tnum">+8.9%</span></td><td><span class="mono tnum up">+240</span></td><td><span class="chip-streak chip-streak-buy mono small">連買2日</span></td><td class="muted small">Industrials</td><td><a class="sc-link mono" href="holdings/1503.html">DEEP →</a></td></tr></tbody>
+    </table>
+    <div id="sc-empty" class="sc-empty muted" style="display:none">
+      沒有符合條件的個股。試試放寬條件或 RESET。
+    </div>
+  </div>
+
+  <div class="sc-foot muted small">
+    <strong>怎麼用這個工具？</strong>先用 Preset 測試一組條件，看哪些股票被篩出來。點 DEEP → 進深度頁看 AI 評分 / 基本面 / 籌碼面。
+    篩選器是「研究候選清單」不是「買進訊號」；基本面數字來自 yfinance，TW 個股有時會延遲或缺漏。
+  </div>
+</section>
+
+<script>
+(function() {
+  const tbody = document.getElementById('sc-tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr.sc-row'));
+  const countEl = document.getElementById('sc-count');
+  const emptyEl = document.getElementById('sc-empty');
+  const controls = {
+    search: document.getElementById('sc-search'),
+    p52_min: document.getElementById('sc-52w-min'),
+    p52_max: document.getElementById('sc-52w-max'),
+    ytd_min: document.getElementById('sc-ytd-min'),
+    r90_min: document.getElementById('sc-90d-min'),
+    pe_max:  document.getElementById('sc-pe-max'),
+    epsg_min: document.getElementById('sc-epsg-min'),
+    roe_min: document.getElementById('sc-roe-min'),
+    pm_min:  document.getElementById('sc-pm-min'),
+    f5:      document.getElementById('sc-f5'),
+    fstreak_min: document.getElementById('sc-fstreak-min'),
+    sector:  document.getElementById('sc-sector'),
+    source:  document.getElementById('sc-source'),
+  };
+  const STORAGE_KEY = 'screener_filters_v1';
+
+  function num(attr) { return attr === '' ? null : Number(attr); }
+
+  function filterRow(tr) {
+    const d = tr.dataset;
+    const q = controls.search.value.trim().toLowerCase();
+    if (q) {
+      const hay = (d.sym + ' ' + d.name).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    const p52 = num(d['52w']);
+    if (controls.p52_min.value !== '' && (p52 === null || p52 < Number(controls.p52_min.value))) return false;
+    if (controls.p52_max.value !== '' && (p52 === null || p52 > Number(controls.p52_max.value))) return false;
+
+    const ytd = num(d.retytd);
+    if (controls.ytd_min.value !== '' && (ytd === null || ytd < Number(controls.ytd_min.value))) return false;
+
+    const r90 = num(d.ret90);
+    if (controls.r90_min.value !== '' && (r90 === null || r90 < Number(controls.r90_min.value))) return false;
+
+    const pe = num(d.pe);
+    if (controls.pe_max.value !== '' && (pe === null || pe > Number(controls.pe_max.value))) return false;
+
+    // EPS growth is stored as ratio (0.15 = 15%) — user enters 15
+    const epsg = num(d.epsg);
+    if (controls.epsg_min.value !== '' && (epsg === null || epsg * 100 < Number(controls.epsg_min.value))) return false;
+
+    const roe = num(d.roe);
+    if (controls.roe_min.value !== '' && (roe === null || roe * 100 < Number(controls.roe_min.value))) return false;
+
+    const pm = num(d.pm);
+    if (controls.pm_min.value !== '' && (pm === null || pm * 100 < Number(controls.pm_min.value))) return false;
+
+    const f5 = num(d.f5);
+    if (controls.f5.value === 'buy'  && !(f5 !== null && f5 > 0)) return false;
+    if (controls.f5.value === 'sell' && !(f5 !== null && f5 < 0)) return false;
+
+    const fstreak = num(d.fstreak);
+    if (controls.fstreak_min.value !== '' && (fstreak === null || fstreak < Number(controls.fstreak_min.value))) return false;
+
+    if (controls.sector.value && d.sector !== controls.sector.value) return false;
+    if (controls.source.value && d.source !== controls.source.value) return false;
+
+    return true;
+  }
+
+  function applyFilters() {
+    let visible = 0;
+    for (const tr of rows) {
+      if (filterRow(tr)) { tr.style.display = ''; visible++; }
+      else tr.style.display = 'none';
+    }
+    countEl.textContent = visible + ' / ' + rows.length + ' 檔';
+    emptyEl.style.display = visible === 0 ? '' : 'none';
+  }
+
+  Object.values(controls).forEach(el => {
+    el.addEventListener('input', applyFilters);
+    el.addEventListener('change', applyFilters);
+  });
+
+  // Presets — apply JSON filters to inputs
+  document.querySelectorAll('.sc-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const f = JSON.parse(btn.dataset.preset);
+      // Clear first
+      for (const k in controls) {
+        if (controls[k].tagName === 'SELECT') controls[k].value = '';
+        else controls[k].value = '';
+      }
+      if (f.pct_52w_min  != null) controls.p52_min.value = f.pct_52w_min;
+      if (f.pct_52w_max  != null) controls.p52_max.value = f.pct_52w_max;
+      if (f.ret_ytd_min  != null) controls.ytd_min.value = f.ret_ytd_min;
+      if (f.ret_90d_min  != null) controls.r90_min.value = f.ret_90d_min;
+      if (f.pe_max       != null) controls.pe_max.value = f.pe_max;
+      if (f.eps_growth_min != null) controls.epsg_min.value = f.eps_growth_min;
+      if (f.roe_min      != null) controls.roe_min.value = f.roe_min;
+      if (f.profit_margin_min != null) controls.pm_min.value = f.profit_margin_min;
+      if (f.foreign_5d_min != null) controls.f5.value = f.foreign_5d_min >= 0 ? 'buy' : 'sell';
+      if (f.foreign_streak_min != null) controls.fstreak_min.value = f.foreign_streak_min;
+      // Visual feedback
+      document.querySelectorAll('.sc-preset').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  // Save / Load / Reset
+  document.getElementById('sc-save').addEventListener('click', () => {
+    const state = {};
+    for (const k in controls) state[k] = controls[k].value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    alert('已儲存過濾條件。');
+  });
+  document.getElementById('sc-load').addEventListener('click', () => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) { alert('沒有已儲存的過濾條件。'); return; }
+    try {
+      const state = JSON.parse(raw);
+      for (const k in state) if (controls[k]) controls[k].value = state[k];
+      applyFilters();
+    } catch (e) { alert('儲存的條件無法讀取。'); }
+  });
+  document.getElementById('sc-reset').addEventListener('click', () => {
+    for (const k in controls) controls[k].value = '';
+    document.querySelectorAll('.sc-preset.active').forEach(b => b.classList.remove('active'));
+    applyFilters();
+  });
+
+  // Sortable columns — click TH to toggle asc/desc
+  const ths = document.querySelectorAll('.sc-table thead th[data-sort]');
+  const sortState = { col: null, dir: 1 };
+  function numericKey(tr, key) {
+    const v = tr.dataset[key];
+    if (v === undefined || v === '') return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+  ths.forEach(th => {
+    th.addEventListener('click', () => {
+      const k = th.dataset.sort;
+      if (sortState.col === k) sortState.dir *= -1;
+      else { sortState.col = k; sortState.dir = 1; }
+      ths.forEach(x => x.classList.remove('sc-sort-asc', 'sc-sort-desc'));
+      th.classList.add(sortState.dir > 0 ? 'sc-sort-asc' : 'sc-sort-desc');
+      const sorted = [...rows].sort((a, b) => {
+        if (k === 'name' || k === 'sector') {
+          const av = (a.dataset[k] || a.dataset.name || '').toLowerCase();
+          const bv = (b.dataset[k] || b.dataset.name || '').toLowerCase();
+          return av.localeCompare(bv) * sortState.dir;
+        }
+        const av = numericKey(a, k);
+        const bv = numericKey(b, k);
+        // null goes to bottom regardless of direction
+        if (av === null && bv === null) return 0;
+        if (av === null) return 1;
+        if (bv === null) return -1;
+        return (av - bv) * sortState.dir;
+      });
+      sorted.forEach(tr => tbody.appendChild(tr));
+    });
+  });
 })();
 </script>
 
@@ -2269,64 +2567,351 @@
       </div>
       <div class="tab-panel" data-panel="chat">
         
-<div class="chat-shell">
-  <aside class="chat-sidebar">
-    <div class="chat-sidebar-head">
-      <span class="mono">對話歷史</span>
-      <button class="chat-new-btn mono">+ 新對話</button>
-    </div>
-    <div class="chat-thread-list"><a class="chat-thread active" href="#">
-          <div class="chat-thread-title">組合今天有什麼需要注意的？</div>
-          <div class="chat-thread-meta muted small mono">剛剛</div>
-          <div class="chat-thread-preview muted small">AI 正在分析 TSMC 法說會前的倉位…</div>
-        </a><a class="chat-thread" href="#">
-          <div class="chat-thread-title">0050 vs 006208 哪個比較適合存股？</div>
-          <div class="chat-thread-meta muted small mono">昨天</div>
-          <div class="chat-thread-preview muted small">費用率 / 流動性 / 追蹤誤差比較…</div>
-        </a><a class="chat-thread" href="#">
-          <div class="chat-thread-title">我能在 5000 元內切進光通訊嗎？</div>
-          <div class="chat-thread-meta muted small mono">3 天前</div>
-          <div class="chat-thread-preview muted small">雪球法 · 第一筆 3081 試水…</div>
-        </a></div>
-  </aside>
-  <main class="chat-main">
-    <div class="chat-main-head">
+<div class="ch-shell">
+
+  <section class="ch-cta-box">
+    <div class="ch-cta-head">
+      <div class="ch-cta-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="icon"><path d="M12 3 L13 8 L18 9 L13 10 L12 15 L11 10 L6 9 L11 8 Z" fill="currentColor"/><path d="M18 4 L18.6 6 L20.5 6.5 L18.6 7 L18 9 L17.4 7 L15.5 6.5 L17.4 6 Z" fill="currentColor"/></svg></div>
       <div>
-        <h2 class="chat-title">組合今天有什麼需要注意的？</h2>
-        <span class="muted small mono">CLAUDE 4.5 · GPT-5 · INTERNAL QUANT v3.2 · 多模型協作</span>
-      </div>
-      <div class="chat-model-chips">
-        <span class="chat-model-chip mono">CLAUDE 4.5</span>
-        <span class="chat-model-chip mono">GPT-5</span>
-        <span class="chat-model-chip mono">QUANT v3.2</span>
-      </div>
-    </div>
-    <div class="chat-feed">
-      <div class="chat-msg chat-msg-user">
-        <div class="chat-msg-body">組合今天有什麼需要注意的？</div>
-      </div>
-      <div class="chat-msg chat-msg-ai">
-        <div class="chat-msg-meta mono small"><span class="live-dot accent"></span> QUANT v3.2 · 剛剛</div>
-        <div class="chat-msg-body">台股昨日 (4/17) 雖受<a href="holdings/2330.html" class="tx-link">台積電</a>法說後利多出盡影響下跌 327 點，但資金轉往中小型股，櫃買指數創歷史新高，顯示市場資金仍在。美股則因中東地緣政治降溫消息而勁揚，國際油價重挫，對全球股市氛圍帶來正面影響。整體而言，台股在大型權值股休息時，中小型股表現活絡，市場情緒偏向中性偏多。</div>
-        <div class="chat-sources">
-          <span class="mono small muted">來源 · SOURCES</span>
-          <a class="chat-source-chip mono" href="#">analysis.json</a>
-          <a class="chat-source-chip mono" href="#">portfolio.json</a>
-          <a class="chat-source-chip mono" href="#">今日 Brief</a>
-        </div>
-      </div>
-      <div class="chat-empty-note muted small">
-        * 本頁為 UI 原型。多模型對話整合將透過 serverless endpoint 啟動；
-        目前你可以用今日 Brief 的 "Copy Prompt" 按鈕貼到 Claude.ai / ChatGPT。
+        <h2 class="ch-cta-title">要「對話」請回 Claude Code</h2>
+        <p class="ch-cta-sub muted">
+          這個 dashboard 是一份「每日快照」，不是 chatbot。
+          真正的分析對話發生在 <strong>Claude Code</strong>（你 build 這個 repo 的地方）。
+          那裡能讀你的全部資料、跑程式、改你的 portfolio.yaml —— 比這裡的靜態 UI 強很多。
+        </p>
       </div>
     </div>
-    <div class="chat-suggest-bar"><button class="chat-suggest-chip mono">我的組合目前最大風險是什麼？</button><button class="chat-suggest-chip mono">下一筆 NT$5,000 怎麼配？</button><button class="chat-suggest-chip mono">0050 比重會不會太高？</button><button class="chat-suggest-chip mono">台積電現在可以加碼嗎？</button><button class="chat-suggest-chip mono">光通訊這個題材還能追嗎？</button></div>
-    <form class="chat-input-bar" onsubmit="event.preventDefault();">
-      <input type="text" class="chat-input mono" placeholder="問問組合 / 題材 / 風險 … (enter 送出)" disabled>
-      <button class="chat-send mono" disabled>送出</button>
-    </form>
-  </main>
+    <div class="ch-cta-buttons">
+      <a class="ch-cta-btn ch-cta-btn-primary mono" href="https://claude.ai/code" target="_blank" rel="noopener">
+        打開 Claude Code →
+      </a>
+      <a class="ch-cta-btn mono" href="https://claude.ai/new" target="_blank" rel="noopener">
+        或用 Claude.ai（貼下面 prompt）
+      </a>
+      <a class="ch-cta-btn mono" href="https://chatgpt.com" target="_blank" rel="noopener">
+        或 ChatGPT
+      </a>
+    </div>
+  </section>
+
+  <section class="ch-section">
+    <div class="ch-section-head">
+      <h3 class="ch-section-title mono">TODAY'S FAQ · 今日重點 Q&amp;A</h3>
+      <span class="muted small mono">由今日 AI 分析自動抽取</span>
+    </div>
+    <div class="ch-faq-list"><details class="ch-faq">
+              <summary>
+                <span class="ch-faq-tag mono small">市場</span>
+                <span class="ch-faq-q">今天市場的一句話摘要？</span>
+              </summary>
+              <div class="ch-faq-a">台股昨日 (4/17) 受<a href="holdings/2330.html" class="tx-link">台積電</a>法說後利多出盡影響，大盤小幅回檔，但資金轉往中小型股，AI相關題材仍是市場焦點，對您的成長型組合影響中性偏多，需留意權值股後續走勢。</div>
+            </details><details class="ch-faq">
+              <summary>
+                <span class="ch-faq-tag mono small">個股</span>
+                <span class="ch-faq-q">0050 元大台灣50 今天表現如何？</span>
+              </summary>
+              <div class="ch-faq-a">今日 -1.00%，目前市值 $100,980，累計損益 +17.27%。 52 週位階 98%。</div>
+            </details><details class="ch-faq">
+              <summary>
+                <span class="ch-faq-tag mono small">題材</span>
+                <span class="ch-faq-q">光通訊 CPO / 矽光子 這個題材怎麼看？</span>
+              </summary>
+              <div class="ch-faq-a"><a href="holdings/3081.html" class="tx-link">聯亞</a>、<a href="holdings/3363.html" class="tx-link">上詮</a>、<a href="holdings/4979.html" class="tx-link">華星光</a>連3日量增，外資點名 1.6T 升級題材</div>
+            </details></div>
+  </section>
+
+  <section class="ch-section">
+    <div class="ch-section-head">
+      <h3 class="ch-section-title mono">CONTEXT PROMPTS · 一鍵複製去問 AI</h3>
+      <span class="muted small mono">自動打包你的組合 + 今日分析</span>
+    </div>
+    <p class="muted small ch-section-sub">
+      複製 → 貼到 Claude / ChatGPT → 你會得到「有你資料」的具體答案，不是空泛回答。
+      【方括號】裡的地方改成你的問題再送出。
+    </p>
+    <div class="ch-card-grid"><div class="ch-card">
+          <div class="ch-card-head">
+            <span class="ch-card-title mono">問：組合風險 &amp; 下一筆怎麼配</span>
+            <button class="ch-copy-btn mono small" data-prompt-key="risk">COPY →</button>
+          </div>
+          <textarea class="ch-card-body mono" id="ch-prompt-risk" readonly>我是 Taiwan 的小白投資者，偏好雪球式滾存（先累積小部位→有信心再放大）。以下是我今天的組合快照與 AI 分析。請幫我回答：
+1. 我的組合目前最大風險是什麼？
+2. 下一筆 NT$5,000–10,000 建議怎麼配？
+3. 有哪一檔已偏離我的「雪球」策略（例如漲太多／位階太高）？
+
+請直接點名 ticker，不要給籠統建議。
+
+---
+以下是今日組合 + 分析資料（JSON）：
+{
+  &quot;date&quot;: &quot;2026-04-18T22:22:39.041703+08:00&quot;,
+  &quot;portfolio_summary&quot;: {
+    &quot;total_value_twd&quot;: 141580.0,
+    &quot;day_pnl_pct&quot;: -1.48,
+    &quot;total_pnl_pct&quot;: 13.48,
+    &quot;alpha_vs_benchmark_pct&quot;: -0.48
+  },
+  &quot;holdings&quot;: [
+    {
+      &quot;symbol&quot;: &quot;0050&quot;,
+      &quot;name&quot;: &quot;元大台灣50&quot;,
+      &quot;shares&quot;: 1200,
+      &quot;cost_basis&quot;: 71.76,
+      &quot;price&quot;: 84.15,
+      &quot;pnl_pct&quot;: 17.27,
+      &quot;day_change_pct&quot;: -1.0,
+      &quot;pct_52w&quot;: 97.94
+    },
+    {
+      &quot;symbol&quot;: &quot;2330&quot;,
+      &quot;name&quot;: &quot;台積電&quot;,
+      &quot;shares&quot;: 20,
+      &quot;cost_basis&quot;: 1932.5,
+      &quot;price&quot;: 2030.0,
+      &quot;pnl_pct&quot;: 5.05,
+      &quot;day_change_pct&quot;: -2.6379,
+      &quot;pct_52w&quot;: 94.55
+    }
+  ],
+  &quot;today_one_liner&quot;: &quot;台股昨日 (4/17) 受台積電法說後利多出盡影響，大盤小幅回檔，但資金轉往中小型股，AI相關題材仍是市場焦點，對您的成長型組合影響中性偏多，需留意權值股後續走勢。&quot;,
+  &quot;opportunities_top3&quot;: [
+    {
+      &quot;theme&quot;: &quot;光通訊 CPO / 矽光子&quot;,
+      &quot;stage&quot;: &quot;中段&quot;,
+      &quot;confidence_pct&quot;: 80,
+      &quot;crowding_pct&quot;: 70,
+      &quot;lead_stocks&quot;: [
+        &quot;3081&quot;,
+        &quot;3363&quot;,
+        &quot;4979&quot;
+      ]
+    },
+    {
+      &quot;theme&quot;: &quot;AI 伺服器散熱 / 液冷&quot;,
+      &quot;stage&quot;: &quot;中段&quot;,
+      &quot;confidence_pct&quot;: 85,
+      &quot;crowding_pct&quot;: 65,
+      &quot;lead_stocks&quot;: [
+        &quot;3324&quot;,
+        &quot;3017&quot;,
+        &quot;4566&quot;
+      ]
+    },
+    {
+      &quot;theme&quot;: &quot;PCB / CCL 材料上游漲價&quot;,
+      &quot;stage&quot;: &quot;早期&quot;,
+      &quot;confidence_pct&quot;: 70,
+      &quot;crowding_pct&quot;: 45,
+      &quot;lead_stocks&quot;: [
+        &quot;1815&quot;,
+        &quot;5475&quot;,
+        &quot;8358&quot;
+      ]
+    }
+  ]
+}</textarea>
+        </div><div class="ch-card">
+          <div class="ch-card-head">
+            <span class="ch-card-title mono">問：某個題材值不值得跟</span>
+            <button class="ch-copy-btn mono small" data-prompt-key="theme">COPY →</button>
+          </div>
+          <textarea class="ch-card-body mono" id="ch-prompt-theme" readonly>我看到今天 AI 分析有列出這些題材機會。我想深入了解：
+【填你有興趣的題材名稱】
+請幫我判斷：
+1. 這個題材目前在什麼階段（夢階段 / 營收驗證 / 本夢比）？
+2. 領先股 vs. 落後股分別是誰？為什麼？
+3. 如果我要跟，哪一檔位階最合理？哪一檔最貴？
+4. 最大風險是什麼（退潮時會跌多少）？
+
+---
+以下是今日組合 + 分析資料（JSON）：
+{
+  &quot;date&quot;: &quot;2026-04-18T22:22:39.041703+08:00&quot;,
+  &quot;portfolio_summary&quot;: {
+    &quot;total_value_twd&quot;: 141580.0,
+    &quot;day_pnl_pct&quot;: -1.48,
+    &quot;total_pnl_pct&quot;: 13.48,
+    &quot;alpha_vs_benchmark_pct&quot;: -0.48
+  },
+  &quot;holdings&quot;: [
+    {
+      &quot;symbol&quot;: &quot;0050&quot;,
+      &quot;name&quot;: &quot;元大台灣50&quot;,
+      &quot;shares&quot;: 1200,
+      &quot;cost_basis&quot;: 71.76,
+      &quot;price&quot;: 84.15,
+      &quot;pnl_pct&quot;: 17.27,
+      &quot;day_change_pct&quot;: -1.0,
+      &quot;pct_52w&quot;: 97.94
+    },
+    {
+      &quot;symbol&quot;: &quot;2330&quot;,
+      &quot;name&quot;: &quot;台積電&quot;,
+      &quot;shares&quot;: 20,
+      &quot;cost_basis&quot;: 1932.5,
+      &quot;price&quot;: 2030.0,
+      &quot;pnl_pct&quot;: 5.05,
+      &quot;day_change_pct&quot;: -2.6379,
+      &quot;pct_52w&quot;: 94.55
+    }
+  ],
+  &quot;today_one_liner&quot;: &quot;台股昨日 (4/17) 受台積電法說後利多出盡影響，大盤小幅回檔，但資金轉往中小型股，AI相關題材仍是市場焦點，對您的成長型組合影響中性偏多，需留意權值股後續走勢。&quot;,
+  &quot;opportunities_top3&quot;: [
+    {
+      &quot;theme&quot;: &quot;光通訊 CPO / 矽光子&quot;,
+      &quot;stage&quot;: &quot;中段&quot;,
+      &quot;confidence_pct&quot;: 80,
+      &quot;crowding_pct&quot;: 70,
+      &quot;lead_stocks&quot;: [
+        &quot;3081&quot;,
+        &quot;3363&quot;,
+        &quot;4979&quot;
+      ]
+    },
+    {
+      &quot;theme&quot;: &quot;AI 伺服器散熱 / 液冷&quot;,
+      &quot;stage&quot;: &quot;中段&quot;,
+      &quot;confidence_pct&quot;: 85,
+      &quot;crowding_pct&quot;: 65,
+      &quot;lead_stocks&quot;: [
+        &quot;3324&quot;,
+        &quot;3017&quot;,
+        &quot;4566&quot;
+      ]
+    },
+    {
+      &quot;theme&quot;: &quot;PCB / CCL 材料上游漲價&quot;,
+      &quot;stage&quot;: &quot;早期&quot;,
+      &quot;confidence_pct&quot;: 70,
+      &quot;crowding_pct&quot;: 45,
+      &quot;lead_stocks&quot;: [
+        &quot;1815&quot;,
+        &quot;5475&quot;,
+        &quot;8358&quot;
+      ]
+    }
+  ]
+}</textarea>
+        </div><div class="ch-card">
+          <div class="ch-card-head">
+            <span class="ch-card-title mono">問：把一個財報術語講給我懂</span>
+            <button class="ch-copy-btn mono small" data-prompt-key="learn">COPY →</button>
+          </div>
+          <textarea class="ch-card-body mono" id="ch-prompt-learn" readonly>我是小白，請用「具體例子＋我熟悉的公司（TSMC / 0050 等）」解釋下面這個概念，不要只給定義。
+
+【填你想懂的詞：P/E、ROE、EPS 成長、本益比成長比 PEG、毛利率、營業利益率 …】
+
+最後請告訴我：這個指標是「越高越好」還是「要看情境」？什麼時候會誤判？
+
+---
+以下是今日組合 + 分析資料（JSON）：
+{
+  &quot;date&quot;: &quot;2026-04-18T22:22:39.041703+08:00&quot;,
+  &quot;portfolio_summary&quot;: {
+    &quot;total_value_twd&quot;: 141580.0,
+    &quot;day_pnl_pct&quot;: -1.48,
+    &quot;total_pnl_pct&quot;: 13.48,
+    &quot;alpha_vs_benchmark_pct&quot;: -0.48
+  },
+  &quot;holdings&quot;: [
+    {
+      &quot;symbol&quot;: &quot;0050&quot;,
+      &quot;name&quot;: &quot;元大台灣50&quot;,
+      &quot;shares&quot;: 1200,
+      &quot;cost_basis&quot;: 71.76,
+      &quot;price&quot;: 84.15,
+      &quot;pnl_pct&quot;: 17.27,
+      &quot;day_change_pct&quot;: -1.0,
+      &quot;pct_52w&quot;: 97.94
+    },
+    {
+      &quot;symbol&quot;: &quot;2330&quot;,
+      &quot;name&quot;: &quot;台積電&quot;,
+      &quot;shares&quot;: 20,
+      &quot;cost_basis&quot;: 1932.5,
+      &quot;price&quot;: 2030.0,
+      &quot;pnl_pct&quot;: 5.05,
+      &quot;day_change_pct&quot;: -2.6379,
+      &quot;pct_52w&quot;: 94.55
+    }
+  ],
+  &quot;today_one_liner&quot;: &quot;台股昨日 (4/17) 受台積電法說後利多出盡影響，大盤小幅回檔，但資金轉往中小型股，AI相關題材仍是市場焦點，對您的成長型組合影響中性偏多，需留意權值股後續走勢。&quot;,
+  &quot;opportunities_top3&quot;: [
+    {
+      &quot;theme&quot;: &quot;光通訊 CPO / 矽光子&quot;,
+      &quot;stage&quot;: &quot;中段&quot;,
+      &quot;confidence_pct&quot;: 80,
+      &quot;crowding_pct&quot;: 70,
+      &quot;lead_stocks&quot;: [
+        &quot;3081&quot;,
+        &quot;3363&quot;,
+        &quot;4979&quot;
+      ]
+    },
+    {
+      &quot;theme&quot;: &quot;AI 伺服器散熱 / 液冷&quot;,
+      &quot;stage&quot;: &quot;中段&quot;,
+      &quot;confidence_pct&quot;: 85,
+      &quot;crowding_pct&quot;: 65,
+      &quot;lead_stocks&quot;: [
+        &quot;3324&quot;,
+        &quot;3017&quot;,
+        &quot;4566&quot;
+      ]
+    },
+    {
+      &quot;theme&quot;: &quot;PCB / CCL 材料上游漲價&quot;,
+      &quot;stage&quot;: &quot;早期&quot;,
+      &quot;confidence_pct&quot;: 70,
+      &quot;crowding_pct&quot;: 45,
+      &quot;lead_stocks&quot;: [
+        &quot;1815&quot;,
+        &quot;5475&quot;,
+        &quot;8358&quot;
+      ]
+    }
+  ]
+}</textarea>
+        </div></div>
+  </section>
+
+  <section class="ch-section ch-why">
+    <div class="ch-section-head">
+      <h3 class="ch-section-title mono">WHY NO LIVE CHAT · 為什麼這裡不做即時對話</h3>
+    </div>
+    <ul class="ch-why-list">
+      <li><strong>成本</strong>：LLM API 按 token 計費，每次問答要完整吃一次 portfolio 的 context，穩定訪客下每日 $2–10 美金，不值得。</li>
+      <li><strong>時效</strong>：dashboard 是靜態站（GitHub Pages 每日排程重 build），沒有 backend 可以即時呼叫 API。</li>
+      <li><strong>品質</strong>：Claude Code 能執行程式、讀你的原始 JSON、修改你的 portfolio.yaml，那才是你最需要的互動 —— 做到這邊就夠了。</li>
+    </ul>
+  </section>
+
 </div>
+
+<script>
+(function() {
+  document.querySelectorAll('.ch-copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.promptKey;
+      const ta = document.getElementById('ch-prompt-' + key);
+      if (!ta) return;
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      try {
+        navigator.clipboard.writeText(ta.value).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = 'COPIED ✓';
+          btn.classList.add('ch-copy-success');
+          setTimeout(() => { btn.textContent = orig; btn.classList.remove('ch-copy-success'); }, 1800);
+        });
+      } catch (e) {
+        document.execCommand('copy');
+        btn.textContent = 'COPIED ✓';
+      }
+    });
+  });
+})();
+</script>
 
       </div>
       <div class="tab-panel" data-panel="positions">
@@ -2464,7 +3049,7 @@
         <span class="live-dot accent"></span>
         <span class="sb-status">MARKET OPEN</span>
         <span class="sb-div">|</span>
-        <span id="sb-clock">TPE 22:13</span>
+        <span id="sb-clock">TPE 22:22</span>
         <span class="sb-div">|</span>
         <span>VIEW: <span id="sb-view" class="sb-view">AI</span></span>
         <span class="sb-div">|</span>
@@ -2479,7 +3064,7 @@
 (function() {
   const clock = document.getElementById('sb-clock');
   const viewEl = document.getElementById('sb-view');
-  const viewMap = {ai: 'AI', radar: 'RADAR', sim: 'SIM', portfolio: 'PORT', macro: 'MACRO', briefs: 'NEWS', chat: 'CHAT', positions: 'HOLD'};
+  const viewMap = {ai: 'AI', radar: 'RADAR', screen: 'SCREEN', sim: 'SIM', portfolio: 'PORT', macro: 'MACRO', briefs: 'NEWS', chat: 'CHAT', positions: 'HOLD'};
   function tick() {
     const d = new Date();
     const hh = String(d.getHours()).padStart(2, '0');
@@ -2583,7 +3168,7 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 22:17 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 22:35 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>

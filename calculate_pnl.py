@@ -21,7 +21,19 @@ TAIPEI = ZoneInfo("Asia/Taipei")
 PORTFOLIO_PATH = ROOT / "portfolio.yaml"
 PRICES_PATH = ROOT / "prices.json"
 HISTORY_PATH = ROOT / "price_history.json"
+CHIPS_PATH = ROOT / "chips.json"
 OUTPUT_PATH = ROOT / "portfolio.json"
+
+
+def _load_chips() -> dict[str, dict]:
+    """Load institutional-flow data keyed by TW symbol (e.g. '2330')."""
+    if not CHIPS_PATH.exists():
+        return {}
+    try:
+        data = json.loads(CHIPS_PATH.read_text(encoding="utf-8"))
+        return data.get("by_symbol") or {}
+    except Exception:
+        return {}
 
 # Default pillar allocation targets by profile
 TARGET_ALLOCATIONS: dict[str, dict[str, float]] = {
@@ -192,6 +204,7 @@ def main() -> int:
     cfg = yaml.safe_load(PORTFOLIO_PATH.read_text(encoding="utf-8"))
     prices = json.loads(PRICES_PATH.read_text(encoding="utf-8"))["prices"]
     history = json.loads(HISTORY_PATH.read_text(encoding="utf-8"))["history"]
+    chips = _load_chips()
 
     usdtwd = get_usdtwd(prices)
     cash_twd = float(cfg.get("cash_twd", 0) or 0)
@@ -268,6 +281,7 @@ def main() -> int:
             "sparkline": spark,
             "yf_ticker": p.get("yf_ticker", yf_ticker),
             "fundamentals": p.get("fundamentals") or {},
+            "chips": chips.get(h["symbol"], {}),
         }
         entry["recommendation"] = compute_recommendation(
             entry, is_holding=True, pnl_pct=entry["pnl_pct"],
@@ -460,6 +474,7 @@ def main() -> int:
             "is_held": u["symbol"] in existing_syms,
             "yf_ticker": p.get("yf_ticker", yf_ticker),
             "fundamentals": p.get("fundamentals") or {},
+            "chips": chips.get(u["symbol"], {}),
         }
         entry["recommendation"] = compute_recommendation(entry, is_holding=False)
         universe_out.append(entry)
@@ -490,6 +505,7 @@ def main() -> int:
             "sparkline": _sparkline(history.get(yf_ticker, []), 30),
             "yf_ticker": p.get("yf_ticker", yf_ticker),
             "fundamentals": p.get("fundamentals") or {},
+            "chips": chips.get(w["symbol"], {}),
         }
         entry["recommendation"] = compute_recommendation(entry, is_holding=False)
         watchlist_out.append(entry)

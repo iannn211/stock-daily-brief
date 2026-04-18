@@ -268,6 +268,19 @@ RESPONSE_SCHEMA = {
             },
             "required": ["term", "explanation"],
         },
+        "faq": {
+            "type": "array",
+            "description": "5–8 common questions a retail TW investor would ask today, with specific answers grounded in the news + portfolio snapshot. No generic textbook answers.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "q": {"type": "string", "description": "Specific 10–20 word question in Traditional Chinese."},
+                    "a": {"type": "string", "description": "150–250 word answer referencing specific tickers / numbers / today's news."},
+                    "tag": {"type": "string", "description": "One of: 市場 / 個股 / 題材 / 風險 / 策略 / 新手"},
+                },
+                "required": ["q", "a", "tag"],
+            },
+        },
     },
     "required": ["market_pulse", "morning_brief", "macro_context", "portfolio_diagnosis",
                  "topics", "action_checklist", "learning_point", "budget_allocation"],
@@ -588,6 +601,31 @@ rebalance_advice 要具體、符合雪球法語境。例如：
 
 plan_summary：一句 30-50 字總結（例：「今日建議用 NT$5,000 試水聯亞 1 股，理由：光通訊受高盛上修 + 52 週位階雖高但法人連續買超；停損 2340、停利 3380 分批。」）
 
+---
+
+**FAQ 生成指引（faq 欄位，5-8 題）：**
+
+這些 Q&A 會顯示在 dashboard 的「今日重點」區塊給使用者（台灣散戶新手）看。他們不會跟 LLM 對話，所以你要「預測他今天會想問什麼」並先答。
+
+**規則：**
+1. 問題必須來自「今日新聞」+「使用者組合」+「今日機會雷達」——不是通用教科書問題
+2. 問題 10-20 字，用使用者的口吻（「我該不該…」「XXX 還能追嗎？」「XXX 要注意什麼？」）
+3. 答案 150-250 字，必須：
+   - 引用具體 ticker、數字、百分比、日期
+   - 連結到使用者真實持倉（例如他持有 0050 + 2330，就常回答這兩檔）
+   - 給明確結論（可 / 不可 / 視情況），不要打太極
+   - 提醒風險但不要每句都掛免責聲明
+4. tag 欄位從這 6 選 1：`市場`（大盤/國際）、`個股`（特定 ticker）、`題材`（產業機會）、`風險`（下跌/風險）、`策略`（配置/操作）、`新手`（教育性）
+5. 至少涵蓋：1 題使用者持倉、1 題今日機會雷達、1 題風險、1 題新手教育性
+
+**好範例：**
+- Q: 2330 現在 P/E 22 還算便宜嗎？
+- A: 以台積電歷史區間看（10 年平均 P/E 約 18-20，牛市時可達 25-30），目前 22 算偏上區間但不誇張。今日 EPS TTM $52.3、預估 EPS $58，forward P/E 僅 19.5。考量 AI 資本支出高峰、CoWoS 供不應求，分析師上修幅度未停。若你持股成本是 800，現在 1,150 已 +44%，不用急著加碼；若還沒建倉，建議等 1,080-1,100 區間分批。停損參考 1,030（月線）。tag: 個股
+
+**壞範例（不要這樣寫）：**
+- Q: 該怎麼挑股票？（太空泛）
+- A: 挑股票要看基本面、技術面、籌碼面…（教科書答案，沒連結到今日新聞）
+
 """
 
 
@@ -620,7 +658,8 @@ def build_prompt(brief_markdown: str) -> str:
 - [ ] 引用了具體數字（股價、%、金額），不用模糊詞
 - [ ] 每個 topic 都連結到使用者持倉的影響
 - [ ] action_checklist 的每項都是具體可執行的觀察/條件單
-- [ ] learning_point 是今天新聞裡真的出現過的名詞"""
+- [ ] learning_point 是今天新聞裡真的出現過的名詞
+- [ ] faq 有 5-8 題，每題都連結到今日新聞或使用者持倉，答案有具體 ticker/數字"""
 
 
 def call_gemini(prompt: str) -> tuple[dict | None, str | None]:
