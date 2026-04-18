@@ -757,79 +757,468 @@ PAGE_FOOT = """
 """
 
 
-def render_index(briefs: list[dict], pf: dict | None) -> str:
-    macro_html = render_macro_ribbon(pf) if pf else ""
-    portfolio_html = render_portfolio_card(pf) if pf else ""
-    holdings_html = render_holdings_grid(pf) if pf else ""
+def render_desk_sidebar(pf: dict) -> str:
+    """Hyperdash-style left sidebar: compact label/value stat lists."""
+    if not pf:
+        return ""
+    s = pf.get("summary", {})
+    bench = pf.get("benchmark", {})
+    risk = pf.get("risk", {})
+    pillar = pf.get("pillar_allocation", {})
+    alerts = pf.get("alerts", {})
+    profile = pf.get("risk_profile", {})
+    alert_count = pf.get("alert_count", 0)
 
-    if briefs:
-        latest = briefs[0]["date"]
-        total = len(briefs)
-        subtitle = f"台股+美股每日情報簡報 · 共 {total} 份 · 最新 {latest}"
-    else:
-        subtitle = "台股+美股每日情報簡報"
+    def _row(lbl, val, cls="", title=""):
+        t = f' title="{title}"' if title else ""
+        return f'<div class="stat-row"{t}><span class="stat-lbl">{lbl}</span><span class="stat-val {cls}">{val}</span></div>'
 
+    # Overview
+    ov = [
+        _row("TOTAL VALUE", _fmt_twd(s.get("total_value_twd", 0))),
+        _row("CASH", f"{s.get('cash_ratio_pct', 0):.1f}%"),
+        _row("TODAY", f"{_fmt_twd(s.get('day_pnl_twd', 0), sign=True)} ({_fmt_pct(s.get('day_pnl_pct', 0))})",
+             _cls(s.get("day_pnl_twd"))),
+        _row("ALL TIME", f"{_fmt_twd(s.get('total_pnl_twd', 0), sign=True)} ({_fmt_pct(s.get('total_pnl_pct', 0))})",
+             _cls(s.get("total_pnl_twd"))),
+        _row(f"vs {bench.get('symbol', '0050')}", _fmt_pct(bench.get('day_change_pct', 0)), _cls(bench.get('day_change_pct', 0))),
+        _row("ALPHA", _fmt_pct(s.get("alpha_vs_benchmark_pct", 0)), _cls(s.get("alpha_vs_benchmark_pct", 0))),
+    ]
+
+    # Returns
+    rets = [
+        _row("7D", _fmt_pct(s.get('ret_7d_pct'), 2), _cls(s.get('ret_7d_pct'))),
+        _row("30D", _fmt_pct(s.get('ret_30d_pct'), 2), _cls(s.get('ret_30d_pct'))),
+        _row("90D", _fmt_pct(s.get('ret_90d_pct'), 2), _cls(s.get('ret_90d_pct'))),
+        _row("1Y", _fmt_pct(s.get('ret_1y_pct'), 1), _cls(s.get('ret_1y_pct'))),
+    ]
+
+    # Risk
+    rk = [
+        _row("VOLATILITY", f"{risk.get('volatility_annualized_pct', 0):.1f}%"),
+        _row("DRAWDOWN 30D", f"{risk.get('drawdown_30d_pct', 0):.2f}%", _cls(risk.get('drawdown_30d_pct', 0))),
+        _row("DRAWDOWN 90D", f"{risk.get('drawdown_90d_pct', 0):.2f}%", _cls(risk.get('drawdown_90d_pct', 0))),
+        _row("DRAWDOWN 1Y", f"{risk.get('drawdown_1y_pct', 0):.2f}%", _cls(risk.get('drawdown_1y_pct', 0))),
+        _row("STYLE", html.escape(profile.get("style", "—"))),
+    ]
+
+    # Pillar allocation
+    actual = pillar.get("actual", {})
+    target = pillar.get("target", {})
+    pills_rows = []
+    for key in ("growth", "defense", "flexibility"):
+        a = actual.get(key, 0)
+        t = target.get(key, 0)
+        diff = a - t
+        diff_cls = "up" if diff > 5 else ("dn" if diff < -5 else "flat")
+        sign = "+" if diff > 0 else ""
+        pills_rows.append(
+            f'<div class="stat-row pillar-stat">'
+            f'<span class="stat-lbl"><span class="pillar-dot {PILLAR_CLS.get(key, "")}"></span>{PILLAR_LABEL.get(key, key)}</span>'
+            f'<span class="stat-val"><span class="mono">{a:.0f}%</span><span class="muted mono"> / {t:.0f}%</span> <span class="{diff_cls} mono small">{sign}{diff:.0f}</span></span>'
+            f'</div>'
+        )
+
+    # Alerts
+    alert_rows = []
+    for a in alerts.get("stop_loss", []):
+        alert_rows.append(f'<div class="alert-line"><span class="dn">🔴 {a["symbol"]}</span> <span class="muted">停損觸發 @{a["stop_loss"]}</span></div>')
+    for a in alerts.get("take_profit", []):
+        alert_rows.append(f'<div class="alert-line"><span class="up">🟢 {a["symbol"]}</span> <span class="muted">停利觸發 @{a["take_profit"]}</span></div>')
+    for a in alerts.get("nearing_stop", []):
+        alert_rows.append(f'<div class="alert-line"><span class="amber">🟡 {a["symbol"]}</span> <span class="muted">接近停損 {a["stop_loss_dist_pct"]:+.1f}%</span></div>')
+    for a in alerts.get("concentration", []):
+        alert_rows.append(f'<div class="alert-line"><span class="amber">🟠 {a["symbol"]}</span> <span class="muted">{a["weight_pct"]:.1f}% &gt; {a["limit_pct"]:.0f}%</span></div>')
+    for a in alerts.get("pillar", []):
+        alert_rows.append(f'<div class="alert-line"><span class="purple">🟣 {PILLAR_LABEL.get(a["pillar"], a["pillar"])}</span> <span class="muted">{a["actual_pct"]:.0f}% / {a["target_pct"]:.0f}% ({a["diff_pct"]:+.1f}pp)</span></div>')
+    if not alert_rows:
+        alert_rows = ['<div class="alert-line muted">無警報</div>']
+
+    return f'''
+<aside class="desk-sidebar">
+  <div class="stat-block">
+    <div class="stat-block-head">OVERVIEW</div>
+    {"".join(ov)}
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">RETURNS</div>
+    {"".join(rets)}
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">RISK (90D)</div>
+    {"".join(rk)}
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">ALLOCATION</div>
+    {"".join(pills_rows)}
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">ALERTS <span class="badge-count">{alert_count} ACTIVE</span></div>
+    {"".join(alert_rows)}
+  </div>
+</aside>
+'''
+
+
+def render_big_chart(pf: dict) -> str:
+    """Big hero chart: portfolio value 90 days."""
+    if not pf:
+        return ""
+    series = pf.get("portfolio_series", [])
+    if len(series) < 2:
+        return '<div class="chart-area"><p class="muted">歷史資料不足</p></div>'
+
+    w, h = 900, 240
+    pad_l, pad_r, pad_t, pad_b = 56, 16, 24, 30
+
+    values = [r["v"] for r in series]
+    dates = [r["d"] for r in series]
+    mn, mx = min(values), max(values)
+    rng = mx - mn if mx != mn else 1
+
+    iw = w - pad_l - pad_r
+    ih = h - pad_t - pad_b
+
+    def sx(i):
+        return pad_l + iw * i / (len(values) - 1)
+
+    def sy(v):
+        return pad_t + ih * (1 - (v - mn) / rng)
+
+    # Line path
+    d = "M " + " L ".join(f"{sx(i):.1f} {sy(v):.1f}" for i, v in enumerate(values))
+    # Area polygon
+    area = "".join(f"{sx(i):.1f},{sy(v):.1f} " for i, v in enumerate(values))
+    area = f"{pad_l},{pad_t + ih} " + area + f"{pad_l + iw},{pad_t + ih}"
+
+    # Value direction
+    up = values[-1] >= values[0]
+    stroke = "var(--up)" if up else "var(--dn)"
+
+    # Axis labels
+    y_labels = []
+    for frac in (0, 0.5, 1):
+        v = mn + rng * (1 - frac)
+        y = pad_t + ih * frac
+        y_labels.append(
+            f'<text x="{pad_l - 8}" y="{y + 4:.0f}" text-anchor="end" fill="var(--tx-3)" font-size="10" font-family="var(--font-mono)">{v / 1000:.0f}k</text>'
+            f'<line x1="{pad_l}" y1="{y:.0f}" x2="{pad_l + iw}" y2="{y:.0f}" stroke="var(--line)" stroke-dasharray="2 3"/>'
+        )
+
+    # Date labels: start, 1/3, 2/3, end
+    x_ticks = [0, len(dates) // 3, (2 * len(dates)) // 3, len(dates) - 1]
+    x_labels = []
+    for i in x_ticks:
+        label = dates[i][-5:]  # MM-DD
+        x_labels.append(
+            f'<text x="{sx(i):.0f}" y="{h - 8}" text-anchor="middle" fill="var(--tx-3)" font-size="10" font-family="var(--font-mono)">{label}</text>'
+        )
+
+    # Current value annotation
+    cur = values[-1]
+    cur_x = sx(len(values) - 1)
+    cur_y = sy(cur)
+    delta = values[-1] - values[0]
+    delta_pct = delta / values[0] * 100 if values[0] else 0
+    delta_cls = "up" if delta >= 0 else "dn"
+
+    return f'''
+<div class="chart-area">
+  <div class="chart-head">
+    <div>
+      <div class="chart-title">Portfolio Value · 90D</div>
+      <div class="chart-value mono tnum">{_fmt_twd(cur)}</div>
+    </div>
+    <div class="chart-delta {delta_cls} mono tnum">{_fmt_twd(delta, sign=True)} ({_fmt_pct(delta_pct, 2)}) · 90d</div>
+  </div>
+  <svg viewBox="0 0 {w} {h}" preserveAspectRatio="none" class="chart-svg" width="100%">
+    <defs>
+      <linearGradient id="g-fill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="{stroke}" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="{stroke}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    {"".join(y_labels)}
+    <polygon points="{area}" fill="url(#g-fill)"/>
+    <path d="{d}" stroke="{stroke}" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+    <circle cx="{cur_x:.0f}" cy="{cur_y:.0f}" r="4" fill="{stroke}"/>
+    <circle cx="{cur_x:.0f}" cy="{cur_y:.0f}" r="7" fill="{stroke}" opacity="0.25"/>
+    {"".join(x_labels)}
+  </svg>
+</div>
+'''
+
+
+def render_positions_table(pf: dict) -> str:
+    holdings = pf.get("holdings", [])
+    watchlist = pf.get("watchlist", [])
+    if not holdings and not watchlist:
+        return '<p class="muted">無持倉資料</p>'
+
+    def row_holding(h):
+        day_cls = _cls(h.get("day_change_pct"))
+        pnl_cls = _cls(h.get("pnl"))
+        pillar_cls = PILLAR_CLS.get(h.get("pillar", "growth"), "")
+        sl_hint = ""
+        d = h.get("stop_loss_dist_pct")
+        if d is not None and 0 < d < 5:
+            sl_hint = f' <span class="amber small" title="接近停損">⚠</span>'
+        return f'''
+        <tr onclick="location.href='holdings/{h["symbol"]}.html'">
+          <td><span class="pillar-dot {pillar_cls}"></span><strong>{h["symbol"]}</strong> <span class="muted">{html.escape(h["name"])}</span>{sl_hint}</td>
+          <td>{h["shares"]:,}</td>
+          <td>{h["cost_basis"]:.2f}</td>
+          <td>{h["price"]:.2f}</td>
+          <td class="{day_cls}">{_fmt_pct(h["day_change_pct"])}</td>
+          <td>{h.get("pct_52w", 0):.0f}%</td>
+          <td>{_fmt_twd(h["value"])}</td>
+          <td class="{pnl_cls}">{_fmt_twd(h["pnl"], sign=True)}</td>
+          <td class="{pnl_cls}">{_fmt_pct(h["pnl_pct"])}</td>
+        </tr>'''
+
+    def row_watch(w):
+        day_cls = _cls(w.get("day_change_pct"))
+        ytd_cls = _cls(w.get("ret_ytd"))
+        pillar_cls = PILLAR_CLS.get(w.get("pillar", "growth"), "")
+        return f'''
+        <tr onclick="location.href='holdings/{w["symbol"]}.html'">
+          <td><span class="pillar-dot {pillar_cls}"></span><strong>{w["symbol"]}</strong> <span class="muted">{html.escape(w["name"])}</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>{w["price"]:.2f}</td>
+          <td class="{day_cls}">{_fmt_pct(w["day_change_pct"])}</td>
+          <td>{w.get("pct_52w", 0):.0f}%</td>
+          <td class="muted small">{w.get("currency", "")}</td>
+          <td class="{ytd_cls}">YTD {_fmt_pct(w.get("ret_ytd"), 1)}</td>
+          <td class="muted">觀察</td>
+        </tr>'''
+
+    holding_rows = "".join(row_holding(h) for h in holdings)
+    watch_rows = "".join(row_watch(w) for w in watchlist)
+
+    return f'''
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>ASSET</th>
+      <th>SHARES</th>
+      <th>COST</th>
+      <th>PRICE</th>
+      <th>DAY</th>
+      <th>52W</th>
+      <th>VALUE</th>
+      <th>PNL</th>
+      <th>%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="sub-head"><td colspan="9">HOLDINGS · {len(holdings)}</td></tr>
+    {holding_rows}
+    <tr class="sub-head"><td colspan="9">WATCHLIST · {len(watchlist)}</td></tr>
+    {watch_rows}
+  </tbody>
+</table>
+'''
+
+
+def render_briefs_table(briefs: list[dict]) -> str:
+    if not briefs:
+        return '<p class="muted">還沒有 brief</p>'
     weekday_map = {"一": "Mon", "二": "Tue", "三": "Wed", "四": "Thu",
                    "五": "Fri", "六": "Sat", "日": "Sun"}
-    cards = []
+    rows = []
     for b in briefs:
-        tags_html = "".join(
-            f'<span class="chip chip-muted small">{html.escape(t)}</span>'
-            for t in b["tags"][:5]
-        )
-        day_en = weekday_map.get(b["weekday"], "")
         has_ai = (ANALYSES_DIR / f'{b["date"]}.json').exists()
-        ai_badge = '<span class="ai-badge">🤖 AI 已分析</span>' if has_ai else ''
-        cards.append(f'''
-        <a class="brief-card" href="briefs/{b["date"]}.html">
-          <div class="bc-top">
-            <div>
-              <div class="bc-date mono">{b["date"]}</div>
-              <div class="bc-day muted small">週{b["weekday"]} · {day_en}</div>
-            </div>
-            {ai_badge}
-          </div>
-          <div class="bc-count muted small">{b["count"]} 則新聞</div>
-          <div class="bc-tags">{tags_html}</div>
-          <div class="bc-link">看完整分析 →</div>
-        </a>''')
-    briefs_html = "".join(cards) if cards else '<p class="empty">還沒有 brief。</p>'
+        ai_badge = '<span class="badge-ai">AI</span>' if has_ai else ''
+        tags = " · ".join(html.escape(t) for t in b["tags"][:4])
+        rows.append(f'''
+        <tr onclick="location.href='briefs/{b["date"]}.html'">
+          <td><strong>{b["date"]}</strong> <span class="muted">週{b["weekday"]} {weekday_map.get(b["weekday"], "")}</span></td>
+          <td>{b["count"]}</td>
+          <td class="left muted small">{tags}</td>
+          <td>{ai_badge}</td>
+        </tr>''')
+    return f'''
+<table class="data-table">
+  <thead>
+    <tr><th>DATE</th><th>NEWS</th><th>TAGS</th><th>AI</th></tr>
+  </thead>
+  <tbody>{"".join(rows)}</tbody>
+</table>
+'''
+
+
+def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
+    if not latest_brief or not analysis:
+        return '<p class="muted">尚未產生 AI 分析。請等下次排程或手動觸發。</p>'
+    mp = analysis.get("market_pulse", {})
+    diag = analysis.get("portfolio_diagnosis", {})
+    actions = analysis.get("action_checklist", {})
+    topics = analysis.get("topics", [])
+
+    # Action summary mini
+    def mini_actions(items, cls, icon, label):
+        if not items:
+            return ""
+        body = "".join(
+            f'<li><strong>{html.escape(i["action"])}</strong>'
+            f'<div class="action-reason">{html.escape(i["reason"])}</div></li>'
+            for i in items
+        )
+        return f'<div class="action-col {cls}"><div class="action-header">{icon} {label}</div><ul>{body}</ul></div>'
+
+    topic_rows = "".join(
+        f'<tr onclick="location.href=\'briefs/{latest_brief["date"]}.html#{html.escape(t.get("title", ""))}\'">'
+        f'<td><strong>{html.escape(t.get("title", ""))}</strong></td>'
+        f'<td>{_sentiment_badge(t.get("sentiment", "中性"))}</td>'
+        f'<td class="muted small">{html.escape(", ".join(t.get("tickers", [])[:4]))}</td>'
+        f'</tr>' for t in topics
+    )
+
+    actions_html = (
+        '<div class="actions-grid">'
+        + mini_actions(actions.get("green", []), "action-green", "🟢", "可以做")
+        + mini_actions(actions.get("yellow", []), "action-yellow", "🟡", "該警戒")
+        + mini_actions(actions.get("red", []), "action-red", "🔴", "不要做")
+        + '</div>'
+    )
+
+    diag_html = ""
+    if diag.get("overall_health"):
+        health_cls = {"良好": "up", "需調整": "amber", "高風險": "dn"}.get(diag.get("overall_health"), "flat")
+        diag_html = f'''
+<div class="diag-compact">
+  <div class="diag-compact-head">
+    <span class="muted small">健康度</span>
+    <span class="badge badge-{health_cls}">{html.escape(diag.get("overall_health"))}</span>
+  </div>
+  <div class="diag-compact-body">
+    <div><strong class="small muted">關鍵議題：</strong>{html.escape(diag.get("key_issue", ""))}</div>
+    <div><strong class="small muted">調整建議：</strong>{html.escape(diag.get("rebalance_advice", ""))}</div>
+  </div>
+</div>
+'''
+
+    pulse_cls_tw = SENTIMENT_CLS.get(mp.get("tw_sentiment", "中性"), "flat")
+    pulse_cls_us = SENTIMENT_CLS.get(mp.get("us_sentiment", "中性"), "flat")
+
+    return f'''
+<div class="ai-tab-body">
+  <div class="pulse-mini">
+    <div class="pulse-mini-cell"><span class="muted small">台股</span> {_sentiment_badge(mp.get("tw_sentiment", "中性"))}</div>
+    <div class="pulse-mini-cell"><span class="muted small">美股</span> {_sentiment_badge(mp.get("us_sentiment", "中性"))}</div>
+    <div class="pulse-mini-summary">{html.escape(mp.get("summary", ""))}</div>
+  </div>
+  {diag_html}
+  <div class="tab-subhead">🎯 今日行動清單</div>
+  {actions_html}
+  <div class="tab-subhead">📊 今日主題 <span class="muted small">{len(topics)} 則</span></div>
+  <table class="data-table">
+    <thead><tr><th>主題</th><th>情緒</th><th>涉及個股</th></tr></thead>
+    <tbody>{topic_rows}</tbody>
+  </table>
+  <div class="tab-footer"><a href="briefs/{latest_brief["date"]}.html" class="btn-link">→ 看完整分析</a></div>
+</div>
+'''
+
+
+def render_macro_strip(pf: dict) -> str:
+    """Compact macro strip for main area (wider, horizontal)."""
+    if not pf:
+        return ""
+    macro = pf.get("macro", {})
+
+    def _cell(label, key, fmt="{:.1f}"):
+        d = macro.get(key, {})
+        close = d.get("close")
+        if close is None:
+            return ""
+        day = d.get("day_change_pct") or 0
+        ytd = d.get("ret_ytd")
+        ytd_str = f'<span class="muted tnum small">YTD {_fmt_pct(ytd, 1)}</span>' if ytd is not None else ""
+        return f'''
+        <div class="macro-strip-cell">
+          <div class="muted small">{label}</div>
+          <div class="mono tnum macro-strip-val">{fmt.format(close)}</div>
+          <div class="macro-strip-delta"><span class="mono tnum {_cls(day)}">{_fmt_pct(day, 2)}</span> {ytd_str}</div>
+        </div>'''
+
+    return f'''
+<div class="macro-strip">
+  {_cell("加權 ^TWII", "twii", "{:.0f}")}
+  {_cell("S&P 500", "spx", "{:.0f}")}
+  {_cell("VIX", "vix", "{:.2f}")}
+  {_cell("USD/TWD", "usdtwd", "{:.3f}")}
+</div>
+'''
+
+
+def render_index(briefs: list[dict], pf: dict | None) -> str:
+    if not pf:
+        # Fallback for no portfolio data
+        return (
+            PAGE_HEAD.format(title="Stock AI Desk", css_href="styles.css")
+            + '<div class="empty-state wrap"><h1>📈 Stock AI Desk</h1><p>無組合資料</p></div>'
+            + PAGE_FOOT.format(now=datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M"))
+        )
+
+    latest_brief = briefs[0] if briefs else None
+    latest_analysis = load_analysis(latest_brief["date"]) if latest_brief else None
+
+    try:
+        as_of = datetime.fromisoformat(pf.get("as_of", ""))
+        as_of_str = as_of.strftime("%Y-%m-%d %H:%M")
+        date_str = as_of.strftime("%Y-%m-%d")
+        weekday_zh = "一二三四五六日"[as_of.weekday()]
+    except Exception:
+        as_of_str = pf.get("as_of", "")
+        date_str = ""
+        weekday_zh = ""
+
+    sidebar = render_desk_sidebar(pf)
+    chart = render_big_chart(pf)
+    macro_strip = render_macro_strip(pf)
+    positions = render_positions_table(pf)
+    briefs_table = render_briefs_table(briefs)
+    ai_tab = render_ai_tab(latest_brief, latest_analysis)
 
     body = f'''
-<header class="site-header">
-  <div class="wrap">
-    <div class="title-row">
-      <h1>📈 Stock AI Desk</h1>
-      <span class="live-dot accent"></span>
-    </div>
-    <p class="subtitle muted">{html.escape(subtitle)}</p>
+<header class="desk-topbar">
+  <div class="desk-brand">
+    <span class="desk-logo">📈 Stock AI Desk</span>
+    <span class="live-dot accent"></span>
   </div>
+  <div class="desk-breadcrumb mono">HOME / {date_str} · 週{weekday_zh} / AS OF {html.escape(as_of_str)}</div>
+  <div class="desk-spacer"></div>
 </header>
 
-{macro_html}
-{portfolio_html}
-{holdings_html}
-
-<section class="wrap briefs-section">
-  <div class="section-head">
-    <h2>🗞️ 歷史 Brief</h2>
-    <span class="muted small">{len(briefs)} 份</span>
-  </div>
-  <input type="search" id="search" placeholder="🔍 搜尋日期、產業標籤..." autocomplete="off" class="search-box">
-  <div class="briefs-grid" id="brief-list">{briefs_html}</div>
-</section>
+<div class="desk">
+  {sidebar}
+  <main class="desk-main">
+    {macro_strip}
+    {chart}
+    <section class="desk-panel">
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="positions">Positions</button>
+        <button class="tab-btn" data-tab="ai">AI Analysis</button>
+        <button class="tab-btn" data-tab="briefs">Briefs · {len(briefs)}</button>
+      </div>
+      <div class="tab-panel active" data-panel="positions">{positions}</div>
+      <div class="tab-panel" data-panel="ai">{ai_tab}</div>
+      <div class="tab-panel" data-panel="briefs">{briefs_table}</div>
+    </section>
+  </main>
+</div>
 
 <script>
-const q = document.getElementById('search');
-const cards = document.querySelectorAll('.brief-card');
-if (q) {{
-  q.addEventListener('input', () => {{
-    const t = q.value.toLowerCase().trim();
-    cards.forEach(c => {{
-      c.style.display = !t || c.textContent.toLowerCase().includes(t) ? '' : 'none';
-    }});
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {{
+  btn.addEventListener('click', () => {{
+    const t = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === t));
   }});
-}}
+}});
 </script>
 '''
     now = datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M")
@@ -1534,6 +1923,364 @@ a:hover { color: #b8d0ff; }
 /* ── Footer ── */
 footer { padding: 24px 20px 36px; text-align: center; color: var(--tx-4); font-size: 11px; border-top: 1px solid var(--line); margin-top: 40px; }
 footer a { color: var(--tx-3); }
+
+/* ────────────────────────────────────────────────────────────
+   DESK LAYOUT (Hyperdash-style) — main index.html
+   ──────────────────────────────────────────────────────────── */
+.desk-topbar {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 24px;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: saturate(180%) blur(10px);
+}
+.desk-brand { display: flex; align-items: center; gap: 8px; }
+.desk-logo { font-weight: 700; font-size: 14px; letter-spacing: 0.3px; }
+.desk-breadcrumb {
+  color: var(--tx-3); font-size: 10px;
+  letter-spacing: 0.6px; text-transform: uppercase;
+}
+.desk-spacer { flex: 1; }
+
+.desk {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  padding: 20px 24px 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.desk-sidebar {
+  position: sticky; top: 70px;
+  align-self: start;
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.desk-sidebar::-webkit-scrollbar { width: 6px; }
+.desk-sidebar::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
+
+.desk-main {
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 0;
+}
+
+/* Sidebar stat blocks */
+.stat-block { padding-bottom: 16px; margin-bottom: 6px; }
+.stat-block-head {
+  font-size: 10px;
+  color: var(--tx-3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  font-size: 12px;
+  gap: 10px;
+}
+.stat-row + .stat-row { border-top: 1px solid rgba(255,255,255,0.03); }
+.stat-lbl {
+  color: var(--tx-3);
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.stat-val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: right;
+  white-space: nowrap;
+}
+.pillar-stat .stat-val { font-size: 11px; }
+.alert-line {
+  font-size: 11px;
+  padding: 5px 0;
+  font-family: var(--font-mono);
+  letter-spacing: 0.2px;
+}
+.alert-line + .alert-line { border-top: 1px solid rgba(255,255,255,0.03); }
+
+/* Macro strip (horizontal cells inside desk-main) */
+.macro-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.macro-strip-cell {
+  padding: 12px 14px;
+  background: var(--bg-1);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.macro-strip-cell .muted { font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+.macro-strip-val { font-size: 18px; font-weight: 700; }
+.macro-strip-delta { font-size: 11px; display: flex; gap: 8px; align-items: baseline; }
+
+/* Big chart area */
+.chart-area {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.chart-area::after {
+  content: "HYPERDASH";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 68px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--tx-4);
+  opacity: 0.06;
+  pointer-events: none;
+  font-family: var(--font-mono);
+}
+.chart-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 14px; position: relative; z-index: 1;
+}
+.chart-title {
+  font-size: 11px; color: var(--tx-3);
+  letter-spacing: 0.6px; text-transform: uppercase;
+  font-family: var(--font-mono); font-weight: 600;
+}
+.chart-value { font-size: 26px; font-weight: 700; margin-top: 2px; }
+.chart-delta { font-size: 12px; align-self: flex-end; }
+.chart-svg { display: block; width: 100%; height: auto; }
+
+/* Tabs */
+.desk-panel {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+  overflow-x: auto;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 12px 20px;
+  background: none; border: none;
+  color: var(--tx-3);
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.6px; text-transform: uppercase;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.tab-btn:hover { color: var(--tx-1); }
+.tab-btn.active {
+  color: var(--accent-2);
+  border-bottom-color: var(--accent);
+  background: var(--bg-1);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; padding: 0; }
+
+/* Data table — shared */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+}
+.data-table thead { position: sticky; top: 0; background: var(--bg-1); z-index: 1; }
+.data-table th {
+  text-align: right;
+  padding: 10px 12px;
+  color: var(--tx-3);
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.data-table th:first-child { text-align: left; padding-left: 18px; }
+.data-table th:last-child { padding-right: 18px; }
+.data-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  text-align: right;
+  white-space: nowrap;
+}
+.data-table td:first-child { text-align: left; padding-left: 18px; }
+.data-table td:last-child { padding-right: 18px; }
+.data-table td.left { text-align: left; }
+.data-table tbody tr { cursor: pointer; transition: background 0.1s; }
+.data-table tbody tr:hover { background: var(--bg-2); }
+.data-table .sub-head td {
+  background: var(--bg-2);
+  color: var(--tx-3);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 8px 18px;
+  cursor: default;
+}
+.data-table .sub-head td:hover { background: var(--bg-2); }
+
+.badge-ai {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  padding: 2px 7px; border-radius: 3px;
+  background: var(--accent-soft); color: var(--accent-2);
+  letter-spacing: 0.5px;
+}
+
+/* AI tab compact */
+.ai-tab-body { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+.pulse-mini {
+  display: grid; grid-template-columns: auto auto 1fr; gap: 14px; align-items: center;
+  padding: 12px 16px; background: var(--bg-2); border-radius: var(--r-sm);
+  border-left: 3px solid var(--accent);
+}
+.pulse-mini-cell { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.pulse-mini-summary { color: var(--tx-2); font-size: 13px; line-height: 1.7; }
+
+.diag-compact {
+  padding: 12px 16px; background: var(--bg-2); border-radius: var(--r-sm);
+  border-left: 3px solid var(--amber);
+}
+.diag-compact-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.diag-compact-body { font-size: 13px; line-height: 1.7; display: flex; flex-direction: column; gap: 4px; }
+
+.tab-subhead {
+  font-size: 11px; color: var(--tx-3);
+  letter-spacing: 0.6px; text-transform: uppercase;
+  font-weight: 700; font-family: var(--font-mono);
+  margin: 6px 0 -2px;
+  display: flex; gap: 8px; align-items: baseline;
+}
+
+.tab-footer { padding-top: 8px; text-align: right; }
+.btn-link { color: var(--accent-2); font-size: 13px; font-weight: 600; font-family: var(--font-mono); }
+.btn-link:hover { color: #b8d0ff; }
+
+.empty-state { padding: 60px 0; text-align: center; }
+
+/* Desk mobile fallback — stack sidebar above main */
+@media (max-width: 960px) {
+  .desk {
+    grid-template-columns: 1fr;
+    padding: 12px 14px 30px;
+    gap: 14px;
+  }
+  .desk-sidebar {
+    position: static;
+    max-height: none;
+    padding-right: 0;
+  }
+  .desk-topbar { padding: 10px 14px; flex-wrap: wrap; }
+  .desk-breadcrumb { font-size: 9px; }
+  .macro-strip { grid-template-columns: repeat(2, 1fr); }
+  .data-table { font-size: 11px; }
+  .data-table th, .data-table td { padding: 8px 6px; }
+  .data-table th:first-child, .data-table td:first-child { padding-left: 12px; }
+  .data-table th:last-child, .data-table td:last-child { padding-right: 12px; }
+  .stat-block { padding: 12px 14px; background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--r-sm); }
+  .chart-area { padding: 14px; }
+  .chart-area::after { font-size: 38px; letter-spacing: 4px; }
+  .chart-value { font-size: 22px; }
+}
+
+/* Tweaks panel */
+.tweaks-panel {
+  position: fixed; bottom: 84px; right: 20px;
+  width: 280px; z-index: 1000;
+  background: var(--bg-1); border: 1px solid var(--line-2);
+  border-radius: 14px; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  display: none;
+}
+.tweaks-panel.open { display: block; }
+.tweaks-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono);
+}
+.tweaks-close { background: none; border: none; color: var(--tx-3); cursor: pointer; font-size: 18px; }
+.tweak-row { margin-bottom: 14px; }
+.tweak-row-label {
+  font-size: 10px; color: var(--tx-3); margin-bottom: 6px;
+  text-transform: uppercase; letter-spacing: 0.6px; font-family: var(--font-mono);
+}
+.tweak-row-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.tweak-opt {
+  padding: 6px 10px; border-radius: 7px;
+  background: var(--bg-3); color: var(--tx-2);
+  border: 1px solid transparent;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all 0.15s;
+}
+.tweak-opt:hover { background: var(--bg-4); }
+.tweak-opt.active {
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  border-color: var(--accent);
+}
+.color-swatch {
+  width: 26px; height: 26px; border-radius: 50%;
+  cursor: pointer; border: 2px solid transparent;
+  transition: all 0.15s;
+}
+.color-swatch.active { border-color: var(--tx-1); transform: scale(1.1); }
+.fab {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--accent); border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--accent-glow);
+  z-index: 999; color: white;
+}
+
+/* Light theme adjustments */
+[data-theme="light"] body { background: var(--bg-0); }
+[data-theme="light"] .desk-topbar { background: rgba(255,255,255,0.9); }
+[data-theme="light"] .chart-area::after { color: #000; opacity: 0.04; }
+
+/* Density: dense — squeeze padding */
+[data-density="dense"] .stat-row { padding: 4px 0; }
+[data-density="dense"] .data-table th,
+[data-density="dense"] .data-table td { padding: 7px 10px; }
+[data-density="dense"] .chart-area { padding: 14px; }
+
+/* Accent overrides */
+[data-accent="purple"] { --accent: #a685ff; --accent-2: #bda2ff; --accent-glow: rgba(166,133,255,0.35); --accent-soft: rgba(166,133,255,0.14); }
+[data-accent="green"]  { --accent: #3fd99a; --accent-2: #6fe6b5; --accent-glow: rgba(63,217,154,0.35); --accent-soft: rgba(63,217,154,0.14); }
+[data-accent="amber"]  { --accent: #ffb547; --accent-2: #ffc878; --accent-glow: rgba(255,181,71,0.4); --accent-soft: rgba(255,181,71,0.14); }
 
 /* ── Mobile ── */
 @media (max-width: 720px) {
