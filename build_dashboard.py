@@ -35,6 +35,7 @@ DOCS_BRIEFS_DIR = DOCS_DIR / "briefs"
 DOCS_HOLDINGS_DIR = DOCS_DIR / "holdings"
 PORTFOLIO_JSON = ROOT / "portfolio.json"
 HISTORY_JSON = ROOT / "price_history.json"
+STOCK_UNIVERSE_JSON = ROOT / "stock_universe.json"  # all TW stocks from TWSE/TPEx
 
 DATE_RE = re.compile(r"^# Daily Brief — (\d{4}-\d{2}-\d{2}) \(週(.)\)", re.MULTILINE)
 COUNT_RE = re.compile(r"抓到 (\d+) 則新聞")
@@ -249,6 +250,17 @@ def load_history() -> dict:
         return json.loads(HISTORY_JSON.read_text(encoding="utf-8")).get("history", {})
     except Exception:
         return {}
+
+
+def load_full_tw_universe() -> list[dict]:
+    """Full TWSE+TPEx stock list for search autocomplete (2000+ stocks)."""
+    if not STOCK_UNIVERSE_JSON.exists():
+        return []
+    try:
+        data = json.loads(STOCK_UNIVERSE_JSON.read_text(encoding="utf-8"))
+        return data.get("stocks", [])
+    except Exception:
+        return []
 
 
 def build_news_index(briefs: list[dict], universe: list[dict]) -> dict[str, list[dict]]:
@@ -2620,15 +2632,24 @@ document.querySelectorAll('.sn-btn').forEach(btn => {{
 const initTab = (location.hash || '').replace('#', '');
 if (initTab && document.querySelector(`.sn-btn[data-tab="${{initTab}}"]`)) setTab(initTab);
 
-// --- Search: autocomplete any stock, navigate to /holdings/<sym>.html ---
+// --- Search: autocomplete across ALL TW stocks (2000+) + our tracked universe ---
 (function() {{
-  const INDEX = {json.dumps([
+  // Tracked stocks (have deep pages + prices)
+  const TRACKED = {json.dumps([
       {"symbol": it.get("symbol"), "name": it.get("name", ""),
-       "category": it.get("category", ""), "price": it.get("price"),
-       "group": "持股" if it.get("is_held") else "追蹤/全部"}
+       "category": it.get("category", ""),
+       "group": "📊 已追蹤"}
       for it in (pf.get("simulator_universe") or []) + pf.get("holdings", []) + pf.get("watchlist", [])
       if it.get("symbol")
   ], ensure_ascii=False)};
+  const TRACKED_SYMS = new Set(TRACKED.map(t => t.symbol));
+  // Full TW universe (just symbol+name, no prices) — from TWSE/TPEx
+  const FULL = {json.dumps([
+      {"symbol": s.get("symbol"), "name": s.get("name", ""), "group": "🔎 全市場"}
+      for s in load_full_tw_universe()
+      if s.get("symbol")
+  ], ensure_ascii=False)};
+  const INDEX = [...TRACKED, ...FULL.filter(s => !TRACKED_SYMS.has(s.symbol))];
   const seen = new Set();
   const uniq = INDEX.filter(x => !seen.has(x.symbol) && seen.add(x.symbol));
   const input = document.getElementById('top-search');
@@ -2638,12 +2659,22 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${{initTab}}"]`)) setTa
 
   function render(matches) {{
     if (!matches.length) {{ results.classList.remove('open'); results.innerHTML=''; return; }}
-    results.innerHTML = matches.slice(0, 10).map((m, i) => `
-      <a class="search-result${{i === activeIdx ? ' active' : ''}}" href="holdings/${{m.symbol}}.html">
+    results.innerHTML = matches.slice(0, 12).map((m, i) => {{
+      const isTracked = TRACKED_SYMS.has(m.symbol);
+      const href = isTracked
+        ? `holdings/${{m.symbol}}.html`
+        : `https://tw.stock.yahoo.com/quote/${{m.symbol}}.TW`;
+      const target = isTracked ? '' : 'target="_blank" rel="noopener"';
+      const badge = isTracked
+        ? `<span class="search-result-cat tracked">${{m.category || '追蹤中'}}</span>`
+        : `<span class="search-result-cat untracked">Yahoo ↗</span>`;
+      return `
+      <a class="search-result${{i === activeIdx ? ' active' : ''}}" href="${{href}}" ${{target}}>
         <span class="search-result-sym">${{m.symbol}}</span>
         <span class="search-result-name">${{m.name}}</span>
-        <span class="search-result-cat">${{m.category || m.group}}</span>
-      </a>`).join('');
+        ${{badge}}
+      </a>`;
+    }}).join('');
     results.classList.add('open');
   }}
 
@@ -4609,6 +4640,8 @@ footer a { color: var(--tx-3); }
 .search-result-sym { font-family: var(--font-mono); font-size: 13px; font-weight: 700; min-width: 60px; }
 .search-result-name { flex: 1; font-size: 13px; color: var(--tx-2); }
 .search-result-cat { font-size: 10px; color: var(--tx-3); padding: 2px 7px; background: var(--bg-3); border-radius: 3px; }
+.search-result-cat.tracked { color: var(--accent-2); background: var(--accent-soft); }
+.search-result-cat.untracked { color: var(--tx-3); background: var(--bg-3); }
 .search-result.active { background: var(--accent-soft); }
 
 /* Entry strategy buttons */

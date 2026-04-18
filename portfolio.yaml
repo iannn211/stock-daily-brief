@@ -152,3 +152,53 @@ simulator_universe:
   - { symbol: "AAPL", name: "Apple",               market: "US", category: "美股個股" }
   - { symbol: "TSLA", name: "Tesla",               market: "US", category: "美股個股" }
   - { symbol: "MSFT", name: "Microsoft",           market: "US", category: "美股個股" }
+  # ── 面板 / 光學 ──
+  - { symbol: "2409", name: "友達",             market: "TW", category: "面板" }
+  - { symbol: "3481", name: "群創",             market: "TW", category: "面板" }
+  - { symbol: "4960", name: "誠美材",           market: "TW", category: "面板" }
+  - { symbol: "3008", name: "大立光",           market: "TW", category: "光學" }
+  - { symbol: "3406", name: "玉晶光",           market: "TW", category: "光學" }
+  - { symbol: "8069", name: "元太",             market: "TW", category: "電子紙" }
+  # ── 航運 / 汽車 / 紡織 ──
+  - { symbol: "2603", name: "長榮",             market: "TW", category: "航運" }
+  - { symbol: "2609", name: "陽明",             market: "TW", category: "航運" }
+  - { symbol: "2618", name: "長榮航",           market: "TW", category: "航空" }
+  - { symbol: "2207", name: "和泰車",           market: "TW", category: "汽車" }
+  - { symbol: "1476", name: "儒鴻",             market: "TW", category: "紡織" }
+  - { symbol: "9914", name: "美利達",           market: "TW", category: "自行車" }
+  - { symbol: "9921", name: "巨大",             market: "TW", category: "自行車" }
+  # ── 金融股 ──
+  - { symbol: "2881", name: "富邦金",           market: "TW", category: "金融" }
+  - { symbol: "2882", name: "國泰金",           market: "TW", category: "金融" }
+  - { symbol: "2886", name: "兆豐金",           market: "TW", category: "金融" }
+  - { symbol: "2891", name: "中信金",           market: "TW", category: "金融" }
+  - { symbol: "2884", name: "玉山金",           market: "TW", category: "金融" }
+  # ── 塑化 / 原物料 ──
+  - { symbol: "1301", name: "台塑",             market: "TW", category: "塑化" }
+  - { symbol: "1303", name: "南亞",             market: "TW", category: "塑化" }
+  - { symbol: "2002", name: "中鋼",             market: "TW", category: "鋼鐵" }
+  # ── 食品 / 零售 ──
+  - { symbol: "1216", name: "統一",             market: "TW", category: "食品" }
+  - { symbol: "2912", name: "統一超",           market: "TW", category: "零售" }
+  # ── 工業電腦 / 機器人 ──
+  - { symbol: "2395", name: "研華",             market: "TW", category: "工業電腦" }
+  - { symbol: "6414", name: "樺漢",             market: "TW", category: "工業電腦" }
+  - { symbol: "2049", name: "上銀",             market: "TW", category: "機器人" }
+  - { symbol: "1590", name: "亞德客-KY",        market: "TW", category: "機器人" }
+  # ── PC 品牌 / 代工 ──
+  - { symbol: "2357", name: "華碩",             market: "TW", category: "PC" }
+  - { symbol: "4938", name: "和碩",             market: "TW", category: "PC" }
+  - { symbol: "2356", name: "英業達",           market: "TW", category: "PC" }
+  - { symbol: "2353", name: "宏碁",             market: "TW", category: "PC" }
+  # ── AI / 半導體補充 ──
+  - { symbol: "2408", name: "南亞科",           market: "TW", category: "半導體記憶體" }
+  - { symbol: "8069", name: "元太",             market: "TW", category: "電子紙" }
+  - { symbol: "6488", name: "環球晶",           market: "TW", category: "矽晶圓" }
+  - { symbol: "6415", name: "矽力-KY",          market: "TW", category: "IC 設計" }
+  - { symbol: "2449", name: "京元電子",         market: "TW", category: "測試" }
+  - { symbol: "2474", name: "可成",             market: "TW", category: "機殼" }
+  - { symbol: "3105", name: "穩懋",             market: "TW", category: "砷化鎵" }
+  # ── 能源 / 電力 ──
+  - { symbol: "1504", name: "東元",             market: "TW", category: "重電" }
+  - { symbol: "1519", name: "華城",             market: "TW", category: "重電" }
+  - { symbol: "1503", name: "士電",             market: "TW", category: "重電" }
