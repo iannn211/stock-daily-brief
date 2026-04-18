@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stock Daily Brief</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <h1>📈 Stock Daily Brief</h1>
+    <p class="subtitle">台股+美股每日情報簡報 · 共 1 份 · 最新 2026-04-18</p>
+  </div>
+</header>
+<div class="search-wrap wrap">
+  <input type="search" id="search" placeholder="🔍 搜尋日期、產業標籤..." autocomplete="off">
+</div>
+<main id="brief-list" class="grid wrap">
+
+        <a class="card" href="briefs/2026-04-18.html">
+          <div class="card-top">
+            <div class="card-date">2026-04-18</div>
+            <div class="card-day">週六 · Sat</div>
+          </div>
+          <div class="card-count">350 則新聞</div>
+          <div class="card-tags"><span class="tag">2330 台積電</span><span class="tag">0050 元大台灣50</span><span class="tag">半導體代工</span><span class="tag">IC 設計</span><span class="tag">AI 伺服器 / CoWoS</span><span class="tag">光通訊</span></div>
+          <div class="card-link">看完整分析 →</div>
+        </a>
+</main>
+<script>
+const q = document.getElementById('search');
+const cards = document.querySelectorAll('.card');
+q.addEventListener('input', () => {
+  const t = q.value.toLowerCase().trim();
+  cards.forEach(c => {
+    c.style.display = !t || c.textContent.toLowerCase().includes(t) ? '' : 'none';
+  });
+});
+</script>
+
+<footer>
+  <p>生成於 2026-04-18 16:09 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">原始碼</a></p>
+</footer>
+</body>
+</html>
