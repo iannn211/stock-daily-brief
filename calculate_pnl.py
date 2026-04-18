@@ -29,6 +29,8 @@ TARGET_ALLOCATIONS: dict[str, dict[str, float]] = {
     "balanced":        {"growth": 0.55, "defense": 0.30, "flexibility": 0.15},
     "aggressive":      {"growth": 0.80, "defense": 0.05, "flexibility": 0.15},
     "defensive":       {"growth": 0.40, "defense": 0.45, "flexibility": 0.15},
+    # Custom: snowball-growth — 0050 is savings, no dividend ETFs, bonds optional
+    "snowball-growth": {"growth": 1.00, "defense": 0.00, "flexibility": 0.00},
 }
 
 

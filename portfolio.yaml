@@ -22,10 +22,40 @@ cash_twd: 0
 
 # Risk preferences — fed into the AI so it tunes recommendations
 risk_profile:
-  style: "beginner-growth"     # beginner-growth | balanced | aggressive | defensive
-  target_cash_ratio: 0.10      # 理想現金比例 (0-1)
-  max_single_position: 0.40    # 單一持股佔比警戒上限 (0-1)
-  rebalance_threshold: 0.05    # 偏離超過 5% 就提醒
+  style: "snowball-growth"     # custom: 小額滾雪球、0050 當存款、利潤分批入存款/滾下一檔
+  target_cash_ratio: 0.05      # 不留太多現金（有就投）
+  max_single_position: 0.80    # 0050 當存款很正常，抬高上限（超過 80% 才算過度集中）
+  rebalance_threshold: 0.10    # 只在真的很偏才提醒
+
+# Strategy notes — MULTI-LINE free text fed verbatim to the AI.
+# This overrides generic "三柱配置" textbook advice. Edit this whenever
+# your strategy evolves.
+strategy_notes: |
+  【使用者的個人策略，AI 必須嚴格遵守】
+
+  1. **0050 的角色 = 存款**：每月定期定額持續投入，不要建議「賣 0050 配置到其他地方」。0050 的比重高是刻意的，不是需要被「調整」的問題。
+
+  2. **2330 台積電 = 長線成長核心**：減碼只在法說會利多出盡等明確技術面訊號下才建議；不要因為「單一個股集中度過高」就建議減碼。
+
+  3. **禁止建議的防禦資產**：
+     - ❌ 高股息 ETF（00878 國泰永續高股息、00919 群益台灣精選高息、0056 元大高股息 等等）— 使用者不要殖利率導向
+     - ❌ 金融股、公用事業、REITs 作為「防禦」
+     - ❌ 任何以「配息」為主打的工具
+
+  4. **唯一可接受的防禦資產 = 美債 ETF**：
+     - 如果 AI 真的認為要加防禦，只能推 BND / TLT / IEF / AGG（美股）或 00687B / 00679B / 00772B（台股 ETF）
+     - 但也不要硬推——只有在總經判斷真的需要（例如衰退訊號、利率轉折）才提
+
+  5. **主動操作資金 = 雪球法**：
+     - 每次新題材只用 NT$5,000 起跳的小倉位試水
+     - 賺到 10,000 或 15,000 時，分一部分（例：50%）入 0050 或 2330（存款化）
+     - 剩下 50% 繼續留在市場找下一個機會
+     - AI 給「值得研究的個股」時，請按這個邏輯給：倉位 < 3% 組合、明確設定 take-profit 目標、賺到後回補存款
+
+  6. **組合診斷方向**：
+     - 不要在 rebalance_advice 抱怨「Growth 100% 沒 Defense 緩衝」—— 這是使用者刻意選擇
+     - 改成：指出「單一持股或題材過度集中、是否接近停利/停損、有沒有錯過具體機會」
+     - 單一個股集中度 > 60% 才值得提醒（不是通用的 40%）
 
 holdings:
   - symbol: "0050"

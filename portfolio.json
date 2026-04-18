@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-04-18T17:44:14.881670+08:00",
+  "as_of": "2026-04-18T19:12:20.269983+08:00",
   "fx_usdtwd": 31.464,
   "risk_profile": {
-    "style": "beginner-growth",
+    "style": "snowball-growth",
     "target_allocation": {
-      "growth": 70.0,
-      "defense": 20.0,
-      "flexibility": 10.0
+      "growth": 100.0,
+      "defense": 0.0,
+      "flexibility": 0.0
     },
-    "max_single_position_pct": 40.0,
-    "target_cash_ratio_pct": 10.0,
-    "rebalance_threshold_pct": 5.0
+    "max_single_position_pct": 80.0,
+    "target_cash_ratio_pct": 5.0,
+    "rebalance_threshold_pct": 10.0
   },
   "summary": {
     "total_value_twd": 141580.0,
@@ -47,9 +47,9 @@
       "flexibility": 0.0
     },
     "target": {
-      "growth": 70.0,
-      "defense": 20.0,
-      "flexibility": 10.0
+      "growth": 100.0,
+      "defense": 0.0,
+      "flexibility": 0.0
     }
   },
   "macro": {
@@ -704,37 +704,11 @@
   "alerts": {
     "stop_loss": [],
     "take_profit": [],
-    "concentration": [
-      {
-        "symbol": "0050",
-        "name": "元大台灣50",
-        "weight_pct": 71.32,
-        "limit_pct": 40.0
-      }
-    ],
-    "pillar": [
-      {
-        "pillar": "growth",
-        "actual_pct": 100.0,
-        "target_pct": 70.0,
-        "diff_pct": 30.0
-      },
-      {
-        "pillar": "defense",
-        "actual_pct": 0.0,
-        "target_pct": 20.0,
-        "diff_pct": -20.0
-      },
-      {
-        "pillar": "flexibility",
-        "actual_pct": 0.0,
-        "target_pct": 10.0,
-        "diff_pct": -10.0
-      }
-    ],
+    "concentration": [],
+    "pillar": [],
     "nearing_stop": []
   },
-  "alert_count": 4,
+  "alert_count": 0,
   "watchlist": [
     {
       "symbol": "VOO",
