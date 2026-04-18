@@ -1783,21 +1783,58 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
         if health else ""
     )
 
-    # Picks strip — symbol + name + thesis one-liner
+    # Picks strip — theme + lead stock + headline + warning (v7 schema)
     picks_html = ""
     if opps:
         picks = []
         for o in opps[:3]:
-            sym = o.get("symbol", "")
-            pick_href = f"holdings/{sym}.html" if sym in _TICKER_ALIAS else f"briefs/{latest_brief['date']}.html#opportunities"
+            # Resolve a lead symbol for link target; fall back to opportunities anchor
+            leads = o.get("lead_stocks") or []
+            lead_sym = (leads[0].get("symbol") if leads else "") or o.get("symbol", "")
+            lead_name = (leads[0].get("name") if leads else "") or o.get("name", "")
+
+            theme = o.get("theme") or o.get("category_tag") or lead_sym or "題材"
+            # Headline first, then legacy thesis, then why
+            thesis = o.get("headline") or o.get("thesis") or o.get("why", "")
+            # Risk priority: explicit ai_warning > legacy risk (no signal fallback —
+            # signals like "量增" are bullish, not risks)
+            signals = o.get("signals") or []
+            risk_text = o.get("ai_warning") or o.get("risk") or ""
+            conf = int(o.get("confidence_pct") or 0)
+            stage = o.get("stage", "")
+
+            pick_href = (
+                f"holdings/{lead_sym}.html" if lead_sym in _TICKER_ALIAS
+                else f"briefs/{latest_brief['date']}.html#opportunities"
+            )
+
+            # Strip leading emojis the AI may have added
+            theme_clean = _strip_leading_emoji(theme)
+            lead_str = f"{lead_sym} {lead_name}".strip() if lead_sym else (lead_name or "")
+
+            risk_row = ""
+            if risk_text:
+                risk_row = (
+                    f'<div class="pick-risk muted small"><span class="mono amber">RISK</span> · '
+                    f'{html.escape(risk_text)[:60]}{"…" if len(risk_text) > 60 else ""}</div>'
+                )
+
+            meta_bits = []
+            if stage:
+                meta_bits.append(f'<span class="pick-stage mono small">{html.escape(stage)}</span>')
+            if conf:
+                meta_bits.append(f'<span class="pick-conf mono small muted">CONF {conf}</span>')
+            meta_html = f'<div class="pick-meta">{" ".join(meta_bits)}</div>' if meta_bits else ""
+
             picks.append(f'''
             <a class="pick-card" href="{pick_href}">
               <div class="pick-head">
-                <strong>{html.escape(sym)}</strong>
-                <span class="muted small">{html.escape(o.get("name", ""))}</span>
+                <strong>{html.escape(theme_clean)}</strong>
+                <span class="muted small">{html.escape(lead_str)}</span>
               </div>
-              <div class="pick-thesis small">{html.escape(o.get("thesis", ""))[:80]}{"…" if len(o.get("thesis", "")) > 80 else ""}</div>
-              <div class="pick-risk muted small"><span class="mono amber">RISK</span> · {html.escape(o.get("risk", ""))[:60]}{"…" if len(o.get("risk", "")) > 60 else ""}</div>
+              <div class="pick-thesis small">{html.escape(thesis)[:80]}{"…" if len(thesis) > 80 else ""}</div>
+              {meta_html}
+              {risk_row}
             </a>''')
         picks_html = f'''
         <div class="hero-picks">
