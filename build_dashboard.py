@@ -89,6 +89,28 @@ def init_ticker_alias(pf: dict | None) -> None:
                 _TICKER_ALIAS[nm.replace("-KY", "")] = sym
 
 
+# Compatibility shims for rendering code that uses older helper names.
+def _is_known_symbol(sym: str) -> bool:
+    return sym in _TICKER_ALIAS
+
+
+def esc_linked(text: str, prefix: str = "holdings") -> str:
+    """HTML-escape text and linkify known tickers / stock names."""
+    return _link_tickers(text or "", href_prefix=prefix + "/")
+
+
+# Backwards-compat: _KNOWN_SYMBOLS behaves like a read-only set lookup
+class _KnownSymbolsProxy:
+    def __contains__(self, item):
+        return item in _TICKER_ALIAS
+    def __iter__(self):
+        return iter(_TICKER_ALIAS)
+    def __len__(self):
+        return len(_TICKER_ALIAS)
+
+_KNOWN_SYMBOLS = _KnownSymbolsProxy()
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
