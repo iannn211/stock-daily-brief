@@ -1239,67 +1239,207 @@ def render_briefs_table(briefs: list[dict]) -> str:
 '''
 
 
-def render_radar_tab(analysis: dict | None, pf: dict | None) -> str:
-    """Opportunity Radar — dedicated tab that surfaces themes to research.
+def _theme_sparkline_from_leads(lead_stocks: list[dict], history: dict,
+                                  days: int = 14) -> list[float]:
+    """Compute a theme sparkline by averaging normalized close of lead stocks."""
+    series: list[list[float]] = []
+    for ls in lead_stocks[:4]:
+        sym = ls.get("symbol")
+        if not sym:
+            continue
+        # Try .TW then .TWO (universe falls back silently)
+        rows = history.get(f"{sym}.TW") or history.get(f"{sym}.TWO") or history.get(sym) or []
+        tail = [r["close"] for r in rows[-days:]]
+        if len(tail) < 2:
+            continue
+        # Normalize to start=100
+        first = tail[0] or 1
+        series.append([c / first * 100 for c in tail])
+    if not series:
+        return []
+    # Average across stocks at each time step
+    min_len = min(len(s) for s in series)
+    return [sum(s[i] for s in series) / len(series) for i in range(min_len)]
 
-    Shows AI opportunities as big cards with industry grouping, lead stocks
-    (clickable to deep page), topic cross-reference, and a 'how it's found'
-    explanation.
-    """
+
+def _crowding_tone(pct: int) -> str:
+    if pct <= 30:
+        return "crowd-low"
+    if pct <= 60:
+        return "crowd-mid"
+    if pct <= 80:
+        return "crowd-high"
+    return "crowd-max"
+
+
+def _stage_cls(stage: str) -> str:
+    return {
+        "萌芽": "stage-emerg",
+        "早期": "stage-early",
+        "中段": "stage-mid",
+        "過熱": "stage-hot",
+    }.get(stage, "")
+
+
+def render_radar_tab(analysis: dict | None, pf: dict | None,
+                     history: dict | None = None) -> str:
+    """GUSHI-style Opportunity Radar with filter pills + sort, CROWD bars,
+    per-theme sparkline, lead-stocks chips with %change, sources and CTA."""
+    history = history or {}
     if not analysis:
         return '<div class="radar-empty"><p class="muted">AI 分析尚未生成。下次排程後會看到機會雷達。</p></div>'
 
     opps = analysis.get("opportunities", [])
-    topics = analysis.get("topics", [])
-
     if not opps:
-        return '<div class="radar-empty"><p class="muted">今日 AI 未挑出值得研究的新機會（市場條件可能不合適）。</p></div>'
+        return '<div class="radar-empty"><p class="muted">今日 AI 未挑出新機會（市場條件可能不合適）。</p></div>'
 
-    # Intro
-    intro = f'''
-<div class="radar-intro">
-  <h2 class="radar-title">📡 機會雷達</h2>
-  <p class="muted">
-    AI 橫掃全市場找出「你可能錯過」的題材。每個都有論點 / 研究切入點 / 風險 / 直接跳到個股分析。
-    今天掃出 <strong class="mono">{len(opps)}</strong> 個機會、<strong class="mono">{len(topics)}</strong> 個主題。
-  </p>
+    # Lookup current day change per symbol (from universe + holdings)
+    price_lookup: dict[str, dict] = {}
+    for coll in ("holdings", "watchlist", "simulator_universe"):
+        for it in pf.get(coll, []) or []:
+            if it.get("symbol"):
+                price_lookup[it["symbol"]] = it
+
+    cards: list[str] = []
+    for idx, o in enumerate(opps):
+        theme = o.get("theme") or o.get("symbol", "未命名題材")
+        tag = o.get("category_tag") or f"#{theme.split()[0]}"
+        stage = o.get("stage", "—")
+        conf = int(o.get("confidence_pct") or 0)
+        crowd = int(o.get("crowding_pct") or 0)
+        crowd_label = o.get("crowding_label", "")
+        headline = o.get("headline") or o.get("thesis", "")
+        why = o.get("why") or o.get("research_angle", "")
+        timeframe = o.get("timeframe", "—")
+        lead_stocks = o.get("lead_stocks") or []
+        # Legacy fallback: if using old symbol/name, convert to lead_stocks
+        if not lead_stocks and o.get("symbol"):
+            lead_stocks = [{"symbol": o["symbol"], "name": o.get("name", "")}]
+        sources = o.get("sources") or []
+        signals = o.get("signals") or []
+        warning = o.get("ai_warning", "")
+
+        # Lead stocks chips
+        chips = []
+        for ls in lead_stocks[:5]:
+            sym = ls.get("symbol", "")
+            name = ls.get("name", "")
+            day_pct = 0.0
+            if sym in price_lookup:
+                day_pct = price_lookup[sym].get("day_change_pct") or 0
+            href = f"holdings/{sym}.html" if sym in _TICKER_ALIAS else "#"
+            chips.append(f'''
+              <a class="lead-chip" href="{href}">
+                <span class="lead-sym mono">{html.escape(sym)}</span>
+                <span class="lead-name muted small">{html.escape(name)}</span>
+                <span class="lead-chg mono {_cls(day_pct)}">{_fmt_pct(day_pct, 2)}</span>
+              </a>''')
+        chips_html = "".join(chips) if chips else ""
+
+        # Theme sparkline (SVG)
+        spark_data = _theme_sparkline_from_leads(lead_stocks, history, days=14)
+        spark_svg = ""
+        if len(spark_data) >= 2:
+            w, h = 640, 60
+            mn, mx = min(spark_data), max(spark_data)
+            rng = mx - mn if mx != mn else 1
+
+            def _sx(i):
+                return 4 + (w - 8) * i / (len(spark_data) - 1)
+
+            def _sy(v):
+                return h - 4 - (h - 8) * (v - mn) / rng
+
+            pts = " ".join(f"{_sx(i):.1f},{_sy(v):.1f}" for i, v in enumerate(spark_data))
+            area = f"4,{h-4} {pts} {w-4},{h-4}"
+            direction = "up" if spark_data[-1] >= spark_data[0] else "dn"
+            stroke = "var(--up)" if direction == "up" else "var(--dn)"
+            spark_svg = f'''
+              <svg class="radar-spark" viewBox="0 0 {w} {h}" preserveAspectRatio="none" width="100%" height="60">
+                <polygon points="{area}" fill="{stroke}" opacity="0.1"/>
+                <polyline points="{pts}" stroke="{stroke}" stroke-width="1.8" fill="none"
+                          stroke-linejoin="round" stroke-linecap="round"/>
+              </svg>'''
+
+        crowd_tone = _crowding_tone(crowd)
+        stage_cls = _stage_cls(stage)
+        warn_html = f'<div class="radar-warn small">⚠️ {html.escape(warning)}</div>' if warning else ""
+        signals_html = ""
+        if signals:
+            sig_chips = "".join(f'<span class="sig-chip">{html.escape(s)}</span>' for s in signals[:5])
+            signals_html = f'<div class="sig-row">{sig_chips}</div>'
+
+        # Card
+        first_lead_sym = lead_stocks[0].get("symbol") if lead_stocks else ""
+        chain_href = f"holdings/{first_lead_sym}.html" if first_lead_sym in _TICKER_ALIAS else "#"
+
+        # Data attributes for client-side filter/sort
+        data_attrs = (
+            f'data-stage="{stage}" data-crowd="{crowd}" data-conf="{conf}" '
+            f'data-theme="{html.escape(theme)}" data-idx="{idx}"'
+        )
+
+        cards.append(f'''
+        <article class="radar-card" {data_attrs}>
+          <div class="radar-card-top">
+            <div class="radar-top-left">
+              <span class="radar-tag mono">{html.escape(tag)}</span>
+              <span class="stage-chip {stage_cls}">{html.escape(stage)}</span>
+            </div>
+            <div class="radar-conf">
+              <span class="conf-lbl mono small muted">CONF</span>
+              <span class="conf-val mono tnum">{conf}</span>
+            </div>
+          </div>
+          <h3 class="radar-headline">{_link_tickers(headline)}</h3>
+          <div class="crowd-row">
+            <span class="crowd-lbl mono small muted">CROWD</span>
+            <div class="crowd-bar"><div class="crowd-fill {crowd_tone}" style="width:{crowd}%"></div></div>
+            <span class="crowd-val mono tnum">{crowd}</span>
+            <span class="crowd-label {crowd_tone} small">{html.escape(crowd_label)}</span>
+          </div>
+          {spark_svg}
+          <div class="leads-row">{chips_html}</div>
+          {signals_html}
+          <div class="radar-why small">
+            <span class="why-lbl mono muted">WHY · </span>{_link_tickers(why)}
+          </div>
+          {warn_html}
+          <div class="radar-card-foot small muted mono">
+            <span>{len(sources)} SOURCES</span>
+            <span class="sb-sep">·</span>
+            <span>{html.escape(timeframe)}</span>
+            <a class="radar-chain-link" href="{chain_href}">VIEW CHAIN →</a>
+          </div>
+        </article>''')
+
+    # Filter + sort controls (client-side)
+    controls = '''
+<div class="radar-controls">
+  <div class="radar-filter-group">
+    <span class="rc-lbl mono small muted">FILTER</span>
+    <button class="rc-btn active" data-filter="all">全部</button>
+    <button class="rc-btn" data-filter="low">低擁擠</button>
+    <button class="rc-btn" data-filter="mid">中段</button>
+    <button class="rc-btn" data-filter="hot">過熱</button>
+  </div>
+  <div class="radar-sort-group">
+    <span class="rc-lbl mono small muted">SORT</span>
+    <button class="rc-btn active" data-sort="conf">AI 信心</button>
+    <button class="rc-btn" data-sort="cold">冷門優先</button>
+    <button class="rc-btn" data-sort="stage">題材階段</button>
+  </div>
 </div>
 '''
 
-    # Opportunity cards — big, with all detail exposed
-    opp_cards = []
-    for o in opps:
-        sym = o.get("symbol", "")
-        in_universe = sym in _TICKER_ALIAS
-        cta = (
-            f'<a href="holdings/{sym}.html" class="btn-link small">→ {sym} 完整分析 / 趨勢圖 / 新聞</a>'
-            if in_universe else
-            f'<span class="muted small">（尚未在資料庫中：手動到 portfolio.yaml 加入 simulator_universe 即可）</span>'
-        )
-        opp_cards.append(f'''
-        <article class="radar-card">
-          <div class="radar-card-head">
-            <div>
-              <h3>{html.escape(sym)} <span class="muted">{html.escape(o.get("name", ""))}</span></h3>
-            </div>
-          </div>
-          <div class="radar-card-body">
-            <div class="radar-row"><span class="radar-label">論點</span>{_link_tickers(o.get("thesis", ""))}</div>
-            <div class="radar-row"><span class="radar-label">研究切入</span>{_link_tickers(o.get("research_angle", ""))}</div>
-            <div class="radar-row radar-risk-row"><span class="radar-label dn">⚠ 風險</span>{_link_tickers(o.get("risk", ""))}</div>
-          </div>
-          <div class="radar-card-foot">{cta}</div>
-        </article>''')
-
-    # Related topics (mini — linked to brief)
+    # Topics mini section
+    topics = analysis.get("topics", [])
     topics_mini = []
     for t in topics[:6]:
         ticks = "".join(
-            (
-                f'<a href="holdings/{_TICKER_ALIAS[tk]}.html" class="chip chip-muted small">{html.escape(tk)}</a>'
-                if tk in _TICKER_ALIAS else
-                f'<span class="chip chip-muted small">{html.escape(tk)}</span>'
-            )
+            (f'<a href="holdings/{_TICKER_ALIAS[tk]}.html" class="chip chip-muted small">{html.escape(tk)}</a>'
+             if tk in _TICKER_ALIAS else
+             f'<span class="chip chip-muted small">{html.escape(tk)}</span>')
             for tk in t.get("tickers", [])[:5]
         )
         topics_mini.append(f'''
@@ -1327,10 +1467,65 @@ def render_radar_tab(analysis: dict | None, pf: dict | None) -> str:
 
     return f'''
 <div class="radar-body">
-  {intro}
-  <div class="radar-grid">{"".join(opp_cards)}</div>
+  <div class="radar-intro">
+    <h2 class="radar-title mono">📡 機會雷達</h2>
+    <p class="muted small">AI 橫掃全市場找出「你可能錯過」的題材 · {len(opps)} 個機會 · {len(topics)} 個主題</p>
+  </div>
+  {controls}
+  <div class="radar-grid" id="radar-grid">{"".join(cards)}</div>
   {topics_block}
 </div>
+<script>
+(function() {{
+  const grid = document.getElementById('radar-grid');
+  if (!grid) return;
+  let state = {{ filter: 'all', sort: 'conf' }};
+  function apply() {{
+    const cards = Array.from(grid.querySelectorAll('.radar-card'));
+    // Filter
+    cards.forEach(c => {{
+      const crowd = parseInt(c.dataset.crowd) || 0;
+      const stage = c.dataset.stage;
+      let show = true;
+      if (state.filter === 'low') show = crowd <= 40;
+      else if (state.filter === 'mid') show = crowd > 40 && crowd <= 70;
+      else if (state.filter === 'hot') show = crowd > 70;
+      c.style.display = show ? '' : 'none';
+    }});
+    // Sort
+    const visible = cards.filter(c => c.style.display !== 'none');
+    visible.sort((a, b) => {{
+      const aC = parseInt(a.dataset.conf) || 0;
+      const bC = parseInt(b.dataset.conf) || 0;
+      const aCr = parseInt(a.dataset.crowd) || 0;
+      const bCr = parseInt(b.dataset.crowd) || 0;
+      const stageOrder = {{ '萌芽': 0, '早期': 1, '中段': 2, '過熱': 3 }};
+      if (state.sort === 'conf') return bC - aC;
+      if (state.sort === 'cold') return aCr - bCr;
+      if (state.sort === 'stage') return (stageOrder[a.dataset.stage] || 0) - (stageOrder[b.dataset.stage] || 0);
+      return 0;
+    }});
+    visible.forEach(c => grid.appendChild(c));
+  }}
+  document.querySelectorAll('.radar-filter-group .rc-btn').forEach(b => {{
+    b.addEventListener('click', () => {{
+      document.querySelectorAll('.radar-filter-group .rc-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.filter = b.dataset.filter;
+      apply();
+    }});
+  }});
+  document.querySelectorAll('.radar-sort-group .rc-btn').forEach(b => {{
+    b.addEventListener('click', () => {{
+      document.querySelectorAll('.radar-sort-group .rc-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.sort = b.dataset.sort;
+      apply();
+    }});
+  }});
+  apply();
+}})();
+</script>
 '''
 
 
@@ -2256,7 +2451,9 @@ def render_macro_strip(pf: dict) -> str:
 '''
 
 
-def render_index(briefs: list[dict], pf: dict | None) -> str:
+def render_index(briefs: list[dict], pf: dict | None,
+                 history: dict | None = None) -> str:
+    history = history or {}
     if not pf:
         # Fallback for no portfolio data
         return (
@@ -2289,7 +2486,7 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     positions = render_positions_table(pf)
     briefs_table = render_briefs_table(briefs)
     ai_tab = render_ai_tab(latest_brief, latest_analysis)
-    radar_tab = render_radar_tab(latest_analysis, pf)
+    radar_tab = render_radar_tab(latest_analysis, pf, history)
     sim_html, _ = render_simulator(pf, latest_analysis)
 
     # Thin portfolio summary strip values
@@ -4078,41 +4275,197 @@ footer a { color: var(--tx-3); }
 }
 .sim-rule strong { color: var(--amber); margin-right: 8px; font-size: 12px; }
 
-/* ── Radar tab ── */
+/* ── Radar tab (GUSHI-style) ── */
 .radar-empty { padding: 40px 20px; text-align: center; }
 .radar-body { padding: 0; }
 .radar-intro { padding: 20px 22px 14px; border-bottom: 1px solid var(--line); }
-.radar-title { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
+.radar-title { margin: 0 0 6px; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
+
+/* Filter + sort controls */
+.radar-controls {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.radar-filter-group, .radar-sort-group {
+  display: flex; align-items: center; gap: 6px;
+}
+.rc-lbl {
+  letter-spacing: 0.6px; font-weight: 700;
+  padding-right: 4px;
+}
+.rc-btn {
+  padding: 5px 12px;
+  background: transparent;
+  color: var(--tx-2);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rc-btn:hover { background: var(--bg-3); color: var(--tx-1); }
+.rc-btn.active {
+  background: var(--accent-soft); color: var(--accent-2);
+  border-color: var(--accent);
+}
+
 .radar-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
   gap: 14px;
   padding: 18px 22px;
 }
+@media (max-width: 720px) {
+  .radar-grid { grid-template-columns: 1fr; padding: 14px; }
+}
+
 .radar-card {
   background: var(--bg-1);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
   border-radius: var(--r);
   padding: 16px 18px 14px;
-  display: flex; flex-direction: column; gap: 10px;
-  transition: border-color 0.15s;
+  display: flex; flex-direction: column; gap: 12px;
+  transition: border-color 0.15s, transform 0.15s;
 }
-.radar-card:hover { border-left-color: var(--accent-2); }
-.radar-card-head h3 { margin: 0; font-size: 17px; }
-.radar-card-head h3 .muted { font-weight: 500; font-size: 14px; }
-.radar-card-body { display: flex; flex-direction: column; gap: 8px; }
-.radar-row { font-size: 13px; line-height: 1.65; }
-.radar-row.radar-risk-row { color: var(--tx-2); }
-.radar-label {
-  display: inline-block;
-  font-size: 11px; padding: 2px 8px; margin-right: 8px;
+.radar-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+/* Top row: tag + stage + CONF */
+.radar-card-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 8px;
+}
+.radar-top-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.radar-tag {
+  font-size: 12px; font-weight: 700;
+  padding: 3px 10px;
   background: var(--bg-3); color: var(--tx-2);
-  border-radius: 4px; font-weight: 600;
-  font-family: var(--font-mono);
+  border-radius: 4px;
+  letter-spacing: 0.3px;
 }
-.radar-label.dn { color: var(--up-soft); background: var(--up-bg); }
-.radar-card-foot { padding-top: 6px; border-top: 1px solid var(--line); }
+.stage-chip {
+  font-size: 11px; font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  letter-spacing: 0.4px;
+}
+.stage-chip.stage-emerg { color: #b584ff; background: rgba(181,132,255,0.1); border-color: rgba(181,132,255,0.3); }
+.stage-chip.stage-early { color: var(--dn-soft); background: var(--dn-bg); border-color: rgba(27,217,124,0.3); }
+.stage-chip.stage-mid   { color: var(--accent-2); background: var(--accent-soft); border-color: var(--accent); }
+.stage-chip.stage-hot   { color: var(--up-soft); background: var(--up-bg); border-color: rgba(255,59,59,0.3); }
+.radar-conf {
+  display: flex; align-items: baseline; gap: 6px;
+  flex-shrink: 0;
+}
+.conf-lbl { letter-spacing: 0.6px; font-weight: 700; }
+.conf-val { font-size: 26px; font-weight: 800; color: var(--accent-2); }
+
+.radar-headline {
+  margin: 0;
+  font-size: 16px; font-weight: 700;
+  line-height: 1.5;
+  color: var(--tx-1);
+}
+
+/* CROWD bar */
+.crowd-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+}
+.crowd-lbl { letter-spacing: 0.6px; font-weight: 700; }
+.crowd-bar {
+  height: 6px;
+  background: var(--bg-3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.crowd-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease-out;
+}
+.crowd-fill.crowd-low  { background: linear-gradient(90deg, var(--dn) 0%, var(--dn-soft) 100%); }
+.crowd-fill.crowd-mid  { background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); }
+.crowd-fill.crowd-high { background: linear-gradient(90deg, var(--amber) 0%, #ffcd78 100%); }
+.crowd-fill.crowd-max  { background: linear-gradient(90deg, var(--up) 0%, var(--up-soft) 100%); }
+.crowd-val { font-size: 14px; font-weight: 700; }
+.crowd-label.crowd-low  { color: var(--dn-soft); }
+.crowd-label.crowd-mid  { color: var(--accent-2); }
+.crowd-label.crowd-high { color: var(--amber); }
+.crowd-label.crowd-max  { color: var(--up-soft); }
+
+.radar-spark { display: block; margin: 2px 0; }
+
+/* Lead stocks chips */
+.leads-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.lead-chip {
+  display: flex; align-items: baseline; gap: 6px;
+  padding: 5px 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 12px;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.lead-chip:hover { border-color: var(--accent); background: var(--bg-3); }
+.lead-sym { font-weight: 700; font-size: 13px; letter-spacing: 0.2px; }
+.lead-name { font-size: 11px; }
+.lead-chg { font-weight: 700; font-size: 12px; }
+
+/* Signals chips */
+.sig-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.sig-chip {
+  font-size: 10px; font-weight: 600;
+  padding: 2px 7px;
+  background: var(--accent-soft); color: var(--accent-2);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.3px;
+}
+
+.radar-why {
+  font-size: 12.5px; line-height: 1.65; color: var(--tx-2);
+  padding: 10px 12px;
+  background: var(--bg-2); border-radius: var(--r-sm);
+  border-left: 2px solid var(--accent-soft);
+}
+.why-lbl { letter-spacing: 0.6px; font-weight: 700; }
+
+.radar-warn {
+  padding: 8px 12px;
+  background: var(--amber-bg);
+  border: 1px solid rgba(255,181,71,0.3);
+  border-radius: var(--r-sm);
+  color: var(--amber);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.radar-card-foot {
+  display: flex; align-items: center; gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  letter-spacing: 0.5px;
+}
+.radar-card-foot .sb-sep { color: var(--tx-4); }
+.radar-chain-link {
+  margin-left: auto;
+  color: var(--accent-2);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.radar-chain-link:hover { color: var(--accent); }
+
 .radar-topics { padding: 18px 22px 24px; border-top: 1px solid var(--line); }
 .radar-subtitle { margin: 0 0 14px; font-size: 16px; font-weight: 700; }
 .radar-topics-grid {
@@ -4578,7 +4931,7 @@ def main() -> int:
     (DOCS_DIR / "styles.css").write_text(STYLES_CSS, encoding="utf-8")
     (DOCS_DIR / ".nojekyll").write_text("", encoding="utf-8")
 
-    (DOCS_DIR / "index.html").write_text(render_index(briefs, pf), encoding="utf-8")
+    (DOCS_DIR / "index.html").write_text(render_index(briefs, pf, history), encoding="utf-8")
     print("wrote docs/index.html", file=sys.stderr)
 
     for brief in briefs:

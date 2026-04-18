@@ -404,80 +404,232 @@
       <div class="tab-panel" data-panel="radar">
         
 <div class="radar-body">
+  <div class="radar-intro">
+    <h2 class="radar-title mono">📡 機會雷達</h2>
+    <p class="muted small">AI 橫掃全市場找出「你可能錯過」的題材 · 5 個機會 · 6 個主題</p>
+  </div>
   
-<div class="radar-intro">
-  <h2 class="radar-title">📡 機會雷達</h2>
-  <p class="muted">
-    AI 橫掃全市場找出「你可能錯過」的題材。每個都有論點 / 研究切入點 / 風險 / 直接跳到個股分析。
-    今天掃出 <strong class="mono">5</strong> 個機會、<strong class="mono">6</strong> 個主題。
-  </p>
+<div class="radar-controls">
+  <div class="radar-filter-group">
+    <span class="rc-lbl mono small muted">FILTER</span>
+    <button class="rc-btn active" data-filter="all">全部</button>
+    <button class="rc-btn" data-filter="low">低擁擠</button>
+    <button class="rc-btn" data-filter="mid">中段</button>
+    <button class="rc-btn" data-filter="hot">過熱</button>
+  </div>
+  <div class="radar-sort-group">
+    <span class="rc-lbl mono small muted">SORT</span>
+    <button class="rc-btn active" data-sort="conf">AI 信心</button>
+    <button class="rc-btn" data-sort="cold">冷門優先</button>
+    <button class="rc-btn" data-sort="stage">題材階段</button>
+  </div>
 </div>
 
-  <div class="radar-grid">
-        <article class="radar-card">
-          <div class="radar-card-head">
-            <div>
-              <h3>2303 <span class="muted">聯電</span></h3>
+  <div class="radar-grid" id="radar-grid">
+        <article class="radar-card" data-stage="—" data-crowd="0" data-conf="0" data-theme="2303" data-idx="0">
+          <div class="radar-card-top">
+            <div class="radar-top-left">
+              <span class="radar-tag mono">#2303</span>
+              <span class="stage-chip ">—</span>
+            </div>
+            <div class="radar-conf">
+              <span class="conf-lbl mono small muted">CONF</span>
+              <span class="conf-val mono tnum">0</span>
             </div>
           </div>
-          <div class="radar-card-body">
-            <div class="radar-row"><span class="radar-label">論點</span><a href="holdings/2303.html" class="tx-link">聯電</a>受惠於成熟製程漲價趨勢，以及<a href="holdings/2330.html" class="tx-link">台積電</a>成熟製程訂單外溢效應，加上積極布局先進封裝與矽光子技術，有望迎來營運結構性改善與新成長動能。</div>
-            <div class="radar-row"><span class="radar-label">研究切入</span>關注下週三 (4/29, 11 天後) 法說會對第二季、第三季營收的預期，以及法人對其漲價策略的評價。研究其在先進封裝與矽光子技術的具體進展與客戶導入情況。</div>
-            <div class="radar-row radar-risk-row"><span class="radar-label dn">⚠ 風險</span>成熟製程漲價可能面臨客戶接受度挑戰，且新技術布局仍需時間發酵，短期營收成長幅度可能有限。</div>
+          <h3 class="radar-headline"><a href="holdings/2303.html" class="tx-link">聯電</a>受惠於成熟製程漲價趨勢，以及<a href="holdings/2330.html" class="tx-link">台積電</a>成熟製程訂單外溢效應，加上積極布局先進封裝與矽光子技術，有望迎來營運結構性改善與新成長動能。</h3>
+          <div class="crowd-row">
+            <span class="crowd-lbl mono small muted">CROWD</span>
+            <div class="crowd-bar"><div class="crowd-fill crowd-low" style="width:0%"></div></div>
+            <span class="crowd-val mono tnum">0</span>
+            <span class="crowd-label crowd-low small"></span>
           </div>
-          <div class="radar-card-foot"><a href="holdings/2303.html" class="btn-link small">→ 2303 完整分析 / 趨勢圖 / 新聞</a></div>
+          
+              <svg class="radar-spark" viewBox="0 0 640 60" preserveAspectRatio="none" width="100%" height="60">
+                <polygon points="4,56 4.0,44.7 52.6,46.9 101.2,48.2 149.8,45.8 198.5,56.0 247.1,43.4 295.7,38.0 344.3,38.8 392.9,33.5 441.5,38.6 490.2,39.6 538.8,33.2 587.4,16.6 636.0,4.0 636,56" fill="var(--up)" opacity="0.1"/>
+                <polyline points="4.0,44.7 52.6,46.9 101.2,48.2 149.8,45.8 198.5,56.0 247.1,43.4 295.7,38.0 344.3,38.8 392.9,33.5 441.5,38.6 490.2,39.6 538.8,33.2 587.4,16.6 636.0,4.0" stroke="var(--up)" stroke-width="1.8" fill="none"
+                          stroke-linejoin="round" stroke-linecap="round"/>
+              </svg>
+          <div class="leads-row">
+              <a class="lead-chip" href="holdings/2303.html">
+                <span class="lead-sym mono">2303</span>
+                <span class="lead-name muted small">聯電</span>
+                <span class="lead-chg mono up">+6.88%</span>
+              </a></div>
+          
+          <div class="radar-why small">
+            <span class="why-lbl mono muted">WHY · </span>關注下週三 (4/29, 11 天後) 法說會對第二季、第三季營收的預期，以及法人對其漲價策略的評價。研究其在先進封裝與矽光子技術的具體進展與客戶導入情況。
+          </div>
+          
+          <div class="radar-card-foot small muted mono">
+            <span>0 SOURCES</span>
+            <span class="sb-sep">·</span>
+            <span>—</span>
+            <a class="radar-chain-link" href="holdings/2303.html">VIEW CHAIN →</a>
+          </div>
         </article>
-        <article class="radar-card">
-          <div class="radar-card-head">
-            <div>
-              <h3>6173 <span class="muted">信昌電</span></h3>
+        <article class="radar-card" data-stage="—" data-crowd="0" data-conf="0" data-theme="6173" data-idx="1">
+          <div class="radar-card-top">
+            <div class="radar-top-left">
+              <span class="radar-tag mono">#6173</span>
+              <span class="stage-chip ">—</span>
+            </div>
+            <div class="radar-conf">
+              <span class="conf-lbl mono small muted">CONF</span>
+              <span class="conf-val mono tnum">0</span>
             </div>
           </div>
-          <div class="radar-card-body">
-            <div class="radar-row"><span class="radar-label">論點</span>被動元件產業受 AI 需求與原物料成本上升影響，傳出漲價訊息，信昌電作為高容高壓電容、電阻供應商，受惠於此波漲價潮，近期股價強勢，有望帶動獲利成長。</div>
-            <div class="radar-row"><span class="radar-label">研究切入</span>研究其高容高壓產品在 AI 應用中的滲透率，觀察法人連續買賣超動向，並評估其本益比是否仍具吸引力。關注其第一季財報表現。</div>
-            <div class="radar-row radar-risk-row"><span class="radar-label dn">⚠ 風險</span>股價短期漲幅已大，追高風險高；若漲價無法順利轉嫁給客戶，或原物料成本持續上升，可能侵蝕獲利。</div>
+          <h3 class="radar-headline">被動元件產業受 AI 需求與原物料成本上升影響，傳出漲價訊息，信昌電作為高容高壓電容、電阻供應商，受惠於此波漲價潮，近期股價強勢，有望帶動獲利成長。</h3>
+          <div class="crowd-row">
+            <span class="crowd-lbl mono small muted">CROWD</span>
+            <div class="crowd-bar"><div class="crowd-fill crowd-low" style="width:0%"></div></div>
+            <span class="crowd-val mono tnum">0</span>
+            <span class="crowd-label crowd-low small"></span>
           </div>
-          <div class="radar-card-foot"><span class="muted small">（尚未在資料庫中：手動到 portfolio.yaml 加入 simulator_universe 即可）</span></div>
+          
+          <div class="leads-row">
+              <a class="lead-chip" href="#">
+                <span class="lead-sym mono">6173</span>
+                <span class="lead-name muted small">信昌電</span>
+                <span class="lead-chg mono flat">+0.00%</span>
+              </a></div>
+          
+          <div class="radar-why small">
+            <span class="why-lbl mono muted">WHY · </span>研究其高容高壓產品在 AI 應用中的滲透率，觀察法人連續買賣超動向，並評估其本益比是否仍具吸引力。關注其第一季財報表現。
+          </div>
+          
+          <div class="radar-card-foot small muted mono">
+            <span>0 SOURCES</span>
+            <span class="sb-sep">·</span>
+            <span>—</span>
+            <a class="radar-chain-link" href="#">VIEW CHAIN →</a>
+          </div>
         </article>
-        <article class="radar-card">
-          <div class="radar-card-head">
-            <div>
-              <h3>2383 <span class="muted">台光電</span></h3>
+        <article class="radar-card" data-stage="—" data-crowd="0" data-conf="0" data-theme="2383" data-idx="2">
+          <div class="radar-card-top">
+            <div class="radar-top-left">
+              <span class="radar-tag mono">#2383</span>
+              <span class="stage-chip ">—</span>
+            </div>
+            <div class="radar-conf">
+              <span class="conf-lbl mono small muted">CONF</span>
+              <span class="conf-val mono tnum">0</span>
             </div>
           </div>
-          <div class="radar-card-body">
-            <div class="radar-row"><span class="radar-label">論點</span>PCB 上游材料 CCL (銅箔基板) 受 AI 伺服器需求點火，傳出漲價訊息，<a href="holdings/2383.html" class="tx-link">台光電</a>作為高階 CCL 供應商，有望受惠於產業景氣復甦與產品組合優化。</div>
-            <div class="radar-row"><span class="radar-label">研究切入</span>觀察其高階 CCL 產品在 AI 伺服器、CoWoS 等應用中的市佔率與客戶導入情況。研究法人對其營收成長預期與目標價。</div>
-            <div class="radar-row radar-risk-row"><span class="radar-label dn">⚠ 風險</span>PCB 產業競爭激烈，若漲價無法全面轉嫁，可能影響毛利率；全球經濟放緩也可能影響終端需求。</div>
+          <h3 class="radar-headline">PCB 上游材料 CCL (銅箔基板) 受 AI 伺服器需求點火，傳出漲價訊息，<a href="holdings/2383.html" class="tx-link">台光電</a>作為高階 CCL 供應商，有望受惠於產業景氣復甦與產品組合優化。</h3>
+          <div class="crowd-row">
+            <span class="crowd-lbl mono small muted">CROWD</span>
+            <div class="crowd-bar"><div class="crowd-fill crowd-low" style="width:0%"></div></div>
+            <span class="crowd-val mono tnum">0</span>
+            <span class="crowd-label crowd-low small"></span>
           </div>
-          <div class="radar-card-foot"><a href="holdings/2383.html" class="btn-link small">→ 2383 完整分析 / 趨勢圖 / 新聞</a></div>
+          
+              <svg class="radar-spark" viewBox="0 0 640 60" preserveAspectRatio="none" width="100%" height="60">
+                <polygon points="4,56 4.0,42.9 52.6,48.2 101.2,56.0 149.8,45.1 198.5,48.2 247.1,44.0 295.7,32.0 344.3,29.9 392.9,21.5 441.5,25.5 490.2,13.7 538.8,5.1 587.4,4.0 636.0,5.5 636,56" fill="var(--up)" opacity="0.1"/>
+                <polyline points="4.0,42.9 52.6,48.2 101.2,56.0 149.8,45.1 198.5,48.2 247.1,44.0 295.7,32.0 344.3,29.9 392.9,21.5 441.5,25.5 490.2,13.7 538.8,5.1 587.4,4.0 636.0,5.5" stroke="var(--up)" stroke-width="1.8" fill="none"
+                          stroke-linejoin="round" stroke-linecap="round"/>
+              </svg>
+          <div class="leads-row">
+              <a class="lead-chip" href="holdings/2383.html">
+                <span class="lead-sym mono">2383</span>
+                <span class="lead-name muted small">台光電</span>
+                <span class="lead-chg mono dn">-0.91%</span>
+              </a></div>
+          
+          <div class="radar-why small">
+            <span class="why-lbl mono muted">WHY · </span>觀察其高階 CCL 產品在 AI 伺服器、CoWoS 等應用中的市佔率與客戶導入情況。研究法人對其營收成長預期與目標價。
+          </div>
+          
+          <div class="radar-card-foot small muted mono">
+            <span>0 SOURCES</span>
+            <span class="sb-sep">·</span>
+            <span>—</span>
+            <a class="radar-chain-link" href="holdings/2383.html">VIEW CHAIN →</a>
+          </div>
         </article>
-        <article class="radar-card">
-          <div class="radar-card-head">
-            <div>
-              <h3>3324 <span class="muted">雙鴻</span></h3>
+        <article class="radar-card" data-stage="—" data-crowd="0" data-conf="0" data-theme="3324" data-idx="3">
+          <div class="radar-card-top">
+            <div class="radar-top-left">
+              <span class="radar-tag mono">#3324</span>
+              <span class="stage-chip ">—</span>
+            </div>
+            <div class="radar-conf">
+              <span class="conf-lbl mono small muted">CONF</span>
+              <span class="conf-val mono tnum">0</span>
             </div>
           </div>
-          <div class="radar-card-body">
-            <div class="radar-row"><span class="radar-label">論點</span>AI 伺服器對散熱需求極高，液冷散熱技術成為主流趨勢，<a href="holdings/3324.html" class="tx-link">雙鴻</a>作為散熱模組大廠，有望受惠於 AI 基建狂潮與液冷散熱需求的爆發。</div>
-            <div class="radar-row"><span class="radar-label">研究切入</span>研究其在液冷散熱技術的研發進度與客戶訂單狀況，特別是與 AI 伺服器大廠的合作。觀察其營收成長率與法人對其獲利預期。</div>
-            <div class="radar-row radar-risk-row"><span class="radar-label dn">⚠ 風險</span>散熱模組產業競爭激烈，新技術開發成本高；AI 伺服器出貨不如預期可能影響營收。</div>
+          <h3 class="radar-headline">AI 伺服器對散熱需求極高，液冷散熱技術成為主流趨勢，<a href="holdings/3324.html" class="tx-link">雙鴻</a>作為散熱模組大廠，有望受惠於 AI 基建狂潮與液冷散熱需求的爆發。</h3>
+          <div class="crowd-row">
+            <span class="crowd-lbl mono small muted">CROWD</span>
+            <div class="crowd-bar"><div class="crowd-fill crowd-low" style="width:0%"></div></div>
+            <span class="crowd-val mono tnum">0</span>
+            <span class="crowd-label crowd-low small"></span>
           </div>
-          <div class="radar-card-foot"><a href="holdings/3324.html" class="btn-link small">→ 3324 完整分析 / 趨勢圖 / 新聞</a></div>
+          
+              <svg class="radar-spark" viewBox="0 0 640 60" preserveAspectRatio="none" width="100%" height="60">
+                <polygon points="4,56 4.0,20.3 52.6,31.9 101.2,56.0 149.8,43.2 198.5,46.3 247.1,43.8 295.7,16.5 344.3,21.5 392.9,21.2 441.5,36.9 490.2,29.1 538.8,26.9 587.4,4.0 636.0,7.1 636,56" fill="var(--up)" opacity="0.1"/>
+                <polyline points="4.0,20.3 52.6,31.9 101.2,56.0 149.8,43.2 198.5,46.3 247.1,43.8 295.7,16.5 344.3,21.5 392.9,21.2 441.5,36.9 490.2,29.1 538.8,26.9 587.4,4.0 636.0,7.1" stroke="var(--up)" stroke-width="1.8" fill="none"
+                          stroke-linejoin="round" stroke-linecap="round"/>
+              </svg>
+          <div class="leads-row">
+              <a class="lead-chip" href="holdings/3324.html">
+                <span class="lead-sym mono">3324</span>
+                <span class="lead-name muted small">雙鴻</span>
+                <span class="lead-chg mono dn">-0.96%</span>
+              </a></div>
+          
+          <div class="radar-why small">
+            <span class="why-lbl mono muted">WHY · </span>研究其在液冷散熱技術的研發進度與客戶訂單狀況，特別是與 AI 伺服器大廠的合作。觀察其營收成長率與法人對其獲利預期。
+          </div>
+          
+          <div class="radar-card-foot small muted mono">
+            <span>0 SOURCES</span>
+            <span class="sb-sep">·</span>
+            <span>—</span>
+            <a class="radar-chain-link" href="holdings/3324.html">VIEW CHAIN →</a>
+          </div>
         </article>
-        <article class="radar-card">
-          <div class="radar-card-head">
-            <div>
-              <h3>3017 <span class="muted">奇鋐</span></h3>
+        <article class="radar-card" data-stage="—" data-crowd="0" data-conf="0" data-theme="3017" data-idx="4">
+          <div class="radar-card-top">
+            <div class="radar-top-left">
+              <span class="radar-tag mono">#3017</span>
+              <span class="stage-chip ">—</span>
+            </div>
+            <div class="radar-conf">
+              <span class="conf-lbl mono small muted">CONF</span>
+              <span class="conf-val mono tnum">0</span>
             </div>
           </div>
-          <div class="radar-card-body">
-            <div class="radar-row"><span class="radar-label">論點</span>與<a href="holdings/3324.html" class="tx-link">雙鴻</a>類似，<a href="holdings/3017.html" class="tx-link">奇鋐</a>也是散熱模組領導廠商，受惠於 AI 伺服器對高效散熱解決方案的強勁需求，尤其在液冷技術方面具備競爭優勢。</div>
-            <div class="radar-row"><span class="radar-label">研究切入</span>比較其與<a href="holdings/3324.html" class="tx-link">雙鴻</a>在液冷技術的差異化優勢，以及在不同 AI 伺服器客戶中的市佔率。關注其新產能開出時程與對營收的貢獻。</div>
-            <div class="radar-row radar-risk-row"><span class="radar-label dn">⚠ 風險</span>AI 伺服器市場變化快速，技術迭代風險高；若未能持續領先，可能面臨訂單流失風險。</div>
+          <h3 class="radar-headline">與<a href="holdings/3324.html" class="tx-link">雙鴻</a>類似，<a href="holdings/3017.html" class="tx-link">奇鋐</a>也是散熱模組領導廠商，受惠於 AI 伺服器對高效散熱解決方案的強勁需求，尤其在液冷技術方面具備競爭優勢。</h3>
+          <div class="crowd-row">
+            <span class="crowd-lbl mono small muted">CROWD</span>
+            <div class="crowd-bar"><div class="crowd-fill crowd-low" style="width:0%"></div></div>
+            <span class="crowd-val mono tnum">0</span>
+            <span class="crowd-label crowd-low small"></span>
           </div>
-          <div class="radar-card-foot"><a href="holdings/3017.html" class="btn-link small">→ 3017 完整分析 / 趨勢圖 / 新聞</a></div>
+          
+              <svg class="radar-spark" viewBox="0 0 640 60" preserveAspectRatio="none" width="100%" height="60">
+                <polygon points="4,56 4.0,32.3 52.6,39.2 101.2,56.0 149.8,42.1 198.5,46.8 247.1,51.4 295.7,28.3 344.3,27.7 392.9,24.2 441.5,31.7 490.2,19.0 538.8,17.3 587.4,4.0 636.0,8.6 636,56" fill="var(--up)" opacity="0.1"/>
+                <polyline points="4.0,32.3 52.6,39.2 101.2,56.0 149.8,42.1 198.5,46.8 247.1,51.4 295.7,28.3 344.3,27.7 392.9,24.2 441.5,31.7 490.2,19.0 538.8,17.3 587.4,4.0 636.0,8.6" stroke="var(--up)" stroke-width="1.8" fill="none"
+                          stroke-linejoin="round" stroke-linecap="round"/>
+              </svg>
+          <div class="leads-row">
+              <a class="lead-chip" href="holdings/3017.html">
+                <span class="lead-sym mono">3017</span>
+                <span class="lead-name muted small">奇鋐</span>
+                <span class="lead-chg mono dn">-1.64%</span>
+              </a></div>
+          
+          <div class="radar-why small">
+            <span class="why-lbl mono muted">WHY · </span>比較其與<a href="holdings/3324.html" class="tx-link">雙鴻</a>在液冷技術的差異化優勢，以及在不同 AI 伺服器客戶中的市佔率。關注其新產能開出時程與對營收的貢獻。
+          </div>
+          
+          <div class="radar-card-foot small muted mono">
+            <span>0 SOURCES</span>
+            <span class="sb-sep">·</span>
+            <span>—</span>
+            <a class="radar-chain-link" href="holdings/3017.html">VIEW CHAIN →</a>
+          </div>
         </article></div>
   
 <div class="radar-topics">
@@ -537,6 +689,57 @@
 </div>
 
 </div>
+<script>
+(function() {
+  const grid = document.getElementById('radar-grid');
+  if (!grid) return;
+  let state = { filter: 'all', sort: 'conf' };
+  function apply() {
+    const cards = Array.from(grid.querySelectorAll('.radar-card'));
+    // Filter
+    cards.forEach(c => {
+      const crowd = parseInt(c.dataset.crowd) || 0;
+      const stage = c.dataset.stage;
+      let show = true;
+      if (state.filter === 'low') show = crowd <= 40;
+      else if (state.filter === 'mid') show = crowd > 40 && crowd <= 70;
+      else if (state.filter === 'hot') show = crowd > 70;
+      c.style.display = show ? '' : 'none';
+    });
+    // Sort
+    const visible = cards.filter(c => c.style.display !== 'none');
+    visible.sort((a, b) => {
+      const aC = parseInt(a.dataset.conf) || 0;
+      const bC = parseInt(b.dataset.conf) || 0;
+      const aCr = parseInt(a.dataset.crowd) || 0;
+      const bCr = parseInt(b.dataset.crowd) || 0;
+      const stageOrder = { '萌芽': 0, '早期': 1, '中段': 2, '過熱': 3 };
+      if (state.sort === 'conf') return bC - aC;
+      if (state.sort === 'cold') return aCr - bCr;
+      if (state.sort === 'stage') return (stageOrder[a.dataset.stage] || 0) - (stageOrder[b.dataset.stage] || 0);
+      return 0;
+    });
+    visible.forEach(c => grid.appendChild(c));
+  }
+  document.querySelectorAll('.radar-filter-group .rc-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.radar-filter-group .rc-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.filter = b.dataset.filter;
+      apply();
+    });
+  });
+  document.querySelectorAll('.radar-sort-group .rc-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.radar-sort-group .rc-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.sort = b.dataset.sort;
+      apply();
+    });
+  });
+  apply();
+})();
+</script>
 
       </div>
       <div class="tab-panel" data-panel="sim">
@@ -1115,7 +1318,7 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 20:38 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 20:47 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>
