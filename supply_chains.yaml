@@ -12,9 +12,21 @@
 #         - name: "層級名稱"
 #           role: "這一層在鏈上做什麼（1 句）"
 #           stocks:
-#             - {symbol: "XXXX", name: "名稱", role: "這檔在層內的角色", pillar: "growth|core|defensive"}
+#             - {symbol: "XXXX", name: "名稱", role: "這檔在層內的角色",
+#                pillar: "growth|core|defensive",
+#                tier: "mega|large|mid|small|hidden"}
+#
+# tier 標記：
+#   mega   — 市值 > NT$2T（2330 2317 2382 2454）：絕對存款級，已被 full 分析師覆蓋
+#   large  — NT$300B-2T（3711 2308 3037 4958 2327 3017 2345）：主流持股
+#   mid    — NT$80B-300B（6515 2449 6274 3324 4979 6147 6239 2492 6230 2395）：波段選項
+#   small  — NT$20B-80B（6510 8358 3081 3163 3234 3296 6269 3202 6196 3583 8150 5608 3006 5269 2360 6669 3715）：雪球級
+#   hidden — < NT$20B 或冷門未覆蓋（真正的隱形冠軍）：upside 最大
+#
+# 使用者策略：主動倉位（雪球試水）要找 small / hidden tier；
+# mega / large 是 portfolio 核心（存款化），不在 coverage_suggestions 主動推薦範圍。
 
-version: 2
+version: 3
 updated: "2026-04-18"
 
 chains:
@@ -29,45 +41,49 @@ chains:
       - name: "上游 · 銅箔 / CCL 基板"
         role: "印電路板的原材料，高速傳輸 AI 訊號品質的根基"
         stocks:
-          - {symbol: "2383", name: "台光電",    role: "CCL 龍頭、AI PCB 認證最完整", pillar: "growth"}
-          - {symbol: "6213", name: "聯茂",      role: "CCL 二哥", pillar: "growth"}
-          - {symbol: "6274", name: "台燿",      role: "CCL / 高速材料", pillar: "growth"}
-          - {symbol: "8358", name: "金居",      role: "銅箔龍頭", pillar: "growth"}
+          - {symbol: "2383", name: "台光電",      role: "CCL 龍頭、AI PCB 認證最完整",   pillar: "growth", tier: "large"}
+          - {symbol: "6213", name: "聯茂",        role: "CCL 二哥",                       pillar: "growth", tier: "small"}
+          - {symbol: "6274", name: "台燿",        role: "CCL / 高速材料",                 pillar: "growth", tier: "mid"}
+          - {symbol: "8358", name: "金居",        role: "銅箔龍頭",                       pillar: "growth", tier: "small"}
 
       - name: "中游 · PCB 製造"
         role: "AI 伺服器主機板、HDI、GPU 板用的 PCB"
         stocks:
-          - {symbol: "2368", name: "金像電",    role: "AI 伺服器高階 PCB 首選", pillar: "growth"}
-          - {symbol: "4958", name: "臻鼎-KY",   role: "軟板龍頭、蘋果 + AI 雙動能", pillar: "growth"}
-          - {symbol: "3044", name: "健鼎",      role: "多層板 / AI 伺服器 PCB", pillar: "growth"}
+          - {symbol: "2368", name: "金像電",      role: "AI 伺服器高階 PCB 首選",         pillar: "growth", tier: "large"}
+          - {symbol: "4958", name: "臻鼎-KY",     role: "軟板龍頭、蘋果 + AI 雙動能",     pillar: "growth", tier: "large"}
+          - {symbol: "3044", name: "健鼎",        role: "多層板 / AI 伺服器 PCB",         pillar: "growth", tier: "mid"}
+          - {symbol: "3715", name: "定穎投控",    role: "AI load board / 車用 PCB、小型標的", pillar: "growth", tier: "small"}
+          - {symbol: "8155", name: "博智",        role: "高階通訊 PCB、5G / AI 伺服器",   pillar: "growth", tier: "hidden"}
+          - {symbol: "2355", name: "敬鵬",        role: "車用 + AI PCB、近年法人切入中",  pillar: "growth", tier: "small"}
 
       - name: "中游 · ABF 載板"
         role: "CPU / GPU 晶片下方的載板，AI 晶片訊號密度瓶頸"
         stocks:
-          - {symbol: "3037", name: "欣興",      role: "ABF 載板龍頭", pillar: "growth"}
-          - {symbol: "8046", name: "南電",      role: "ABF 載板、NVIDIA 供應鏈", pillar: "growth"}
-          - {symbol: "6239", name: "力成",      role: "載板 / 封測（橫跨）", pillar: "growth"}
+          - {symbol: "3037", name: "欣興",        role: "ABF 載板龍頭",                   pillar: "growth", tier: "large"}
+          - {symbol: "8046", name: "南電",        role: "ABF 載板、NVIDIA 供應鏈",        pillar: "growth", tier: "large"}
+          - {symbol: "6239", name: "力成",        role: "載板 / 封測（橫跨）",            pillar: "growth", tier: "mid"}
 
       - name: "下游 · 封測 OSAT"
         role: "晶圓切下來的裸晶要封裝、測試。CoWoS 外包首選"
         stocks:
-          - {symbol: "3711", name: "日月光投控", role: "全球最大 OSAT、CoWoS 外包第一", pillar: "core"}
-          - {symbol: "2449", name: "京元電",    role: "AI GPU / ASIC 測試龍頭", pillar: "growth"}
-          - {symbol: "6147", name: "頎邦",      role: "DDI 封測 + HBM 測試", pillar: "growth"}
-          - {symbol: "8150", name: "南茂",      role: "記憶體 / DDI 封測", pillar: "growth"}
+          - {symbol: "3711", name: "日月光投控",  role: "全球最大 OSAT、CoWoS 外包第一",  pillar: "core",   tier: "large"}
+          - {symbol: "2449", name: "京元電",      role: "AI GPU / ASIC 測試龍頭",         pillar: "growth", tier: "mid"}
+          - {symbol: "6147", name: "頎邦",        role: "DDI 封測 + HBM 測試",            pillar: "growth", tier: "mid"}
+          - {symbol: "8150", name: "南茂",        role: "記憶體 / DDI 封測",              pillar: "growth", tier: "small"}
+          - {symbol: "3289", name: "宜特",        role: "失效分析 + 可靠度驗證小型股",    pillar: "growth", tier: "hidden"}
 
       - name: "下游 · 探針卡 Probe Card"
         role: "晶圓測試接觸針、AI chip 腳位多耗量大、razor-and-blade"
         stocks:
-          - {symbol: "6515", name: "穎崴",      role: "MEMS probe card 龍頭、毛利 50%", pillar: "growth"}
-          - {symbol: "6510", name: "精測",      role: "Vertical Probe、NVIDIA 直接供應", pillar: "growth"}
-          - {symbol: "5608", name: "雍智",      role: "邏輯 IC probe card", pillar: "growth"}
+          - {symbol: "6515", name: "穎崴",        role: "MEMS probe card 龍頭、毛利 50%", pillar: "growth", tier: "mid"}
+          - {symbol: "6510", name: "精測",        role: "Vertical Probe、NVIDIA 直接供應", pillar: "growth", tier: "small"}
+          - {symbol: "5608", name: "雍智",        role: "邏輯 IC probe card、小型冠軍",   pillar: "growth", tier: "hidden"}
 
       - name: "下游 · 測試設備 ATE"
         role: "自動測試機台，AI 晶片複雜度讓測試時間翻倍"
         stocks:
-          - {symbol: "2360", name: "致茂",      role: "ATE 龍頭、光學檢測", pillar: "growth"}
-          - {symbol: "3583", name: "辛耘",      role: "晶圓傳送 / 測試設備", pillar: "growth"}
+          - {symbol: "2360", name: "致茂",        role: "ATE 龍頭、光學檢測",             pillar: "growth", tier: "small"}
+          - {symbol: "3583", name: "辛耘",        role: "晶圓傳送 / 測試設備",            pillar: "growth", tier: "small"}
 
   optics_cpo:
     title: "光通訊 / CPO · 2026 夢階段題材"
@@ -79,15 +95,17 @@ chains:
       - name: "模組 / 核心"
         role: "光通訊模組成品、直接供給雲端巨頭"
         stocks:
-          - {symbol: "3081", name: "聯亞",      role: "EML 雷射晶片、CPO 直接受惠", pillar: "growth"}
-          - {symbol: "4979", name: "華星光",    role: "高速光通訊模組", pillar: "growth"}
-          - {symbol: "3234", name: "光環",      role: "DWDM 光通訊", pillar: "growth"}
-          - {symbol: "3163", name: "波若威",    role: "光被動元件", pillar: "growth"}
-          - {symbol: "3363", name: "上詮",      role: "光纖連接器 / CPO 封裝", pillar: "growth"}
+          - {symbol: "3081", name: "聯亞",        role: "EML 雷射晶片、CPO 直接受惠",     pillar: "growth", tier: "small"}
+          - {symbol: "4979", name: "華星光",      role: "高速光通訊模組",                 pillar: "growth", tier: "mid"}
+          - {symbol: "3234", name: "光環",        role: "DWDM 光通訊",                    pillar: "growth", tier: "small"}
+          - {symbol: "3163", name: "波若威",      role: "光被動元件",                     pillar: "growth", tier: "small"}
+          - {symbol: "3363", name: "上詮",        role: "光纖連接器 / CPO 封裝",          pillar: "growth", tier: "small"}
+          - {symbol: "4908", name: "前鼎",        role: "光收發 ODM、真小型冠軍",         pillar: "growth", tier: "hidden"}
       - name: "周邊 / 檢測"
         role: "光通訊設備測試、認證"
         stocks:
-          - {symbol: "3202", name: "光聖",      role: "光通訊 ODM", pillar: "growth"}
+          - {symbol: "3202", name: "光聖",        role: "光通訊 ODM",                     pillar: "growth", tier: "small"}
+          - {symbol: "3152", name: "璟德",        role: "光通訊 passive filter、小型冠軍", pillar: "growth", tier: "hidden"}
 
   thermal:
     title: "AI 散熱 · 氣冷 → 水冷 → 浸沒"
@@ -99,14 +117,15 @@ chains:
       - name: "散熱模組 / 熱管"
         role: "GPU / CPU 上的散熱片、vapor chamber、水冷板"
         stocks:
-          - {symbol: "3017", name: "奇鋐",      role: "vapor chamber 龍頭、NVIDIA 供應", pillar: "growth"}
-          - {symbol: "3324", name: "雙鴻",      role: "散熱模組 / 水冷板", pillar: "growth"}
-          - {symbol: "6230", name: "超眾",      role: "熱管 / 散熱模組", pillar: "growth"}
-          - {symbol: "3296", name: "勝麗",      role: "散熱鰭片", pillar: "growth"}
+          - {symbol: "3017", name: "奇鋐",        role: "vapor chamber 龍頭、NVIDIA 供應", pillar: "growth", tier: "large"}
+          - {symbol: "3324", name: "雙鴻",        role: "散熱模組 / 水冷板",              pillar: "growth", tier: "mid"}
+          - {symbol: "6230", name: "超眾",        role: "熱管 / 散熱模組",                pillar: "growth", tier: "small"}
+          - {symbol: "3296", name: "勝麗",        role: "散熱鰭片",                       pillar: "growth", tier: "small"}
+          - {symbol: "3338", name: "泰碩",        role: "散熱模組小型股、AI 伺服器切入中", pillar: "growth", tier: "hidden"}
       - name: "水冷關鍵元件"
         role: "CDU、manifold、quick disconnect"
         stocks:
-          - {symbol: "6196", name: "帆宣",      role: "CDU 液冷機櫃", pillar: "growth"}
+          - {symbol: "6196", name: "帆宣",        role: "CDU 液冷機櫃",                   pillar: "growth", tier: "small"}
 
   ai_server:
     title: "AI 伺服器 · ODM / 系統組裝"
@@ -118,34 +137,36 @@ chains:
       - name: "ODM · 整機"
         role: "伺服器代工，直供雲端客戶"
         stocks:
-          - {symbol: "2317", name: "鴻海",      role: "GB200 組裝主力、機構件自製率高", pillar: "core"}
-          - {symbol: "2382", name: "廣達",      role: "AI 伺服器、Meta / Amazon 訂單", pillar: "growth"}
-          - {symbol: "3231", name: "緯創",      role: "AI 伺服器、NVIDIA / Google", pillar: "growth"}
-          - {symbol: "6669", name: "緯穎",      role: "雲端伺服器、Meta / Microsoft", pillar: "growth"}
-          - {symbol: "2376", name: "技嘉",      role: "AI 伺服器品牌機 + ODM", pillar: "growth"}
+          - {symbol: "2317", name: "鴻海",        role: "GB200 組裝主力、機構件自製率高", pillar: "core",   tier: "mega"}
+          - {symbol: "2382", name: "廣達",        role: "AI 伺服器、Meta / Amazon 訂單",  pillar: "growth", tier: "mega"}
+          - {symbol: "3231", name: "緯創",        role: "AI 伺服器、NVIDIA / Google",     pillar: "growth", tier: "large"}
+          - {symbol: "6669", name: "緯穎",        role: "雲端伺服器、Meta / Microsoft",   pillar: "growth", tier: "small"}
+          - {symbol: "2376", name: "技嘉",        role: "AI 伺服器品牌機 + ODM",          pillar: "growth", tier: "mid"}
       - name: "網通 / Switch"
         role: "伺服器之間的高速交換機"
         stocks:
-          - {symbol: "2345", name: "智邦",      role: "白牌交換機、Meta / Microsoft", pillar: "growth"}
-      - name: "電源 / 機殼"
-        role: "PSU、機殼、滑軌"
+          - {symbol: "2345", name: "智邦",        role: "白牌交換機、Meta / Microsoft",   pillar: "growth", tier: "large"}
+      - name: "電源 / 機殼 / IC 通路"
+        role: "PSU、機殼、滑軌 + 關鍵料件通路"
         stocks:
-          - {symbol: "3515", name: "華擎",      role: "伺服器主機板 / 品牌", pillar: "growth"}
-          - {symbol: "2308", name: "台達電",    role: "AI 伺服器電源供應", pillar: "core"}
+          - {symbol: "3515", name: "華擎",        role: "伺服器主機板 / 品牌",            pillar: "growth", tier: "mid"}
+          - {symbol: "2308", name: "台達電",      role: "AI 伺服器電源供應",              pillar: "core",   tier: "large"}
+          - {symbol: "3702", name: "大聯大",      role: "IC 通路龍頭、AI 零組件集散",     pillar: "growth", tier: "mid"}
 
   connectors:
-    title: "AI 連接器 · 高速互連"
-    tags: ["連接器", "高速傳輸"]
+    title: "AI 連接器 · 高速互連 + 線束"
+    tags: ["連接器", "高速傳輸", "線束"]
     narrative: |
-      AI 晶片高速訊號 → 需要高頻連接器（PCIe 6.0 / CXL / NVLink）。
-      單機用量大增，ASP 每代翻倍。
+      AI 晶片高速訊號 → 需要高頻連接器（PCIe 6.0 / CXL / NVLink）+ NVIDIA GB200
+      機櫃內大量高速線束 / copper cable。ASP 每代翻倍。
     layers:
       - name: "連接器 / 纜線"
-        role: "板對板、板內互連"
+        role: "板對板、板內互連、機櫃內高速線"
         stocks:
-          - {symbol: "3533", name: "嘉澤",      role: "CPU socket 獨家 + AI 連接器", pillar: "growth"}
-          - {symbol: "3202", name: "華訊",      role: "高速連接器", pillar: "growth"}
-          - {symbol: "6269", name: "台郡",      role: "軟板", pillar: "growth"}
+          - {symbol: "3533", name: "嘉澤",        role: "CPU socket 獨家 + AI 連接器",    pillar: "growth", tier: "large"}
+          - {symbol: "6269", name: "台郡",        role: "軟板",                           pillar: "growth", tier: "small"}
+          - {symbol: "3665", name: "貿聯-KY",     role: "NVIDIA GB200 高速線束、隱形冠軍", pillar: "growth", tier: "hidden"}
+          - {symbol: "6088", name: "鴻碩",        role: "車用 / 工業連接器小型股",        pillar: "growth", tier: "hidden"}
 
   passives:
     title: "AI 被動元件 · MLCC / 電感 / 電阻"
@@ -157,11 +178,14 @@ chains:
       - name: "MLCC / 電容"
         role: "高容值 / 高耐壓 MLCC"
         stocks:
-          - {symbol: "2327", name: "國巨",      role: "MLCC 龍頭 + 併 KEMET 全球第 3", pillar: "core"}
-          - {symbol: "2492", name: "華新科",    role: "MLCC", pillar: "growth"}
+          - {symbol: "2327", name: "國巨",        role: "MLCC 龍頭 + 併 KEMET 全球第 3",  pillar: "core",   tier: "large"}
+          - {symbol: "2492", name: "華新科",      role: "MLCC",                           pillar: "growth", tier: "mid"}
+          - {symbol: "3026", name: "禾伸堂",      role: "MLCC 二線、利基型、小型股",      pillar: "growth", tier: "hidden"}
+          - {symbol: "6173", name: "信昌電",      role: "MLCC 原材料、近期法人切入",      pillar: "growth", tier: "hidden"}
       - name: "電感 / 電阻"
         stocks:
-          - {symbol: "2308", name: "台達電",    role: "電源管理", pillar: "core"}
+          - {symbol: "2308", name: "台達電",      role: "電源管理",                       pillar: "core",   tier: "large"}
+          - {symbol: "3042", name: "晶技",        role: "石英元件、AI 時脈應用",          pillar: "growth", tier: "small"}
 
   hbm_memory:
     title: "HBM / 記憶體 · 堆疊封裝題材"
@@ -172,13 +196,14 @@ chains:
     layers:
       - name: "HBM 測試 / 封裝"
         stocks:
-          - {symbol: "6239", name: "力成",      role: "DRAM / HBM 封測", pillar: "growth"}
-          - {symbol: "6147", name: "頎邦",      role: "HBM 測試切入中", pillar: "growth"}
-          - {symbol: "8150", name: "南茂",      role: "記憶體封測", pillar: "growth"}
+          - {symbol: "6239", name: "力成",        role: "DRAM / HBM 封測",                pillar: "growth", tier: "mid"}
+          - {symbol: "6147", name: "頎邦",        role: "HBM 測試切入中",                 pillar: "growth", tier: "mid"}
+          - {symbol: "8150", name: "南茂",        role: "記憶體封測",                     pillar: "growth", tier: "small"}
       - name: "利基 DRAM"
         stocks:
-          - {symbol: "3006", name: "晶豪科",    role: "利基 DRAM 設計", pillar: "growth"}
-          - {symbol: "5269", name: "祥碩",      role: "儲存介面控制 IC", pillar: "growth"}
+          - {symbol: "3006", name: "晶豪科",      role: "利基 DRAM 設計",                 pillar: "growth", tier: "small"}
+          - {symbol: "5269", name: "祥碩",        role: "儲存介面控制 IC",                pillar: "growth", tier: "small"}
+          - {symbol: "2408", name: "南亞科",      role: "DRAM 製造，週期性標的",          pillar: "growth", tier: "mid"}
 
   robotics:
     title: "機器人 / 自動化 · 人形 + 產業自動化"
@@ -190,13 +215,15 @@ chains:
       - name: "關鍵零組件"
         role: "減速機、線性傳動、氣壓、諧波減速器"
         stocks:
-          - {symbol: "2049", name: "上銀",      role: "線性傳動 / 滾珠螺桿", pillar: "growth"}
-          - {symbol: "1590", name: "亞德客-KY", role: "氣壓元件", pillar: "growth"}
-          - {symbol: "2308", name: "台達電",    role: "伺服馬達 / 驅動器", pillar: "core"}
+          - {symbol: "2049", name: "上銀",        role: "線性傳動 / 滾珠螺桿",            pillar: "growth", tier: "large"}
+          - {symbol: "1590", name: "亞德客-KY",   role: "氣壓元件",                       pillar: "growth", tier: "large"}
+          - {symbol: "2308", name: "台達電",      role: "伺服馬達 / 驅動器",              pillar: "core",   tier: "large"}
+          - {symbol: "4566", name: "時碩工業",    role: "機器人諧波減速機、隱形冠軍",     pillar: "growth", tier: "hidden"}
       - name: "工業電腦 / 控制器"
         stocks:
-          - {symbol: "2395", name: "研華",      role: "工業電腦龍頭", pillar: "growth"}
-          - {symbol: "6414", name: "樺漢",      role: "工業電腦", pillar: "growth"}
+          - {symbol: "2395", name: "研華",        role: "工業電腦龍頭",                   pillar: "growth", tier: "large"}
+          - {symbol: "6414", name: "樺漢",        role: "工業電腦",                       pillar: "growth", tier: "mid"}
+          - {symbol: "6125", name: "廣運",        role: "AGV / 自動化搬運、小型標的",     pillar: "growth", tier: "hidden"}
 
   semiconductor_eq:
     title: "半導體設備 · 晶圓廠資本支出鏈"
@@ -207,9 +234,25 @@ chains:
     layers:
       - name: "先進封裝周邊"
         stocks:
-          - {symbol: "3583", name: "辛耘",      role: "晶圓清洗 / 浸潤設備", pillar: "growth"}
-          - {symbol: "6515", name: "穎崴",      role: "probe card（與 AI 鏈重疊）", pillar: "growth"}
+          - {symbol: "3583", name: "辛耘",        role: "晶圓清洗 / 浸潤設備",            pillar: "growth", tier: "small"}
+          - {symbol: "6515", name: "穎崴",        role: "probe card（與 AI 鏈重疊）",     pillar: "growth", tier: "mid"}
+          - {symbol: "3131", name: "弘塑",        role: "晶圓背面研磨 / 切割設備",        pillar: "growth", tier: "hidden"}
       - name: "晶圓廠工程"
         stocks:
-          - {symbol: "6196", name: "帆宣",      role: "廠務工程 + CDU 液冷", pillar: "growth"}
-          - {symbol: "3324", name: "雙鴻",      role: "廠務散熱（與 AI 散熱重疊）", pillar: "growth"}
+          - {symbol: "6196", name: "帆宣",        role: "廠務工程 + CDU 液冷",            pillar: "growth", tier: "small"}
+          - {symbol: "3324", name: "雙鴻",        role: "廠務散熱（與 AI 散熱重疊）",     pillar: "growth", tier: "mid"}
+          - {symbol: "6146", name: "耕興",        role: "半導體認證實驗室、冷門小型",     pillar: "growth", tier: "hidden"}
+
+  # 新增鏈：IC 通路 / 零組件整合 — 今天 audit 抓到的新聞熱點「大聯大 3702」
+  ic_distribution:
+    title: "IC 通路 / 零組件整合 · AI 料件集散"
+    tags: ["IC 通路", "零組件", "大聯大"]
+    narrative: |
+      AI 伺服器、EV、IoT 所需的 IC 與被動元件由通路商集中採購分銷，
+      AI 缺貨潮放大通路商的週轉效率與議價力，利潤率在擴產期會跳升。
+    layers:
+      - name: "IC 通路"
+        stocks:
+          - {symbol: "3702", name: "大聯大",      role: "亞太最大 IC 通路、AI 零組件集散", pillar: "growth", tier: "mid"}
+          - {symbol: "3036", name: "文曄",        role: "IC 通路二哥、Future electronics 整併", pillar: "growth", tier: "mid"}
+          - {symbol: "3529", name: "力旺",        role: "IP 授權、IC 設計加值",           pillar: "growth", tier: "mid"}

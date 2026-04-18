@@ -152,19 +152,32 @@
     <section class="th-section sc-map-section">
       <div class="th-section-head mono">
         <span>SUPPLY CHAIN · 完整供應鏈地圖</span>
-        <span class="muted small"> · 2 層 · 5 檔</span>
+        <span class="muted small"> · 2 層 · 7 檔</span>
       </div>
       <div class="sc-map-intro">
         <div class="sc-map-title mono">機器人 / 自動化 · 人形 + 產業自動化</div>
         <div class="sc-map-tags"><span class="sc-map-tag mono small">機器人</span> <span class="sc-map-tag mono small">自動化</span> <span class="sc-map-tag mono small">人形機器人</span></div>
         <div class="sc-map-narrative">TSMC 晶圓廠、AI 伺服器廠自動化 → 機器手臂 / 線性傳動需求。
 特斯拉 Optimus / Figure 人形機器人商業化剛起步。</div>
+        <div class="sc-map-tier-bar"><span class="sc-map-tier-count sc-map-tier-badge-large mono small">4 LARGE</span> <span class="sc-map-tier-count sc-map-tier-badge-mid mono small">1 MID</span> <span class="sc-map-tier-count sc-map-tier-badge-hidden mono small">2 HIDDEN</span></div>
         <div class="sc-map-legend muted small">
-          🟡 有底色 = AI 今天挑中的領先股（lead_stock）·
-          ○ 灰色框 = 這條供應鏈上的其他同層標的，值得一起比較。
-          來源：<code class="mono">supply_chains.yaml</code>（人工策畫）
+          <strong>TIER 說明：</strong>
+          <span class="sc-map-tier-badge-mega mono small">MEGA</span>/<span class="sc-map-tier-badge-large mono small">LARGE</span> 是「存款柱」（2330、鴻海那種，覆蓋過多漲不動）·
+          <span class="sc-map-tier-badge-mid mono small">MID</span> 是波段（題材來才動）·
+          <span class="sc-map-tier-badge-small mono small">SMALL</span>/<span class="sc-map-tier-badge-hidden mono small">HIDDEN</span> 是<strong>雪球能滾大的位置</strong>（NT$5,000 試水能變 50,000+）。<br>
+          黃底 = AI 今天挑中的 lead · 綠框 = 雪球級（小型/隱形）。
+          來源：<code class="mono">supply_chains.yaml</code>（人工策畫 + audit_coverage 自動維護）
         </div>
       </div>
+      
+    <div class="sc-map-filter">
+      <span class="mono small muted">篩選市值級別：</span>
+      <button type="button" class="sc-map-filter-btn active" data-tier="all">全部</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="snowball">雪球級 (small + hidden)</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="hidden">只看隱形冠軍</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="mid">中型波段</button>
+    </div>
+    
       <div class="sc-map-layers">
         
         <div class="sc-map-layer">
@@ -177,12 +190,12 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/2049.html" class="sc-map-sym-link"><strong class="mono">2049</strong></a>
                 <span class="sc-map-name">上銀</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">線性傳動 / 滾珠螺桿</div>
               
@@ -192,12 +205,12 @@
                   <span class="muted small">52w 95%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/1590.html" class="sc-map-sym-link"><strong class="mono">1590</strong></a>
                 <span class="sc-map-name">亞德客-KY</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">氣壓元件</div>
               
@@ -207,14 +220,24 @@
                   <span class="muted small">52w 96%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot "></span>
                 <strong class="mono">2308</strong>
                 <span class="sc-map-name">台達電</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">伺服馬達 / 驅動器</div>
+              
+            </div>
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-hidden" data-tier="hidden">
+              <div class="sc-map-stock-head">
+                <span class="pillar-dot p-growth"></span>
+                <strong class="mono">4566</strong>
+                <span class="sc-map-name">時碩工業</span>
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-hidden mono small" title="隱形冠軍">HIDDEN</span></span>
+              </div>
+              <div class="sc-map-stock-role muted small">機器人諧波減速機、隱形冠軍</div>
               
             </div>
           </div>
@@ -229,12 +252,12 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock sc-map-stock-lead">
+            <div class="sc-map-stock sc-map-stock-lead sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/2395.html" class="sc-map-sym-link"><strong class="mono">2395</strong></a>
                 <span class="sc-map-name">研華</span>
-                <span class="sc-map-lead-badge mono small">AI 選</span>
+                <span class="sc-map-badges"><span class="sc-map-lead-badge mono small">AI 選</span> <span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">工業電腦龍頭</div>
               
@@ -244,12 +267,12 @@
                   <span class="muted small">52w 90%</span>
                 </div>
             </div>
-            <div class="sc-map-stock sc-map-stock-lead">
+            <div class="sc-map-stock sc-map-stock-lead sc-map-tier-mid" data-tier="mid">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/6414.html" class="sc-map-sym-link"><strong class="mono">6414</strong></a>
                 <span class="sc-map-name">樺漢</span>
-                <span class="sc-map-lead-badge mono small">AI 選</span>
+                <span class="sc-map-badges"><span class="sc-map-lead-badge mono small">AI 選</span> <span class="sc-map-tier-badge sc-map-tier-badge-mid mono small" title="波段">MID</span></span>
               </div>
               <div class="sc-map-stock-role muted small">工業電腦</div>
               
@@ -259,10 +282,43 @@
                   <span class="muted small">52w 66%</span>
                 </div>
             </div>
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-hidden" data-tier="hidden">
+              <div class="sc-map-stock-head">
+                <span class="pillar-dot p-growth"></span>
+                <strong class="mono">6125</strong>
+                <span class="sc-map-name">廣運</span>
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-hidden mono small" title="隱形冠軍">HIDDEN</span></span>
+              </div>
+              <div class="sc-map-stock-role muted small">AGV / 自動化搬運、小型標的</div>
+              
+            </div>
           </div>
         </div>
       </div>
     </section>
+    <script>
+    (function() {
+      const section = document.currentScript.previousElementSibling;
+      const btns = section.querySelectorAll('.sc-map-filter-btn');
+      const cards = section.querySelectorAll('.sc-map-stock');
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          btns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const mode = btn.dataset.tier;
+          cards.forEach(c => {
+            const t = c.dataset.tier;
+            let show = true;
+            if (mode === 'snowball') show = (t === 'small' || t === 'hidden');
+            else if (mode === 'hidden') show = (t === 'hidden');
+            else if (mode === 'mid') show = (t === 'mid');
+            // else 'all'
+            c.style.display = show ? '' : 'none';
+          });
+        });
+      });
+    })();
+    </script>
     
 
   <div class="th-callouts"><div class="th-callout th-hot-box"><div class="th-callout-tag mono">HOT · 已漲多</div><div class="th-callout-body">位階 70% 以上，短線追高風險高：<strong>2395</strong> 研華</div><div class="th-callout-foot muted small">策略：等拉回 5-10% 再分批進場，或觀察 20 日均線是否守住。不要 FOMO。</div></div></div>
@@ -276,7 +332,7 @@
 </div>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 23:06 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 23:25 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>

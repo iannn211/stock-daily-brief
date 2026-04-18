@@ -1550,6 +1550,21 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
         for t in tags
     )
 
+    # Tier badges — visual shortcut for market cap / upside tier
+    # mega/large = 存款級（已被過度覆蓋，漲幅空間小）
+    # mid        = 波段級（法人會進出、題材才動）
+    # small      = 雪球試水級（NT$5,000 起跳有空間滾到 5x+）
+    # hidden     = 真隱形冠軍（最大 upside、流動性最差、要看法人動向進場）
+    TIER_META = {
+        "mega":   ("MEGA",   "mega",   "存款級"),
+        "large":  ("LARGE",  "large",  "核心"),
+        "mid":    ("MID",    "mid",    "波段"),
+        "small":  ("SMALL",  "small",  "雪球"),
+        "hidden": ("HIDDEN", "hidden", "隱形冠軍"),
+    }
+
+    # Count tiers for the header summary
+    tier_counts: dict[str, int] = {}
     layer_html: list[str] = []
     total_stocks = 0
     for i, layer in enumerate(chain.get("layers") or []):
@@ -1565,6 +1580,10 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
             nm = st.get("name", "")
             sub_role = st.get("role", "")
             pillar = st.get("pillar", "growth")
+            tier = (st.get("tier") or "mid").lower()
+            tier_counts[tier] = tier_counts.get(tier, 0) + 1
+            tier_label, tier_cls, tier_tooltip = TIER_META.get(
+                tier, ("?", "mid", ""))
             rec = lookup.get(sym) or {}
             price = rec.get("price")
             day_pct = rec.get("day_change_pct")
@@ -1572,13 +1591,23 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
             is_lead = sym in lead_syms
             has_page = sym in _TICKER_ALIAS
 
-            # Highlight if AI picked this stock as a lead
+            # Highlight if AI picked this stock as a lead, AND separately
+            # highlight hidden-tier (snowball upside) with a different style
             card_cls = "sc-map-stock"
             if is_lead:
                 card_cls += " sc-map-stock-lead"
-            badge = ""
+            if tier in ("small", "hidden"):
+                card_cls += " sc-map-stock-snowball"
+            card_cls += f" sc-map-tier-{tier_cls}"
+
+            badges: list[str] = []
             if is_lead:
-                badge = '<span class="sc-map-lead-badge mono small">AI 選</span>'
+                badges.append('<span class="sc-map-lead-badge mono small">AI 選</span>')
+            badges.append(
+                f'<span class="sc-map-tier-badge sc-map-tier-badge-{tier_cls} mono small" '
+                f'title="{html.escape(tier_tooltip)}">{html.escape(tier_label)}</span>'
+            )
+            badges_html = " ".join(badges)
 
             # Link to holding page if exists
             sym_html = (
@@ -1603,12 +1632,12 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
 
             pillar_cls = PILLAR_CLS.get(pillar, "")
             stock_cards.append(f'''
-            <div class="{card_cls}">
+            <div class="{card_cls}" data-tier="{tier}">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot {pillar_cls}"></span>
                 {sym_html}
                 <span class="sc-map-name">{html.escape(nm)}</span>
-                {badge}
+                <span class="sc-map-badges">{badges_html}</span>
               </div>
               <div class="sc-map-stock-role muted small">{html.escape(sub_role)}</div>
               {price_html}
@@ -1628,6 +1657,28 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
           </div>
         </div>''')
 
+    # Header tier summary: "4 mega · 7 large · 5 mid · 6 small · 3 hidden"
+    tier_summary_parts: list[str] = []
+    for tier_key in ("mega", "large", "mid", "small", "hidden"):
+        c = tier_counts.get(tier_key, 0)
+        if c:
+            lbl, cls, _ = TIER_META[tier_key]
+            tier_summary_parts.append(
+                f'<span class="sc-map-tier-count sc-map-tier-badge-{cls} mono small">{c} {lbl}</span>'
+            )
+    tier_summary = " ".join(tier_summary_parts)
+
+    # Filter pills — lets user show only hidden/small-cap candidates (snowball lens)
+    filter_bar = f'''
+    <div class="sc-map-filter">
+      <span class="mono small muted">篩選市值級別：</span>
+      <button type="button" class="sc-map-filter-btn active" data-tier="all">全部</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="snowball">雪球級 (small + hidden)</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="hidden">只看隱形冠軍</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="mid">中型波段</button>
+    </div>
+    '''
+
     return f'''
     <section class="th-section sc-map-section">
       <div class="th-section-head mono">
@@ -1638,16 +1689,44 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
         <div class="sc-map-title mono">{html.escape(title)}</div>
         <div class="sc-map-tags">{tag_pills}</div>
         {(f'<div class="sc-map-narrative">{html.escape(narrative)}</div>' if narrative else "")}
+        <div class="sc-map-tier-bar">{tier_summary}</div>
         <div class="sc-map-legend muted small">
-          🟡 有底色 = AI 今天挑中的領先股（lead_stock）·
-          ○ 灰色框 = 這條供應鏈上的其他同層標的，值得一起比較。
-          來源：<code class="mono">supply_chains.yaml</code>（人工策畫）
+          <strong>TIER 說明：</strong>
+          <span class="sc-map-tier-badge-mega mono small">MEGA</span>/<span class="sc-map-tier-badge-large mono small">LARGE</span> 是「存款柱」（2330、鴻海那種，覆蓋過多漲不動）·
+          <span class="sc-map-tier-badge-mid mono small">MID</span> 是波段（題材來才動）·
+          <span class="sc-map-tier-badge-small mono small">SMALL</span>/<span class="sc-map-tier-badge-hidden mono small">HIDDEN</span> 是<strong>雪球能滾大的位置</strong>（NT$5,000 試水能變 50,000+）。<br>
+          黃底 = AI 今天挑中的 lead · 綠框 = 雪球級（小型/隱形）。
+          來源：<code class="mono">supply_chains.yaml</code>（人工策畫 + audit_coverage 自動維護）
         </div>
       </div>
+      {filter_bar}
       <div class="sc-map-layers">
         {"".join(layer_html)}
       </div>
     </section>
+    <script>
+    (function() {{
+      const section = document.currentScript.previousElementSibling;
+      const btns = section.querySelectorAll('.sc-map-filter-btn');
+      const cards = section.querySelectorAll('.sc-map-stock');
+      btns.forEach(btn => {{
+        btn.addEventListener('click', () => {{
+          btns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const mode = btn.dataset.tier;
+          cards.forEach(c => {{
+            const t = c.dataset.tier;
+            let show = true;
+            if (mode === 'snowball') show = (t === 'small' || t === 'hidden');
+            else if (mode === 'hidden') show = (t === 'hidden');
+            else if (mode === 'mid') show = (t === 'mid');
+            // else 'all'
+            c.style.display = show ? '' : 'none';
+          }});
+        }});
+      }});
+    }})();
+    </script>
     '''
 
 
@@ -9206,9 +9285,84 @@ footer a { color: var(--tx-3); }
   color: var(--tx-1);
 }
 
+/* ---- tier badges & filter (Phase G: hidden-champion bias) ---- */
+.sc-map-badges {
+  margin-left: auto;
+  display: flex; gap: 4px; align-items: center;
+}
+.sc-map-tier-bar {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin: 10px 0 14px;
+}
+.sc-map-tier-badge {
+  padding: 1px 6px; border-radius: 8px;
+  border: 1px solid;
+  letter-spacing: 0.4px;
+}
+.sc-map-tier-badge-mega {
+  background: rgba(255,59,59,0.10); color: var(--dn);
+  border-color: rgba(255,59,59,0.30);
+}
+.sc-map-tier-badge-large {
+  background: rgba(255,181,71,0.10); color: var(--amber);
+  border-color: rgba(255,181,71,0.30);
+}
+.sc-map-tier-badge-mid {
+  background: var(--bg-0); color: var(--tx-2);
+  border-color: var(--line);
+}
+.sc-map-tier-badge-small {
+  background: rgba(27,217,124,0.10); color: var(--up);
+  border-color: rgba(27,217,124,0.30);
+}
+.sc-map-tier-badge-hidden {
+  background: rgba(27,217,124,0.20); color: var(--up);
+  border-color: rgba(27,217,124,0.50);
+  font-weight: 700;
+}
+.sc-map-tier-count { padding: 2px 8px; }
+.sc-map-stock-snowball {
+  border-color: rgba(27,217,124,0.40);
+}
+.sc-map-stock-snowball:hover { border-color: var(--up); }
+.sc-map-filter {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  margin: 14px 0 18px; padding: 10px 14px;
+  background: var(--bg-2); border-radius: 4px;
+}
+.sc-map-filter-label {
+  color: var(--tx-2); letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+.sc-map-filter-btn {
+  padding: 4px 12px;
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  color: var(--tx-2);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  transition: border-color 120ms, color 120ms;
+}
+.sc-map-filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--tx-1);
+}
+.sc-map-filter-btn.active {
+  background: var(--accent);
+  color: var(--bg-0);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+.sc-map-stock.is-filtered-out { display: none; }
+
 @media (max-width: 720px) {
   .sc-map-layer-stocks { grid-template-columns: 1fr; }
   .sc-map-layer { padding: 12px 14px; }
+  .sc-map-filter { padding: 8px 10px; }
+  .sc-map-filter-btn { padding: 3px 8px; font-size: 11px; }
 }
 """
 

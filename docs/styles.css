@@ -3385,7 +3385,82 @@ footer a { color: var(--tx-3); }
   color: var(--tx-1);
 }
 
+/* ---- tier badges & filter (Phase G: hidden-champion bias) ---- */
+.sc-map-badges {
+  margin-left: auto;
+  display: flex; gap: 4px; align-items: center;
+}
+.sc-map-tier-bar {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin: 10px 0 14px;
+}
+.sc-map-tier-badge {
+  padding: 1px 6px; border-radius: 8px;
+  border: 1px solid;
+  letter-spacing: 0.4px;
+}
+.sc-map-tier-badge-mega {
+  background: rgba(255,59,59,0.10); color: var(--dn);
+  border-color: rgba(255,59,59,0.30);
+}
+.sc-map-tier-badge-large {
+  background: rgba(255,181,71,0.10); color: var(--amber);
+  border-color: rgba(255,181,71,0.30);
+}
+.sc-map-tier-badge-mid {
+  background: var(--bg-0); color: var(--tx-2);
+  border-color: var(--line);
+}
+.sc-map-tier-badge-small {
+  background: rgba(27,217,124,0.10); color: var(--up);
+  border-color: rgba(27,217,124,0.30);
+}
+.sc-map-tier-badge-hidden {
+  background: rgba(27,217,124,0.20); color: var(--up);
+  border-color: rgba(27,217,124,0.50);
+  font-weight: 700;
+}
+.sc-map-tier-count { padding: 2px 8px; }
+.sc-map-stock-snowball {
+  border-color: rgba(27,217,124,0.40);
+}
+.sc-map-stock-snowball:hover { border-color: var(--up); }
+.sc-map-filter {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  margin: 14px 0 18px; padding: 10px 14px;
+  background: var(--bg-2); border-radius: 4px;
+}
+.sc-map-filter-label {
+  color: var(--tx-2); letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+.sc-map-filter-btn {
+  padding: 4px 12px;
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  color: var(--tx-2);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  transition: border-color 120ms, color 120ms;
+}
+.sc-map-filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--tx-1);
+}
+.sc-map-filter-btn.active {
+  background: var(--accent);
+  color: var(--bg-0);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+.sc-map-stock.is-filtered-out { display: none; }
+
 @media (max-width: 720px) {
   .sc-map-layer-stocks { grid-template-columns: 1fr; }
   .sc-map-layer { padding: 12px 14px; }
+  .sc-map-filter { padding: 8px 10px; }
+  .sc-map-filter-btn { padding: 3px 8px; font-size: 11px; }
 }

@@ -40,11 +40,17 @@ FEEDS: list[dict] = [
     {"name": "經濟日報 證券",     "url": "https://money.udn.com/rssfeed/news/1001/5590?ch=news", "market": "TW"},
     {"name": "經濟日報 股市要聞", "url": "https://money.udn.com/rssfeed/news/1001/5591?ch=news", "market": "TW"},
     {"name": "Yahoo 股市 TW",     "url": "https://tw.stock.yahoo.com/rss",                       "market": "TW"},
+    # Taiwan — macro / research house (deeper analysis vs. daily headlines)
+    # 財經 M 平方：總經資料 + 每週盤前 + 行情快報，台灣總經品質最穩的來源。
+    {"name": "財經M平方",          "url": "https://www.macromicro.me/rss",                        "market": "TW"},
     # Taiwan — Google News aggregated queries (catches 鉅亨、工商、商周、天下、Anue 等)
     {"name": "GNews 台股",        "url": _gnews("台股"),                                         "market": "TW"},
     {"name": "GNews 半導體",      "url": _gnews("台積電 OR 半導體 OR 晶圓"),                     "market": "TW"},
     {"name": "GNews AI光通訊",    "url": _gnews("AI伺服器 OR CoWoS OR 光通訊 OR CPO"),            "market": "TW"},
     {"name": "GNews 產業",        "url": _gnews("PCB OR 載板 OR 被動元件 OR 散熱 OR MLCC"),       "market": "TW"},
+    # Taiwan — hidden-champion / small-cap bias (counters the big-cap skew of mainstream feeds)
+    {"name": "GNews 中小型股",    "url": _gnews("中小型股 OR 隱形冠軍 OR 小型股 OR 波段"),        "market": "TW"},
+    {"name": "GNews 法人布局",    "url": _gnews("法人買超 OR 投信加碼 OR 外資買超"),              "market": "TW"},
     # US
     {"name": "Yahoo Finance",     "url": "https://finance.yahoo.com/news/rssindex",              "market": "US"},
     {"name": "MarketWatch Top",   "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "market": "US"},

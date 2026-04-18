@@ -152,19 +152,32 @@
     <section class="th-section sc-map-section">
       <div class="th-section-head mono">
         <span>SUPPLY CHAIN · 完整供應鏈地圖</span>
-        <span class="muted small"> · 6 層 · 19 檔</span>
+        <span class="muted small"> · 6 層 · 23 檔</span>
       </div>
       <div class="sc-map-intro">
         <div class="sc-map-title mono">AI 基建 · PCB / 載板 / 封測 / 探針</div>
         <div class="sc-map-tags"><span class="sc-map-tag mono small">PCB</span> <span class="sc-map-tag mono small">AI 伺服器</span> <span class="sc-map-tag mono small">CCL</span> <span class="sc-map-tag mono small">載板</span> <span class="sc-map-tag mono small">封測</span> <span class="sc-map-tag mono small">探針</span> <span class="sc-map-tag mono small">OSAT</span></div>
         <div class="sc-map-narrative">AI GPU 從晶片到最終伺服器板，要過一整條 TW 供應鏈：CCL → PCB 製造 → 載板 →
 先進封裝（CoWoS 外包）→ 探針卡測試。CoWoS 滿載讓測試 throughput 成新瓶頸。</div>
+        <div class="sc-map-tier-bar"><span class="sc-map-tier-count sc-map-tier-badge-large mono small">6 LARGE</span> <span class="sc-map-tier-count sc-map-tier-badge-mid mono small">6 MID</span> <span class="sc-map-tier-count sc-map-tier-badge-small mono small">8 SMALL</span> <span class="sc-map-tier-count sc-map-tier-badge-hidden mono small">3 HIDDEN</span></div>
         <div class="sc-map-legend muted small">
-          🟡 有底色 = AI 今天挑中的領先股（lead_stock）·
-          ○ 灰色框 = 這條供應鏈上的其他同層標的，值得一起比較。
-          來源：<code class="mono">supply_chains.yaml</code>（人工策畫）
+          <strong>TIER 說明：</strong>
+          <span class="sc-map-tier-badge-mega mono small">MEGA</span>/<span class="sc-map-tier-badge-large mono small">LARGE</span> 是「存款柱」（2330、鴻海那種，覆蓋過多漲不動）·
+          <span class="sc-map-tier-badge-mid mono small">MID</span> 是波段（題材來才動）·
+          <span class="sc-map-tier-badge-small mono small">SMALL</span>/<span class="sc-map-tier-badge-hidden mono small">HIDDEN</span> 是<strong>雪球能滾大的位置</strong>（NT$5,000 試水能變 50,000+）。<br>
+          黃底 = AI 今天挑中的 lead · 綠框 = 雪球級（小型/隱形）。
+          來源：<code class="mono">supply_chains.yaml</code>（人工策畫 + audit_coverage 自動維護）
         </div>
       </div>
+      
+    <div class="sc-map-filter">
+      <span class="mono small muted">篩選市值級別：</span>
+      <button type="button" class="sc-map-filter-btn active" data-tier="all">全部</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="snowball">雪球級 (small + hidden)</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="hidden">只看隱形冠軍</button>
+      <button type="button" class="sc-map-filter-btn" data-tier="mid">中型波段</button>
+    </div>
+    
       <div class="sc-map-layers">
         
         <div class="sc-map-layer">
@@ -177,12 +190,12 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/2383.html" class="sc-map-sym-link"><strong class="mono">2383</strong></a>
                 <span class="sc-map-name">台光電</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">CCL 龍頭、AI PCB 認證最完整</div>
               
@@ -192,32 +205,32 @@
                   <span class="muted small">52w 96%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-small" data-tier="small">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">6213</strong>
                 <span class="sc-map-name">聯茂</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
               </div>
               <div class="sc-map-stock-role muted small">CCL 二哥</div>
               
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-mid" data-tier="mid">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">6274</strong>
                 <span class="sc-map-name">台燿</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-mid mono small" title="波段">MID</span></span>
               </div>
               <div class="sc-map-stock-role muted small">CCL / 高速材料</div>
               
             </div>
-            <div class="sc-map-stock sc-map-stock-lead">
+            <div class="sc-map-stock sc-map-stock-lead sc-map-stock-snowball sc-map-tier-small" data-tier="small">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">8358</strong>
                 <span class="sc-map-name">金居</span>
-                <span class="sc-map-lead-badge mono small">AI 選</span>
+                <span class="sc-map-badges"><span class="sc-map-lead-badge mono small">AI 選</span> <span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
               </div>
               <div class="sc-map-stock-role muted small">銅箔龍頭</div>
               
@@ -234,12 +247,12 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/2368.html" class="sc-map-sym-link"><strong class="mono">2368</strong></a>
                 <span class="sc-map-name">金像電</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">AI 伺服器高階 PCB 首選</div>
               
@@ -249,12 +262,12 @@
                   <span class="muted small">52w 97%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/4958.html" class="sc-map-sym-link"><strong class="mono">4958</strong></a>
                 <span class="sc-map-name">臻鼎-KY</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">軟板龍頭、蘋果 + AI 雙動能</div>
               
@@ -264,14 +277,44 @@
                   <span class="muted small">52w 100%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-mid" data-tier="mid">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">3044</strong>
                 <span class="sc-map-name">健鼎</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-mid mono small" title="波段">MID</span></span>
               </div>
               <div class="sc-map-stock-role muted small">多層板 / AI 伺服器 PCB</div>
+              
+            </div>
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-small" data-tier="small">
+              <div class="sc-map-stock-head">
+                <span class="pillar-dot p-growth"></span>
+                <strong class="mono">3715</strong>
+                <span class="sc-map-name">定穎投控</span>
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
+              </div>
+              <div class="sc-map-stock-role muted small">AI load board / 車用 PCB、小型標的</div>
+              
+            </div>
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-hidden" data-tier="hidden">
+              <div class="sc-map-stock-head">
+                <span class="pillar-dot p-growth"></span>
+                <strong class="mono">8155</strong>
+                <span class="sc-map-name">博智</span>
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-hidden mono small" title="隱形冠軍">HIDDEN</span></span>
+              </div>
+              <div class="sc-map-stock-role muted small">高階通訊 PCB、5G / AI 伺服器</div>
+              
+            </div>
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-small" data-tier="small">
+              <div class="sc-map-stock-head">
+                <span class="pillar-dot p-growth"></span>
+                <strong class="mono">2355</strong>
+                <span class="sc-map-name">敬鵬</span>
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
+              </div>
+              <div class="sc-map-stock-role muted small">車用 + AI PCB、近年法人切入中</div>
               
             </div>
           </div>
@@ -286,12 +329,12 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/3037.html" class="sc-map-sym-link"><strong class="mono">3037</strong></a>
                 <span class="sc-map-name">欣興</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">ABF 載板龍頭</div>
               
@@ -301,12 +344,12 @@
                   <span class="muted small">52w 97%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/8046.html" class="sc-map-sym-link"><strong class="mono">8046</strong></a>
                 <span class="sc-map-name">南電</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">ABF 載板、NVIDIA 供應鏈</div>
               
@@ -316,12 +359,12 @@
                   <span class="muted small">52w 96%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-mid" data-tier="mid">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">6239</strong>
                 <span class="sc-map-name">力成</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-mid mono small" title="波段">MID</span></span>
               </div>
               <div class="sc-map-stock-role muted small">載板 / 封測（橫跨）</div>
               
@@ -338,22 +381,22 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-large" data-tier="large">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot "></span>
                 <strong class="mono">3711</strong>
                 <span class="sc-map-name">日月光投控</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-large mono small" title="核心">LARGE</span></span>
               </div>
               <div class="sc-map-stock-role muted small">全球最大 OSAT、CoWoS 外包第一</div>
               
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-mid" data-tier="mid">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/2449.html" class="sc-map-sym-link"><strong class="mono">2449</strong></a>
                 <span class="sc-map-name">京元電</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-mid mono small" title="波段">MID</span></span>
               </div>
               <div class="sc-map-stock-role muted small">AI GPU / ASIC 測試龍頭</div>
               
@@ -363,24 +406,34 @@
                   <span class="muted small">52w 77%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-mid" data-tier="mid">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">6147</strong>
                 <span class="sc-map-name">頎邦</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-mid mono small" title="波段">MID</span></span>
               </div>
               <div class="sc-map-stock-role muted small">DDI 封測 + HBM 測試</div>
               
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-small" data-tier="small">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">8150</strong>
                 <span class="sc-map-name">南茂</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
               </div>
               <div class="sc-map-stock-role muted small">記憶體 / DDI 封測</div>
+              
+            </div>
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-hidden" data-tier="hidden">
+              <div class="sc-map-stock-head">
+                <span class="pillar-dot p-growth"></span>
+                <strong class="mono">3289</strong>
+                <span class="sc-map-name">宜特</span>
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-hidden mono small" title="隱形冠軍">HIDDEN</span></span>
+              </div>
+              <div class="sc-map-stock-role muted small">失效分析 + 可靠度驗證小型股</div>
               
             </div>
           </div>
@@ -395,12 +448,12 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-tier-mid" data-tier="mid">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <a href="../holdings/6515.html" class="sc-map-sym-link"><strong class="mono">6515</strong></a>
                 <span class="sc-map-name">穎崴</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-mid mono small" title="波段">MID</span></span>
               </div>
               <div class="sc-map-stock-role muted small">MEMS probe card 龍頭、毛利 50%</div>
               
@@ -410,24 +463,24 @@
                   <span class="muted small">52w 96%</span>
                 </div>
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-small" data-tier="small">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">6510</strong>
                 <span class="sc-map-name">精測</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
               </div>
               <div class="sc-map-stock-role muted small">Vertical Probe、NVIDIA 直接供應</div>
               
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-hidden" data-tier="hidden">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">5608</strong>
                 <span class="sc-map-name">雍智</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-hidden mono small" title="隱形冠軍">HIDDEN</span></span>
               </div>
-              <div class="sc-map-stock-role muted small">邏輯 IC probe card</div>
+              <div class="sc-map-stock-role muted small">邏輯 IC probe card、小型冠軍</div>
               
             </div>
           </div>
@@ -442,22 +495,22 @@
           </div>
           <div class="sc-map-layer-stocks">
             
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-small" data-tier="small">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">2360</strong>
                 <span class="sc-map-name">致茂</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
               </div>
               <div class="sc-map-stock-role muted small">ATE 龍頭、光學檢測</div>
               
             </div>
-            <div class="sc-map-stock">
+            <div class="sc-map-stock sc-map-stock-snowball sc-map-tier-small" data-tier="small">
               <div class="sc-map-stock-head">
                 <span class="pillar-dot p-growth"></span>
                 <strong class="mono">3583</strong>
                 <span class="sc-map-name">辛耘</span>
-                
+                <span class="sc-map-badges"><span class="sc-map-tier-badge sc-map-tier-badge-small mono small" title="雪球">SMALL</span></span>
               </div>
               <div class="sc-map-stock-role muted small">晶圓傳送 / 測試設備</div>
               
@@ -466,6 +519,29 @@
         </div>
       </div>
     </section>
+    <script>
+    (function() {
+      const section = document.currentScript.previousElementSibling;
+      const btns = section.querySelectorAll('.sc-map-filter-btn');
+      const cards = section.querySelectorAll('.sc-map-stock');
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          btns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const mode = btn.dataset.tier;
+          cards.forEach(c => {
+            const t = c.dataset.tier;
+            let show = true;
+            if (mode === 'snowball') show = (t === 'small' || t === 'hidden');
+            else if (mode === 'hidden') show = (t === 'hidden');
+            else if (mode === 'mid') show = (t === 'mid');
+            // else 'all'
+            c.style.display = show ? '' : 'none';
+          });
+        });
+      });
+    })();
+    </script>
     
 
   
@@ -479,7 +555,7 @@
 </div>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 23:06 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 23:25 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>
