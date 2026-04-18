@@ -43,7 +43,47 @@ SECTION_RE = re.compile(r"^### (.+)$", re.MULTILINE)
 PROMPT_MARKER = "\n---\n\n你是我的"
 
 SENTIMENT_CLS = {"正面": "up", "負面": "dn", "中性": "flat"}
-SENTIMENT_ICON = {"正面": "🟢", "負面": "🔴", "中性": "⚪"}
+SENTIMENT_ICON = {"正面": "", "負面": "", "中性": ""}  # handled via CSS dots now
+
+
+def _icon(name: str, size: int = 18) -> str:
+    """Inline SVG icons — clean line style, no emojis."""
+    paths = {
+        "ai":       '<path d="M12 3 L13 8 L18 9 L13 10 L12 15 L11 10 L6 9 L11 8 Z" fill="currentColor"/><path d="M18 4 L18.6 6 L20.5 6.5 L18.6 7 L18 9 L17.4 7 L15.5 6.5 L17.4 6 Z" fill="currentColor"/>',
+        "radar":    '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M12 12 L20 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+        "sim":      '<rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="7" y="6" width="10" height="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="0.8" fill="currentColor"/><circle cx="12" cy="13" r="0.8" fill="currentColor"/><circle cx="15.5" cy="13" r="0.8" fill="currentColor"/><circle cx="8.5" cy="17" r="0.8" fill="currentColor"/><circle cx="12" cy="17" r="0.8" fill="currentColor"/><circle cx="15.5" cy="17" r="0.8" fill="currentColor"/>',
+        "chart":    '<polyline points="3,17 9,11 13,14 21,6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17,6 21,6 21,10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+        "case":     '<rect x="3" y="7" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 7 V5 a1 1 0 0 1 1 -1 h4 a1 1 0 0 1 1 1 V7" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/>',
+        "news":     '<rect x="4" y="4" width="16" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="17" x2="13" y2="17" stroke="currentColor" stroke-width="1.5"/>',
+        "search":   '<circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16" y1="16" x2="20" y2="20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+        "bolt":     '<polygon points="13,3 6,14 11,14 10,21 18,10 13,10" fill="currentColor"/>',
+        "target":   '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>',
+        "pulse":    '<polyline points="3,12 8,12 10,6 14,18 16,12 21,12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+        "globe":    '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/>',
+        "cal":      '<rect x="4" y="5" width="16" height="15" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="9" y1="3" x2="9" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="3" x2="15" y2="7" stroke="currentColor" stroke-width="1.5"/>',
+        "book":     '<path d="M4 5 a2 2 0 0 1 2 -2 h12 a1 1 0 0 1 1 1 v15 a1 1 0 0 1 -1 1 H6 a2 2 0 0 1 -2 -2 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="9" x2="15" y2="9" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="13" x2="15" y2="13" stroke="currentColor" stroke-width="1.5"/>',
+        "dollar":   '<line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.6"/><path d="M16 7 H10 a2.5 2.5 0 0 0 0 5 H14 a2.5 2.5 0 0 1 0 5 H8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+        "warn":     '<path d="M12 3 L22 20 H2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><line x1="12" y1="10" x2="12" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="0.8" fill="currentColor"/>',
+        "flame":    '<path d="M12 3 C10 7 8 8 8 12 a4 4 0 0 0 8 0 c0 -3 -2 -4 -4 -9 Z M11 16 a2 2 0 0 0 2 2 a2 2 0 0 0 0 -4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+        "diamond":  '<polygon points="12,3 21,10 12,21 3,10" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/>',
+        "eye":      '<path d="M2 12 C5 6 8 4 12 4 C16 4 19 6 22 12 C19 18 16 20 12 20 C8 20 5 18 2 12 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+    }
+    d = paths.get(name, '<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/>')
+    return f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" class="icon">{d}</svg>'
+
+
+def _sec_head(title_cn: str, title_en: str = "", meta: str = "", count: int | None = None) -> str:
+    """Consistent Bloomberg-style section header — no emojis."""
+    en = f'<span class="sec-en mono">{html.escape(title_en)}</span>' if title_en else ""
+    cnt = f'<span class="sec-count mono">{count}</span>' if count is not None else ""
+    metahtml = f'<span class="sec-meta mono">{html.escape(meta)}</span>' if meta else ""
+    return f'''
+<div class="sec-head">
+  <span class="sec-tick"></span>
+  <h2 class="sec-title">{html.escape(title_cn)}</h2>
+  {en}{cnt}{metahtml}
+</div>
+'''
 PILLAR_LABEL = {"growth": "成長核心", "defense": "防禦對沖", "flexibility": "機動倉位"}
 PILLAR_CLS = {"growth": "p-growth", "defense": "p-defense", "flexibility": "p-flex"}
 
@@ -461,7 +501,7 @@ def render_portfolio_card(pf: dict) -> str:
   <div class="pf-top">
     <div class="pf-top-l">
       <div class="pf-title-row">
-        <h2>📊 投資組合</h2>
+        <h2>投資組合 · <span class="sec-en">PORTFOLIO</span></h2>
         <span class="live-dot"></span>
       </div>
       <div class="pf-asof muted mono">AS OF {html.escape(as_of_str)} · {html.escape(profile.get("style", "—"))}</div>
@@ -651,13 +691,13 @@ def render_holdings_grid(pf: dict) -> str:
     return f'''
 <section class="holdings-grid wrap">
   <div class="section-head">
-    <h2>💼 持股明細</h2>
+    <h2>持股明細 · <span class="sec-en">HOLDINGS</span></h2>
     <span class="muted small">{len(holdings)} 檔</span>
   </div>
   <div class="hgrid">{"".join(cards)}</div>
 
   <div class="section-head mt">
-    <h2>👁️ 追蹤清單</h2>
+    <h2>追蹤清單 · <span class="sec-en">WATCHLIST</span></h2>
     <span class="muted small">{len(pf.get("watchlist", []))} 檔</span>
   </div>
   <div class="wgrid">{"".join(watchlist_cards)}</div>
@@ -690,7 +730,7 @@ def render_analysis_section(analysis: dict) -> str:
     pulse_html = f'''
 <section class="a-section">
   <div class="section-head">
-    <h2>🌡️ 市場脈搏</h2>
+    <h2>市場脈搏 · <span class="sec-en">MARKET PULSE</span></h2>
     <span class="muted small mono">GENERATED {gen_str}</span>
   </div>
   <div class="pulse-grid">
@@ -716,7 +756,7 @@ def render_analysis_section(analysis: dict) -> str:
             wp_html = '<ul class="watchpoint-list">' + "".join(f'<li>{html.escape(w)}</li>' for w in wp) + '</ul>'
         macro_html = f'''
 <section class="a-section">
-  <div class="section-head"><h2>🌏 總經背景</h2></div>
+  <div class="section-head"><h2>總經背景 · <span class="sec-en">MACRO</span></h2></div>
   <p class="narrative">{html.escape(macro_ctx["narrative"])}</p>
   {wp_html}
 </section>
@@ -729,7 +769,7 @@ def render_analysis_section(analysis: dict) -> str:
         health_cls = {"良好": "up", "需調整": "amber", "高風險": "dn"}.get(health, "flat")
         diag_html = f'''
 <section class="a-section diag-section">
-  <div class="section-head"><h2>🩺 組合診斷</h2></div>
+  <div class="section-head"><h2>組合診斷 · <span class="sec-en">DIAGNOSIS</span></h2></div>
   <div class="diag-head">
     <span class="muted small">健康度</span>
     <span class="badge badge-{health_cls} large">{html.escape(health)}</span>
@@ -761,7 +801,7 @@ def render_analysis_section(analysis: dict) -> str:
 
     actions_html = f'''
 <section class="a-section">
-  <div class="section-head"><h2>🎯 今日行動清單</h2></div>
+  <div class="section-head"><h2>今日行動 · <span class="sec-en">ACTION CHECKLIST</span></h2></div>
   <div class="actions-grid">
     {render_actions(actions.get("green", []), "action-green", "可以做", "🟢")}
     {render_actions(actions.get("yellow", []), "action-yellow", "該警戒", "🟡")}
@@ -790,7 +830,7 @@ def render_analysis_section(analysis: dict) -> str:
           {pts_html}
         </article>''')
     topics_html = (
-        f'<section class="a-section"><div class="section-head"><h2>📊 今日主題</h2>'
+        f'<section class="a-section"><div class="section-head"><h2>今日主題 · <span class="sec-en">TOPICS</span></h2>'
         f'<span class="muted small">{len(topics)} 則</span></div>'
         f'{"".join(topic_cards)}</section>'
     )
@@ -834,7 +874,7 @@ def render_analysis_section(analysis: dict) -> str:
           <div class="hc-split">{cat_html}{risk_html}</div>
         </article>''')
     holdings_html = (
-        f'<section class="a-section"><div class="section-head"><h2>💼 持股分析</h2></div>'
+        f'<section class="a-section"><div class="section-head"><h2>持股分析 · <span class="sec-en">HOLDINGS AI</span></h2></div>'
         f'{"".join(holding_cards)}</section>'
         if holding_cards else ""
     )
@@ -850,7 +890,7 @@ def render_analysis_section(analysis: dict) -> str:
           <p class="risk-line"><span class="label-inline dn">⚠️ 風險</span>{html.escape(o.get("risk", ""))}</p>
         </article>''')
     opps_html = (
-        f'<section class="a-section"><div class="section-head"><h2>🔍 值得研究 '
+        f'<section class="a-section"><div class="section-head"><h2>值得研究 · <span class="sec-en">OPPORTUNITIES</span> '
         f'<span class="badge-count">{len(opps)} DETECTED</span></h2></div>'
         f'{"".join(opp_cards)}</section>'
         if opp_cards else ""
@@ -900,7 +940,7 @@ def render_analysis_section(analysis: dict) -> str:
         why_not_line = f'<p class="muted small"><strong>為什麼不選別檔：</strong>{html.escape(why_not)}</p>' if why_not else ""
         budget_section_html = f'''
 <section class="a-section" id="budget">
-  <div class="section-head"><h2>💰 今日 NT${budget_alloc.get("budget_twd", 0):,.0f} 配置建議 <span class="badge-count">SNOWBALL</span></h2></div>
+  <div class="section-head"><h2>今日配置 NT${budget_alloc.get("budget_twd", 0):,.0f} · <span class="sec-en">ALLOCATION</span> <span class="badge-count">SNOWBALL</span></h2></div>
   <div class="budget-plan-big">{html.escape(budget_alloc.get("plan_summary", ""))}</div>
   {"".join(rows)}
   {unalloc_line}
@@ -913,7 +953,7 @@ def render_analysis_section(analysis: dict) -> str:
     if lp:
         learning_html = f'''
 <section class="a-section learning-section">
-  <div class="section-head"><h2>📚 新手學習點</h2></div>
+  <div class="section-head"><h2>學習點 · <span class="sec-en">LESSON</span></h2></div>
   <div class="learning-card">
     <h3>{html.escape(lp.get("term", ""))}</h3>
     <p>{html.escape(lp.get("explanation", ""))}</p>
@@ -1469,7 +1509,7 @@ def render_radar_tab(analysis: dict | None, pf: dict | None,
         date = (analysis.get("date") or "")
         topics_block = f'''
 <div class="radar-topics">
-  <h3 class="radar-subtitle">🔥 今日主題 — {len(topics)} 個族群</h3>
+  <h3 class="radar-subtitle">TODAY · 今日主題 — {len(topics)} 個族群</h3>
   <div class="radar-topics-grid">{"".join(topics_mini)}</div>
   <div class="tab-footer">
     <a href="briefs/{date}.html" class="btn-link small">→ 看完整主題分析 + 原始新聞</a>
@@ -1480,7 +1520,7 @@ def render_radar_tab(analysis: dict | None, pf: dict | None,
     return f'''
 <div class="radar-body">
   <div class="radar-intro">
-    <h2 class="radar-title mono">📡 機會雷達</h2>
+    <h2 class="radar-title mono">OPPORTUNITY RADAR · 機會雷達</h2>
     <p class="muted small">AI 橫掃全市場找出「你可能錯過」的題材 · {len(opps)} 個機會 · {len(topics)} 個主題</p>
   </div>
   {controls}
@@ -1637,7 +1677,7 @@ def render_catalyst_timeline(analysis: dict | None) -> str:
     return f'''
 <div class="catalyst-panel">
   <div class="cat-head">
-    <span class="cat-title mono">🗓 TODAY & UPCOMING</span>
+    <span class="cat-title mono">CATALYSTS · TODAY & UPCOMING</span>
     <span class="muted small">{len(agenda)} 個事件</span>
   </div>
   <div class="cat-list">{"".join(items)}</div>
@@ -1670,7 +1710,7 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
         a = actions[0]
         top_action_html = f'''
         <div class="hero-action">
-          <div class="hero-action-lbl">🟢 今日可以做</div>
+          <div class="hero-action-lbl"><span class="dot dot-up"></span>TODAY · GO</div>
           <div class="hero-action-body"><strong>{html.escape(a.get("action", ""))}</strong>
             <div class="hero-action-reason muted small">{html.escape(a.get("reason", ""))}</div>
           </div>
@@ -1870,7 +1910,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
             ) + '</ul>'
         macro_html = f'''
 <div class="ai-block">
-  <div class="tab-subhead">🌏 總經背景</div>
+  <div class="tab-subhead">MACRO · 總經背景</div>
   <p class="narrative">{html.escape(macro_ctx["narrative"])}</p>
   {wp_html}
 </div>
@@ -1896,7 +1936,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
           {pts_html}
         </article>''')
     topics_html = (
-        f'<div class="ai-block"><div class="tab-subhead">📊 今日主題 '
+        f'<div class="ai-block"><div class="tab-subhead">TOPICS · 今日主題 '
         f'<span class="muted small">{len(topics)} 則</span></div>'
         f'{"".join(topic_cards)}</div>'
         if topic_cards else ""
@@ -1939,7 +1979,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
           <div class="hc-split">{cat_html}{risk_html}</div>
         </article>''')
     holdings_html = (
-        f'<div class="ai-block"><div class="tab-subhead">💼 持股分析</div>{"".join(holding_cards)}</div>'
+        f'<div class="ai-block"><div class="tab-subhead">HOLDINGS · 持股分析</div>{"".join(holding_cards)}</div>'
         if holding_cards else ""
     )
 
@@ -1986,7 +2026,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
         why_not_line = f'<p class="muted small">為什麼不選別檔：{html.escape(why_not)}</p>' if why_not else ""
         budget_full_html = f'''
 <div class="ai-block" id="budget">
-  <div class="tab-subhead">💰 今日 NT${budget_alloc.get("budget_twd", 0):,.0f} 配置建議 <span class="badge-count">SNOWBALL</span></div>
+  <div class="tab-subhead">ALLOCATION · 今日 NT${budget_alloc.get("budget_twd", 0):,.0f} 配置建議 <span class="badge-count">SNOWBALL</span></div>
   <div class="budget-plan-big">{html.escape(budget_alloc.get("plan_summary", ""))}</div>
   {"".join(rows)}
   {unalloc_line}
@@ -2012,7 +2052,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
               <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{esc_linked(o.get("risk", ""))}</p>
             </article>''')
         opps_html = (
-            f'<div class="ai-block" id="opportunities"><div class="tab-subhead">🔍 值得研究的個股 '
+            f'<div class="ai-block" id="opportunities"><div class="tab-subhead">OPPORTUNITIES · 值得研究 '
             f'<span class="badge-count">{len(opps)} DETECTED</span> <span class="muted small">· 點代碼看深度</span></div>'
             f'{"".join(rows)}</div>'
         )
@@ -2022,7 +2062,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
     if lp:
         learning_html = f'''
 <div class="ai-block">
-  <div class="tab-subhead">📚 新手學習點</div>
+  <div class="tab-subhead">LESSON · 學習點</div>
   <div class="learning-card">
     <h3>{html.escape(lp.get("term", ""))}</h3>
     <p>{html.escape(lp.get("explanation", ""))}</p>
@@ -2040,7 +2080,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
   {diag_html}
 
   <div class="ai-block">
-    <div class="tab-subhead">🎯 今日行動清單</div>
+    <div class="tab-subhead">ACTION · 今日行動</div>
     {actions_html}
   </div>
 
@@ -2515,24 +2555,24 @@ def render_index(briefs: list[dict], pf: dict | None,
     body = f'''
 <div class="shell">
   <aside class="sidenav" aria-label="主導航">
-    <div class="sidenav-logo">📈</div>
-    <button class="sn-btn active" data-tab="ai" title="AI 建議">
-      <span class="sn-icon">🤖</span><span class="sn-label">AI</span>
+    <div class="sidenav-logo">{_icon("bolt", 22)}</div>
+    <button class="sn-btn active" data-tab="ai" title="AI Brief">
+      {_icon("ai")}<span class="sn-label">AI</span>
     </button>
-    <button class="sn-btn" data-tab="radar" title="機會雷達">
-      <span class="sn-icon">📡</span><span class="sn-label">RADAR</span>
+    <button class="sn-btn" data-tab="radar" title="Opportunity Radar">
+      {_icon("radar")}<span class="sn-label">RADAR</span>
     </button>
-    <button class="sn-btn" data-tab="sim" title="試算">
-      <span class="sn-icon">🧮</span><span class="sn-label">SIM</span>
+    <button class="sn-btn" data-tab="sim" title="Simulator">
+      {_icon("sim")}<span class="sn-label">SIM</span>
     </button>
-    <button class="sn-btn" data-tab="portfolio" title="組合">
-      <span class="sn-icon">📊</span><span class="sn-label">PF</span>
+    <button class="sn-btn" data-tab="portfolio" title="Portfolio">
+      {_icon("chart")}<span class="sn-label">PF</span>
     </button>
-    <button class="sn-btn" data-tab="positions" title="持股">
-      <span class="sn-icon">💼</span><span class="sn-label">HOLD</span>
+    <button class="sn-btn" data-tab="positions" title="Holdings">
+      {_icon("case")}<span class="sn-label">HOLD</span>
     </button>
-    <button class="sn-btn" data-tab="briefs" title="Brief">
-      <span class="sn-icon">📰</span><span class="sn-label">BRIEF</span>
+    <button class="sn-btn" data-tab="briefs" title="Brief Archive">
+      {_icon("news")}<span class="sn-label">BRIEF</span>
       <span class="sn-badge">{len(briefs)}</span>
     </button>
   </aside>
@@ -2545,8 +2585,8 @@ def render_index(briefs: list[dict], pf: dict | None,
         <span class="live-dot accent"></span>
       </div>
       <div class="top-search-wrap">
-        <span class="top-search-icon">🔍</span>
-        <input type="text" id="top-search" class="top-search-input" placeholder="搜尋 2330 · 台積電 · NVDA · 光通訊 …" autocomplete="off">
+        <span class="top-search-icon">{_icon("search", 14)}</span>
+        <input type="text" id="top-search" class="top-search-input" placeholder="Search · 2330 · 台積電 · NVDA · 光通訊 …" autocomplete="off">
         <div class="top-search-results" id="top-search-results"></div>
       </div>
       <div class="summary-strip">
@@ -2562,7 +2602,7 @@ def render_index(briefs: list[dict], pf: dict | None,
           <span class="ss-lbl">α</span>
           <span class="ss-val mono tnum {_cls(alpha)}">{_fmt_pct(alpha)}</span>
         </div>
-        {f'<div class="ss-cell ss-alert"><span class="ss-lbl">⚠</span><span class="ss-val mono tnum amber">{alert_count}</span></div>' if alert_count > 0 else ''}
+        {f'<div class="ss-cell ss-alert"><span class="ss-lbl">ALRT</span><span class="ss-val mono tnum amber">{alert_count}</span></div>' if alert_count > 0 else ''}
       </div>
     </header>
 
@@ -2599,22 +2639,47 @@ def render_index(briefs: list[dict], pf: dict | None,
     <footer class="status-bar">
       <div class="sb-left mono">
         <span class="live-dot accent"></span>
-        <span class="sb-lbl">LIVE</span>
-        <span class="sb-sep">·</span>
-        <span>AS OF {html.escape(as_of_str)}</span>
-        <span class="sb-sep">·</span>
-        <span>{len(pf.get("simulator_universe", []))} TICKERS</span>
-        <span class="sb-sep">·</span>
-        <span>{len(briefs)} BRIEFS</span>
+        <span class="sb-status">MARKET OPEN</span>
+        <span class="sb-div">|</span>
+        <span id="sb-clock">TPE {html.escape(as_of_str.split(' ')[-1] if ' ' in as_of_str else as_of_str)}</span>
+        <span class="sb-div">|</span>
+        <span>VIEW: <span id="sb-view" class="sb-view">AI</span></span>
+        <span class="sb-div">|</span>
+        <span>SCANNING · {len(pf.get("simulator_universe", []))} TICKERS · {len(briefs)} BRIEFS</span>
       </div>
       <div class="sb-right mono">
-        <span class="sb-lbl">YTD</span>
-        <span class="{_cls(s.get('ret_1y_pct'))}">{_fmt_pct(s.get('ret_1y_pct'), 1)}</span>
-        <span class="sb-sep">·</span>
-        <span class="sb-lbl">VOL</span>
-        <span>{pf.get("risk", {}).get("volatility_annualized_pct", 0):.1f}%</span>
+        <span>AI: Gemini 2.5 · Quant Engine v2</span>
       </div>
     </footer>
+<script>
+// Live clock + view name in status bar
+(function() {{
+  const clock = document.getElementById('sb-clock');
+  const viewEl = document.getElementById('sb-view');
+  const viewMap = {{ai: 'AI', radar: 'RADAR', sim: 'SIM', portfolio: 'PORT', positions: 'HOLD', briefs: 'NEWS'}};
+  function tick() {{
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    if (clock) clock.textContent = `TPE ${{hh}}:${{mm}}:${{ss}}`;
+  }}
+  tick(); setInterval(tick, 1000);
+  // Update view name on tab change
+  window.addEventListener('hashchange', () => {{
+    const k = (location.hash || '').replace('#', '') || 'ai';
+    if (viewEl) viewEl.textContent = viewMap[k] || 'AI';
+  }});
+  // Also wire existing tab buttons to update view label
+  document.querySelectorAll('.sn-btn').forEach(b => {{
+    b.addEventListener('click', () => {{
+      if (viewEl) viewEl.textContent = viewMap[b.dataset.tab] || 'AI';
+    }});
+  }});
+  const init = (location.hash || '').replace('#', '') || 'ai';
+  if (viewEl) viewEl.textContent = viewMap[init] || 'AI';
+}})();
+</script>
   </div>
 </div>
 
@@ -2952,7 +3017,7 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
         news_html = f'''
 <section class="wrap dd-news-section">
   <div class="section-head">
-    <h2>📰 近期相關新聞 <span class="muted small">({len(news_for_ticker)} 則)</span></h2>
+    <h2>相關新聞 · <span class="sec-en">NEWS</span> <span class="muted small">({len(news_for_ticker)} 則)</span></h2>
   </div>
   <ul class="dd-news-list">{"".join(rows)}</ul>
 </section>
@@ -3061,6 +3126,28 @@ html, body {
 body { overflow-x: hidden; }
 a { color: var(--accent-2); text-decoration: none; }
 a:hover { color: #b8d0ff; }
+
+
+/* Section header EN label — subtle mono uppercase */
+.sec-en {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--tx-3);
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+/* Dot indicators (replace emoji colored circles) */
+.dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.dot-up { background: var(--dn); box-shadow: 0 0 6px var(--dn); }
+.dot-warn { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.dot-dn { background: var(--up); box-shadow: 0 0 6px var(--up); }
 
 /* ── Layout ── */
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
@@ -3562,9 +3649,12 @@ footer a { color: var(--tx-3); }
   position: sticky; bottom: 0; z-index: 20;
   margin-top: auto;
 }
-.sb-left, .sb-right { display: flex; align-items: center; gap: 8px; }
+.sb-left, .sb-right { display: flex; align-items: center; gap: 10px; font-size: 10px; }
 .sb-lbl { text-transform: uppercase; color: var(--tx-4); font-weight: 700; }
 .sb-sep { color: var(--tx-4); }
+.sb-div { color: var(--tx-4); font-weight: 400; opacity: 0.6; }
+.sb-status { color: var(--up); font-weight: 700; letter-spacing: 0.8px; }
+.sb-view { color: var(--accent-2); font-weight: 700; letter-spacing: 0.8px; }
 
 .main-panel {
   flex: 1;

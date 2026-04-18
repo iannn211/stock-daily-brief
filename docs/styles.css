@@ -44,6 +44,28 @@ body { overflow-x: hidden; }
 a { color: var(--accent-2); text-decoration: none; }
 a:hover { color: #b8d0ff; }
 
+
+/* Section header EN label — subtle mono uppercase */
+.sec-en {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--tx-3);
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+/* Dot indicators (replace emoji colored circles) */
+.dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.dot-up { background: var(--dn); box-shadow: 0 0 6px var(--dn); }
+.dot-warn { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.dot-dn { background: var(--up); box-shadow: 0 0 6px var(--up); }
+
 /* ── Layout ── */
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 .mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
@@ -544,9 +566,12 @@ footer a { color: var(--tx-3); }
   position: sticky; bottom: 0; z-index: 20;
   margin-top: auto;
 }
-.sb-left, .sb-right { display: flex; align-items: center; gap: 8px; }
+.sb-left, .sb-right { display: flex; align-items: center; gap: 10px; font-size: 10px; }
 .sb-lbl { text-transform: uppercase; color: var(--tx-4); font-weight: 700; }
 .sb-sep { color: var(--tx-4); }
+.sb-div { color: var(--tx-4); font-weight: 400; opacity: 0.6; }
+.sb-status { color: var(--up); font-weight: 700; letter-spacing: 0.8px; }
+.sb-view { color: var(--accent-2); font-weight: 700; letter-spacing: 0.8px; }
 
 .main-panel {
   flex: 1;
