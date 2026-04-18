@@ -1,25 +1,14 @@
 """
-Calculate portfolio metrics from portfolio.yaml + prices.json.
+Compute portfolio metrics: P&L, alpha, attribution, risk, sparklines, pillar
+allocation. Reads portfolio.yaml + prices.json + price_history.json.
 
-Writes portfolio.json with:
-  {
-    "as_of": ISO,
-    "summary": { total_value, total_cost, total_pnl, total_pnl_pct,
-                 day_pnl, day_pnl_pct, alpha_vs_benchmark },
-    "holdings": [ {symbol, name, shares, cost_basis, price, value, cost,
-                   pnl, pnl_pct, day_change, day_contribution,
-                   stop_loss_hit, take_profit_hit}, ... ],
-    "attribution": { positive: [top 3], negative: [top 3] },
-    "alerts": { stop_loss: [...], take_profit: [...] },
-    "benchmark": { symbol, day_change_pct },
-    "watchlist": [ {symbol, price, day_change_pct}, ... ]
-  }
-
-All amounts in TWD (US stocks converted via USD/TWD from yfinance).
+Writes portfolio.json consumed by build_dashboard.py and analyze.py.
 """
 from __future__ import annotations
 
 import json
+import math
+import statistics
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -31,8 +20,16 @@ ROOT = Path(__file__).resolve().parent
 TAIPEI = ZoneInfo("Asia/Taipei")
 PORTFOLIO_PATH = ROOT / "portfolio.yaml"
 PRICES_PATH = ROOT / "prices.json"
+HISTORY_PATH = ROOT / "price_history.json"
 OUTPUT_PATH = ROOT / "portfolio.json"
-USDTWD_DEFAULT = 32.0  # Fallback if fx lookup fails
+
+# Default pillar allocation targets by profile
+TARGET_ALLOCATIONS: dict[str, dict[str, float]] = {
+    "beginner-growth": {"growth": 0.70, "defense": 0.20, "flexibility": 0.10},
+    "balanced":        {"growth": 0.55, "defense": 0.30, "flexibility": 0.15},
+    "aggressive":      {"growth": 0.80, "defense": 0.05, "flexibility": 0.15},
+    "defensive":       {"growth": 0.40, "defense": 0.45, "flexibility": 0.15},
+}
 
 
 def to_yf_ticker(symbol: str, market: str) -> str:
@@ -40,19 +37,68 @@ def to_yf_ticker(symbol: str, market: str) -> str:
 
 
 def get_usdtwd(prices: dict) -> float:
-    """Look for TWD=X in prices, else fallback."""
     for key, p in prices.items():
-        if key.upper().startswith("TWD=X") or key == "USDTWD":
-            return p.get("close", USDTWD_DEFAULT)
-    return USDTWD_DEFAULT
+        if key.upper().startswith("TWD=X"):
+            return p.get("close", 32.0)
+    return 32.0
+
+
+def _daily_returns(closes: list[float]) -> list[float]:
+    return [
+        (closes[i] - closes[i - 1]) / closes[i - 1]
+        for i in range(1, len(closes))
+        if closes[i - 1]
+    ]
+
+
+def _max_drawdown(values: list[float]) -> float:
+    """Return max drawdown as negative percent (e.g. -12.3)."""
+    if len(values) < 2:
+        return 0.0
+    peak = values[0]
+    max_dd = 0.0
+    for v in values[1:]:
+        if v > peak:
+            peak = v
+        dd = (v - peak) / peak * 100 if peak else 0
+        if dd < max_dd:
+            max_dd = dd
+    return round(max_dd, 2)
+
+
+def _volatility(daily_returns: list[float]) -> float:
+    if len(daily_returns) < 2:
+        return 0.0
+    std = statistics.stdev(daily_returns)
+    return round(std * math.sqrt(252) * 100, 2)  # annualized %
+
+
+def _pillar_allocation(holdings: list[dict], cash_twd: float, total_value: float) -> dict:
+    pillars: dict[str, float] = {"growth": 0.0, "defense": 0.0, "flexibility": 0.0}
+    for h in holdings:
+        pillars[h.get("pillar", "growth")] = pillars.get(h.get("pillar", "growth"), 0) + h["value"]
+    # Cash goes to "defense"
+    pillars["defense"] += cash_twd
+    return {k: round(v / total_value * 100, 2) if total_value else 0 for k, v in pillars.items()}
+
+
+def _sparkline(history: list[dict], days: int = 30) -> list[dict]:
+    tail = history[-days:]
+    return [{"d": r["date"], "c": r["close"]} for r in tail]
 
 
 def main() -> int:
     cfg = yaml.safe_load(PORTFOLIO_PATH.read_text(encoding="utf-8"))
     prices = json.loads(PRICES_PATH.read_text(encoding="utf-8"))["prices"]
+    history = json.loads(HISTORY_PATH.read_text(encoding="utf-8"))["history"]
 
     usdtwd = get_usdtwd(prices)
+    cash_twd = float(cfg.get("cash_twd", 0) or 0)
+    risk_profile = cfg.get("risk_profile", {}) or {}
+    style = risk_profile.get("style", "beginner-growth")
+    target_alloc = TARGET_ALLOCATIONS.get(style, TARGET_ALLOCATIONS["beginner-growth"])
 
+    # -------------------- per-holding --------------------
     holdings_out: list[dict] = []
     total_value = 0.0
     total_cost = 0.0
@@ -74,59 +120,190 @@ def main() -> int:
         day_change_twd = p["day_change"] * fx
         day_contribution = day_change_twd * h["shares"]
         day_pnl += day_contribution
-
         total_value += value
         total_cost += cost
 
         stop_loss_hit = bool(h.get("stop_loss") and p["close"] <= h["stop_loss"])
         take_profit_hit = bool(h.get("take_profit") and p["close"] >= h["take_profit"])
 
+        # Distance to stop/target (for "nearing" warnings)
+        def _pct_distance(level: float | None) -> float | None:
+            if not level:
+                return None
+            return round((p["close"] - level) / level * 100, 2)
+
+        hist = history.get(yf_ticker, [])
+        spark = _sparkline(hist, 30)
+
         holdings_out.append({
             "symbol": h["symbol"],
             "name": h["name"],
             "market": h["market"],
+            "pillar": h.get("pillar", "growth"),
             "shares": h["shares"],
             "cost_basis": h["cost_basis"],
             "price": p["close"],
             "price_twd": round(price_twd, 2),
-            "day_change": p["day_change"],
-            "day_change_pct": p["day_change_pct"],
-            "day_contribution": round(day_contribution, 0),
             "value": round(value, 0),
             "cost": round(cost, 0),
             "pnl": round(pnl, 0),
             "pnl_pct": round(pnl_pct, 2),
+            "day_change": p["day_change"],
+            "day_change_pct": p["day_change_pct"],
+            "day_contribution": round(day_contribution, 0),
+            # 52w + returns (already in prices.json from fetch_prices.py)
+            "high_52w": p.get("high_52w"),
+            "low_52w": p.get("low_52w"),
+            "pct_52w": p.get("pct_52w"),
+            "ret_7d": p.get("ret_7d"),
+            "ret_30d": p.get("ret_30d"),
+            "ret_90d": p.get("ret_90d"),
+            "ret_ytd": p.get("ret_ytd"),
+            # Rules
             "stop_loss": h.get("stop_loss"),
             "take_profit": h.get("take_profit"),
             "stop_loss_hit": stop_loss_hit,
             "take_profit_hit": take_profit_hit,
+            "stop_loss_dist_pct": _pct_distance(h.get("stop_loss")),
+            "take_profit_dist_pct": _pct_distance(h.get("take_profit")),
+            # Sparkline
+            "sparkline": spark,
+            # yf ticker (for deep-dive links)
+            "yf_ticker": p.get("yf_ticker", yf_ticker),
         })
 
+    # -------------------- portfolio-level --------------------
+    total_value_incl_cash = total_value + cash_twd
     total_pnl = total_value - total_cost
     total_pnl_pct = (total_pnl / total_cost * 100) if total_cost else 0.0
-    day_pnl_pct = (day_pnl / (total_value - day_pnl) * 100) if total_value - day_pnl else 0.0
+    prev_total_value = total_value - day_pnl
+    day_pnl_pct = (day_pnl / prev_total_value * 100) if prev_total_value else 0.0
+
+    # Reconstruct historical portfolio value series using current share counts.
+    # This is not "true" historical value (since user may not have held same shares)
+    # but it shows how the current basket has moved over the past year.
+    dates_set: set[str] = set()
+    for h in cfg.get("holdings", []):
+        key = to_yf_ticker(h["symbol"], h["market"])
+        for row in history.get(key, []):
+            dates_set.add(row["date"])
+    dates_sorted = sorted(dates_set)
+
+    portfolio_series: list[dict] = []
+    for d in dates_sorted:
+        day_value = cash_twd
+        ok = True
+        for h in cfg.get("holdings", []):
+            key = to_yf_ticker(h["symbol"], h["market"])
+            rows = history.get(key, [])
+            # Find close on date (linear; datasets are small)
+            close_on = None
+            for r in rows:
+                if r["date"] == d:
+                    close_on = r["close"]
+                    break
+            if close_on is None:
+                ok = False
+                break
+            fx = 1.0 if h["market"] == "TW" else usdtwd
+            day_value += close_on * fx * h["shares"]
+        if ok:
+            portfolio_series.append({"d": d, "v": round(day_value, 0)})
+
+    # Risk metrics
+    values = [r["v"] for r in portfolio_series]
+    daily_rets = _daily_returns(values)
+    vol_annualized = _volatility(daily_rets[-60:]) if len(daily_rets) >= 20 else 0.0
+    drawdown_30d = _max_drawdown(values[-22:]) if len(values) >= 22 else 0.0
+    drawdown_90d = _max_drawdown(values[-66:]) if len(values) >= 66 else 0.0
+    drawdown_1y = _max_drawdown(values) if len(values) >= 30 else 0.0
+
+    # Portfolio return windows
+    def _window_ret(window: int) -> float | None:
+        if len(values) <= window:
+            return None
+        v0 = values[-window - 1]
+        return round((values[-1] - v0) / v0 * 100, 2) if v0 else None
+    ret_7d = _window_ret(5)
+    ret_30d = _window_ret(20)
+    ret_90d = _window_ret(60)
+    ret_1y = round((values[-1] - values[0]) / values[0] * 100, 2) if len(values) > 1 and values[0] else None
 
     # Benchmark
     bench_sym = cfg.get("benchmark_tw", "0050")
     bench_yf = to_yf_ticker(bench_sym, "TW")
-    bench_price = prices.get(bench_yf)
-    bench_day_pct = bench_price["day_change_pct"] if bench_price else 0.0
-    alpha = round(day_pnl_pct - bench_day_pct, 2)
+    bench_price = prices.get(bench_yf, {})
+    bench_day_pct = bench_price.get("day_change_pct", 0)
+    bench_ret_30d = bench_price.get("ret_30d")
+    bench_ret_ytd = bench_price.get("ret_ytd")
+    alpha_day = round(day_pnl_pct - bench_day_pct, 2)
 
-    # Attribution: top +/- contributors
+    # Attribution
     sorted_contrib = sorted(holdings_out, key=lambda h: h["day_contribution"], reverse=True)
     attribution = {
         "positive": [h for h in sorted_contrib if h["day_contribution"] > 0][:3],
         "negative": [h for h in reversed(sorted_contrib) if h["day_contribution"] < 0][:3],
     }
 
-    # Alerts
+    # Alerts: stop-loss / take-profit / concentration / pillar imbalance
+    concentration_alerts = []
+    if total_value_incl_cash:
+        for h in holdings_out:
+            weight = h["value"] / total_value_incl_cash
+            if weight > risk_profile.get("max_single_position", 0.40):
+                concentration_alerts.append({
+                    "symbol": h["symbol"], "name": h["name"],
+                    "weight_pct": round(weight * 100, 2),
+                    "limit_pct": round(risk_profile.get("max_single_position", 0.40) * 100, 2),
+                })
+
+    actual_alloc = _pillar_allocation(holdings_out, cash_twd, total_value_incl_cash)
+    pillar_alerts: list[dict] = []
+    threshold = risk_profile.get("rebalance_threshold", 0.05) * 100
+    for pillar, target in target_alloc.items():
+        target_pct = target * 100
+        diff = actual_alloc.get(pillar, 0) - target_pct
+        if abs(diff) > threshold:
+            pillar_alerts.append({
+                "pillar": pillar,
+                "actual_pct": actual_alloc.get(pillar, 0),
+                "target_pct": target_pct,
+                "diff_pct": round(diff, 2),
+            })
+
     alerts = {
-        "stop_loss": [h for h in holdings_out if h["stop_loss_hit"]],
-        "take_profit": [h for h in holdings_out if h["take_profit_hit"]],
+        "stop_loss":     [h for h in holdings_out if h["stop_loss_hit"]],
+        "take_profit":   [h for h in holdings_out if h["take_profit_hit"]],
+        "concentration": concentration_alerts,
+        "pillar":        pillar_alerts,
+        "nearing_stop":  [
+            h for h in holdings_out
+            if h.get("stop_loss_dist_pct") is not None
+            and 0 < h["stop_loss_dist_pct"] < 5
+        ],
+    }
+    alert_count = (len(alerts["stop_loss"]) + len(alerts["take_profit"])
+                   + len(alerts["concentration"]) + len(alerts["pillar"])
+                   + len(alerts["nearing_stop"]))
+
+    # Macro snapshot
+    def _macro(key: str) -> dict:
+        p = prices.get(key, {})
+        return {
+            "close": p.get("close"),
+            "day_change_pct": p.get("day_change_pct"),
+            "ret_30d": p.get("ret_30d"),
+            "ret_ytd": p.get("ret_ytd"),
+            "pct_52w": p.get("pct_52w"),
+        }
+    macro = {
+        "twii":   _macro("^TWII"),
+        "spx":    _macro("^GSPC"),
+        "vix":    _macro("^VIX"),
+        "usdtwd": _macro("TWD=X"),
     }
 
-    # Watchlist
+    # Watchlist enrichment
     watchlist_out: list[dict] = []
     for w in cfg.get("watchlist", []):
         yf_ticker = to_yf_ticker(w["symbol"], w["market"])
@@ -137,45 +314,88 @@ def main() -> int:
             "symbol": w["symbol"],
             "name": w["name"],
             "market": w["market"],
+            "pillar": w.get("pillar"),
             "price": p["close"],
             "day_change_pct": p["day_change_pct"],
-            "currency": p["currency"],
+            "ret_7d": p.get("ret_7d"),
+            "ret_30d": p.get("ret_30d"),
+            "ret_ytd": p.get("ret_ytd"),
+            "pct_52w": p.get("pct_52w"),
+            "currency": p.get("currency"),
+            "sparkline": _sparkline(history.get(yf_ticker, []), 30),
+            "yf_ticker": p.get("yf_ticker", yf_ticker),
         })
 
     out = {
         "as_of": datetime.now(TAIPEI).isoformat(),
         "fx_usdtwd": usdtwd,
+        "risk_profile": {
+            "style": style,
+            "target_allocation": {k: round(v * 100, 1) for k, v in target_alloc.items()},
+            "max_single_position_pct": round(risk_profile.get("max_single_position", 0.40) * 100, 1),
+            "target_cash_ratio_pct": round(risk_profile.get("target_cash_ratio", 0.10) * 100, 1),
+            "rebalance_threshold_pct": round(risk_profile.get("rebalance_threshold", 0.05) * 100, 1),
+        },
         "summary": {
-            "total_value_twd": round(total_value, 0),
+            "total_value_twd": round(total_value_incl_cash, 0),
+            "equity_value_twd": round(total_value, 0),
+            "cash_twd": round(cash_twd, 0),
+            "cash_ratio_pct": round(cash_twd / total_value_incl_cash * 100, 2) if total_value_incl_cash else 0,
             "total_cost_twd": round(total_cost, 0),
             "total_pnl_twd": round(total_pnl, 0),
             "total_pnl_pct": round(total_pnl_pct, 2),
             "day_pnl_twd": round(day_pnl, 0),
             "day_pnl_pct": round(day_pnl_pct, 2),
-            "alpha_vs_benchmark_pct": alpha,
+            "alpha_vs_benchmark_pct": alpha_day,
+            "ret_7d_pct": ret_7d,
+            "ret_30d_pct": ret_30d,
+            "ret_90d_pct": ret_90d,
+            "ret_1y_pct": ret_1y,
         },
         "benchmark": {
             "symbol": bench_sym,
             "day_change_pct": bench_day_pct,
+            "ret_30d_pct": bench_ret_30d,
+            "ret_ytd_pct": bench_ret_ytd,
         },
+        "risk": {
+            "volatility_annualized_pct": vol_annualized,
+            "drawdown_30d_pct": drawdown_30d,
+            "drawdown_90d_pct": drawdown_90d,
+            "drawdown_1y_pct": drawdown_1y,
+        },
+        "pillar_allocation": {
+            "actual": actual_alloc,
+            "target": {k: round(v * 100, 1) for k, v in target_alloc.items()},
+        },
+        "macro": macro,
         "holdings": holdings_out,
         "attribution": attribution,
         "alerts": alerts,
+        "alert_count": alert_count,
         "watchlist": watchlist_out,
+        "portfolio_series": portfolio_series[-90:],  # last 90 trading days for sparkline
     }
     OUTPUT_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
 
     s = out["summary"]
-    print(f"→ {OUTPUT_PATH.relative_to(ROOT)}  "
-          f"value=NT${s['total_value_twd']:,.0f} "
-          f"pnl={s['total_pnl_pct']:+.2f}% "
-          f"day={s['day_pnl_pct']:+.2f}% "
-          f"alpha={s['alpha_vs_benchmark_pct']:+.2f}%",
+    print(
+        f"→ {OUTPUT_PATH.relative_to(ROOT)}  "
+        f"value=NT${s['total_value_twd']:,.0f} "
+        f"pnl={s['total_pnl_pct']:+.2f}% "
+        f"day={s['day_pnl_pct']:+.2f}% "
+        f"30d={s['ret_30d_pct']}% "
+        f"vol={out['risk']['volatility_annualized_pct']:.1f}% "
+        f"dd30d={out['risk']['drawdown_30d_pct']:.2f}%",
+        file=sys.stderr,
+    )
+    print(f"  pillar actual={actual_alloc}  target={out['risk_profile']['target_allocation']}",
           file=sys.stderr)
-    if alerts["stop_loss"]:
-        print(f"  🔴 stop-loss hit: {[a['symbol'] for a in alerts['stop_loss']]}", file=sys.stderr)
-    if alerts["take_profit"]:
-        print(f"  🟢 take-profit hit: {[a['symbol'] for a in alerts['take_profit']]}", file=sys.stderr)
+    print(f"  alerts: {alert_count} active "
+          f"(stop={len(alerts['stop_loss'])} tp={len(alerts['take_profit'])} "
+          f"conc={len(alerts['concentration'])} pillar={len(alerts['pillar'])} "
+          f"near={len(alerts['nearing_stop'])})",
+          file=sys.stderr)
     return 0
 
 

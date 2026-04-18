@@ -1,16 +1,11 @@
 """
-Fetch daily prices for portfolio + watchlist + benchmark.
+Fetch daily prices + 1-year history for portfolio + watchlist + benchmarks + macro.
 
-Writes prices.json with:
-  {
-    "fetched_at": ISO timestamp,
-    "prices": {
-        "2330.TW": {"close": 2030.0, "prev_close": 2085.0, "currency": "TWD", ...},
-        ...
-    }
-  }
+Writes:
+  prices.json         — latest close / prev close / day change for all tickers
+  price_history.json  — 1-year daily closes keyed by ticker
 
-Uses yfinance for both TW (append .TW) and US stocks. Free, no auth.
+Uses yfinance for TW (.TW, fallback .TWO), US, and macro tickers (^VIX, ^TWII, etc.).
 """
 from __future__ import annotations
 
@@ -20,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import pandas as pd
 import yaml
 import yfinance as yf
 
@@ -27,71 +23,96 @@ ROOT = Path(__file__).resolve().parent
 TAIPEI = ZoneInfo("Asia/Taipei")
 PORTFOLIO_PATH = ROOT / "portfolio.yaml"
 PRICES_PATH = ROOT / "prices.json"
+HISTORY_PATH = ROOT / "price_history.json"
+
+HISTORY_PERIOD = "1y"  # 1-year daily
 
 
 def to_yf_ticker(symbol: str, market: str) -> str:
-    """TW tickers: .TW for TWSE-listed, .TWO for TPEx-listed. Default to .TW."""
+    """TW = .TW default (TPEx fallback handled later)."""
     if market == "TW":
         return f"{symbol}.TW"
     return symbol
 
 
-def _try_history(yf_ticker: str):
-    t = yf.Ticker(yf_ticker)
+def _fetch_history(yf_ticker: str) -> pd.DataFrame | None:
     try:
-        hist = t.history(period="5d", auto_adjust=False)
+        hist = yf.Ticker(yf_ticker).history(period=HISTORY_PERIOD, auto_adjust=False)
         if hist.empty:
-            return None, None
-        return t, hist
+            return None
+        return hist
     except Exception:
-        return None, None
+        return None
 
 
-def fetch_one(yf_ticker: str) -> dict | None:
-    """Fetch close + prev close. For .TW tickers, fall back to .TWO (TPEx)."""
-    t, hist = _try_history(yf_ticker)
+def fetch_one(yf_ticker: str) -> tuple[dict | None, pd.DataFrame | None]:
+    """Fetch latest + 1y history. Fall back to .TWO for TW tickers if .TW fails."""
+    hist = _fetch_history(yf_ticker)
+    actual = yf_ticker
 
     if (hist is None or hist.empty) and yf_ticker.endswith(".TW"):
-        # Try TPEx (上櫃) suffix.
         alt = yf_ticker[:-3] + ".TWO"
-        t, hist = _try_history(alt)
+        hist = _fetch_history(alt)
         if hist is not None and not hist.empty:
-            yf_ticker = alt  # record the one that worked
+            actual = alt
 
     if hist is None or hist.empty:
         print(f"  ⚠️  {yf_ticker}: no history", file=sys.stderr)
-        return None
+        return None, None
 
-    try:
-        close = float(hist["Close"].iloc[-1])
-        prev_close = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else close
-        # Currency from fast_info if available
-        currency = "TWD" if yf_ticker.endswith((".TW", ".TWO")) else "USD"
-        try:
-            fi = t.fast_info
-            currency = getattr(fi, "currency", currency) or currency
-        except Exception:
-            pass
-        day_change = close - prev_close
-        day_change_pct = (day_change / prev_close * 100) if prev_close else 0.0
-        return {
-            "close": round(close, 4),
-            "prev_close": round(prev_close, 4),
-            "day_change": round(day_change, 4),
-            "day_change_pct": round(day_change_pct, 4),
-            "currency": currency,
-            "as_of": hist.index[-1].strftime("%Y-%m-%d"),
-            "yf_ticker": yf_ticker,  # record actual ticker used (may have .TWO fallback)
-        }
-    except Exception as exc:
-        print(f"  ❌  {yf_ticker}: {exc}", file=sys.stderr)
-        return None
+    close = float(hist["Close"].iloc[-1])
+    prev_close = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else close
+    day_change = close - prev_close
+    day_change_pct = (day_change / prev_close * 100) if prev_close else 0.0
+
+    currency = "TWD" if actual.endswith((".TW", ".TWO")) else "USD"
+    if actual == "TWD=X":
+        currency = "TWD"
+    elif actual == "^VIX":
+        currency = "PT"  # points
+
+    latest = {
+        "close": round(close, 4),
+        "prev_close": round(prev_close, 4),
+        "day_change": round(day_change, 4),
+        "day_change_pct": round(day_change_pct, 4),
+        "currency": currency,
+        "as_of": hist.index[-1].strftime("%Y-%m-%d"),
+        "yf_ticker": actual,
+    }
+
+    # 52-week stats + sparkline (last 60 trading days)
+    year = hist.tail(252)
+    latest["high_52w"] = round(float(year["High"].max()), 4)
+    latest["low_52w"] = round(float(year["Low"].min()), 4)
+    rng = latest["high_52w"] - latest["low_52w"]
+    latest["pct_52w"] = round((close - latest["low_52w"]) / rng * 100, 2) if rng else 50.0
+
+    # Tail returns (trading days)
+    def _ret(n: int) -> float | None:
+        if len(hist) <= n:
+            return None
+        past = float(hist["Close"].iloc[-n - 1])
+        return round((close - past) / past * 100, 2) if past else None
+    latest["ret_7d"] = _ret(5)
+    latest["ret_30d"] = _ret(20)
+    latest["ret_90d"] = _ret(60)
+    latest["ret_ytd"] = _ret(len(hist) - 1) if len(hist) > 1 else None  # placeholder
+    # Proper YTD
+    this_year = datetime.now(TAIPEI).year
+    ytd = hist[hist.index.year == this_year]
+    if len(ytd) > 1:
+        y0 = float(ytd["Close"].iloc[0])
+        latest["ret_ytd"] = round((close - y0) / y0 * 100, 2) if y0 else None
+
+    return latest, hist
 
 
 def main() -> int:
     cfg = yaml.safe_load(PORTFOLIO_PATH.read_text(encoding="utf-8"))
-    tickers: dict[str, str] = {}  # yf_ticker -> display symbol
 
+    # Collect tickers in order: holdings, watchlist, benchmarks, macro.
+    tickers: dict[str, str] = {}  # yf_ticker -> display symbol
     for h in cfg.get("holdings", []):
         tickers[to_yf_ticker(h["symbol"], h["market"])] = h["symbol"]
     for w in cfg.get("watchlist", []):
@@ -102,25 +123,48 @@ def main() -> int:
             continue
         market = "TW" if key == "benchmark_tw" else "US"
         tickers.setdefault(to_yf_ticker(sym, market), sym)
+    for m in cfg.get("macro_tickers", []):
+        tickers.setdefault(m, m)
 
-    print(f"[{datetime.now(TAIPEI):%Y-%m-%d %H:%M}] fetching {len(tickers)} tickers…", file=sys.stderr)
+    print(f"[{datetime.now(TAIPEI):%Y-%m-%d %H:%M}] fetching {len(tickers)} tickers + 1y history…",
+          file=sys.stderr)
+
     prices: dict[str, dict] = {}
+    history_out: dict[str, list[dict]] = {}
     for yf_ticker, sym in tickers.items():
-        data = fetch_one(yf_ticker)
-        if data:
-            # Always store under the originally-requested ticker so lookups work,
-            # even if we had to fall back to .TWO.
-            prices[yf_ticker] = {**data, "symbol": sym}
-            actual = data.get("yf_ticker", yf_ticker)
-            suffix_hint = f" (via {actual})" if actual != yf_ticker else ""
-            print(f"  ✓ {yf_ticker}: {data['close']} ({data['day_change_pct']:+.2f}%){suffix_hint}", file=sys.stderr)
+        latest, hist = fetch_one(yf_ticker)
+        if not latest:
+            continue
+        prices[yf_ticker] = {**latest, "symbol": sym}
+        # Downsample history: save last 252 trading days, daily close only
+        tail = hist.tail(252)
+        history_out[yf_ticker] = [
+            {"date": idx.strftime("%Y-%m-%d"), "close": round(float(row["Close"]), 4)}
+            for idx, row in tail.iterrows()
+        ]
+        actual = latest.get("yf_ticker", yf_ticker)
+        hint = f" (via {actual})" if actual != yf_ticker else ""
+        print(
+            f"  ✓ {yf_ticker}: {latest['close']} ({latest['day_change_pct']:+.2f}%) "
+            f"52w pct={latest['pct_52w']:.0f}% ytd={latest.get('ret_ytd') or '—'}{hint}",
+            file=sys.stderr,
+        )
 
-    out = {
-        "fetched_at": datetime.now(TAIPEI).isoformat(),
-        "prices": prices,
-    }
-    PRICES_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"→ wrote {PRICES_PATH.relative_to(ROOT)} with {len(prices)} tickers", file=sys.stderr)
+    PRICES_PATH.write_text(
+        json.dumps({"fetched_at": datetime.now(TAIPEI).isoformat(), "prices": prices},
+                   ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    HISTORY_PATH.write_text(
+        json.dumps({"fetched_at": datetime.now(TAIPEI).isoformat(), "history": history_out},
+                   ensure_ascii=False),
+        encoding="utf-8",
+    )
+    print(
+        f"→ prices.json ({len(prices)} tickers), "
+        f"price_history.json ({sum(len(v) for v in history_out.values())} rows)",
+        file=sys.stderr,
+    )
     return 0
 
 

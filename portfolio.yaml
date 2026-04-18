@@ -1,20 +1,31 @@
-# Your portfolio — edit this file to add/remove/adjust holdings.
-# Shares and cost basis come from your 國泰證券 帳務 screenshot (2026-04-18).
+# Your portfolio. Edit freely — every push / run uses the latest values.
 #
 # Fields per holding:
-#   symbol        TWSE ticker (numbers only, e.g. "2330") or US ticker ("VOO")
+#   symbol        TWSE/TPEx ticker (numbers only, e.g. "2330") or US ticker
 #   name          Display name
-#   shares        Number of shares held
-#   cost_basis    Average cost per share (same currency as market data)
+#   shares        Number of shares
+#   cost_basis    Average cost per share (original currency)
 #   market        "TW" or "US"
-#   stop_loss     (optional) alert if price falls below this
-#   take_profit   (optional) alert if price rises above this
+#   pillar        "growth" | "defense" | "flexibility"  (三柱配置法)
+#   stop_loss     (optional) alert if price ≤ this
+#   take_profit   (optional) alert if price ≥ this
 #
-# Benchmark: 0050 is used as the TW portfolio benchmark (台版 SPY).
-# Alpha = portfolio daily return − benchmark daily return.
+# Benchmarks:
+#   benchmark_tw — 台版 SPY alpha 基準（預設 0050）
+#   benchmark_us — 美股 alpha 基準（預設 VOO）
 
 benchmark_tw: "0050"
 benchmark_us: "VOO"
+
+# Cash sitting in broker account, NT dollars. Included in total value + cash ratio.
+cash_twd: 0
+
+# Risk preferences — fed into the AI so it tunes recommendations
+risk_profile:
+  style: "beginner-growth"     # beginner-growth | balanced | aggressive | defensive
+  target_cash_ratio: 0.10      # 理想現金比例 (0-1)
+  max_single_position: 0.40    # 單一持股佔比警戒上限 (0-1)
+  rebalance_threshold: 0.05    # 偏離超過 5% 就提醒
 
 holdings:
   - symbol: "0050"
@@ -22,29 +33,31 @@ holdings:
     shares: 1200
     cost_basis: 71.76
     market: "TW"
-    # 0050 is itself the benchmark — no stop/target
+    pillar: "growth"
   - symbol: "2330"
     name: "台積電"
     shares: 20
     cost_basis: 1932.5
     market: "TW"
-    stop_loss: 1800     # TSMC breaking 1800 = law of facts gone
-    take_profit: 2500   # outer-resistance zone per 外資 target range
+    pillar: "growth"
+    stop_loss: 1800
+    take_profit: 2500
 
-# Watchlist: stocks you track but don't own yet. Priced daily, but no P&L.
+# Watchlist: priced daily, but no P&L or pillar allocation.
 watchlist:
-  - symbol: "VOO"
-    name: "S&P 500 ETF"
-    market: "US"
-  - symbol: "2303"
-    name: "聯電"
-    market: "TW"
-  - symbol: "3081"
-    name: "聯亞"
-    market: "TW"
-  - symbol: "3324"
-    name: "雙鴻"
-    market: "TW"
-  - symbol: "3017"
-    name: "奇鋐"
-    market: "TW"
+  - { symbol: "VOO",  name: "S&P 500 ETF", market: "US", pillar: "growth" }
+  - { symbol: "2303", name: "聯電",          market: "TW", pillar: "growth" }
+  - { symbol: "3081", name: "聯亞",          market: "TW", pillar: "growth" }
+  - { symbol: "3324", name: "雙鴻",          market: "TW", pillar: "growth" }
+  - { symbol: "3017", name: "奇鋐",          market: "TW", pillar: "growth" }
+
+# Macro tickers (fetched for context, not tradable from here):
+#   ^TWII     台股加權
+#   ^GSPC     S&P 500 指數
+#   ^VIX      VIX 恐慌指數
+#   TWD=X     USD/TWD 匯率
+macro_tickers:
+  - "^TWII"
+  - "^GSPC"
+  - "^VIX"
+  - "TWD=X"
