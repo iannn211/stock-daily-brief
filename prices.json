@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-18T17:30:26.540152+08:00",
+  "fetched_at": "2026-04-18T17:44:14.723185+08:00",
   "prices": {
     "0050.TW": {
       "close": 84.15,
@@ -9,6 +9,13 @@
       "currency": "TWD",
       "as_of": "2026-04-17",
       "yf_ticker": "0050.TW",
+      "high_52w": 85.1,
+      "low_52w": 38.9875,
+      "pct_52w": 97.94,
+      "ret_7d": 4.21,
+      "ret_30d": 8.16,
+      "ret_90d": 20.47,
+      "ret_ytd": 25.69,
       "symbol": "0050"
     },
     "2330.TW": {
@@ -19,6 +26,13 @@
       "currency": "TWD",
       "as_of": "2026-04-17",
       "yf_ticker": "2330.TW",
+      "high_52w": 2100.0,
+      "low_52w": 816.0,
+      "pct_52w": 94.55,
+      "ret_7d": 1.5,
+      "ret_30d": 6.56,
+      "ret_90d": 20.83,
+      "ret_ytd": 28.08,
       "symbol": "2330"
     },
     "VOO": {
@@ -29,6 +43,13 @@
       "currency": "USD",
       "as_of": "2026-04-17",
       "yf_ticker": "VOO",
+      "high_52w": 654.88,
+      "low_52w": 467.33,
+      "pct_52w": 98.88,
+      "ret_7d": 4.51,
+      "ret_30d": 7.59,
+      "ret_90d": 3.57,
+      "ret_ytd": 3.9,
       "symbol": "VOO"
     },
     "2303.TW": {
@@ -39,6 +60,13 @@
       "currency": "TWD",
       "as_of": "2026-04-17",
       "yf_ticker": "2303.TW",
+      "high_52w": 79.7,
+      "low_52w": 40.1,
+      "pct_52w": 83.08,
+      "ret_7d": 17.74,
+      "ret_30d": 19.48,
+      "ret_90d": 32.49,
+      "ret_ytd": 49.9,
       "symbol": "2303"
     },
     "3081.TW": {
@@ -49,6 +77,13 @@
       "currency": "TWD",
       "as_of": "2026-04-17",
       "yf_ticker": "3081.TWO",
+      "high_52w": 2600.0,
+      "low_52w": 220.0,
+      "pct_52w": 100.0,
+      "ret_7d": 12.31,
+      "ret_30d": 80.56,
+      "ret_90d": 324.84,
+      "ret_ytd": 306.25,
       "symbol": "3081"
     },
     "3324.TW": {
@@ -59,6 +94,13 @@
       "currency": "TWD",
       "as_of": "2026-04-17",
       "yf_ticker": "3324.TWO",
+      "high_52w": 1200.0,
+      "low_52w": 430.0,
+      "pct_52w": 78.57,
+      "ret_7d": 4.55,
+      "ret_30d": 0.49,
+      "ret_90d": 7.25,
+      "ret_ytd": 3.5,
       "symbol": "3324"
     },
     "3017.TW": {
@@ -69,7 +111,82 @@
       "currency": "TWD",
       "as_of": "2026-04-17",
       "yf_ticker": "3017.TW",
+      "high_52w": 2515.0,
+      "low_52w": 392.5,
+      "pct_52w": 94.58,
+      "ret_7d": 5.96,
+      "ret_30d": 29.73,
+      "ret_90d": 74.55,
+      "ret_ytd": 64.95,
       "symbol": "3017"
+    },
+    "^TWII": {
+      "close": 36804.3398,
+      "prev_close": 37132.0195,
+      "day_change": -327.6797,
+      "day_change_pct": -0.8825,
+      "currency": "USD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "^TWII",
+      "high_52w": 37145.6602,
+      "low_52w": 18793.4297,
+      "pct_52w": 98.14,
+      "ret_7d": 3.91,
+      "ret_30d": 7.15,
+      "ret_90d": 21.51,
+      "ret_ytd": 25.4,
+      "symbol": "^TWII"
+    },
+    "^GSPC": {
+      "close": 7126.0601,
+      "prev_close": 7041.2798,
+      "day_change": 84.7803,
+      "day_change_pct": 1.204,
+      "currency": "USD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "^GSPC",
+      "high_52w": 7147.52,
+      "low_52w": 5101.6299,
+      "pct_52w": 98.95,
+      "ret_7d": 4.54,
+      "ret_30d": 7.86,
+      "ret_90d": 3.64,
+      "ret_ytd": 3.9,
+      "symbol": "^GSPC"
+    },
+    "^VIX": {
+      "close": 17.48,
+      "prev_close": 17.94,
+      "day_change": -0.46,
+      "day_change_pct": -2.5641,
+      "currency": "PT",
+      "as_of": "2026-04-17",
+      "yf_ticker": "^VIX",
+      "high_52w": 35.75,
+      "low_52w": 13.38,
+      "pct_52w": 18.33,
+      "ret_7d": -9.1,
+      "ret_30d": -27.35,
+      "ret_90d": 3.43,
+      "ret_ytd": 20.47,
+      "symbol": "^VIX"
+    },
+    "TWD=X": {
+      "close": 31.464,
+      "prev_close": 31.587,
+      "day_change": -0.123,
+      "day_change_pct": -0.3894,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "TWD=X",
+      "high_52w": 32.769,
+      "low_52w": 27.891,
+      "pct_52w": 73.25,
+      "ret_7d": -0.83,
+      "ret_30d": -1.06,
+      "ret_90d": -0.38,
+      "ret_ytd": 0.51,
+      "symbol": "TWD=X"
     }
   }
 }

@@ -1,98 +1,350 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="dark" data-density="comfortable" data-accent="blue">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stock Daily Brief</title>
+<meta name="color-scheme" content="dark">
+<title>Stock AI Desk</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="wrap">
-    <h1>📈 Stock Daily Brief</h1>
-    <p class="subtitle">台股+美股每日情報簡報 · 共 1 份 · 最新 2026-04-18</p>
+    <div class="title-row">
+      <h1>📈 Stock AI Desk</h1>
+      <span class="live-dot accent"></span>
+    </div>
+    <p class="subtitle muted">台股+美股每日情報簡報 · 共 1 份 · 最新 2026-04-18</p>
   </div>
 </header>
 
+<section class="macro-ribbon wrap">
+          <div class="macro-cell">
+            <div class="macro-label">台股加權 ^TWII</div>
+            <div class="macro-val mono tnum">36804</div>
+            <div class="macro-delta dn mono">-0.88%</div>
+            <span class="macro-ytd up">YTD +25.4%</span>
+          </div>
+          <div class="macro-cell">
+            <div class="macro-label">S&P 500</div>
+            <div class="macro-val mono tnum">7126</div>
+            <div class="macro-delta up mono">+1.20%</div>
+            <span class="macro-ytd up">YTD +3.9%</span>
+          </div>
+          <div class="macro-cell">
+            <div class="macro-label">VIX (恐慌)</div>
+            <div class="macro-val mono tnum">17.48</div>
+            <div class="macro-delta dn mono">-2.56%</div>
+            
+          </div>
+          <div class="macro-cell">
+            <div class="macro-label">USD/TWD</div>
+            <div class="macro-val mono tnum">31.464</div>
+            <div class="macro-delta dn mono">-0.39%</div>
+            
+          </div></section>
+
 <section class="pf-card wrap">
-  <div class="pf-head">
-    <h2>📊 投資組合</h2>
-    <div class="pf-asof">2026-04-18 17:30</div>
+  <div class="pf-top">
+    <div class="pf-top-l">
+      <div class="pf-title-row">
+        <h2>📊 投資組合</h2>
+        <span class="live-dot"></span>
+      </div>
+      <div class="pf-asof muted mono">AS OF 2026-04-18 17:44 · beginner-growth</div>
+    </div>
+    <div class="pf-top-r"><svg class="sparkline" viewBox="0 0 340 48" width="340" height="48" preserveAspectRatio="none"><polygon points="2.0 46 2.0 45.0 5.8 44.3 9.6 46.0 13.3 45.3 17.1 44.1 20.9 44.4 24.7 43.4 28.4 41.4 32.2 41.9 36.0 40.8 39.8 42.4 43.5 42.1 47.3 43.5 51.1 44.5 54.9 45.1 58.6 45.1 62.4 44.3 66.2 42.4 70.0 41.5 73.7 41.2 77.5 40.2 81.3 38.7 85.1 39.1 88.8 37.9 92.6 35.4 96.4 30.4 100.2 28.5 103.9 29.8 107.7 29.3 111.5 29.7 115.3 28.9 119.0 28.0 122.8 28.0 126.6 28.5 130.4 25.7 134.1 24.6 137.9 24.2 141.7 25.9 145.5 25.6 149.2 24.8 153.0 25.1 156.8 23.6 160.6 21.3 164.3 22.2 168.1 24.2 171.9 25.8 175.7 23.3 179.4 23.7 183.2 25.2 187.0 25.0 190.8 21.7 194.5 18.4 198.3 15.5 202.1 15.5 205.9 11.6 209.6 8.4 213.4 8.8 217.2 10.2 221.0 13.1 224.7 18.5 228.5 15.5 232.3 16.4 236.1 22.2 239.8 19.4 243.6 13.7 247.4 16.9 251.2 18.1 254.9 19.0 258.7 17.1 262.5 14.9 266.3 18.4 270.0 18.7 273.8 21.4 277.6 21.2 281.4 18.2 285.1 18.8 288.9 20.3 292.7 22.5 296.5 24.9 300.2 18.9 304.0 21.8 307.8 19.0 311.6 12.2 315.3 12.2 319.1 9.2 322.9 9.6 326.7 5.0 330.4 3.2 334.2 2.0 338.0 4.2 338.0 46" fill="var(--up)" opacity="0.12"/><path d="M 2.0 45.0 L 5.8 44.3 L 9.6 46.0 L 13.3 45.3 L 17.1 44.1 L 20.9 44.4 L 24.7 43.4 L 28.4 41.4 L 32.2 41.9 L 36.0 40.8 L 39.8 42.4 L 43.5 42.1 L 47.3 43.5 L 51.1 44.5 L 54.9 45.1 L 58.6 45.1 L 62.4 44.3 L 66.2 42.4 L 70.0 41.5 L 73.7 41.2 L 77.5 40.2 L 81.3 38.7 L 85.1 39.1 L 88.8 37.9 L 92.6 35.4 L 96.4 30.4 L 100.2 28.5 L 103.9 29.8 L 107.7 29.3 L 111.5 29.7 L 115.3 28.9 L 119.0 28.0 L 122.8 28.0 L 126.6 28.5 L 130.4 25.7 L 134.1 24.6 L 137.9 24.2 L 141.7 25.9 L 145.5 25.6 L 149.2 24.8 L 153.0 25.1 L 156.8 23.6 L 160.6 21.3 L 164.3 22.2 L 168.1 24.2 L 171.9 25.8 L 175.7 23.3 L 179.4 23.7 L 183.2 25.2 L 187.0 25.0 L 190.8 21.7 L 194.5 18.4 L 198.3 15.5 L 202.1 15.5 L 205.9 11.6 L 209.6 8.4 L 213.4 8.8 L 217.2 10.2 L 221.0 13.1 L 224.7 18.5 L 228.5 15.5 L 232.3 16.4 L 236.1 22.2 L 239.8 19.4 L 243.6 13.7 L 247.4 16.9 L 251.2 18.1 L 254.9 19.0 L 258.7 17.1 L 262.5 14.9 L 266.3 18.4 L 270.0 18.7 L 273.8 21.4 L 277.6 21.2 L 281.4 18.2 L 285.1 18.8 L 288.9 20.3 L 292.7 22.5 L 296.5 24.9 L 300.2 18.9 L 304.0 21.8 L 307.8 19.0 L 311.6 12.2 L 315.3 12.2 L 319.1 9.2 L 322.9 9.6 L 326.7 5.0 L 330.4 3.2 L 334.2 2.0 L 338.0 4.2" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
   </div>
 
-  <div class="pf-metrics">
-    <div class="pf-metric">
-      <div class="pf-label">總市值</div>
-      <div class="pf-val">NT$141,580</div>
+  <div class="pf-hero">
+    <div class="pf-hero-main">
+      <div class="pf-hero-lbl muted">總市值</div>
+      <div class="pf-hero-val mono tnum">NT$141,580</div>
+      <div class="pf-hero-sub muted mono">現金 0.0%</div>
     </div>
-    <div class="pf-metric">
-      <div class="pf-label">今日損益</div>
-      <div class="pf-val down">-NT$2,120 <span class="pf-sub">(-1.48%)</span></div>
-    </div>
-    <div class="pf-metric">
-      <div class="pf-label">總損益</div>
-      <div class="pf-val up">+NT$16,818 <span class="pf-sub">(+13.48%)</span></div>
+    <div class="pf-hero-side">
+      <div class="pf-metric">
+        <div class="muted">今日</div>
+        <div class="mono tnum dn">-NT$2,120</div>
+        <div class="mono tnum small dn">-1.48%</div>
+      </div>
+      <div class="pf-metric">
+        <div class="muted">總損益</div>
+        <div class="mono tnum up">+NT$16,818</div>
+        <div class="mono tnum small up">+13.48%</div>
+      </div>
+      <div class="pf-metric">
+        <div class="muted">vs 0050</div>
+        <div class="mono tnum muted small">-1.00%</div>
+        <div class="mono tnum alpha-val dn">α -0.48%</div>
+      </div>
     </div>
   </div>
 
-  <div class="pf-alpha">
-    vs <strong>0050</strong> <span class="down">(-1.00%)</span>
-    → alpha <span class="down"><strong>-0.48%</strong></span>
+  <div class="pf-returns"><div class="ret-cell"><div class="ret-lbl">7日</div><div class="mono tnum up">+3.42%</div></div><div class="ret-cell"><div class="ret-lbl">30日</div><div class="mono tnum up">+7.70%</div></div><div class="ret-cell"><div class="ret-lbl">90日</div><div class="mono tnum up">+20.58%</div></div><div class="ret-cell"><div class="ret-lbl">1年</div><div class="mono tnum up">+117.5%</div></div></div>
+
+  <div class="pf-split">
+    <div class="pf-pillars">
+      <div class="pf-sub-head">三柱配置</div>
+      
+          <div class="pillar-row">
+            <div class="pillar-head">
+              <span class="pillar-dot p-growth"></span>
+              <span class="pillar-name">成長核心</span>
+              <span class="pillar-tgt muted mono">目標 70%</span>
+              <span class="pillar-diff mono up">+30pp</span>
+            </div>
+            <div class="pillar-bar"><div class="pillar-fill p-growth" style="width:100%"></div></div>
+            <div class="pillar-val mono tnum">100%</div>
+          </div>
+        
+          <div class="pillar-row">
+            <div class="pillar-head">
+              <span class="pillar-dot p-defense"></span>
+              <span class="pillar-name">防禦對沖</span>
+              <span class="pillar-tgt muted mono">目標 20%</span>
+              <span class="pillar-diff mono dn">-20pp</span>
+            </div>
+            <div class="pillar-bar"><div class="pillar-fill p-defense" style="width:0%"></div></div>
+            <div class="pillar-val mono tnum">0%</div>
+          </div>
+        
+          <div class="pillar-row">
+            <div class="pillar-head">
+              <span class="pillar-dot p-flex"></span>
+              <span class="pillar-name">機動倉位</span>
+              <span class="pillar-tgt muted mono">目標 10%</span>
+              <span class="pillar-diff mono dn">-10pp</span>
+            </div>
+            <div class="pillar-bar"><div class="pillar-fill p-flex" style="width:0%"></div></div>
+            <div class="pillar-val mono tnum">0%</div>
+          </div>
+        
+    </div>
+    <div class="pf-risk">
+      <div class="pf-sub-head">風險指標</div>
+      <div class="risk-grid">
+        <div class="risk-cell">
+          <div class="muted">年化波動</div>
+          <div class="mono tnum val-md">30.9%</div>
+        </div>
+        <div class="risk-cell">
+          <div class="muted">30日回撤</div>
+          <div class="mono tnum val-md dn">-7.18%</div>
+        </div>
+        <div class="risk-cell">
+          <div class="muted">90日回撤</div>
+          <div class="mono tnum val-md dn">-11.34%</div>
+        </div>
+        <div class="risk-cell">
+          <div class="muted">1年回撤</div>
+          <div class="mono tnum val-md dn">-11.34%</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="pf-attr">
-    <div class="pf-attr-row"><span class="pf-attr-lbl">正貢獻</span><span class="chip muted">無</span></div>
-    <div class="pf-attr-row"><span class="pf-attr-lbl">負貢獻</span><span class="chip down">2330 -NT$1,100</span><span class="chip down">0050 -NT$1,020</span></div>
+    <div class="pf-sub-head small">今日歸因</div>
+    <div class="attr-row"><span class="attr-lbl muted">正貢獻</span><span class="chip chip-muted">無</span></div>
+    <div class="attr-row"><span class="attr-lbl muted">負貢獻</span><a class="chip chip-dn" href="holdings/2330.html">2330 -NT$1,100</a><a class="chip chip-dn" href="holdings/0050.html">0050 -NT$1,020</a></div>
   </div>
 
   
+<div class="pf-alerts">
+  <div class="pf-sub-head with-badge">
+    ⚠️ 組合警報 <span class="badge-count">4 ACTIVE</span>
+  </div>
+  <div class="alert-list"><div class="alert-item alert-amber">🟠 <strong>單一持股過重</strong> 0050：佔比 71.3% &gt; 上限 40%</div><div class="alert-item alert-purple">🟣 <strong>三柱失衡</strong> 成長核心：現 100% vs 目標 70% (差 +30.0pp)</div><div class="alert-item alert-purple">🟣 <strong>三柱失衡</strong> 防禦對沖：現 0% vs 目標 20% (差 -20.0pp)</div><div class="alert-item alert-purple">🟣 <strong>三柱失衡</strong> 機動倉位：現 0% vs 目標 10% (差 -10.0pp)</div></div>
+</div>
 
-  <details class="pf-details">
-    <summary>持股明細 (2)</summary>
-    <table>
-      <thead><tr><th>標的</th><th>股數</th><th>成本</th><th>現價</th><th>今日</th><th>市值</th><th>損益</th><th>%</th></tr></thead>
-      <tbody><tr><td><strong>0050</strong> 元大台灣50</td><td class="num">1,200</td><td class="num">71.76</td><td class="num">84.15</td><td class="num down">-1.00%</td><td class="num">NT$100,980</td><td class="num up">+NT$14,868</td><td class="num up">+17.27%</td></tr><tr><td><strong>2330</strong> 台積電</td><td class="num">20</td><td class="num">1932.50</td><td class="num">2030.00</td><td class="num down">-2.64%</td><td class="num">NT$40,600</td><td class="num up">+NT$1,950</td><td class="num up">+5.05%</td></tr></tbody>
-    </table>
-  </details>
-
-  <details class="pf-details">
-    <summary>追蹤清單 (5)</summary>
-    <table>
-      <thead><tr><th>標的</th><th>現價</th><th>今日</th><th>幣別</th></tr></thead>
-      <tbody><tr><td><strong>VOO</strong> S&amp;P 500 ETF</td><td class="num">652.78</td><td class="num up">+1.23%</td><td class="num muted">USD</td></tr><tr><td><strong>2303</strong> 聯電</td><td class="num">73.00</td><td class="num up">+6.88%</td><td class="num muted">TWD</td></tr><tr><td><strong>3081</strong> 聯亞</td><td class="num">2600.00</td><td class="num up">+9.94%</td><td class="num muted">TWD</td></tr><tr><td><strong>3324</strong> 雙鴻</td><td class="num">1035.00</td><td class="num down">-0.96%</td><td class="num muted">TWD</td></tr><tr><td><strong>3017</strong> 奇鋐</td><td class="num">2400.00</td><td class="num down">-1.64%</td><td class="num muted">TWD</td></tr></tbody>
-    </table>
-  </details>
 </section>
 
-<div class="search-wrap wrap">
-  <input type="search" id="search" placeholder="🔍 搜尋日期、產業標籤..." autocomplete="off">
-</div>
-<main id="brief-list" class="grid wrap">
 
-        <a class="card" href="briefs/2026-04-18.html">
-          <div class="card-top">
-            <div class="card-date">2026-04-18</div>
-            <div class="card-day">週六 · Sat</div>
+<section class="holdings-grid wrap">
+  <div class="section-head">
+    <h2>💼 持股明細</h2>
+    <span class="muted small">2 檔</span>
+  </div>
+  <div class="hgrid">
+        <a class="holding-card" href="holdings/0050.html">
+          <div class="hc-head">
+            <div>
+              <div class="hc-sym mono">0050</div>
+              <div class="hc-name muted small">元大台灣50</div>
+            </div>
+            <span class="pillar-dot p-growth" title="成長核心"></span>
           </div>
-          <div class="card-count">349 則新聞</div>
-          <div class="card-tags"><span class="tag">2330 台積電</span><span class="tag">0050 元大台灣50</span><span class="tag">半導體代工</span><span class="tag">IC 設計</span><span class="tag">AI 伺服器 / CoWoS</span><span class="tag">光通訊</span></div>
-          <div class="card-link">看完整分析 →</div>
+          <div class="hc-price-row">
+            <span class="mono tnum val-md">84.15</span>
+            <span class="mono tnum small dn">-1.00%</span>
+          </div>
+          <svg class="sparkline" viewBox="0 0 120 28" width="120" height="28" preserveAspectRatio="none"><polygon points="2.0 26 2.0 16.4 6.0 17.5 10.0 23.6 14.0 20.6 18.0 14.9 22.0 17.9 26.0 19.2 30.0 19.8 34.0 17.8 38.0 15.7 42.0 19.1 46.0 19.3 50.0 22.4 54.0 22.1 58.0 18.7 62.0 19.5 66.0 21.0 70.0 23.1 74.0 26.0 78.0 20.1 82.0 23.0 86.0 20.4 90.0 13.0 94.0 13.1 98.0 10.1 102.0 10.3 106.0 5.6 110.0 3.6 114.0 2.0 118.0 3.6 118.0 26" fill="var(--up)" opacity="0.12"/><path d="M 2.0 16.4 L 6.0 17.5 L 10.0 23.6 L 14.0 20.6 L 18.0 14.9 L 22.0 17.9 L 26.0 19.2 L 30.0 19.8 L 34.0 17.8 L 38.0 15.7 L 42.0 19.1 L 46.0 19.3 L 50.0 22.4 L 54.0 22.1 L 58.0 18.7 L 62.0 19.5 L 66.0 21.0 L 70.0 23.1 L 74.0 26.0 L 78.0 20.1 L 82.0 23.0 L 86.0 20.4 L 90.0 13.0 L 94.0 13.1 L 98.0 10.1 L 102.0 10.3 L 106.0 5.6 L 110.0 3.6 L 114.0 2.0 L 118.0 3.6" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <div class="mini-row">
+            <span class="muted">市值</span><span class="mono tnum">NT$100,980</span>
+          </div>
+          <div class="mini-row">
+            <span class="muted">損益</span>
+            <span class="mono tnum up">+NT$14,868 (+17.27%)</span>
+          </div>
+          <div class="mini-row">
+            <span class="muted">52w</span>
+            <span class="mono tnum">98%位階</span>
+          </div>
+          
         </a>
-</main>
+        <a class="holding-card" href="holdings/2330.html">
+          <div class="hc-head">
+            <div>
+              <div class="hc-sym mono">2330</div>
+              <div class="hc-name muted small">台積電</div>
+            </div>
+            <span class="pillar-dot p-growth" title="成長核心"></span>
+          </div>
+          <div class="hc-price-row">
+            <span class="mono tnum val-md">2030.00</span>
+            <span class="mono tnum small dn">-2.64%</span>
+          </div>
+          <svg class="sparkline" viewBox="0 0 120 28" width="120" height="28" preserveAspectRatio="none"><polygon points="2.0 26 2.0 15.7 6.0 16.4 10.0 22.3 14.0 19.4 18.0 12.7 22.0 16.8 26.0 18.2 30.0 19.7 34.0 17.9 38.0 15.3 42.0 19.4 46.0 20.1 50.0 22.3 54.0 22.3 58.0 19.7 62.0 20.1 66.0 21.6 70.0 24.5 74.0 26.0 78.0 19.0 82.0 22.3 86.0 18.6 90.0 12.0 94.0 11.6 98.0 8.3 102.0 9.0 106.0 4.2 110.0 2.4 114.0 2.0 118.0 6.1 118.0 26" fill="var(--up)" opacity="0.12"/><path d="M 2.0 15.7 L 6.0 16.4 L 10.0 22.3 L 14.0 19.4 L 18.0 12.7 L 22.0 16.8 L 26.0 18.2 L 30.0 19.7 L 34.0 17.9 L 38.0 15.3 L 42.0 19.4 L 46.0 20.1 L 50.0 22.3 L 54.0 22.3 L 58.0 19.7 L 62.0 20.1 L 66.0 21.6 L 70.0 24.5 L 74.0 26.0 L 78.0 19.0 L 82.0 22.3 L 86.0 18.6 L 90.0 12.0 L 94.0 11.6 L 98.0 8.3 L 102.0 9.0 L 106.0 4.2 L 110.0 2.4 L 114.0 2.0 L 118.0 6.1" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <div class="mini-row">
+            <span class="muted">市值</span><span class="mono tnum">NT$40,600</span>
+          </div>
+          <div class="mini-row">
+            <span class="muted">損益</span>
+            <span class="mono tnum up">+NT$1,950 (+5.05%)</span>
+          </div>
+          <div class="mini-row">
+            <span class="muted">52w</span>
+            <span class="mono tnum">95%位階</span>
+          </div>
+          <div class="mini-row muted"><span>距停損</span><span class="mono tnum">+12.8%</span></div>
+        </a></div>
+
+  <div class="section-head mt">
+    <h2>👁️ 追蹤清單</h2>
+    <span class="muted small">5 檔</span>
+  </div>
+  <div class="wgrid">
+        <a class="watch-card" href="holdings/VOO.html">
+          <div class="wc-head">
+            <span class="mono">VOO</span>
+            <span class="muted small">S&amp;P 500 ETF</span>
+          </div>
+          <div class="wc-price">
+            <span class="mono tnum">652.78</span>
+            <span class="mono tnum small up">+1.23%</span>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 24" width="100" height="24" preserveAspectRatio="none"><polygon points="2.0 22 2.0 11.6 5.3 10.1 8.6 10.4 11.9 10.6 15.2 13.2 18.6 14.2 21.9 12.5 25.2 12.0 28.5 14.4 31.8 14.8 35.1 17.3 38.4 15.5 41.7 16.0 45.0 15.1 48.3 18.1 51.7 21.4 55.0 22.0 58.3 17.4 61.6 16.1 64.9 15.9 68.2 15.1 71.5 15.0 74.8 10.8 78.1 9.7 81.4 9.8 84.8 8.1 88.1 6.0 91.4 4.6 94.7 4.2 98.0 2.0 98.0 22" fill="var(--up)" opacity="0.12"/><path d="M 2.0 11.6 L 5.3 10.1 L 8.6 10.4 L 11.9 10.6 L 15.2 13.2 L 18.6 14.2 L 21.9 12.5 L 25.2 12.0 L 28.5 14.4 L 31.8 14.8 L 35.1 17.3 L 38.4 15.5 L 41.7 16.0 L 45.0 15.1 L 48.3 18.1 L 51.7 21.4 L 55.0 22.0 L 58.3 17.4 L 61.6 16.1 L 64.9 15.9 L 68.2 15.1 L 71.5 15.0 L 74.8 10.8 L 78.1 9.7 L 81.4 9.8 L 84.8 8.1 L 88.1 6.0 L 91.4 4.6 L 94.7 4.2 L 98.0 2.0" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <div class="mini-row muted">
+            <span>YTD <span class="up">+3.9%</span></span>
+            <span>52w <span class="mono">99%</span></span>
+          </div>
+        </a>
+        
+        <a class="watch-card" href="holdings/2303.html">
+          <div class="wc-head">
+            <span class="mono">2303</span>
+            <span class="muted small">聯電</span>
+          </div>
+          <div class="wc-price">
+            <span class="mono tnum">73.00</span>
+            <span class="mono tnum small up">+6.88%</span>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 24" width="100" height="24" preserveAspectRatio="none"><polygon points="2.0 22 2.0 13.2 5.3 13.3 8.6 15.7 11.9 15.0 15.2 13.1 18.6 14.8 21.9 15.9 25.2 14.9 28.5 14.7 31.8 14.3 35.1 16.7 38.4 17.7 41.7 18.8 45.0 19.0 48.3 16.3 51.7 17.3 55.0 17.7 58.3 18.5 61.6 19.0 64.9 18.1 68.2 22.0 71.5 17.2 74.8 15.1 78.1 15.4 81.4 13.3 84.8 15.3 88.1 15.7 91.4 13.2 94.7 6.8 98.0 2.0 98.0 22" fill="var(--up)" opacity="0.12"/><path d="M 2.0 13.2 L 5.3 13.3 L 8.6 15.7 L 11.9 15.0 L 15.2 13.1 L 18.6 14.8 L 21.9 15.9 L 25.2 14.9 L 28.5 14.7 L 31.8 14.3 L 35.1 16.7 L 38.4 17.7 L 41.7 18.8 L 45.0 19.0 L 48.3 16.3 L 51.7 17.3 L 55.0 17.7 L 58.3 18.5 L 61.6 19.0 L 64.9 18.1 L 68.2 22.0 L 71.5 17.2 L 74.8 15.1 L 78.1 15.4 L 81.4 13.3 L 84.8 15.3 L 88.1 15.7 L 91.4 13.2 L 94.7 6.8 L 98.0 2.0" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <div class="mini-row muted">
+            <span>YTD <span class="up">+49.9%</span></span>
+            <span>52w <span class="mono">83%</span></span>
+          </div>
+        </a>
+        
+        <a class="watch-card" href="holdings/3081.html">
+          <div class="wc-head">
+            <span class="mono">3081</span>
+            <span class="muted small">聯亞</span>
+          </div>
+          <div class="wc-price">
+            <span class="mono tnum">2600.00</span>
+            <span class="mono tnum small up">+9.94%</span>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 24" width="100" height="24" preserveAspectRatio="none"><polygon points="2.0 22 2.0 21.8 5.3 19.6 8.6 22.0 11.9 19.8 15.2 18.7 18.6 20.6 21.9 19.8 25.2 19.6 28.5 22.0 31.8 20.6 35.1 19.0 38.4 17.4 41.7 19.9 45.0 21.2 48.3 19.0 51.7 16.6 55.0 16.1 58.3 16.2 61.6 18.4 64.9 15.9 68.2 14.4 71.5 11.5 74.8 11.0 78.1 9.9 81.4 6.6 84.8 6.5 88.1 8.8 91.4 6.6 94.7 5.8 98.0 2.0 98.0 22" fill="var(--up)" opacity="0.12"/><path d="M 2.0 21.8 L 5.3 19.6 L 8.6 22.0 L 11.9 19.8 L 15.2 18.7 L 18.6 20.6 L 21.9 19.8 L 25.2 19.6 L 28.5 22.0 L 31.8 20.6 L 35.1 19.0 L 38.4 17.4 L 41.7 19.9 L 45.0 21.2 L 48.3 19.0 L 51.7 16.6 L 55.0 16.1 L 58.3 16.2 L 61.6 18.4 L 64.9 15.9 L 68.2 14.4 L 71.5 11.5 L 74.8 11.0 L 78.1 9.9 L 81.4 6.6 L 84.8 6.5 L 88.1 8.8 L 91.4 6.6 L 94.7 5.8 L 98.0 2.0" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <div class="mini-row muted">
+            <span>YTD <span class="up">+306.2%</span></span>
+            <span>52w <span class="mono">100%</span></span>
+          </div>
+        </a>
+        
+        <a class="watch-card" href="holdings/3324.html">
+          <div class="wc-head">
+            <span class="mono">3324</span>
+            <span class="muted small">雙鴻</span>
+          </div>
+          <div class="wc-price">
+            <span class="mono tnum">1035.00</span>
+            <span class="mono tnum small dn">-0.96%</span>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 24" width="100" height="24" preserveAspectRatio="none"><polygon points="2.0 22 2.0 11.6 5.3 10.5 8.6 20.4 11.9 15.8 15.2 6.2 18.6 4.1 21.9 3.6 25.2 5.7 28.5 4.1 31.8 6.2 35.1 2.0 38.4 2.5 41.7 8.8 45.0 8.8 48.3 5.7 51.7 10.9 55.0 10.1 58.3 13.9 61.6 22.0 64.9 17.7 68.2 18.8 71.5 17.9 74.8 8.8 78.1 10.5 81.4 10.4 84.8 15.6 88.1 13.0 91.4 12.3 94.7 4.6 98.0 5.7 98.0 22" fill="var(--up)" opacity="0.12"/><path d="M 2.0 11.6 L 5.3 10.5 L 8.6 20.4 L 11.9 15.8 L 15.2 6.2 L 18.6 4.1 L 21.9 3.6 L 25.2 5.7 L 28.5 4.1 L 31.8 6.2 L 35.1 2.0 L 38.4 2.5 L 41.7 8.8 L 45.0 8.8 L 48.3 5.7 L 51.7 10.9 L 55.0 10.1 L 58.3 13.9 L 61.6 22.0 L 64.9 17.7 L 68.2 18.8 L 71.5 17.9 L 74.8 8.8 L 78.1 10.5 L 81.4 10.4 L 84.8 15.6 L 88.1 13.0 L 91.4 12.3 L 94.7 4.6 L 98.0 5.7" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <div class="mini-row muted">
+            <span>YTD <span class="up">+3.5%</span></span>
+            <span>52w <span class="mono">79%</span></span>
+          </div>
+        </a>
+        
+        <a class="watch-card" href="holdings/3017.html">
+          <div class="wc-head">
+            <span class="mono">3017</span>
+            <span class="muted small">奇鋐</span>
+          </div>
+          <div class="wc-price">
+            <span class="mono tnum">2400.00</span>
+            <span class="mono tnum small dn">-1.64%</span>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 24" width="100" height="24" preserveAspectRatio="none"><polygon points="2.0 22 2.0 18.0 5.3 17.4 8.6 22.0 11.9 21.2 15.2 17.0 18.6 16.6 21.9 16.8 25.2 17.7 28.5 15.8 31.8 17.2 35.1 13.0 38.4 12.1 41.7 13.5 45.0 14.8 48.3 10.8 51.7 6.3 55.0 8.3 58.3 9.9 61.6 13.6 64.9 10.5 68.2 11.5 71.5 12.6 74.8 7.4 78.1 7.3 81.4 6.5 84.8 8.2 88.1 5.4 91.4 5.0 94.7 2.0 98.0 3.0 98.0 22" fill="var(--up)" opacity="0.12"/><path d="M 2.0 18.0 L 5.3 17.4 L 8.6 22.0 L 11.9 21.2 L 15.2 17.0 L 18.6 16.6 L 21.9 16.8 L 25.2 17.7 L 28.5 15.8 L 31.8 17.2 L 35.1 13.0 L 38.4 12.1 L 41.7 13.5 L 45.0 14.8 L 48.3 10.8 L 51.7 6.3 L 55.0 8.3 L 58.3 9.9 L 61.6 13.6 L 64.9 10.5 L 68.2 11.5 L 71.5 12.6 L 74.8 7.4 L 78.1 7.3 L 81.4 6.5 L 84.8 8.2 L 88.1 5.4 L 91.4 5.0 L 94.7 2.0 L 98.0 3.0" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <div class="mini-row muted">
+            <span>YTD <span class="up">+65.0%</span></span>
+            <span>52w <span class="mono">95%</span></span>
+          </div>
+        </a>
+        </div>
+</section>
+
+
+<section class="wrap briefs-section">
+  <div class="section-head">
+    <h2>🗞️ 歷史 Brief</h2>
+    <span class="muted small">1 份</span>
+  </div>
+  <input type="search" id="search" placeholder="🔍 搜尋日期、產業標籤..." autocomplete="off" class="search-box">
+  <div class="briefs-grid" id="brief-list">
+        <a class="brief-card" href="briefs/2026-04-18.html">
+          <div class="bc-top">
+            <div>
+              <div class="bc-date mono">2026-04-18</div>
+              <div class="bc-day muted small">週六 · Sat</div>
+            </div>
+            <span class="ai-badge">🤖 AI 已分析</span>
+          </div>
+          <div class="bc-count muted small">346 則新聞</div>
+          <div class="bc-tags"><span class="chip chip-muted small">2330 台積電</span><span class="chip chip-muted small">0050 元大台灣50</span><span class="chip chip-muted small">半導體代工</span><span class="chip chip-muted small">IC 設計</span><span class="chip chip-muted small">AI 伺服器 / CoWoS</span></div>
+          <div class="bc-link">看完整分析 →</div>
+        </a></div>
+</section>
+
 <script>
 const q = document.getElementById('search');
-const cards = document.querySelectorAll('.card');
-q.addEventListener('input', () => {
-  const t = q.value.toLowerCase().trim();
-  cards.forEach(c => {
-    c.style.display = !t || c.textContent.toLowerCase().includes(t) ? '' : 'none';
+const cards = document.querySelectorAll('.brief-card');
+if (q) {
+  q.addEventListener('input', () => {
+    const t = q.value.toLowerCase().trim();
+    cards.forEach(c => {
+      c.style.display = !t || c.textContent.toLowerCase().includes(t) ? '' : 'none';
+    });
   });
-});
+}
 </script>
 
-<footer>
-  <p>生成於 2026-04-18 17:30 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">原始碼</a></p>
+<footer class="wrap">
+  <p>生成於 2026-04-18 17:44 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>
