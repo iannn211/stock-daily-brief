@@ -1102,11 +1102,115 @@ def render_briefs_table(briefs: list[dict]) -> str:
 '''
 
 
-def render_daily_hero(latest_brief: dict | None, analysis: dict | None) -> str:
-    """Prominent 'today's AI take' card — always visible above the chart.
+def render_market_mood(pf: dict, analysis: dict | None) -> str:
+    """Fear & Greed donut + VIX + 4 indices mini-grid (GUSHI MarketMoodMini)."""
+    if not pf:
+        return ""
+    mp = (analysis or {}).get("market_pulse", {}) if analysis else {}
+    fg = mp.get("fear_greed_score")
+    fg_label = mp.get("fear_greed_label", "")
+    macro = pf.get("macro", {})
 
-    Shows: market pulse one-liner + top green action + 3 stock picks preview.
-    Anchors to AI tab + links to full brief for more.
+    # Donut stroke-based on value position
+    pct = max(0, min(100, fg)) if fg is not None else 50
+    fg_color = (
+        "var(--dn)" if pct < 30 else
+        "var(--amber)" if pct < 45 else
+        "var(--accent)" if pct < 55 else
+        "var(--amber)" if pct < 75 else
+        "var(--up)"
+    )
+    r, stroke = 26, 6
+    circ = 2 * 3.14159 * r
+
+    donut = f'''
+    <div class="mood-donut">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="{r}" fill="none" stroke="var(--bg-3)" stroke-width="{stroke}"/>
+        <circle cx="32" cy="32" r="{r}" fill="none" stroke="{fg_color}" stroke-width="{stroke}"
+                stroke-linecap="round" stroke-dasharray="{circ:.2f}" stroke-dashoffset="{circ * (1 - pct/100):.2f}"
+                transform="rotate(-90 32 32)"/>
+        <text x="32" y="37" text-anchor="middle" font-family="var(--font-mono)" font-size="18" font-weight="700" fill="var(--tx-1)">{pct}</text>
+      </svg>
+    </div>''' if fg is not None else '<div class="mood-donut muted small">—</div>'
+
+    def _cell(label, data, fmt="{:.1f}"):
+        close = data.get("close")
+        if close is None:
+            return ""
+        day = data.get("day_change_pct") or 0
+        return f'''
+        <div class="mood-mini-cell">
+          <div class="mood-mini-lbl mono">{label}</div>
+          <div class="mono tnum mood-mini-val">{fmt.format(close)}</div>
+          <div class="mono tnum small {_cls(day)}">{_fmt_pct(day, 2)}</div>
+        </div>'''
+
+    cells = [
+        _cell("加權", macro.get("twii", {}), "{:.0f}"),
+        _cell("S&P", macro.get("spx", {}), "{:.0f}"),
+        _cell("VIX", macro.get("vix", {}), "{:.2f}"),
+        _cell("TWD", macro.get("usdtwd", {}), "{:.3f}"),
+    ]
+
+    return f'''
+<div class="mood-panel">
+  <div class="mood-head">
+    <div>
+      <div class="mood-title">MARKET MOOD</div>
+      <div class="mood-sub muted small">Fear & Greed · VIX · 指數</div>
+    </div>
+  </div>
+  <div class="mood-body">
+    {donut}
+    <div class="mood-score">
+      <div class="muted small mono">FEAR & GREED</div>
+      <div class="mood-score-label">{html.escape(fg_label) if fg_label else ("—" if fg is None else str(pct))}</div>
+      <div class="muted small mono">分數 {pct if fg is not None else "—"}/100</div>
+    </div>
+  </div>
+  <div class="mood-grid">{"".join(cells)}</div>
+</div>
+'''
+
+
+def render_catalyst_timeline(analysis: dict | None) -> str:
+    """Upcoming events timeline from morning_brief.agenda."""
+    if not analysis:
+        return ""
+    mb = analysis.get("morning_brief", {})
+    agenda = mb.get("agenda", [])
+    if not agenda:
+        return ""
+    kind_icon = {"earnings": "📊", "macro": "🌏", "event": "📌"}
+    kind_cls = {"earnings": "kind-earn", "macro": "kind-macro", "event": "kind-event"}
+    items = []
+    for a in agenda[:6]:
+        k = a.get("kind", "event")
+        items.append(f'''
+        <div class="cat-item {kind_cls.get(k, "")}">
+          <div class="cat-icon">{kind_icon.get(k, "📌")}</div>
+          <div class="cat-body">
+            <div class="cat-when mono small">{html.escape(a.get("when", ""))}</div>
+            <div class="cat-label">{html.escape(a.get("label", ""))}</div>
+          </div>
+        </div>''')
+    return f'''
+<div class="catalyst-panel">
+  <div class="cat-head">
+    <span class="cat-title mono">🗓 TODAY & UPCOMING</span>
+    <span class="muted small">{len(agenda)} 個事件</span>
+  </div>
+  <div class="cat-list">{"".join(items)}</div>
+</div>
+'''
+
+
+def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
+                     pf: dict | None = None) -> str:
+    """Prominent 'today's AI take' card — GUSHI-style Morning Brief Hero.
+
+    Shows: greeting + headline + one-liner + 3 highlights (win/risk/opp) + agenda.
     """
     if not latest_brief or not analysis:
         return (
@@ -1116,6 +1220,7 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None) -> str:
         )
 
     mp = analysis.get("market_pulse", {})
+    mb = analysis.get("morning_brief", {})
     actions = analysis.get("action_checklist", {}).get("green", [])
     opps = analysis.get("opportunities", [])
     diag = analysis.get("portfolio_diagnosis", {})
@@ -1211,17 +1316,50 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None) -> str:
     date_str = latest_brief["date"]
     weekday = latest_brief["weekday"]
 
+    # GUSHI-style BriefHero: greeting + headline + one-liner + highlights + agenda
+    greeting = mb.get("greeting") or "早安"
+    headline = mb.get("headline") or mp.get("summary", "今日尚未生成摘要。")[:20]
+    one_liner = mb.get("one_liner") or mp.get("summary", "")
+    highlights = mb.get("highlights", [])
+
+    # Highlights as win/risk/opp cards
+    highlights_html = ""
+    if highlights:
+        kind_labels = {"win": "進帳", "risk": "注意", "opp": "機會"}
+        kind_cls = {"win": "up", "risk": "amber", "opp": "accent"}
+        cards = []
+        for i, h in enumerate(highlights[:3]):
+            k = h.get("kind", "opp")
+            cards.append(f'''
+            <div class="hl-card hl-{kind_cls.get(k, "accent")}" style="animation-delay:{i * 0.1}s">
+              <div class="hl-tag">{kind_labels.get(k, k)}</div>
+              <div class="hl-label">{html.escape(h.get("label", ""))}</div>
+              <div class="hl-detail muted small">{html.escape(h.get("detail", ""))}</div>
+            </div>''')
+        highlights_html = f'<div class="hl-grid">{"".join(cards)}</div>'
+
+    # Count for headline emphasis
+    import re as _re
+    headline_html = _re.sub(
+        r"(\d+)",
+        r'<span class="shimmer-text">\1</span>',
+        html.escape(headline),
+        count=1,
+    )
+
     return f'''
-<div class="daily-hero">
-  <div class="hero-top">
-    <div class="hero-meta">
-      <span class="hero-badge mono">AI DAILY · {date_str} 週{weekday}</span>
-      {_sentiment_badge(mp.get("tw_sentiment", "中性"))}
-      {diag_pill}
-    </div>
+<div class="brief-hero">
+  <div class="bh-top">
+    <span class="live-dot accent"></span>
+    <span class="bh-badge mono">AI MORNING BRIEF · {date_str} 週{weekday}</span>
+    {_sentiment_badge(mp.get("tw_sentiment", "中性"))}
+    {diag_pill}
+    <div class="bh-spacer"></div>
     <a href="briefs/{date_str}.html" class="btn-link small">→ 完整分析</a>
   </div>
-  <p class="hero-oneliner">{html.escape(mp.get("summary", "今日尚未生成摘要。"))}</p>
+  <h2 class="bh-headline">{html.escape(greeting)}，{headline_html}</h2>
+  <p class="bh-oneliner">{html.escape(one_liner)}</p>
+  {highlights_html}
   {budget_html}
   {top_action_html}
   {picks_html}
@@ -1875,7 +2013,9 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
         weekday_zh = ""
 
     sidebar = render_desk_sidebar(pf)
-    hero = render_daily_hero(latest_brief, latest_analysis)
+    hero = render_daily_hero(latest_brief, latest_analysis, pf)
+    mood_panel = render_market_mood(pf, latest_analysis)
+    catalyst_panel = render_catalyst_timeline(latest_analysis)
     chart = render_big_chart(pf)
     macro_strip = render_macro_strip(pf)
     positions = render_positions_table(pf)
@@ -1950,6 +2090,10 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
 <main class="main-panel wrap">
   <div class="tab-panel active" data-panel="ai">
     {hero}
+    <div class="mood-cat-row">
+      {mood_panel}
+      {catalyst_panel}
+    </div>
     {ai_tab}
   </div>
   <div class="tab-panel" data-panel="sim">
@@ -3043,6 +3187,170 @@ footer a { color: var(--tx-3); }
   background: var(--accent-soft); color: var(--accent-2);
   letter-spacing: 0.5px;
 }
+
+/* GUSHI-style Brief Hero */
+.brief-hero {
+  padding: 22px 24px 24px;
+  border-radius: var(--r);
+  background: linear-gradient(135deg, var(--bg-1), var(--accent-soft));
+  border: 1px solid var(--accent-soft);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.brief-hero::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), transparent);
+}
+.bh-top {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.bh-badge {
+  font-size: 10px; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--accent-2);
+  font-weight: 700;
+}
+.bh-spacer { flex: 1; }
+.bh-headline {
+  margin: 8px 0 10px; font-size: 28px; font-weight: 700;
+  letter-spacing: -0.4px; line-height: 1.25;
+}
+.bh-oneliner {
+  margin: 0 0 16px; font-size: 14px;
+  color: var(--tx-2); line-height: 1.7;
+  max-width: 760px;
+}
+.shimmer-text {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 30%, #fff 50%, var(--accent-2) 70%, var(--accent) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 4s linear infinite;
+  font-weight: 800;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Highlight cards (win / risk / opp) */
+.hl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.hl-card {
+  padding: 12px 14px;
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  animation: fade-up 0.5s ease-out backwards;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hl-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px;
+  letter-spacing: 0.4px;
+  font-family: var(--font-mono);
+}
+.hl-up .hl-tag    { background: var(--up-bg); color: var(--up); }
+.hl-amber .hl-tag { background: var(--amber-bg); color: var(--amber); }
+.hl-accent .hl-tag{ background: var(--accent-soft); color: var(--accent-2); }
+.hl-label { font-size: 13px; font-weight: 600; margin: 6px 0 4px; line-height: 1.4; }
+.hl-detail { font-size: 11px; line-height: 1.5; }
+
+/* Mood + Catalyst row — side by side on desktop */
+.mood-cat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 720px) {
+  .mood-cat-row { grid-template-columns: 1fr; }
+  .hl-grid { grid-template-columns: 1fr; }
+  .brief-hero { padding: 16px 16px 18px; }
+  .bh-headline { font-size: 22px; }
+}
+
+/* Market Mood panel */
+.mood-panel {
+  padding: 16px 18px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.mood-head { margin-bottom: 12px; }
+.mood-title {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--tx-3);
+}
+.mood-sub { font-size: 10px; margin-top: 2px; }
+.mood-body {
+  display: flex; align-items: center; gap: 14px;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
+}
+.mood-donut { flex-shrink: 0; }
+.mood-score { flex: 1; }
+.mood-score-label { font-size: 15px; font-weight: 700; margin: 2px 0; }
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px; margin-top: 10px;
+}
+.mood-mini-cell {
+  padding: 8px 10px;
+  background: var(--bg-2);
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}
+.mood-mini-lbl { font-size: 9px; color: var(--tx-3); letter-spacing: 0.5px; }
+.mood-mini-val { font-size: 13px; font-weight: 700; margin: 2px 0; }
+
+/* Catalyst Timeline */
+.catalyst-panel {
+  padding: 16px 18px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.cat-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line);
+}
+.cat-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--tx-3);
+}
+.cat-list { display: flex; flex-direction: column; gap: 10px; }
+.cat-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 8px 10px;
+  background: var(--bg-2);
+  border-radius: var(--r-sm);
+  border-left: 3px solid var(--line-2);
+}
+.cat-item.kind-earn  { border-left-color: var(--accent); }
+.cat-item.kind-macro { border-left-color: var(--amber); }
+.cat-item.kind-event { border-left-color: var(--dn); }
+.cat-icon { font-size: 16px; line-height: 1; }
+.cat-body { flex: 1; min-width: 0; }
+.cat-when {
+  color: var(--accent-2); font-size: 11px;
+  font-weight: 600; margin-bottom: 2px;
+}
+.cat-label { font-size: 13px; line-height: 1.5; }
 
 /* Daily Hero — top of main column */
 .daily-hero {

@@ -56,8 +56,42 @@ RESPONSE_SCHEMA = {
                 "tw_sentiment": {"type": "string", "enum": ["正面", "中性", "負面"]},
                 "us_sentiment": {"type": "string", "enum": ["正面", "中性", "負面"]},
                 "summary": {"type": "string"},
+                "fear_greed_score": {"type": "integer"},  # 0-100
+                "fear_greed_label": {"type": "string"},   # 極度恐慌/恐慌/中性/貪婪/極度貪婪
             },
             "required": ["tw_sentiment", "us_sentiment", "summary"],
+        },
+        "morning_brief": {
+            "type": "object",
+            "properties": {
+                "greeting": {"type": "string"},
+                "headline": {"type": "string"},
+                "one_liner": {"type": "string"},
+                "highlights": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "kind": {"type": "string", "enum": ["win", "risk", "opp"]},
+                            "label": {"type": "string"},
+                            "detail": {"type": "string"},
+                        },
+                        "required": ["kind", "label", "detail"],
+                    },
+                },
+                "agenda": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "when": {"type": "string"},   # "今日 14:30" / "下週三 4/29"
+                            "label": {"type": "string"},
+                            "kind": {"type": "string", "enum": ["earnings", "macro", "event"]},
+                        },
+                        "required": ["when", "label", "kind"],
+                    },
+                },
+            },
         },
         "macro_context": {
             "type": "object",
@@ -209,8 +243,8 @@ RESPONSE_SCHEMA = {
             "required": ["term", "explanation"],
         },
     },
-    "required": ["market_pulse", "macro_context", "portfolio_diagnosis", "topics",
-                 "action_checklist", "learning_point", "budget_allocation"],
+    "required": ["market_pulse", "morning_brief", "macro_context", "portfolio_diagnosis",
+                 "topics", "action_checklist", "learning_point", "budget_allocation"],
 }
 
 
@@ -418,6 +452,23 @@ market_pulse / topics / holdings_analysis 的 sentiment 必須反映「當下對
 
 【macro_context · 重要】
 用一段敘事說明今天的總經環境（VIX、USD/TWD、地緣政治、利率、油價）對台股/美股的影響。再列 2-3 個 watchpoints（下週關鍵觀察：例如 FOMC、台積電法說、CPI 公布）。
+
+【market_pulse.fear_greed_score · 重要】
+綜合 VIX、台股加權 52 週位階、美股動能、地緣政治，給一個 0-100 分的恐慌貪婪指數（CNN 風格）：
+- 0-25 = 極度恐慌（大幅低估，通常進場好時機但信心低）
+- 25-45 = 恐慌
+- 45-55 = 中性
+- 55-75 = 貪婪
+- 75-100 = 極度貪婪（小心追高、獲利了結訊號）
+同時給一個對應的中文 fear_greed_label。
+
+【morning_brief · 重要】
+產出當日 AI Morning Brief：
+- greeting：簡短開場（例「早安」「早」「Hi」— 受使用者偏好口吻影響）
+- headline：一句主打標題（10-15 字內）。格式建議：「今天有 N 件事你應該知道」或「OOO 是今天重點」或「組合守住，三件事值得看」
+- one_liner：承接 headline 的一句話總結（30-80 字），說明今天台股/美股狀況 + 對使用者持倉的 net 影響
+- highlights：**恰好 3 張** 顏色卡片，必須涵蓋 (a) win 今日進帳 (b) risk 要注意 (c) opp 機會
+- agenda：2-5 個未來**時間性事件**（法說會 / CPI / Fed / FOMC / 重大數據），when 欄位必須是相對時間格式（「下週三 (4/29, 11 天後)」、「今日 14:30」、「下週一 (4/21)」），kind 分 event/macro/earnings
 
 【portfolio_diagnosis · 重要】
 **先讀使用者的個人策略再下判斷。** 使用者的 portfolio.yaml 有 strategy_notes 欄位明確禁止某些建議（高股息 ETF、因集中度賣 0050 等）。你的 key_issue 與 rebalance_advice 必須遵守那些規則。
