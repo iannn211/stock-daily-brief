@@ -226,6 +226,12 @@ a:hover { color: #b8d0ff; }
 .alert-green  { background: var(--dn-bg); border-color: rgba(27,217,124,0.3); color: var(--dn-soft); }
 .alert-amber  { background: var(--amber-bg); border-color: rgba(255,181,71,0.3); color: var(--amber); }
 .alert-purple { background: var(--purple-bg); border-color: rgba(181,132,255,0.3); color: var(--purple); }
+.alert-tag {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  background: rgba(255,255,255,0.08); border: 1px solid currentColor;
+  color: inherit; margin-right: 2px;
+}
 
 /* Sparkline */
 .sparkline { display: block; }
@@ -355,7 +361,16 @@ a:hover { color: #b8d0ff; }
 .action-green  { background: rgba(27,217,124,0.06); border-color: rgba(27,217,124,0.28); }
 .action-yellow { background: rgba(255,181,71,0.06); border-color: rgba(255,181,71,0.28); }
 .action-red    { background: rgba(255,59,59,0.06);  border-color: rgba(255,59,59,0.28); }
-.action-header { font-weight: 700; font-size: 13px; margin-bottom: 10px; letter-spacing: 0.3px; }
+.action-header { font-weight: 700; font-size: 13px; margin-bottom: 10px; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px; }
+.action-tag {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  border: 1px solid currentColor;
+  background: rgba(255,255,255,0.04);
+}
+.action-green .action-tag { color: var(--dn); }
+.action-yellow .action-tag { color: var(--amber); }
+.action-red .action-tag { color: var(--up); }
 .action-col ul { margin: 0; padding-left: 18px; font-size: 13px; }
 .action-col li { margin: 8px 0; line-height: 1.6; }
 .action-col li.empty { color: var(--tx-3); font-style: italic; }
@@ -1219,7 +1234,15 @@ footer a { color: var(--tx-3); }
   text-transform: uppercase;
   font-weight: 700;
   font-family: var(--font-mono);
+  display: flex; align-items: center; gap: 6px;
 }
+.sim-tag {
+  display: inline-block; padding: 1px 6px; border-radius: 3px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1px;
+  border: 1px solid currentColor;
+}
+.sim-field:has(#sim-sl) .sim-tag { color: var(--up); }
+.sim-field:has(#sim-tp) .sim-tag { color: var(--dn); }
 .sim-input {
   padding: 10px 12px;
   background: var(--bg-1);
@@ -1487,6 +1510,13 @@ footer a { color: var(--tx-3); }
   color: var(--amber);
   font-size: 11px;
   line-height: 1.5;
+  display: flex; align-items: center; gap: 6px;
+}
+.radar-warn-tag {
+  display: inline-block; padding: 2px 6px; border-radius: 3px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px;
+  background: rgba(255,181,71,0.15); border: 1px solid rgba(255,181,71,0.4);
+  color: var(--amber);
 }
 
 .radar-card-foot {

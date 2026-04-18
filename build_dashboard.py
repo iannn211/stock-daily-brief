@@ -180,6 +180,20 @@ def _cls(n: float | None) -> str:
     return "flat"
 
 
+# Strip leading emoji/symbol chars from AI-supplied labels
+# so the UI keeps a clean mono-label look.
+_EMOJI_RE = re.compile(
+    r"^[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF"
+    r"\U0001F900-\U0001F9FF\u2190-\u21FF\u2300-\u23FF\u25A0-\u25FF]+\s*"
+)
+
+
+def _strip_leading_emoji(s: str) -> str:
+    if not s:
+        return s
+    return _EMOJI_RE.sub("", s).strip()
+
+
 def _spark_svg(points: list[dict], width: int = 120, height: int = 32,
                stroke: str = "var(--accent)") -> str:
     """Generate inline SVG sparkline. Points: [{'d': date, 'c': close}, ...]."""
@@ -581,34 +595,34 @@ def render_alerts_block(alerts: dict, total: int) -> str:
     items = []
     for a in alerts.get("stop_loss", []):
         items.append(
-            f'<div class="alert-item alert-red">🔴 <strong>停損觸發</strong> '
+            f'<div class="alert-item alert-red"><span class="alert-tag mono">STOP</span> <strong>停損觸發</strong> '
             f'{a["symbol"]} {html.escape(a["name"])}：現價 <span class="mono">{a["price"]}</span> ≤ 停損 <span class="mono">{a["stop_loss"]}</span></div>'
         )
     for a in alerts.get("take_profit", []):
         items.append(
-            f'<div class="alert-item alert-green">🟢 <strong>停利觸發</strong> '
+            f'<div class="alert-item alert-green"><span class="alert-tag mono">TP</span> <strong>停利觸發</strong> '
             f'{a["symbol"]} {html.escape(a["name"])}：現價 <span class="mono">{a["price"]}</span> ≥ 停利 <span class="mono">{a["take_profit"]}</span></div>'
         )
     for a in alerts.get("nearing_stop", []):
         items.append(
-            f'<div class="alert-item alert-amber">🟡 <strong>接近停損</strong> '
+            f'<div class="alert-item alert-amber"><span class="alert-tag mono">NEAR</span> <strong>接近停損</strong> '
             f'{a["symbol"]}：距離 {a["stop_loss_dist_pct"]:.1f}%</div>'
         )
     for a in alerts.get("concentration", []):
         items.append(
-            f'<div class="alert-item alert-amber">🟠 <strong>單一持股過重</strong> '
+            f'<div class="alert-item alert-amber"><span class="alert-tag mono">CONC</span> <strong>單一持股過重</strong> '
             f'{a["symbol"]}：佔比 {a["weight_pct"]:.1f}% &gt; 上限 {a["limit_pct"]:.0f}%</div>'
         )
     for a in alerts.get("pillar", []):
         items.append(
-            f'<div class="alert-item alert-purple">🟣 <strong>三柱失衡</strong> '
+            f'<div class="alert-item alert-purple"><span class="alert-tag mono">PILLAR</span> <strong>三柱失衡</strong> '
             f'{PILLAR_LABEL.get(a["pillar"], a["pillar"])}：現 {a["actual_pct"]:.0f}% vs 目標 {a["target_pct"]:.0f}% '
             f'(差 {a["diff_pct"]:+.1f}pp)</div>'
         )
     return f'''
 <div class="pf-alerts">
   <div class="pf-sub-head with-badge">
-    ⚠️ 組合警報 <span class="badge-count">{total} ACTIVE</span>
+    <span class="mono">ALERTS · 組合警報</span> <span class="badge-count">{total} ACTIVE</span>
   </div>
   <div class="alert-list">{"".join(items)}</div>
 </div>
@@ -795,7 +809,7 @@ def render_analysis_section(analysis: dict) -> str:
             )
         return (
             f'<div class="action-col {color_cls}">'
-            f'<div class="action-header">{icon} {label}</div>'
+            f'<div class="action-header"><span class="action-tag mono">{icon}</span> {label}</div>'
             f'<ul>{li}</ul></div>'
         )
 
@@ -803,9 +817,9 @@ def render_analysis_section(analysis: dict) -> str:
 <section class="a-section">
   <div class="section-head"><h2>今日行動 · <span class="sec-en">ACTION CHECKLIST</span></h2></div>
   <div class="actions-grid">
-    {render_actions(actions.get("green", []), "action-green", "可以做", "🟢")}
-    {render_actions(actions.get("yellow", []), "action-yellow", "該警戒", "🟡")}
-    {render_actions(actions.get("red", []), "action-red", "不要做", "🔴")}
+    {render_actions(actions.get("green", []), "action-green", "可以做", "GO")}
+    {render_actions(actions.get("yellow", []), "action-yellow", "該警戒", "WATCH")}
+    {render_actions(actions.get("red", []), "action-red", "不要做", "HOLD")}
   </div>
 </section>
 '''
@@ -1359,7 +1373,7 @@ def render_radar_tab(analysis: dict | None, pf: dict | None,
         stage = o.get("stage", "—")
         conf = int(o.get("confidence_pct") or 0)
         crowd = int(o.get("crowding_pct") or 0)
-        crowd_label = o.get("crowding_label", "")
+        crowd_label = _strip_leading_emoji(o.get("crowding_label", ""))
         headline = o.get("headline") or o.get("thesis", "")
         why = o.get("why") or o.get("research_angle", "")
         timeframe = o.get("timeframe", "—")
@@ -1415,7 +1429,7 @@ def render_radar_tab(analysis: dict | None, pf: dict | None,
 
         crowd_tone = _crowding_tone(crowd)
         stage_cls = _stage_cls(stage)
-        warn_html = f'<div class="radar-warn small">⚠️ {html.escape(warning)}</div>' if warning else ""
+        warn_html = f'<div class="radar-warn small"><span class="radar-warn-tag mono">WARN</span> {html.escape(warning)}</div>' if warning else ""
         signals_html = ""
         if signals:
             sig_chips = "".join(f'<span class="sig-chip">{html.escape(s)}</span>' for s in signals[:5])
@@ -1871,13 +1885,13 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
                 f'<div class="action-reason">{html.escape(i["reason"])}</div></li>'
                 for i in items
             )
-        return f'<div class="action-col {cls}"><div class="action-header">{icon} {label}</div><ul>{li}</ul></div>'
+        return f'<div class="action-col {cls}"><div class="action-header"><span class="action-tag mono">{icon}</span> {label}</div><ul>{li}</ul></div>'
 
     actions_html = (
         '<div class="actions-grid">'
-        + action_col(actions.get("green", []), "action-green", "🟢", "可以做")
-        + action_col(actions.get("yellow", []), "action-yellow", "🟡", "該警戒")
-        + action_col(actions.get("red", []), "action-red", "🔴", "不要做")
+        + action_col(actions.get("green", []), "action-green", "GO", "可以做")
+        + action_col(actions.get("yellow", []), "action-yellow", "WATCH", "該警戒")
+        + action_col(actions.get("red", []), "action-red", "HOLD", "不要做")
         + '</div>'
     )
 
@@ -2133,13 +2147,13 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
 
     for h in pf.get("holdings", []):
         add(h["symbol"], h["name"], h.get("price"), h.get("market", "TW"),
-            "⭐ 我的持股", h.get("pct_52w"), h.get("high_52w"), h.get("low_52w"),
+            "HOLDINGS · 我的持股", h.get("pct_52w"), h.get("high_52w"), h.get("low_52w"),
             h.get("pillar"))
 
     # Watchlist
     for w in pf.get("watchlist", []):
         add(w["symbol"], w["name"], w.get("price"), w.get("market", "TW"),
-            "👁 追蹤中", w.get("pct_52w"), w.get("high_52w"), w.get("low_52w"),
+            "WATCHLIST · 追蹤中", w.get("pct_52w"), w.get("high_52w"), w.get("low_52w"),
             w.get("pillar"))
 
     # AI opportunities — group them distinctly so they stand out
@@ -2152,7 +2166,7 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
                                if u["symbol"] == sym), None)
                 if u_match:
                     add(sym, o.get("name", u_match["name"]), u_match["price"],
-                        u_match["market"], "🔍 AI 今日機會",
+                        u_match["market"], "AI PICKS · 今日機會",
                         u_match.get("pct_52w"), u_match.get("high_52w"),
                         u_match.get("low_52w"), u_match.get("category"))
 
@@ -2228,13 +2242,13 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
     </div>
 
     <div class="sim-field">
-      <label class="sim-lbl">🔴 停損 −<span id="sim-sl-val" class="mono">10</span>%</label>
+      <label class="sim-lbl"><span class="sim-tag mono">STOP</span> 停損 −<span id="sim-sl-val" class="mono">10</span>%</label>
       <input type="range" id="sim-sl" min="3" max="25" value="10" step="1" class="sim-range">
       <div class="sim-range-labels muted small mono"><span>−3%</span><span>−25%</span></div>
     </div>
 
     <div class="sim-field">
-      <label class="sim-lbl">🟢 停利 +<span id="sim-tp-val" class="mono">30</span>%</label>
+      <label class="sim-lbl"><span class="sim-tag mono">TP</span> 停利 +<span id="sim-tp-val" class="mono">30</span>%</label>
       <input type="range" id="sim-tp" min="5" max="100" value="30" step="5" class="sim-range">
       <div class="sim-range-labels muted small mono"><span>+5%</span><span>+100%</span></div>
     </div>
@@ -2306,7 +2320,7 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
   let entryStrategy = 'market'; // market | -2 | -5 | custom
 
   // Populate dropdown grouped by category, with priority groups first
-  const priorityGroups = ['⭐ 我的持股', '👁 追蹤中', '🔍 AI 今日機會'];
+  const priorityGroups = ['HOLDINGS · 我的持股', 'WATCHLIST · 追蹤中', 'AI PICKS · 今日機會'];
   const groups = {{}};
   DATA.items.forEach(it => {{
     if (it.price == null) return;
@@ -2351,7 +2365,7 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
     const diff = ((entry - cur) / cur * 100);
     let advice = '';
     if (it.pct_52w != null) {{
-      if (it.pct_52w >= 90) advice = '⚠️ 52週位階 ' + it.pct_52w.toFixed(0) + '%（高檔），建議限價等拉回';
+      if (it.pct_52w >= 90) advice = '[HIGH] 52週位階 ' + it.pct_52w.toFixed(0) + '%（高檔），建議限價等拉回';
       else if (it.pct_52w >= 70) advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（中高），可考慮限價 −2%';
       else if (it.pct_52w >= 30) advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（中段），現價進或限價 −2% 皆可';
       else advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（低檔），積極進場';
@@ -4254,6 +4268,12 @@ a:hover { color: #b8d0ff; }
 .alert-green  { background: var(--dn-bg); border-color: rgba(27,217,124,0.3); color: var(--dn-soft); }
 .alert-amber  { background: var(--amber-bg); border-color: rgba(255,181,71,0.3); color: var(--amber); }
 .alert-purple { background: var(--purple-bg); border-color: rgba(181,132,255,0.3); color: var(--purple); }
+.alert-tag {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  background: rgba(255,255,255,0.08); border: 1px solid currentColor;
+  color: inherit; margin-right: 2px;
+}
 
 /* Sparkline */
 .sparkline { display: block; }
@@ -4383,7 +4403,16 @@ a:hover { color: #b8d0ff; }
 .action-green  { background: rgba(27,217,124,0.06); border-color: rgba(27,217,124,0.28); }
 .action-yellow { background: rgba(255,181,71,0.06); border-color: rgba(255,181,71,0.28); }
 .action-red    { background: rgba(255,59,59,0.06);  border-color: rgba(255,59,59,0.28); }
-.action-header { font-weight: 700; font-size: 13px; margin-bottom: 10px; letter-spacing: 0.3px; }
+.action-header { font-weight: 700; font-size: 13px; margin-bottom: 10px; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px; }
+.action-tag {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  border: 1px solid currentColor;
+  background: rgba(255,255,255,0.04);
+}
+.action-green .action-tag { color: var(--dn); }
+.action-yellow .action-tag { color: var(--amber); }
+.action-red .action-tag { color: var(--up); }
 .action-col ul { margin: 0; padding-left: 18px; font-size: 13px; }
 .action-col li { margin: 8px 0; line-height: 1.6; }
 .action-col li.empty { color: var(--tx-3); font-style: italic; }
@@ -5247,7 +5276,15 @@ footer a { color: var(--tx-3); }
   text-transform: uppercase;
   font-weight: 700;
   font-family: var(--font-mono);
+  display: flex; align-items: center; gap: 6px;
 }
+.sim-tag {
+  display: inline-block; padding: 1px 6px; border-radius: 3px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1px;
+  border: 1px solid currentColor;
+}
+.sim-field:has(#sim-sl) .sim-tag { color: var(--up); }
+.sim-field:has(#sim-tp) .sim-tag { color: var(--dn); }
 .sim-input {
   padding: 10px 12px;
   background: var(--bg-1);
@@ -5515,6 +5552,13 @@ footer a { color: var(--tx-3); }
   color: var(--amber);
   font-size: 11px;
   line-height: 1.5;
+  display: flex; align-items: center; gap: 6px;
+}
+.radar-warn-tag {
+  display: inline-block; padding: 2px 6px; border-radius: 3px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px;
+  background: rgba(255,181,71,0.15); border: 1px solid rgba(255,181,71,0.4);
+  color: var(--amber);
 }
 
 .radar-card-foot {
