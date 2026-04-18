@@ -1383,6 +1383,36 @@ footer a { color: var(--tx-3); }
 .sim-52w-cur { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
 .sim-52w-entry { background: var(--amber); box-shadow: 0 0 8px rgba(255,181,71,0.5); }
 
+/* Simulator rule-based recommendation */
+.sim-rec { margin-top: 8px; }
+.sim-rec:empty { display: none; }
+.sim-rec-card {
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--tx-3);
+  border-radius: var(--r-sm);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.sim-rec-card.tone-up { border-left-color: var(--up); background: linear-gradient(90deg, rgba(255,59,59,0.05), var(--bg-2) 50%); }
+.sim-rec-card.tone-dn { border-left-color: var(--dn); background: linear-gradient(90deg, rgba(27,217,124,0.05), var(--bg-2) 50%); }
+.sim-rec-card.tone-amber { border-left-color: var(--amber); background: linear-gradient(90deg, rgba(255,181,71,0.05), var(--bg-2) 50%); }
+.sim-rec-lbl { color: var(--tx-3); letter-spacing: 0.5px; text-transform: uppercase; }
+.sim-rec-action { font-size: 14px; font-weight: 700; }
+.sim-rec-action.up { color: var(--up); }
+.sim-rec-action.dn { color: var(--dn); }
+.sim-rec-action.amber { color: var(--amber); }
+.sim-rec-action.flat { color: var(--tx-2); }
+.sim-rec-price { color: var(--tx-2); }
+.sim-rec-price strong { color: var(--accent-2); font-size: 14px; }
+.sim-rec-reason { line-height: 1.5; }
+.sim-deeplink {
+  display: inline-block; margin-top: 6px;
+  font-size: 11px; font-family: var(--font-mono);
+  color: var(--accent-2); text-decoration: none;
+}
+.sim-deeplink:hover { color: #b8d0ff; }
+
 /* Budget allocation — hero + full detail */
 .hero-budget {
   background: linear-gradient(135deg, rgba(255,181,71,0.08) 0%, var(--bg-2) 100%);

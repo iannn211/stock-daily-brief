@@ -1765,23 +1765,26 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
 </div>
 '''
 
-    # Opportunities — the star section
+    # Opportunities — the star section; ticker symbols link to deep dive
     opps_html = ""
     if opps:
         rows = []
         for o in opps:
+            sym = o.get("symbol", "")
+            sym_link = (f'<a href="holdings/{html.escape(sym)}.html" class="stock-link">{html.escape(sym)}</a>'
+                        if sym in _KNOWN_SYMBOLS else html.escape(sym))
             rows.append(f'''
             <article class="opp-card">
               <div class="opp-head">
-                <h3>{html.escape(o.get("symbol", ""))} <span class="muted">{html.escape(o.get("name", ""))}</span></h3>
+                <h3>{sym_link} <span class="muted">{html.escape(o.get("name", ""))}</span></h3>
               </div>
-              <p><span class="label-inline">論點</span>{html.escape(o.get("thesis", ""))}</p>
-              <p><span class="label-inline">研究切入點</span>{html.escape(o.get("research_angle", ""))}</p>
-              <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{html.escape(o.get("risk", ""))}</p>
+              <p><span class="label-inline">論點</span>{esc_linked(o.get("thesis", ""))}</p>
+              <p><span class="label-inline">研究切入點</span>{esc_linked(o.get("research_angle", ""))}</p>
+              <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{esc_linked(o.get("risk", ""))}</p>
             </article>''')
         opps_html = (
             f'<div class="ai-block" id="opportunities"><div class="tab-subhead">🔍 值得研究的個股 '
-            f'<span class="badge-count">{len(opps)} DETECTED</span></div>'
+            f'<span class="badge-count">{len(opps)} DETECTED</span> <span class="muted small">· 點代碼看深度</span></div>'
             f'{"".join(rows)}</div>'
         )
 
@@ -1852,6 +1855,13 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
         })
 
     # Holdings first (user owns these)
+    # Collect rec data alongside pricing
+    rec_by_sym: dict[str, dict] = {}
+    for coll_name in ("holdings", "watchlist", "simulator_universe"):
+        for entry in pf.get(coll_name, []):
+            if entry.get("recommendation"):
+                rec_by_sym[entry["symbol"]] = entry["recommendation"]
+
     for h in pf.get("holdings", []):
         add(h["symbol"], h["name"], h.get("price"), h.get("market", "TW"),
             "⭐ 我的持股", h.get("pct_52w"), h.get("high_52w"), h.get("low_52w"),
@@ -1860,7 +1870,8 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
     # Watchlist
     for w in pf.get("watchlist", []):
         add(w["symbol"], w["name"], w.get("price"), w.get("market", "TW"),
-            "👁 追蹤中", w.get("pct_52w"), None, None, w.get("pillar"))
+            "👁 追蹤中", w.get("pct_52w"), w.get("high_52w"), w.get("low_52w"),
+            w.get("pillar"))
 
     # AI opportunities — group them distinctly so they stand out
     if analysis:
@@ -1898,6 +1909,7 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
         "items": items,
         "defaultBudget": cfg_budget,
         "usdtwd": fx,
+        "recs": rec_by_sym,
     }, ensure_ascii=False)
 
     return f'''
@@ -1927,6 +1939,8 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
       <select id="sim-ticker" class="sim-input sim-select"></select>
       <div class="sim-ticker-info mono small muted" id="sim-ticker-info">—</div>
       <div class="sim-52w-bar" id="sim-52w-bar"></div>
+      <div class="sim-rec" id="sim-rec"></div>
+      <a class="sim-deeplink" id="sim-deeplink" href="#">→ 看完整深度頁</a>
     </div>
 
     <div class="sim-field">
@@ -2129,6 +2143,24 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
 
     updateEntryHint(it, entryPrice);
     render52wBar(it);
+
+    // Rule-based recommendation
+    const recEl = document.getElementById('sim-rec');
+    const dpLink = document.getElementById('sim-deeplink');
+    const rec = (DATA.recs || {{}})[sym];
+    if (rec) {{
+      const toneCls = 'tone-' + (rec.tone || 'flat');
+      recEl.innerHTML = `
+        <div class="sim-rec-card ${{toneCls}}">
+          <div class="sim-rec-lbl mono small">📐 規則建議</div>
+          <div class="sim-rec-action ${{rec.tone || 'flat'}}">${{rec.action}}</div>
+          <div class="sim-rec-price mono small">建議價 <strong>${{rec.suggested_price ? rec.suggested_price.toFixed(2) : '—'}}</strong></div>
+          <div class="sim-rec-reason muted small">${{rec.reason || ''}}</div>
+        </div>`;
+    }} else {{
+      recEl.innerHTML = '';
+    }}
+    if (dpLink) dpLink.href = 'holdings/' + sym + '.html';
 
     document.getElementById('sim-shares').textContent = maxShares > 0 ? maxShares + ' 股' : '0 股（預算不夠 1 股）';
     document.getElementById('sim-cost').textContent = 'NT$' + fmt(totalCost);
@@ -4105,6 +4137,36 @@ footer a { color: var(--tx-3); }
 }
 .sim-52w-cur { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
 .sim-52w-entry { background: var(--amber); box-shadow: 0 0 8px rgba(255,181,71,0.5); }
+
+/* Simulator rule-based recommendation */
+.sim-rec { margin-top: 8px; }
+.sim-rec:empty { display: none; }
+.sim-rec-card {
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--tx-3);
+  border-radius: var(--r-sm);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.sim-rec-card.tone-up { border-left-color: var(--up); background: linear-gradient(90deg, rgba(255,59,59,0.05), var(--bg-2) 50%); }
+.sim-rec-card.tone-dn { border-left-color: var(--dn); background: linear-gradient(90deg, rgba(27,217,124,0.05), var(--bg-2) 50%); }
+.sim-rec-card.tone-amber { border-left-color: var(--amber); background: linear-gradient(90deg, rgba(255,181,71,0.05), var(--bg-2) 50%); }
+.sim-rec-lbl { color: var(--tx-3); letter-spacing: 0.5px; text-transform: uppercase; }
+.sim-rec-action { font-size: 14px; font-weight: 700; }
+.sim-rec-action.up { color: var(--up); }
+.sim-rec-action.dn { color: var(--dn); }
+.sim-rec-action.amber { color: var(--amber); }
+.sim-rec-action.flat { color: var(--tx-2); }
+.sim-rec-price { color: var(--tx-2); }
+.sim-rec-price strong { color: var(--accent-2); font-size: 14px; }
+.sim-rec-reason { line-height: 1.5; }
+.sim-deeplink {
+  display: inline-block; margin-top: 6px;
+  font-size: 11px; font-family: var(--font-mono);
+  color: var(--accent-2); text-decoration: none;
+}
+.sim-deeplink:hover { color: #b8d0ff; }
 
 /* Budget allocation — hero + full detail */
 .hero-budget {
