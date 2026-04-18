@@ -170,6 +170,7 @@
     <section class="desk-panel">
       <div class="tabs" role="tablist">
         <button class="tab-btn active" data-tab="ai">🤖 AI Analysis</button>
+        <button class="tab-btn" data-tab="sim">🧮 Simulator</button>
         <button class="tab-btn" data-tab="positions">Positions</button>
         <button class="tab-btn" data-tab="briefs">Briefs · 1</button>
       </div>
@@ -363,6 +364,183 @@
   </div>
 </div>
 </div>
+      <div class="tab-panel" data-panel="sim">
+<div class="sim-tab-body">
+  <div class="sim-intro muted small">
+    本地即時計算。調參數看「如果我要買某檔、用多少錢、設停損停利在哪，會變怎樣」。不呼叫 AI、不花錢。
+  </div>
+
+  <div class="sim-grid">
+    <div class="sim-field">
+      <label class="sim-lbl">💰 預算</label>
+      <div class="sim-budget-row">
+        <span class="sim-prefix">NT$</span>
+        <input type="number" id="sim-budget" value="5000" min="1000" step="500" class="sim-input">
+      </div>
+      <div class="sim-presets">
+        <button class="sim-chip" data-preset="3000">3k</button>
+        <button class="sim-chip" data-preset="5000">5k</button>
+        <button class="sim-chip" data-preset="10000">10k</button>
+        <button class="sim-chip" data-preset="20000">20k</button>
+        <button class="sim-chip" data-preset="50000">50k</button>
+      </div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">📊 標的</label>
+      <select id="sim-ticker" class="sim-input sim-select"></select>
+      <div class="sim-ticker-info mono small muted" id="sim-ticker-info">—</div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">🔴 停損 −<span id="sim-sl-val" class="mono">10</span>%</label>
+      <input type="range" id="sim-sl" min="3" max="25" value="10" step="1" class="sim-range">
+      <div class="sim-range-labels muted small mono"><span>−3%</span><span>−25%</span></div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">🟢 停利 +<span id="sim-tp-val" class="mono">30</span>%</label>
+      <input type="range" id="sim-tp" min="5" max="100" value="30" step="5" class="sim-range">
+      <div class="sim-range-labels muted small mono"><span>+5%</span><span>+100%</span></div>
+    </div>
+  </div>
+
+  <div class="sim-output" id="sim-output">
+    <div class="sim-out-cell">
+      <div class="muted small">可買股數</div>
+      <div class="mono tnum sim-out-val" id="sim-shares">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">總成本</div>
+      <div class="mono tnum sim-out-val" id="sim-cost">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">剩餘現金</div>
+      <div class="mono tnum sim-out-val" id="sim-cash">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">停損價</div>
+      <div class="mono tnum sim-out-val dn" id="sim-sl-price">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">停利價</div>
+      <div class="mono tnum sim-out-val up" id="sim-tp-price">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">最大損失</div>
+      <div class="mono tnum sim-out-val dn" id="sim-max-loss">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">目標獲利</div>
+      <div class="mono tnum sim-out-val up" id="sim-max-profit">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">佔組合比</div>
+      <div class="mono tnum sim-out-val" id="sim-weight">—</div>
+    </div>
+  </div>
+
+  <div class="sim-rules-row">
+    <div class="sim-rule">
+      <strong>雪球法規則</strong>
+      <span class="muted small">賺到停利 → 取 50% 入 0050 存款、50% 留場繼續滾</span>
+    </div>
+  </div>
+</div>
+
+<script id="sim-data" type="application/json">{"items": [{"symbol": "0050", "name": "元大台灣50", "price": 84.15, "market": "TW", "group": "持股", "pillar": "growth"}, {"symbol": "2330", "name": "台積電", "price": 2030.0, "market": "TW", "group": "持股", "pillar": "growth"}, {"symbol": "VOO", "name": "S&P 500 ETF", "price": 652.78, "market": "US", "group": "追蹤", "pillar": "growth"}, {"symbol": "2303", "name": "聯電", "price": 73.0, "market": "TW", "group": "追蹤", "pillar": "growth"}, {"symbol": "3081", "name": "聯亞", "price": 2600.0, "market": "TW", "group": "追蹤", "pillar": "growth"}, {"symbol": "3324", "name": "雙鴻", "price": 1035.0, "market": "TW", "group": "追蹤", "pillar": "growth"}, {"symbol": "3017", "name": "奇鋐", "price": 2400.0, "market": "TW", "group": "追蹤", "pillar": "growth"}], "defaultBudget": 5000, "usdtwd": 31.464}</script>
+<script>
+(function() {
+  const el = document.getElementById('sim-data');
+  if (!el) return;
+  const DATA = JSON.parse(el.textContent);
+  const fx = DATA.usdtwd || 32.0;
+  const pfTotal = 141580.0;
+
+  const tickerSel = document.getElementById('sim-ticker');
+  const budgetIn = document.getElementById('sim-budget');
+  const slIn = document.getElementById('sim-sl');
+  const tpIn = document.getElementById('sim-tp');
+  const slVal = document.getElementById('sim-sl-val');
+  const tpVal = document.getElementById('sim-tp-val');
+  const infoEl = document.getElementById('sim-ticker-info');
+
+  // Populate ticker dropdown grouped
+  const groups = {};
+  DATA.items.forEach(it => {
+    if (it.price == null) return;  // skip no-price items
+    (groups[it.group] = groups[it.group] || []).push(it);
+  });
+  Object.entries(groups).forEach(([group, items]) => {
+    const og = document.createElement('optgroup');
+    og.label = group;
+    items.forEach(it => {
+      const opt = document.createElement('option');
+      opt.value = it.symbol;
+      opt.textContent = `${it.symbol}  ${it.name}  @${it.price.toFixed(2)}`;
+      og.appendChild(opt);
+    });
+    tickerSel.appendChild(og);
+  });
+
+  function getItem(symbol) {
+    return DATA.items.find(i => i.symbol === symbol && i.price != null);
+  }
+
+  function fmt(n, dp=0) {
+    if (n == null || Number.isNaN(n)) return '—';
+    return n.toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+
+  function recalc() {
+    const sym = tickerSel.value;
+    const budget = parseFloat(budgetIn.value) || 0;
+    const sl = parseFloat(slIn.value);
+    const tp = parseFloat(tpIn.value);
+    slVal.textContent = sl;
+    tpVal.textContent = tp;
+
+    const it = getItem(sym);
+    if (!it) return;
+
+    const priceTwd = it.market === 'TW' ? it.price : it.price * fx;
+    const maxShares = Math.floor(budget / priceTwd);
+    const totalCost = maxShares * priceTwd;
+    const cashLeft = budget - totalCost;
+    const slPrice = it.price * (1 - sl/100);
+    const tpPrice = it.price * (1 + tp/100);
+    const maxLoss = totalCost * (sl/100);
+    const maxProfit = totalCost * (tp/100);
+    const weight = pfTotal ? (totalCost / pfTotal * 100) : 0;
+
+    infoEl.textContent = `${it.market} · 現價 ${it.price.toFixed(2)}${it.market === 'US' ? ' USD' : ''}${it.pillar ? ' · ' + it.pillar : ''}`;
+
+    document.getElementById('sim-shares').textContent = maxShares > 0 ? maxShares + ' 股' : '0 股（預算不夠 1 股）';
+    document.getElementById('sim-cost').textContent = 'NT$' + fmt(totalCost);
+    document.getElementById('sim-cash').textContent = 'NT$' + fmt(cashLeft);
+    document.getElementById('sim-sl-price').textContent = slPrice.toFixed(2);
+    document.getElementById('sim-tp-price').textContent = tpPrice.toFixed(2);
+    document.getElementById('sim-max-loss').textContent = '−NT$' + fmt(maxLoss);
+    document.getElementById('sim-max-profit').textContent = '+NT$' + fmt(maxProfit);
+    document.getElementById('sim-weight').textContent = weight.toFixed(2) + '%';
+  }
+
+  budgetIn.addEventListener('input', recalc);
+  tickerSel.addEventListener('change', recalc);
+  slIn.addEventListener('input', recalc);
+  tpIn.addEventListener('input', recalc);
+  document.querySelectorAll('.sim-chip').forEach(b => {
+    b.addEventListener('click', () => {
+      budgetIn.value = b.dataset.preset;
+      recalc();
+    });
+  });
+
+  // Init
+  if (tickerSel.options.length > 0) recalc();
+})();
+</script>
+</div>
       <div class="tab-panel" data-panel="positions">
 <table class="data-table">
   <thead>
@@ -493,7 +671,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 19:22 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 19:44 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>

@@ -24,6 +24,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import markdown as md
+import yaml
 
 TAIPEI = ZoneInfo("Asia/Taipei")
 ROOT = Path(__file__).resolve().parent
@@ -1476,6 +1477,236 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
 '''
 
 
+def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
+    """Interactive trade simulator — client-side math, no API calls.
+
+    Returns (html, js_data_blob). JS data blob should be injected in the page.
+    """
+    if not pf:
+        return "", "{}"
+
+    # Collect tickers from holdings + watchlist + opportunities (AI picks)
+    items: list[dict] = []
+    seen: set[str] = set()
+
+    def add(sym, name, price, market, group, pillar=None):
+        if not sym or sym in seen:
+            return
+        seen.add(sym)
+        items.append({
+            "symbol": sym, "name": name, "price": price,
+            "market": market, "group": group, "pillar": pillar or "",
+        })
+
+    for h in pf.get("holdings", []):
+        add(h["symbol"], h["name"], h.get("price"), h.get("market", "TW"),
+            "持股", h.get("pillar"))
+    for w in pf.get("watchlist", []):
+        add(w["symbol"], w["name"], w.get("price"), w.get("market", "TW"),
+            "追蹤", w.get("pillar"))
+    # Opportunities from AI if present — attach current price from watchlist/holdings if known
+    if analysis:
+        for o in analysis.get("opportunities", []):
+            sym = o.get("symbol")
+            if sym and sym not in seen:
+                # We don't have price unless it's in pf; leave null — JS will skip
+                add(sym, o.get("name", ""), None, "TW", "AI 機會")
+
+    # Get default budget
+    cfg_budget = 5000
+    try:
+        cfg = yaml.safe_load((ROOT / "portfolio.yaml").read_text(encoding="utf-8"))
+        cfg_budget = int(cfg.get("trade_budget_twd", 5000))
+    except Exception:
+        pass
+
+    fx = pf.get("fx_usdtwd", 32.0)
+
+    data_blob = json.dumps({
+        "items": items,
+        "defaultBudget": cfg_budget,
+        "usdtwd": fx,
+    }, ensure_ascii=False)
+
+    return f'''
+<div class="sim-tab-body">
+  <div class="sim-intro muted small">
+    本地即時計算。調參數看「如果我要買某檔、用多少錢、設停損停利在哪，會變怎樣」。不呼叫 AI、不花錢。
+  </div>
+
+  <div class="sim-grid">
+    <div class="sim-field">
+      <label class="sim-lbl">💰 預算</label>
+      <div class="sim-budget-row">
+        <span class="sim-prefix">NT$</span>
+        <input type="number" id="sim-budget" value="{cfg_budget}" min="1000" step="500" class="sim-input">
+      </div>
+      <div class="sim-presets">
+        <button class="sim-chip" data-preset="3000">3k</button>
+        <button class="sim-chip" data-preset="5000">5k</button>
+        <button class="sim-chip" data-preset="10000">10k</button>
+        <button class="sim-chip" data-preset="20000">20k</button>
+        <button class="sim-chip" data-preset="50000">50k</button>
+      </div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">📊 標的</label>
+      <select id="sim-ticker" class="sim-input sim-select"></select>
+      <div class="sim-ticker-info mono small muted" id="sim-ticker-info">—</div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">🔴 停損 −<span id="sim-sl-val" class="mono">10</span>%</label>
+      <input type="range" id="sim-sl" min="3" max="25" value="10" step="1" class="sim-range">
+      <div class="sim-range-labels muted small mono"><span>−3%</span><span>−25%</span></div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">🟢 停利 +<span id="sim-tp-val" class="mono">30</span>%</label>
+      <input type="range" id="sim-tp" min="5" max="100" value="30" step="5" class="sim-range">
+      <div class="sim-range-labels muted small mono"><span>+5%</span><span>+100%</span></div>
+    </div>
+  </div>
+
+  <div class="sim-output" id="sim-output">
+    <div class="sim-out-cell">
+      <div class="muted small">可買股數</div>
+      <div class="mono tnum sim-out-val" id="sim-shares">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">總成本</div>
+      <div class="mono tnum sim-out-val" id="sim-cost">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">剩餘現金</div>
+      <div class="mono tnum sim-out-val" id="sim-cash">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">停損價</div>
+      <div class="mono tnum sim-out-val dn" id="sim-sl-price">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">停利價</div>
+      <div class="mono tnum sim-out-val up" id="sim-tp-price">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">最大損失</div>
+      <div class="mono tnum sim-out-val dn" id="sim-max-loss">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">目標獲利</div>
+      <div class="mono tnum sim-out-val up" id="sim-max-profit">—</div>
+    </div>
+    <div class="sim-out-cell">
+      <div class="muted small">佔組合比</div>
+      <div class="mono tnum sim-out-val" id="sim-weight">—</div>
+    </div>
+  </div>
+
+  <div class="sim-rules-row">
+    <div class="sim-rule">
+      <strong>雪球法規則</strong>
+      <span class="muted small">賺到停利 → 取 50% 入 0050 存款、50% 留場繼續滾</span>
+    </div>
+  </div>
+</div>
+
+<script id="sim-data" type="application/json">{data_blob}</script>
+<script>
+(function() {{
+  const el = document.getElementById('sim-data');
+  if (!el) return;
+  const DATA = JSON.parse(el.textContent);
+  const fx = DATA.usdtwd || 32.0;
+  const pfTotal = {pf.get("summary", {}).get("total_value_twd", 1)};
+
+  const tickerSel = document.getElementById('sim-ticker');
+  const budgetIn = document.getElementById('sim-budget');
+  const slIn = document.getElementById('sim-sl');
+  const tpIn = document.getElementById('sim-tp');
+  const slVal = document.getElementById('sim-sl-val');
+  const tpVal = document.getElementById('sim-tp-val');
+  const infoEl = document.getElementById('sim-ticker-info');
+
+  // Populate ticker dropdown grouped
+  const groups = {{}};
+  DATA.items.forEach(it => {{
+    if (it.price == null) return;  // skip no-price items
+    (groups[it.group] = groups[it.group] || []).push(it);
+  }});
+  Object.entries(groups).forEach(([group, items]) => {{
+    const og = document.createElement('optgroup');
+    og.label = group;
+    items.forEach(it => {{
+      const opt = document.createElement('option');
+      opt.value = it.symbol;
+      opt.textContent = `${{it.symbol}}  ${{it.name}}  @${{it.price.toFixed(2)}}`;
+      og.appendChild(opt);
+    }});
+    tickerSel.appendChild(og);
+  }});
+
+  function getItem(symbol) {{
+    return DATA.items.find(i => i.symbol === symbol && i.price != null);
+  }}
+
+  function fmt(n, dp=0) {{
+    if (n == null || Number.isNaN(n)) return '—';
+    return n.toLocaleString('en-US', {{ minimumFractionDigits: dp, maximumFractionDigits: dp }});
+  }}
+
+  function recalc() {{
+    const sym = tickerSel.value;
+    const budget = parseFloat(budgetIn.value) || 0;
+    const sl = parseFloat(slIn.value);
+    const tp = parseFloat(tpIn.value);
+    slVal.textContent = sl;
+    tpVal.textContent = tp;
+
+    const it = getItem(sym);
+    if (!it) return;
+
+    const priceTwd = it.market === 'TW' ? it.price : it.price * fx;
+    const maxShares = Math.floor(budget / priceTwd);
+    const totalCost = maxShares * priceTwd;
+    const cashLeft = budget - totalCost;
+    const slPrice = it.price * (1 - sl/100);
+    const tpPrice = it.price * (1 + tp/100);
+    const maxLoss = totalCost * (sl/100);
+    const maxProfit = totalCost * (tp/100);
+    const weight = pfTotal ? (totalCost / pfTotal * 100) : 0;
+
+    infoEl.textContent = `${{it.market}} · 現價 ${{it.price.toFixed(2)}}${{it.market === 'US' ? ' USD' : ''}}${{it.pillar ? ' · ' + it.pillar : ''}}`;
+
+    document.getElementById('sim-shares').textContent = maxShares > 0 ? maxShares + ' 股' : '0 股（預算不夠 1 股）';
+    document.getElementById('sim-cost').textContent = 'NT$' + fmt(totalCost);
+    document.getElementById('sim-cash').textContent = 'NT$' + fmt(cashLeft);
+    document.getElementById('sim-sl-price').textContent = slPrice.toFixed(2);
+    document.getElementById('sim-tp-price').textContent = tpPrice.toFixed(2);
+    document.getElementById('sim-max-loss').textContent = '−NT$' + fmt(maxLoss);
+    document.getElementById('sim-max-profit').textContent = '+NT$' + fmt(maxProfit);
+    document.getElementById('sim-weight').textContent = weight.toFixed(2) + '%';
+  }}
+
+  budgetIn.addEventListener('input', recalc);
+  tickerSel.addEventListener('change', recalc);
+  slIn.addEventListener('input', recalc);
+  tpIn.addEventListener('input', recalc);
+  document.querySelectorAll('.sim-chip').forEach(b => {{
+    b.addEventListener('click', () => {{
+      budgetIn.value = b.dataset.preset;
+      recalc();
+    }});
+  }});
+
+  // Init
+  if (tickerSel.options.length > 0) recalc();
+}})();
+</script>
+''', data_blob
+
+
 def render_macro_strip(pf: dict) -> str:
     """Compact macro strip for main area (wider, horizontal)."""
     if not pf:
@@ -1536,6 +1767,7 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     positions = render_positions_table(pf)
     briefs_table = render_briefs_table(briefs)
     ai_tab = render_ai_tab(latest_brief, latest_analysis)
+    sim_html, _ = render_simulator(pf, latest_analysis)
 
     body = f'''
 <header class="desk-topbar">
@@ -1556,10 +1788,12 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     <section class="desk-panel">
       <div class="tabs" role="tablist">
         <button class="tab-btn active" data-tab="ai">🤖 AI Analysis</button>
+        <button class="tab-btn" data-tab="sim">🧮 Simulator</button>
         <button class="tab-btn" data-tab="positions">Positions</button>
         <button class="tab-btn" data-tab="briefs">Briefs · {len(briefs)}</button>
       </div>
       <div class="tab-panel active" data-panel="ai">{ai_tab}</div>
+      <div class="tab-panel" data-panel="sim">{sim_html}</div>
       <div class="tab-panel" data-panel="positions">{positions}</div>
       <div class="tab-panel" data-panel="briefs">{briefs_table}</div>
     </section>
@@ -2581,6 +2815,119 @@ footer a { color: var(--tx-3); }
 .pick-head strong { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.3px; }
 .pick-thesis { color: var(--tx-2); line-height: 1.6; font-size: 12px; }
 .pick-risk { line-height: 1.5; font-size: 11px; }
+
+/* Simulator tab */
+.sim-tab-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+.sim-intro { padding: 8px 10px; background: var(--bg-2); border-radius: var(--r-sm); border-left: 3px solid var(--accent); }
+.sim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  background: var(--bg-2);
+  padding: 16px;
+  border-radius: var(--r);
+}
+.sim-field { display: flex; flex-direction: column; gap: 8px; }
+.sim-lbl {
+  font-size: 11px;
+  color: var(--tx-3);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+.sim-input {
+  padding: 10px 12px;
+  background: var(--bg-1);
+  color: var(--tx-1);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+.sim-input:focus { border-color: var(--accent); }
+.sim-select { cursor: pointer; }
+.sim-budget-row { display: flex; align-items: center; gap: 4px; }
+.sim-prefix {
+  padding: 10px 8px;
+  background: var(--bg-3);
+  border-radius: 8px 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--tx-3);
+  border: 1px solid var(--line-2);
+  border-right: none;
+}
+.sim-budget-row .sim-input { border-radius: 0 8px 8px 0; }
+.sim-presets { display: flex; gap: 4px; flex-wrap: wrap; }
+.sim-chip {
+  padding: 4px 10px;
+  background: var(--bg-3);
+  color: var(--tx-2);
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sim-chip:hover { background: var(--accent-soft); color: var(--accent-2); border-color: var(--accent); }
+.sim-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--bg-3);
+  border-radius: 3px;
+  outline: none;
+}
+.sim-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px; height: 18px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+.sim-range::-moz-range-thumb {
+  width: 18px; height: 18px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+.sim-range-labels { display: flex; justify-content: space-between; }
+.sim-ticker-info { font-size: 11px; }
+
+.sim-output {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.sim-out-cell {
+  background: var(--bg-1);
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.sim-out-cell .muted { font-size: 10px; letter-spacing: 0.6px; text-transform: uppercase; }
+.sim-out-val { font-size: 18px; font-weight: 700; }
+
+.sim-rules-row {
+  padding: 12px 14px;
+  background: var(--amber-bg);
+  border: 1px solid rgba(255,181,71,0.3);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+}
+.sim-rule strong { color: var(--amber); margin-right: 8px; font-size: 12px; }
 
 /* Budget allocation — hero + full detail */
 .hero-budget {
