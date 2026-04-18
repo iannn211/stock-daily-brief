@@ -125,6 +125,9 @@ def main() -> int:
         tickers.setdefault(to_yf_ticker(sym, market), sym)
     for m in cfg.get("macro_tickers", []):
         tickers.setdefault(m, m)
+    # Simulator universe — fetched lightly (just for price + 52w range)
+    for u in cfg.get("simulator_universe", []):
+        tickers.setdefault(to_yf_ticker(u["symbol"], u["market"]), u["symbol"])
 
     print(f"[{datetime.now(TAIPEI):%Y-%m-%d %H:%M}] fetching {len(tickers)} tickers + 1y history…",
           file=sys.stderr)

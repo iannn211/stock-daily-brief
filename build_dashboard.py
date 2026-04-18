@@ -1481,36 +1481,58 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
     """Interactive trade simulator — client-side math, no API calls.
 
     Returns (html, js_data_blob). JS data blob should be injected in the page.
+    Universe comes from portfolio.json simulator_universe + AI opportunities.
     """
     if not pf:
         return "", "{}"
 
-    # Collect tickers from holdings + watchlist + opportunities (AI picks)
+    # Collect tickers from universe + holdings + watchlist + opportunities
     items: list[dict] = []
     seen: set[str] = set()
 
-    def add(sym, name, price, market, group, pillar=None):
-        if not sym or sym in seen:
+    def add(sym, name, price, market, group, pct52=None, high52=None, low52=None, category=None):
+        if not sym or sym in seen or price is None:
             return
         seen.add(sym)
         items.append({
             "symbol": sym, "name": name, "price": price,
-            "market": market, "group": group, "pillar": pillar or "",
+            "market": market, "group": group,
+            "pct_52w": pct52, "high_52w": high52, "low_52w": low52,
+            "category": category or "",
         })
 
+    # Holdings first (user owns these)
     for h in pf.get("holdings", []):
         add(h["symbol"], h["name"], h.get("price"), h.get("market", "TW"),
-            "持股", h.get("pillar"))
+            "⭐ 我的持股", h.get("pct_52w"), h.get("high_52w"), h.get("low_52w"),
+            h.get("pillar"))
+
+    # Watchlist
     for w in pf.get("watchlist", []):
         add(w["symbol"], w["name"], w.get("price"), w.get("market", "TW"),
-            "追蹤", w.get("pillar"))
-    # Opportunities from AI if present — attach current price from watchlist/holdings if known
+            "👁 追蹤中", w.get("pct_52w"), None, None, w.get("pillar"))
+
+    # AI opportunities — group them distinctly so they stand out
     if analysis:
         for o in analysis.get("opportunities", []):
             sym = o.get("symbol")
             if sym and sym not in seen:
-                # We don't have price unless it's in pf; leave null — JS will skip
-                add(sym, o.get("name", ""), None, "TW", "AI 機會")
+                # Try to find price from universe
+                u_match = next((u for u in pf.get("simulator_universe", [])
+                               if u["symbol"] == sym), None)
+                if u_match:
+                    add(sym, o.get("name", u_match["name"]), u_match["price"],
+                        u_match["market"], "🔍 AI 今日機會",
+                        u_match.get("pct_52w"), u_match.get("high_52w"),
+                        u_match.get("low_52w"), u_match.get("category"))
+
+    # Universe — group by category
+    for u in pf.get("simulator_universe", []):
+        if u["symbol"] in seen:
+            continue
+        cat = u.get("category", "其他")
+        add(u["symbol"], u["name"], u["price"], u["market"], cat,
+            u.get("pct_52w"), u.get("high_52w"), u.get("low_52w"), cat)
 
     # Get default budget
     cfg_budget = 5000
@@ -1551,9 +1573,25 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
     </div>
 
     <div class="sim-field">
-      <label class="sim-lbl">📊 標的</label>
+      <label class="sim-lbl">📊 標的 <span id="sim-count" class="muted small mono"></span></label>
       <select id="sim-ticker" class="sim-input sim-select"></select>
       <div class="sim-ticker-info mono small muted" id="sim-ticker-info">—</div>
+      <div class="sim-52w-bar" id="sim-52w-bar"></div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">🎯 進場策略</label>
+      <div class="sim-entry-group" id="sim-entry-group">
+        <button class="sim-entry-btn active" data-strategy="market">現價進</button>
+        <button class="sim-entry-btn" data-strategy="-2">限價 −2%</button>
+        <button class="sim-entry-btn" data-strategy="-5">限價 −5%</button>
+        <button class="sim-entry-btn" data-strategy="custom">自訂</button>
+      </div>
+      <div class="sim-budget-row" style="margin-top:6px">
+        <span class="sim-prefix">下單價</span>
+        <input type="number" id="sim-entry" value="0" step="0.01" class="sim-input">
+      </div>
+      <div class="sim-entry-hint muted small mono" id="sim-entry-hint">—</div>
     </div>
 
     <div class="sim-field">
@@ -1625,27 +1663,38 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
   const budgetIn = document.getElementById('sim-budget');
   const slIn = document.getElementById('sim-sl');
   const tpIn = document.getElementById('sim-tp');
+  const entryIn = document.getElementById('sim-entry');
   const slVal = document.getElementById('sim-sl-val');
   const tpVal = document.getElementById('sim-tp-val');
   const infoEl = document.getElementById('sim-ticker-info');
+  const entryHint = document.getElementById('sim-entry-hint');
+  const bar52w = document.getElementById('sim-52w-bar');
+  const countEl = document.getElementById('sim-count');
+  let entryStrategy = 'market'; // market | -2 | -5 | custom
 
-  // Populate ticker dropdown grouped
+  // Populate dropdown grouped by category, with priority groups first
+  const priorityGroups = ['⭐ 我的持股', '👁 追蹤中', '🔍 AI 今日機會'];
   const groups = {{}};
   DATA.items.forEach(it => {{
-    if (it.price == null) return;  // skip no-price items
+    if (it.price == null) return;
     (groups[it.group] = groups[it.group] || []).push(it);
   }});
-  Object.entries(groups).forEach(([group, items]) => {{
+  const sortedGroups = [
+    ...priorityGroups.filter(g => groups[g]),
+    ...Object.keys(groups).filter(g => !priorityGroups.includes(g)).sort(),
+  ];
+  sortedGroups.forEach(group => {{
     const og = document.createElement('optgroup');
     og.label = group;
-    items.forEach(it => {{
+    groups[group].forEach(it => {{
       const opt = document.createElement('option');
       opt.value = it.symbol;
-      opt.textContent = `${{it.symbol}}  ${{it.name}}  @${{it.price.toFixed(2)}}`;
+      opt.textContent = `${{it.symbol}}  ${{it.name}}  @${{it.price.toFixed(2)}}${{it.market === 'US' ? ' USD' : ''}}`;
       og.appendChild(opt);
     }});
     tickerSel.appendChild(og);
   }});
+  countEl.textContent = `(${{DATA.items.length}} 檔)`;
 
   function getItem(symbol) {{
     return DATA.items.find(i => i.symbol === symbol && i.price != null);
@@ -1654,6 +1703,47 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
   function fmt(n, dp=0) {{
     if (n == null || Number.isNaN(n)) return '—';
     return n.toLocaleString('en-US', {{ minimumFractionDigits: dp, maximumFractionDigits: dp }});
+  }}
+
+  function suggestEntry(it, strategy) {{
+    const cur = it.price;
+    if (strategy === 'market') return cur;
+    if (strategy === '-2') return cur * 0.98;
+    if (strategy === '-5') return cur * 0.95;
+    return parseFloat(entryIn.value) || cur;
+  }}
+
+  function updateEntryHint(it, entry) {{
+    const cur = it.price;
+    const diff = ((entry - cur) / cur * 100);
+    let advice = '';
+    if (it.pct_52w != null) {{
+      if (it.pct_52w >= 90) advice = '⚠️ 52週位階 ' + it.pct_52w.toFixed(0) + '%（高檔），建議限價等拉回';
+      else if (it.pct_52w >= 70) advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（中高），可考慮限價 −2%';
+      else if (it.pct_52w >= 30) advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（中段），現價進或限價 −2% 皆可';
+      else advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（低檔），積極進場';
+    }}
+    entryHint.textContent = `距現價 ${{diff >= 0 ? '+' : ''}}${{diff.toFixed(2)}}%  ·  ${{advice}}`;
+  }}
+
+  function render52wBar(it) {{
+    if (it.high_52w == null || it.low_52w == null) {{
+      bar52w.innerHTML = '';
+      return;
+    }}
+    const range = it.high_52w - it.low_52w;
+    const curPos = range > 0 ? ((it.price - it.low_52w) / range * 100) : 50;
+    const entry = parseFloat(entryIn.value) || it.price;
+    const entryPos = range > 0 ? Math.max(0, Math.min(100, (entry - it.low_52w) / range * 100)) : 50;
+    bar52w.innerHTML = `
+      <div class="sim-52w-labels">
+        <span>52w低 ${{it.low_52w.toFixed(2)}}</span>
+        <span>52w高 ${{it.high_52w.toFixed(2)}}</span>
+      </div>
+      <div class="sim-52w-track">
+        <div class="sim-52w-entry" style="left:${{entryPos.toFixed(1)}}%" title="進場 ${{entry.toFixed(2)}}"></div>
+        <div class="sim-52w-cur" style="left:${{curPos.toFixed(1)}}%" title="現價 ${{it.price.toFixed(2)}}"></div>
+      </div>`;
   }}
 
   function recalc() {{
@@ -1667,17 +1757,28 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
     const it = getItem(sym);
     if (!it) return;
 
-    const priceTwd = it.market === 'TW' ? it.price : it.price * fx;
-    const maxShares = Math.floor(budget / priceTwd);
-    const totalCost = maxShares * priceTwd;
+    // Update entry price from strategy
+    if (entryStrategy !== 'custom') {{
+      entryIn.value = suggestEntry(it, entryStrategy).toFixed(2);
+    }}
+    const entryPrice = parseFloat(entryIn.value) || it.price;
+
+    const entryTwd = it.market === 'TW' ? entryPrice : entryPrice * fx;
+    const maxShares = Math.floor(budget / entryTwd);
+    const totalCost = maxShares * entryTwd;
     const cashLeft = budget - totalCost;
-    const slPrice = it.price * (1 - sl/100);
-    const tpPrice = it.price * (1 + tp/100);
+    const slPrice = entryPrice * (1 - sl/100);
+    const tpPrice = entryPrice * (1 + tp/100);
     const maxLoss = totalCost * (sl/100);
     const maxProfit = totalCost * (tp/100);
     const weight = pfTotal ? (totalCost / pfTotal * 100) : 0;
 
-    infoEl.textContent = `${{it.market}} · 現價 ${{it.price.toFixed(2)}}${{it.market === 'US' ? ' USD' : ''}}${{it.pillar ? ' · ' + it.pillar : ''}}`;
+    const p52 = it.pct_52w != null ? ` · 52w位階 ${{it.pct_52w.toFixed(0)}}%` : '';
+    const cat = it.category ? ` · ${{it.category}}` : '';
+    infoEl.textContent = `${{it.market}} · 現價 ${{it.price.toFixed(2)}}${{it.market === 'US' ? ' USD' : ''}}${{p52}}${{cat}}`;
+
+    updateEntryHint(it, entryPrice);
+    render52wBar(it);
 
     document.getElementById('sim-shares').textContent = maxShares > 0 ? maxShares + ' 股' : '0 股（預算不夠 1 股）';
     document.getElementById('sim-cost').textContent = 'NT$' + fmt(totalCost);
@@ -1693,9 +1794,22 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
   tickerSel.addEventListener('change', recalc);
   slIn.addEventListener('input', recalc);
   tpIn.addEventListener('input', recalc);
+  entryIn.addEventListener('input', () => {{ entryStrategy = 'custom'; document.querySelectorAll('.sim-entry-btn').forEach(b => b.classList.toggle('active', b.dataset.strategy === 'custom')); recalc(); }});
   document.querySelectorAll('.sim-chip').forEach(b => {{
     b.addEventListener('click', () => {{
       budgetIn.value = b.dataset.preset;
+      recalc();
+    }});
+  }});
+  document.querySelectorAll('.sim-entry-btn').forEach(b => {{
+    b.addEventListener('click', () => {{
+      if (b.dataset.strategy === 'custom') {{
+        entryStrategy = 'custom';
+        entryIn.focus();
+      }} else {{
+        entryStrategy = b.dataset.strategy;
+      }}
+      document.querySelectorAll('.sim-entry-btn').forEach(x => x.classList.toggle('active', x === b));
       recalc();
     }});
   }});
@@ -3111,6 +3225,56 @@ footer a { color: var(--tx-3); }
   font-size: 13px;
 }
 .sim-rule strong { color: var(--amber); margin-right: 8px; font-size: 12px; }
+
+/* Entry strategy buttons */
+.sim-entry-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.sim-entry-btn {
+  flex: 1; min-width: 70px;
+  padding: 7px 8px;
+  background: var(--bg-3);
+  color: var(--tx-2);
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sim-entry-btn:hover { background: var(--bg-4); }
+.sim-entry-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  border-color: var(--accent);
+}
+.sim-entry-hint { margin-top: 2px; font-size: 11px; line-height: 1.5; }
+
+/* 52w range bar */
+.sim-52w-bar { margin-top: 8px; }
+.sim-52w-bar:empty { display: none; }
+.sim-52w-labels {
+  display: flex; justify-content: space-between;
+  font-size: 10px;
+  color: var(--tx-3);
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+.sim-52w-track {
+  position: relative;
+  height: 6px;
+  background: linear-gradient(90deg, var(--dn-bg), var(--bg-3) 50%, var(--up-bg));
+  border-radius: 3px;
+}
+.sim-52w-cur, .sim-52w-entry {
+  position: absolute;
+  top: -4px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  border: 2px solid var(--bg-1);
+}
+.sim-52w-cur { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.sim-52w-entry { background: var(--amber); box-shadow: 0 0 8px rgba(255,181,71,0.5); }
 
 /* Budget allocation — hero + full detail */
 .hero-budget {

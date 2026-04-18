@@ -305,6 +305,28 @@ def main() -> int:
         "usdtwd": _macro("TWD=X"),
     }
 
+    # Simulator universe (light: price + 52w only, no history)
+    universe_out: list[dict] = []
+    existing_syms = {h["symbol"] for h in holdings_out} | {w["symbol"] for w in cfg.get("watchlist", [])}
+    for u in cfg.get("simulator_universe", []):
+        yf_ticker = to_yf_ticker(u["symbol"], u["market"])
+        p = prices.get(yf_ticker)
+        if not p:
+            continue
+        universe_out.append({
+            "symbol": u["symbol"],
+            "name": u["name"],
+            "market": u["market"],
+            "category": u.get("category", "其他"),
+            "price": p["close"],
+            "day_change_pct": p["day_change_pct"],
+            "pct_52w": p.get("pct_52w"),
+            "high_52w": p.get("high_52w"),
+            "low_52w": p.get("low_52w"),
+            "currency": p.get("currency"),
+            "is_held": u["symbol"] in existing_syms,
+        })
+
     # Watchlist enrichment
     watchlist_out: list[dict] = []
     for w in cfg.get("watchlist", []):
@@ -376,6 +398,7 @@ def main() -> int:
         "alerts": alerts,
         "alert_count": alert_count,
         "watchlist": watchlist_out,
+        "simulator_universe": universe_out,
         "portfolio_series": portfolio_series[-90:],  # last 90 trading days for sparkline
     }
     OUTPUT_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")

@@ -95,3 +95,60 @@ macro_tickers:
   - "^GSPC"
   - "^VIX"
   - "TWD=X"
+
+# Simulator universe — 可以在 🧮 試算 tab 挑選的股票池。
+# 這些只抓最新價格 + 52 週高低（不追蹤 P&L），不會顯示在持股卡片上。
+# 想新增個股試算就加進來；不需要寫 shares / cost_basis。
+simulator_universe:
+  # ── 半導體代工 / IC 設計 ──
+  - { symbol: "2330", name: "台積電",       market: "TW", category: "半導體代工" }
+  - { symbol: "2303", name: "聯電",         market: "TW", category: "半導體代工" }
+  - { symbol: "2454", name: "聯發科",       market: "TW", category: "IC 設計" }
+  - { symbol: "2379", name: "瑞昱",         market: "TW", category: "IC 設計" }
+  - { symbol: "3034", name: "聯詠",         market: "TW", category: "IC 設計" }
+  - { symbol: "3443", name: "創意",         market: "TW", category: "IC 設計" }
+  - { symbol: "5274", name: "信驊",         market: "TW", category: "IC 設計" }
+  # ── AI 伺服器 / 電子五哥 ──
+  - { symbol: "2317", name: "鴻海",         market: "TW", category: "AI 伺服器" }
+  - { symbol: "2382", name: "廣達",         market: "TW", category: "AI 伺服器" }
+  - { symbol: "3231", name: "緯創",         market: "TW", category: "AI 伺服器" }
+  - { symbol: "6669", name: "緯穎",         market: "TW", category: "AI 伺服器" }
+  - { symbol: "2376", name: "技嘉",         market: "TW", category: "AI 伺服器" }
+  - { symbol: "2345", name: "智邦",         market: "TW", category: "網通" }
+  # ── 散熱 / 液冷 ──
+  - { symbol: "3017", name: "奇鋐",         market: "TW", category: "散熱" }
+  - { symbol: "3324", name: "雙鴻",         market: "TW", category: "散熱" }
+  - { symbol: "6230", name: "超眾",         market: "TW", category: "散熱" }
+  # ── 光通訊 / CPO ──
+  - { symbol: "3081", name: "聯亞",         market: "TW", category: "光通訊" }
+  - { symbol: "4979", name: "華星光",       market: "TW", category: "光通訊" }
+  - { symbol: "3163", name: "波若威",       market: "TW", category: "光通訊" }
+  - { symbol: "3363", name: "上詮",         market: "TW", category: "光通訊" }
+  - { symbol: "3234", name: "光環",         market: "TW", category: "光通訊" }
+  # ── PCB / 載板 ──
+  - { symbol: "4958", name: "臻鼎-KY",       market: "TW", category: "PCB" }
+  - { symbol: "2368", name: "金像電",       market: "TW", category: "PCB" }
+  - { symbol: "3037", name: "欣興",         market: "TW", category: "PCB" }
+  - { symbol: "8046", name: "南電",         market: "TW", category: "PCB" }
+  - { symbol: "2383", name: "台光電",       market: "TW", category: "PCB" }
+  # ── 被動元件 ──
+  - { symbol: "2327", name: "國巨",         market: "TW", category: "被動元件" }
+  - { symbol: "2492", name: "華新科",       market: "TW", category: "被動元件" }
+  # ── 測試 / 半導體設備 ──
+  - { symbol: "6515", name: "穎崴",         market: "TW", category: "測試" }
+  - { symbol: "3533", name: "嘉澤",         market: "TW", category: "測試" }
+  # ── ETF（台股）──
+  - { symbol: "0050", name: "元大台灣50",    market: "TW", category: "ETF" }
+  - { symbol: "006208", name: "富邦台50",    market: "TW", category: "ETF" }
+  - { symbol: "00830", name: "國泰費半",     market: "TW", category: "ETF" }
+  # ── 美債 ETF（使用者可接受的防禦）──
+  - { symbol: "00687B", name: "國泰20年美債", market: "TW", category: "美債 ETF" }
+  - { symbol: "00679B", name: "元大美債20年", market: "TW", category: "美債 ETF" }
+  # ── 美股 ──
+  - { symbol: "VOO",  name: "Vanguard S&P 500",    market: "US", category: "美股 ETF" }
+  - { symbol: "QQQ",  name: "Invesco QQQ Nasdaq",  market: "US", category: "美股 ETF" }
+  - { symbol: "TLT",  name: "iShares 20+ Year Bond", market: "US", category: "美債 ETF" }
+  - { symbol: "NVDA", name: "NVIDIA",              market: "US", category: "美股個股" }
+  - { symbol: "AAPL", name: "Apple",               market: "US", category: "美股個股" }
+  - { symbol: "TSLA", name: "Tesla",               market: "US", category: "美股個股" }
+  - { symbol: "MSFT", name: "Microsoft",           market: "US", category: "美股個股" }

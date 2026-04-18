@@ -348,9 +348,25 @@
     </div>
 
     <div class="sim-field">
-      <label class="sim-lbl">📊 標的</label>
+      <label class="sim-lbl">📊 標的 <span id="sim-count" class="muted small mono"></span></label>
       <select id="sim-ticker" class="sim-input sim-select"></select>
       <div class="sim-ticker-info mono small muted" id="sim-ticker-info">—</div>
+      <div class="sim-52w-bar" id="sim-52w-bar"></div>
+    </div>
+
+    <div class="sim-field">
+      <label class="sim-lbl">🎯 進場策略</label>
+      <div class="sim-entry-group" id="sim-entry-group">
+        <button class="sim-entry-btn active" data-strategy="market">現價進</button>
+        <button class="sim-entry-btn" data-strategy="-2">限價 −2%</button>
+        <button class="sim-entry-btn" data-strategy="-5">限價 −5%</button>
+        <button class="sim-entry-btn" data-strategy="custom">自訂</button>
+      </div>
+      <div class="sim-budget-row" style="margin-top:6px">
+        <span class="sim-prefix">下單價</span>
+        <input type="number" id="sim-entry" value="0" step="0.01" class="sim-input">
+      </div>
+      <div class="sim-entry-hint muted small mono" id="sim-entry-hint">—</div>
     </div>
 
     <div class="sim-field">
@@ -409,7 +425,7 @@
   </div>
 </div>
 
-<script id="sim-data" type="application/json">{"items": [{"symbol": "0050", "name": "元大台灣50", "price": 84.15, "market": "TW", "group": "持股", "pillar": "growth"}, {"symbol": "2330", "name": "台積電", "price": 2030.0, "market": "TW", "group": "持股", "pillar": "growth"}, {"symbol": "VOO", "name": "S&P 500 ETF", "price": 652.78, "market": "US", "group": "追蹤", "pillar": "growth"}, {"symbol": "2303", "name": "聯電", "price": 73.0, "market": "TW", "group": "追蹤", "pillar": "growth"}, {"symbol": "3081", "name": "聯亞", "price": 2600.0, "market": "TW", "group": "追蹤", "pillar": "growth"}, {"symbol": "3324", "name": "雙鴻", "price": 1035.0, "market": "TW", "group": "追蹤", "pillar": "growth"}, {"symbol": "3017", "name": "奇鋐", "price": 2400.0, "market": "TW", "group": "追蹤", "pillar": "growth"}], "defaultBudget": 5000, "usdtwd": 31.464}</script>
+<script id="sim-data" type="application/json">{"items": [{"symbol": "0050", "name": "元大台灣50", "price": 84.15, "market": "TW", "group": "⭐ 我的持股", "pct_52w": 97.94, "high_52w": 85.1, "low_52w": 38.9875, "category": "growth"}, {"symbol": "2330", "name": "台積電", "price": 2030.0, "market": "TW", "group": "⭐ 我的持股", "pct_52w": 94.55, "high_52w": 2100.0, "low_52w": 816.0, "category": "growth"}, {"symbol": "VOO", "name": "S&P 500 ETF", "price": 652.78, "market": "US", "group": "👁 追蹤中", "pct_52w": 98.88, "high_52w": null, "low_52w": null, "category": "growth"}, {"symbol": "2303", "name": "聯電", "price": 73.0, "market": "TW", "group": "👁 追蹤中", "pct_52w": 83.08, "high_52w": null, "low_52w": null, "category": "growth"}, {"symbol": "3081", "name": "聯亞", "price": 2600.0, "market": "TW", "group": "👁 追蹤中", "pct_52w": 100.0, "high_52w": null, "low_52w": null, "category": "growth"}, {"symbol": "3324", "name": "雙鴻", "price": 1035.0, "market": "TW", "group": "👁 追蹤中", "pct_52w": 78.57, "high_52w": null, "low_52w": null, "category": "growth"}, {"symbol": "3017", "name": "奇鋐", "price": 2400.0, "market": "TW", "group": "👁 追蹤中", "pct_52w": 94.58, "high_52w": null, "low_52w": null, "category": "growth"}, {"symbol": "2454", "name": "聯發科", "price": 1925.0, "market": "TW", "group": "IC 設計", "pct_52w": 94.08, "high_52w": 1975.0, "low_52w": 1130.0, "category": "IC 設計"}, {"symbol": "2379", "name": "瑞昱", "price": 531.0, "market": "TW", "group": "IC 設計", "pct_52w": 60.0, "high_52w": 593.0, "low_52w": 438.0, "category": "IC 設計"}, {"symbol": "3034", "name": "聯詠", "price": 415.0, "market": "TW", "group": "IC 設計", "pct_52w": 31.5, "high_52w": 552.0, "low_52w": 352.0, "category": "IC 設計"}, {"symbol": "3443", "name": "創意", "price": 3255.0, "market": "TW", "group": "IC 設計", "pct_52w": 94.93, "high_52w": 3380.0, "low_52w": 916.0, "category": "IC 設計"}, {"symbol": "5274", "name": "信驊", "price": 13805.0, "market": "TW", "group": "IC 設計", "pct_52w": 91.07, "high_52w": 14890.0, "low_52w": 2740.0, "category": "IC 設計"}, {"symbol": "2317", "name": "鴻海", "price": 206.0, "market": "TW", "group": "AI 伺服器", "pct_52w": 55.81, "high_52w": 265.0, "low_52w": 131.5, "category": "AI 伺服器"}, {"symbol": "2382", "name": "廣達", "price": 323.0, "market": "TW", "group": "AI 伺服器", "pct_52w": 93.93, "high_52w": 329.5, "low_52w": 222.5, "category": "AI 伺服器"}, {"symbol": "3231", "name": "緯創", "price": 136.5, "market": "TW", "group": "AI 伺服器", "pct_52w": 60.67, "high_52w": 161.0, "low_52w": 98.7, "category": "AI 伺服器"}, {"symbol": "6669", "name": "緯穎", "price": 3805.0, "market": "TW", "group": "AI 伺服器", "pct_52w": 66.4, "high_52w": 4850.0, "low_52w": 1740.0, "category": "AI 伺服器"}, {"symbol": "2376", "name": "技嘉", "price": 281.5, "market": "TW", "group": "AI 伺服器", "pct_52w": 67.87, "high_52w": 317.0, "low_52w": 206.5, "category": "AI 伺服器"}, {"symbol": "2345", "name": "智邦", "price": 2070.0, "market": "TW", "group": "網通", "pct_52w": 97.54, "high_52w": 2110.0, "low_52w": 482.5, "category": "網通"}, {"symbol": "6230", "name": "超眾", "price": 161.0, "market": "TW", "group": "散熱", "pct_52w": 65.29, "high_52w": 190.5, "low_52w": 105.5, "category": "散熱"}, {"symbol": "4979", "name": "華星光", "price": 644.0, "market": "TW", "group": "光通訊", "pct_52w": 100.0, "high_52w": 644.0, "low_52w": 131.0, "category": "光通訊"}, {"symbol": "3163", "name": "波若威", "price": 1225.0, "market": "TW", "group": "光通訊", "pct_52w": 96.03, "high_52w": 1270.0, "low_52w": 136.0, "category": "光通訊"}, {"symbol": "3363", "name": "上詮", "price": 899.0, "market": "TW", "group": "光通訊", "pct_52w": 98.29, "high_52w": 912.0, "low_52w": 150.0, "category": "光通訊"}, {"symbol": "3234", "name": "光環", "price": 115.5, "market": "TW", "group": "光通訊", "pct_52w": 89.99, "high_52w": 125.0, "low_52w": 30.05, "category": "光通訊"}, {"symbol": "4958", "name": "臻鼎-KY", "price": 282.0, "market": "TW", "group": "PCB", "pct_52w": 100.0, "high_52w": 282.0, "low_52w": 90.5, "category": "PCB"}, {"symbol": "2368", "name": "金像電", "price": 1175.0, "market": "TW", "group": "PCB", "pct_52w": 96.61, "high_52w": 1210.0, "low_52w": 177.0, "category": "PCB"}, {"symbol": "3037", "name": "欣興", "price": 643.0, "market": "TW", "group": "PCB", "pct_52w": 97.07, "high_52w": 660.0, "low_52w": 79.3, "category": "PCB"}, {"symbol": "8046", "name": "南電", "price": 724.0, "market": "TW", "group": "PCB", "pct_52w": 96.24, "high_52w": 749.0, "low_52w": 84.2, "category": "PCB"}, {"symbol": "2383", "name": "台光電", "price": 3800.0, "market": "TW", "group": "PCB", "pct_52w": 95.66, "high_52w": 3950.0, "low_52w": 497.0, "category": "PCB"}, {"symbol": "2327", "name": "國巨", "price": 316.5, "market": "TW", "group": "被動元件", "pct_52w": 91.25, "high_52w": 336.5, "low_52w": 108.0, "category": "被動元件"}, {"symbol": "2492", "name": "華新科", "price": 147.0, "market": "TW", "group": "被動元件", "pct_52w": 79.87, "high_52w": 165.5, "low_52w": 73.6, "category": "被動元件"}, {"symbol": "6515", "name": "穎崴", "price": 10305.0, "market": "TW", "group": "測試", "pct_52w": 96.27, "high_52w": 10675.0, "low_52w": 749.0, "category": "測試"}, {"symbol": "3533", "name": "嘉澤", "price": 2490.0, "market": "TW", "group": "測試", "pct_52w": 97.62, "high_52w": 2525.0, "low_52w": 1055.0, "category": "測試"}, {"symbol": "006208", "name": "富邦台50", "price": 194.85, "market": "TW", "group": "ETF", "pct_52w": 97.68, "high_52w": 197.3, "low_52w": 91.6, "category": "ETF"}, {"symbol": "00830", "name": "國泰費半", "price": 65.1, "market": "TW", "group": "ETF", "pct_52w": 99.12, "high_52w": 65.4, "low_52w": 31.49, "category": "ETF"}, {"symbol": "00687B", "name": "國泰20年美債", "price": 27.98, "market": "TW", "group": "美債 ETF", "pct_52w": 55.48, "high_52w": 29.89, "low_52w": 25.6, "category": "美債 ETF"}, {"symbol": "00679B", "name": "元大美債20年", "price": 26.91, "market": "TW", "group": "美債 ETF", "pct_52w": 56.37, "high_52w": 28.76, "low_52w": 24.52, "category": "美債 ETF"}, {"symbol": "QQQ", "name": "Invesco QQQ Nasdaq", "price": 648.85, "market": "US", "group": "美股 ETF", "pct_52w": 99.48, "high_52w": 650.0, "low_52w": 427.93, "category": "美股 ETF"}, {"symbol": "TLT", "name": "iShares 20+ Year Bond", "price": 87.07, "market": "US", "group": "美債 ETF", "pct_52w": 42.41, "high_52w": 92.19, "low_52w": 83.3, "category": "美債 ETF"}, {"symbol": "NVDA", "name": "NVIDIA", "price": 201.68, "market": "US", "group": "美股個股", "pct_52w": 91.03, "high_52w": 212.19, "low_52w": 95.04, "category": "美股個股"}, {"symbol": "AAPL", "name": "Apple", "price": 270.23, "market": "US", "group": "美股個股", "pct_52w": 81.39, "high_52w": 288.62, "low_52w": 189.81, "category": "美股個股"}, {"symbol": "TSLA", "name": "Tesla", "price": 400.62, "market": "US", "group": "美股個股", "pct_52w": 64.42, "high_52w": 498.83, "low_52w": 222.79, "category": "美股個股"}, {"symbol": "MSFT", "name": "Microsoft", "price": 422.79, "market": "US", "group": "美股個股", "pct_52w": 33.6, "high_52w": 555.45, "low_52w": 355.67, "category": "美股個股"}], "defaultBudget": 5000, "usdtwd": 31.464}</script>
 <script>
 (function() {
   const el = document.getElementById('sim-data');
@@ -422,27 +438,38 @@
   const budgetIn = document.getElementById('sim-budget');
   const slIn = document.getElementById('sim-sl');
   const tpIn = document.getElementById('sim-tp');
+  const entryIn = document.getElementById('sim-entry');
   const slVal = document.getElementById('sim-sl-val');
   const tpVal = document.getElementById('sim-tp-val');
   const infoEl = document.getElementById('sim-ticker-info');
+  const entryHint = document.getElementById('sim-entry-hint');
+  const bar52w = document.getElementById('sim-52w-bar');
+  const countEl = document.getElementById('sim-count');
+  let entryStrategy = 'market'; // market | -2 | -5 | custom
 
-  // Populate ticker dropdown grouped
+  // Populate dropdown grouped by category, with priority groups first
+  const priorityGroups = ['⭐ 我的持股', '👁 追蹤中', '🔍 AI 今日機會'];
   const groups = {};
   DATA.items.forEach(it => {
-    if (it.price == null) return;  // skip no-price items
+    if (it.price == null) return;
     (groups[it.group] = groups[it.group] || []).push(it);
   });
-  Object.entries(groups).forEach(([group, items]) => {
+  const sortedGroups = [
+    ...priorityGroups.filter(g => groups[g]),
+    ...Object.keys(groups).filter(g => !priorityGroups.includes(g)).sort(),
+  ];
+  sortedGroups.forEach(group => {
     const og = document.createElement('optgroup');
     og.label = group;
-    items.forEach(it => {
+    groups[group].forEach(it => {
       const opt = document.createElement('option');
       opt.value = it.symbol;
-      opt.textContent = `${it.symbol}  ${it.name}  @${it.price.toFixed(2)}`;
+      opt.textContent = `${it.symbol}  ${it.name}  @${it.price.toFixed(2)}${it.market === 'US' ? ' USD' : ''}`;
       og.appendChild(opt);
     });
     tickerSel.appendChild(og);
   });
+  countEl.textContent = `(${DATA.items.length} 檔)`;
 
   function getItem(symbol) {
     return DATA.items.find(i => i.symbol === symbol && i.price != null);
@@ -451,6 +478,47 @@
   function fmt(n, dp=0) {
     if (n == null || Number.isNaN(n)) return '—';
     return n.toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+
+  function suggestEntry(it, strategy) {
+    const cur = it.price;
+    if (strategy === 'market') return cur;
+    if (strategy === '-2') return cur * 0.98;
+    if (strategy === '-5') return cur * 0.95;
+    return parseFloat(entryIn.value) || cur;
+  }
+
+  function updateEntryHint(it, entry) {
+    const cur = it.price;
+    const diff = ((entry - cur) / cur * 100);
+    let advice = '';
+    if (it.pct_52w != null) {
+      if (it.pct_52w >= 90) advice = '⚠️ 52週位階 ' + it.pct_52w.toFixed(0) + '%（高檔），建議限價等拉回';
+      else if (it.pct_52w >= 70) advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（中高），可考慮限價 −2%';
+      else if (it.pct_52w >= 30) advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（中段），現價進或限價 −2% 皆可';
+      else advice = '52週位階 ' + it.pct_52w.toFixed(0) + '%（低檔），積極進場';
+    }
+    entryHint.textContent = `距現價 ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}%  ·  ${advice}`;
+  }
+
+  function render52wBar(it) {
+    if (it.high_52w == null || it.low_52w == null) {
+      bar52w.innerHTML = '';
+      return;
+    }
+    const range = it.high_52w - it.low_52w;
+    const curPos = range > 0 ? ((it.price - it.low_52w) / range * 100) : 50;
+    const entry = parseFloat(entryIn.value) || it.price;
+    const entryPos = range > 0 ? Math.max(0, Math.min(100, (entry - it.low_52w) / range * 100)) : 50;
+    bar52w.innerHTML = `
+      <div class="sim-52w-labels">
+        <span>52w低 ${it.low_52w.toFixed(2)}</span>
+        <span>52w高 ${it.high_52w.toFixed(2)}</span>
+      </div>
+      <div class="sim-52w-track">
+        <div class="sim-52w-entry" style="left:${entryPos.toFixed(1)}%" title="進場 ${entry.toFixed(2)}"></div>
+        <div class="sim-52w-cur" style="left:${curPos.toFixed(1)}%" title="現價 ${it.price.toFixed(2)}"></div>
+      </div>`;
   }
 
   function recalc() {
@@ -464,17 +532,28 @@
     const it = getItem(sym);
     if (!it) return;
 
-    const priceTwd = it.market === 'TW' ? it.price : it.price * fx;
-    const maxShares = Math.floor(budget / priceTwd);
-    const totalCost = maxShares * priceTwd;
+    // Update entry price from strategy
+    if (entryStrategy !== 'custom') {
+      entryIn.value = suggestEntry(it, entryStrategy).toFixed(2);
+    }
+    const entryPrice = parseFloat(entryIn.value) || it.price;
+
+    const entryTwd = it.market === 'TW' ? entryPrice : entryPrice * fx;
+    const maxShares = Math.floor(budget / entryTwd);
+    const totalCost = maxShares * entryTwd;
     const cashLeft = budget - totalCost;
-    const slPrice = it.price * (1 - sl/100);
-    const tpPrice = it.price * (1 + tp/100);
+    const slPrice = entryPrice * (1 - sl/100);
+    const tpPrice = entryPrice * (1 + tp/100);
     const maxLoss = totalCost * (sl/100);
     const maxProfit = totalCost * (tp/100);
     const weight = pfTotal ? (totalCost / pfTotal * 100) : 0;
 
-    infoEl.textContent = `${it.market} · 現價 ${it.price.toFixed(2)}${it.market === 'US' ? ' USD' : ''}${it.pillar ? ' · ' + it.pillar : ''}`;
+    const p52 = it.pct_52w != null ? ` · 52w位階 ${it.pct_52w.toFixed(0)}%` : '';
+    const cat = it.category ? ` · ${it.category}` : '';
+    infoEl.textContent = `${it.market} · 現價 ${it.price.toFixed(2)}${it.market === 'US' ? ' USD' : ''}${p52}${cat}`;
+
+    updateEntryHint(it, entryPrice);
+    render52wBar(it);
 
     document.getElementById('sim-shares').textContent = maxShares > 0 ? maxShares + ' 股' : '0 股（預算不夠 1 股）';
     document.getElementById('sim-cost').textContent = 'NT$' + fmt(totalCost);
@@ -490,9 +569,22 @@
   tickerSel.addEventListener('change', recalc);
   slIn.addEventListener('input', recalc);
   tpIn.addEventListener('input', recalc);
+  entryIn.addEventListener('input', () => { entryStrategy = 'custom'; document.querySelectorAll('.sim-entry-btn').forEach(b => b.classList.toggle('active', b.dataset.strategy === 'custom')); recalc(); });
   document.querySelectorAll('.sim-chip').forEach(b => {
     b.addEventListener('click', () => {
       budgetIn.value = b.dataset.preset;
+      recalc();
+    });
+  });
+  document.querySelectorAll('.sim-entry-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      if (b.dataset.strategy === 'custom') {
+        entryStrategy = 'custom';
+        entryIn.focus();
+      } else {
+        entryStrategy = b.dataset.strategy;
+      }
+      document.querySelectorAll('.sim-entry-btn').forEach(x => x.classList.toggle('active', x === b));
       recalc();
     });
   });
@@ -720,7 +812,7 @@ if (initTab && document.querySelector(`.mt-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 19:56 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 20:04 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>
