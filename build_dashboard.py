@@ -46,6 +46,48 @@ SENTIMENT_ICON = {"正面": "🟢", "負面": "🔴", "中性": "⚪"}
 PILLAR_LABEL = {"growth": "成長核心", "defense": "防禦對沖", "flexibility": "機動倉位"}
 PILLAR_CLS = {"growth": "p-growth", "defense": "p-defense", "flexibility": "p-flex"}
 
+# Populated lazily — maps ticker + Chinese name → symbol for linkification
+_TICKER_ALIAS: dict[str, str] = {}
+
+
+def _link_tickers(text: str, href_prefix: str = "holdings/") -> str:
+    """Replace known ticker codes and names in text with anchors to deep page."""
+    if not _TICKER_ALIAS or not text:
+        return html.escape(text)
+    escaped = html.escape(text)
+    # Sort aliases by length desc so longer names match first
+    keys = sorted(_TICKER_ALIAS.keys(), key=len, reverse=True)
+    for alias in keys:
+        if not alias or len(alias) < 2:
+            continue
+        sym = _TICKER_ALIAS[alias]
+        # Match as a whole token (avoid matching inside larger words)
+        # For digits: use word boundary; for CJK: just substring
+        if alias.isdigit() or alias.isascii():
+            pattern = rf"\b{re.escape(alias)}\b"
+        else:
+            pattern = re.escape(alias)
+        replacement = f'<a href="{href_prefix}{sym}.html" class="tx-link">{alias}</a>'
+        escaped = re.sub(pattern, replacement, escaped, count=3)  # limit replacements to avoid spam
+    return escaped
+
+
+def init_ticker_alias(pf: dict | None) -> None:
+    """Build alias → symbol map from portfolio data."""
+    _TICKER_ALIAS.clear()
+    if not pf:
+        return
+    for coll in ("holdings", "watchlist", "simulator_universe"):
+        for item in pf.get(coll, []) or []:
+            sym = item.get("symbol")
+            if not sym:
+                continue
+            _TICKER_ALIAS[sym] = sym
+            nm = item.get("name")
+            if nm:
+                _TICKER_ALIAS[nm] = sym
+                _TICKER_ALIAS[nm.replace("-KY", "")] = sym
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -1175,6 +1217,101 @@ def render_briefs_table(briefs: list[dict]) -> str:
 '''
 
 
+def render_radar_tab(analysis: dict | None, pf: dict | None) -> str:
+    """Opportunity Radar — dedicated tab that surfaces themes to research.
+
+    Shows AI opportunities as big cards with industry grouping, lead stocks
+    (clickable to deep page), topic cross-reference, and a 'how it's found'
+    explanation.
+    """
+    if not analysis:
+        return '<div class="radar-empty"><p class="muted">AI 分析尚未生成。下次排程後會看到機會雷達。</p></div>'
+
+    opps = analysis.get("opportunities", [])
+    topics = analysis.get("topics", [])
+
+    if not opps:
+        return '<div class="radar-empty"><p class="muted">今日 AI 未挑出值得研究的新機會（市場條件可能不合適）。</p></div>'
+
+    # Intro
+    intro = f'''
+<div class="radar-intro">
+  <h2 class="radar-title">📡 機會雷達</h2>
+  <p class="muted">
+    AI 橫掃全市場找出「你可能錯過」的題材。每個都有論點 / 研究切入點 / 風險 / 直接跳到個股分析。
+    今天掃出 <strong class="mono">{len(opps)}</strong> 個機會、<strong class="mono">{len(topics)}</strong> 個主題。
+  </p>
+</div>
+'''
+
+    # Opportunity cards — big, with all detail exposed
+    opp_cards = []
+    for o in opps:
+        sym = o.get("symbol", "")
+        in_universe = sym in _TICKER_ALIAS
+        cta = (
+            f'<a href="holdings/{sym}.html" class="btn-link small">→ {sym} 完整分析 / 趨勢圖 / 新聞</a>'
+            if in_universe else
+            f'<span class="muted small">（尚未在資料庫中：手動到 portfolio.yaml 加入 simulator_universe 即可）</span>'
+        )
+        opp_cards.append(f'''
+        <article class="radar-card">
+          <div class="radar-card-head">
+            <div>
+              <h3>{html.escape(sym)} <span class="muted">{html.escape(o.get("name", ""))}</span></h3>
+            </div>
+          </div>
+          <div class="radar-card-body">
+            <div class="radar-row"><span class="radar-label">論點</span>{_link_tickers(o.get("thesis", ""))}</div>
+            <div class="radar-row"><span class="radar-label">研究切入</span>{_link_tickers(o.get("research_angle", ""))}</div>
+            <div class="radar-row radar-risk-row"><span class="radar-label dn">⚠ 風險</span>{_link_tickers(o.get("risk", ""))}</div>
+          </div>
+          <div class="radar-card-foot">{cta}</div>
+        </article>''')
+
+    # Related topics (mini — linked to brief)
+    topics_mini = []
+    for t in topics[:6]:
+        ticks = "".join(
+            (
+                f'<a href="holdings/{_TICKER_ALIAS[tk]}.html" class="chip chip-muted small">{html.escape(tk)}</a>'
+                if tk in _TICKER_ALIAS else
+                f'<span class="chip chip-muted small">{html.escape(tk)}</span>'
+            )
+            for tk in t.get("tickers", [])[:5]
+        )
+        topics_mini.append(f'''
+        <div class="radar-topic">
+          <div class="radar-topic-head">
+            <strong>{html.escape(t.get("title", ""))}</strong>
+            {_sentiment_badge(t.get("sentiment", "中性"))}
+          </div>
+          <div class="topic-tickers">{ticks}</div>
+          <p class="narrative small">{_link_tickers(t.get("narrative", ""))[:240]}…</p>
+        </div>''')
+
+    topics_block = ""
+    if topics_mini:
+        date = (analysis.get("date") or "")
+        topics_block = f'''
+<div class="radar-topics">
+  <h3 class="radar-subtitle">🔥 今日主題 — {len(topics)} 個族群</h3>
+  <div class="radar-topics-grid">{"".join(topics_mini)}</div>
+  <div class="tab-footer">
+    <a href="briefs/{date}.html" class="btn-link small">→ 看完整主題分析 + 原始新聞</a>
+  </div>
+</div>
+'''
+
+    return f'''
+<div class="radar-body">
+  {intro}
+  <div class="radar-grid">{"".join(opp_cards)}</div>
+  {topics_block}
+</div>
+'''
+
+
 def render_market_mood(pf: dict, analysis: dict | None) -> str:
     """Fear & Greed donut + VIX + 4 indices mini-grid (GUSHI MarketMoodMini)."""
     if not pf:
@@ -1368,10 +1505,12 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     if opps:
         picks = []
         for o in opps[:3]:
+            sym = o.get("symbol", "")
+            pick_href = f"holdings/{sym}.html" if sym in _TICKER_ALIAS else f"briefs/{latest_brief['date']}.html#opportunities"
             picks.append(f'''
-            <a class="pick-card" href="briefs/{latest_brief["date"]}.html#opportunities">
+            <a class="pick-card" href="{pick_href}">
               <div class="pick-head">
-                <strong>{html.escape(o.get("symbol", ""))}</strong>
+                <strong>{html.escape(sym)}</strong>
                 <span class="muted small">{html.escape(o.get("name", ""))}</span>
               </div>
               <div class="pick-thesis small">{html.escape(o.get("thesis", ""))[:80]}{"…" if len(o.get("thesis", "")) > 80 else ""}</div>
@@ -1431,7 +1570,7 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     <a href="briefs/{date_str}.html" class="btn-link small">→ 完整分析</a>
   </div>
   <h2 class="bh-headline">{html.escape(greeting)}，{headline_html}</h2>
-  <p class="bh-oneliner">{html.escape(one_liner)}</p>
+  <p class="bh-oneliner">{_link_tickers(one_liner)}</p>
   {highlights_html}
   {budget_html}
   {top_action_html}
@@ -1524,7 +1663,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
             {_sentiment_badge(t.get("sentiment", "中性"))}
           </div>
           <div class="topic-tickers">{tickers_chips}</div>
-          <p class="narrative">{html.escape(t.get("narrative", ""))}</p>
+          <p class="narrative">{_link_tickers(t.get("narrative", ""))}</p>
           {pts_html}
         </article>''')
     topics_html = (
@@ -2074,6 +2213,8 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
 
     latest_brief = briefs[0] if briefs else None
     latest_analysis = load_analysis(latest_brief["date"]) if latest_brief else None
+    # Build ticker alias map for linkification across all rendered text
+    init_ticker_alias(pf)
 
     try:
         as_of = datetime.fromisoformat(pf.get("as_of", ""))
@@ -2094,6 +2235,7 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     positions = render_positions_table(pf)
     briefs_table = render_briefs_table(briefs)
     ai_tab = render_ai_tab(latest_brief, latest_analysis)
+    radar_tab = render_radar_tab(latest_analysis, pf)
     sim_html, _ = render_simulator(pf, latest_analysis)
 
     # Thin portfolio summary strip values
@@ -2147,6 +2289,10 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     <span class="mt-icon">🤖</span>
     <span class="mt-label">今日 AI 建議</span>
   </button>
+  <button class="mt-btn" data-tab="radar">
+    <span class="mt-icon">📡</span>
+    <span class="mt-label">機會雷達</span>
+  </button>
   <button class="mt-btn" data-tab="sim">
     <span class="mt-icon">🧮</span>
     <span class="mt-label">試算看看</span>
@@ -2174,6 +2320,9 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
       {catalyst_panel}
     </div>
     {ai_tab}
+  </div>
+  <div class="tab-panel" data-panel="radar">
+    {radar_tab}
   </div>
   <div class="tab-panel" data-panel="sim">
     {sim_html}
@@ -3726,6 +3875,69 @@ footer a { color: var(--tx-3); }
   font-size: 13px;
 }
 .sim-rule strong { color: var(--amber); margin-right: 8px; font-size: 12px; }
+
+/* ── Radar tab ── */
+.radar-empty { padding: 40px 20px; text-align: center; }
+.radar-body { padding: 0; }
+.radar-intro { padding: 20px 22px 14px; border-bottom: 1px solid var(--line); }
+.radar-title { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
+.radar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+  padding: 18px 22px;
+}
+.radar-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 16px 18px 14px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color 0.15s;
+}
+.radar-card:hover { border-left-color: var(--accent-2); }
+.radar-card-head h3 { margin: 0; font-size: 17px; }
+.radar-card-head h3 .muted { font-weight: 500; font-size: 14px; }
+.radar-card-body { display: flex; flex-direction: column; gap: 8px; }
+.radar-row { font-size: 13px; line-height: 1.65; }
+.radar-row.radar-risk-row { color: var(--tx-2); }
+.radar-label {
+  display: inline-block;
+  font-size: 11px; padding: 2px 8px; margin-right: 8px;
+  background: var(--bg-3); color: var(--tx-2);
+  border-radius: 4px; font-weight: 600;
+  font-family: var(--font-mono);
+}
+.radar-label.dn { color: var(--up-soft); background: var(--up-bg); }
+.radar-card-foot { padding-top: 6px; border-top: 1px solid var(--line); }
+.radar-topics { padding: 18px 22px 24px; border-top: 1px solid var(--line); }
+.radar-subtitle { margin: 0 0 14px; font-size: 16px; font-weight: 700; }
+.radar-topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.radar-topic {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+}
+.radar-topic-head {
+  display: flex; justify-content: space-between;
+  align-items: baseline; margin-bottom: 6px;
+}
+.radar-topic-head strong { font-size: 14px; color: var(--accent-2); }
+.radar-topic .narrative.small { font-size: 12px; line-height: 1.6; color: var(--tx-2); margin: 8px 0 0; }
+
+/* Inline ticker link (inside narratives) */
+.tx-link {
+  color: var(--accent-2);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--accent-soft);
+}
+.tx-link:hover { border-bottom-color: var(--accent); background: var(--accent-soft); padding: 0 2px; border-radius: 2px; }
 
 /* ── Deep page: Recommendation card + News section ── */
 .dd-rec-section { margin: 14px auto; }

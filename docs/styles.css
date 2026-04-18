@@ -1153,6 +1153,69 @@ footer a { color: var(--tx-3); }
 }
 .sim-rule strong { color: var(--amber); margin-right: 8px; font-size: 12px; }
 
+/* ── Radar tab ── */
+.radar-empty { padding: 40px 20px; text-align: center; }
+.radar-body { padding: 0; }
+.radar-intro { padding: 20px 22px 14px; border-bottom: 1px solid var(--line); }
+.radar-title { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
+.radar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+  padding: 18px 22px;
+}
+.radar-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 16px 18px 14px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color 0.15s;
+}
+.radar-card:hover { border-left-color: var(--accent-2); }
+.radar-card-head h3 { margin: 0; font-size: 17px; }
+.radar-card-head h3 .muted { font-weight: 500; font-size: 14px; }
+.radar-card-body { display: flex; flex-direction: column; gap: 8px; }
+.radar-row { font-size: 13px; line-height: 1.65; }
+.radar-row.radar-risk-row { color: var(--tx-2); }
+.radar-label {
+  display: inline-block;
+  font-size: 11px; padding: 2px 8px; margin-right: 8px;
+  background: var(--bg-3); color: var(--tx-2);
+  border-radius: 4px; font-weight: 600;
+  font-family: var(--font-mono);
+}
+.radar-label.dn { color: var(--up-soft); background: var(--up-bg); }
+.radar-card-foot { padding-top: 6px; border-top: 1px solid var(--line); }
+.radar-topics { padding: 18px 22px 24px; border-top: 1px solid var(--line); }
+.radar-subtitle { margin: 0 0 14px; font-size: 16px; font-weight: 700; }
+.radar-topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.radar-topic {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+}
+.radar-topic-head {
+  display: flex; justify-content: space-between;
+  align-items: baseline; margin-bottom: 6px;
+}
+.radar-topic-head strong { font-size: 14px; color: var(--accent-2); }
+.radar-topic .narrative.small { font-size: 12px; line-height: 1.6; color: var(--tx-2); margin: 8px 0 0; }
+
+/* Inline ticker link (inside narratives) */
+.tx-link {
+  color: var(--accent-2);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--accent-soft);
+}
+.tx-link:hover { border-bottom-color: var(--accent); background: var(--accent-soft); padding: 0 2px; border-radius: 2px; }
+
 /* ── Deep page: Recommendation card + News section ── */
 .dd-rec-section { margin: 14px auto; }
 .dd-rec-card {
