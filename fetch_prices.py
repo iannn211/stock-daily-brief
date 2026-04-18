@@ -45,7 +45,61 @@ def _fetch_history(yf_ticker: str) -> pd.DataFrame | None:
         return None
 
 
-def fetch_one(yf_ticker: str) -> tuple[dict | None, pd.DataFrame | None]:
+def _safe_num(v) -> float | None:
+    """Coerce yfinance info value to float; drop None/NaN/inf."""
+    if v is None:
+        return None
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    if f != f or f in (float("inf"), float("-inf")):  # NaN / inf
+        return None
+    return f
+
+
+def _fetch_fundamentals(yf_ticker: str) -> dict:
+    """Pull the subset of .info we render on theme/stock pages.
+
+    Returns a dict with keys (any may be None if yfinance doesn't have it):
+      pe_ttm, pe_forward, eps_ttm, eps_forward, pb, roe, profit_margin,
+      rev_growth, earnings_growth, market_cap, dividend_yield, beta
+    """
+    try:
+        info = yf.Ticker(yf_ticker).info or {}
+    except Exception:
+        return {}
+
+    return {
+        "pe_ttm": _safe_num(info.get("trailingPE")),
+        "pe_forward": _safe_num(info.get("forwardPE")),
+        "eps_ttm": _safe_num(info.get("trailingEps")),
+        "eps_forward": _safe_num(info.get("forwardEps")),
+        "pb": _safe_num(info.get("priceToBook")),
+        "roe": _safe_num(info.get("returnOnEquity")),          # 0.24 = 24%
+        "profit_margin": _safe_num(info.get("profitMargins")),  # 0.24 = 24%
+        "rev_growth": _safe_num(info.get("revenueGrowth")),     # yoy
+        "earnings_growth": _safe_num(info.get("earningsGrowth")),  # yoy
+        "market_cap": _safe_num(info.get("marketCap")),
+        "dividend_yield": _safe_num(info.get("dividendYield")),
+        "beta": _safe_num(info.get("beta")),
+        "sector": info.get("sector") or None,
+        "industry": info.get("industry") or None,
+    }
+
+
+def _is_equity(yf_ticker: str) -> bool:
+    """Fundamentals make sense only for real equities — skip macro/FX/commodity tickers."""
+    if yf_ticker.startswith("^"):       # ^VIX ^TWII ^SPX etc
+        return False
+    if "=" in yf_ticker:                # TWD=X, GC=F, CL=F, DX-Y.NYB
+        return False
+    if yf_ticker.endswith("-USD"):      # BTC-USD
+        return False
+    return True
+
+
+def fetch_one(yf_ticker: str, with_fundamentals: bool = True) -> tuple[dict | None, pd.DataFrame | None]:
     """Fetch latest + 1y history. Fall back to .TWO for TW tickers if .TW fails."""
     hist = _fetch_history(yf_ticker)
     actual = yf_ticker
@@ -105,6 +159,12 @@ def fetch_one(yf_ticker: str) -> tuple[dict | None, pd.DataFrame | None]:
         y0 = float(ytd["Close"].iloc[0])
         latest["ret_ytd"] = round((close - y0) / y0 * 100, 2) if y0 else None
 
+    # Fundamentals (equities only — skip indices/FX/commodity)
+    if with_fundamentals and _is_equity(actual):
+        fund = _fetch_fundamentals(actual)
+        if fund:
+            latest["fundamentals"] = fund
+
     return latest, hist
 
 
@@ -147,9 +207,18 @@ def main() -> int:
         ]
         actual = latest.get("yf_ticker", yf_ticker)
         hint = f" (via {actual})" if actual != yf_ticker else ""
+        fund = latest.get("fundamentals") or {}
+        fund_bits = []
+        if fund.get("pe_ttm"):
+            fund_bits.append(f"PE={fund['pe_ttm']:.1f}")
+        if fund.get("eps_ttm"):
+            fund_bits.append(f"EPS={fund['eps_ttm']:.2f}")
+        if fund.get("roe"):
+            fund_bits.append(f"ROE={fund['roe']*100:.0f}%")
+        fund_str = (" " + " ".join(fund_bits)) if fund_bits else ""
         print(
             f"  ✓ {yf_ticker}: {latest['close']} ({latest['day_change_pct']:+.2f}%) "
-            f"52w pct={latest['pct_52w']:.0f}% ytd={latest.get('ret_ytd') or '—'}{hint}",
+            f"52w pct={latest['pct_52w']:.0f}% ytd={latest.get('ret_ytd') or '—'}{fund_str}{hint}",
             file=sys.stderr,
         )
 

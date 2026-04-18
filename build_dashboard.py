@@ -1347,6 +1347,307 @@ def _stage_cls(stage: str) -> str:
     }.get(stage, "")
 
 
+def _theme_slug(opp: dict, idx: int) -> str:
+    """Stable URL-safe slug for a theme.
+    Chinese chars are dropped; idx ensures uniqueness across daily re-runs."""
+    theme = opp.get("theme") or opp.get("symbol") or ""
+    tag = opp.get("category_tag") or ""
+    source = tag.lstrip("#") + "-" + theme
+    ascii_part = re.sub(r"[^A-Za-z0-9]+", "-", source).strip("-").lower()
+    if not ascii_part:
+        ascii_part = "theme"
+    return f"{idx:02d}-{ascii_part[:40].strip('-')}"
+
+
+def _pf_lookup(pf: dict | None) -> dict[str, dict]:
+    """Index every known ticker (holdings + watchlist + universe) by symbol."""
+    if not pf:
+        return {}
+    idx: dict[str, dict] = {}
+    for coll in ("holdings", "watchlist", "simulator_universe"):
+        for it in pf.get(coll, []) or []:
+            if it.get("symbol"):
+                idx[it["symbol"]] = it
+    return idx
+
+
+def _fmt_fund_num(v: float | None, digits: int = 1, suffix: str = "") -> str:
+    if v is None:
+        return "—"
+    return f"{v:.{digits}f}{suffix}"
+
+
+def _fmt_pct_fund(v: float | None, digits: int = 1) -> str:
+    """Format a ratio (0.24) as percent (24.0%)."""
+    if v is None:
+        return "—"
+    return f"{v * 100:.{digits}f}%"
+
+
+def render_theme_page(opp: dict, pf: dict, history: dict,
+                      analysis: dict | None, slug: str) -> str:
+    """Full deep-dive page for one AI-identified theme.
+    Shows all lead stocks with price + fundamentals + 冷熱排行 (cold-to-hot)."""
+    history = history or {}
+    init_ticker_alias(pf)
+    lookup = _pf_lookup(pf)
+
+    # --- Basic theme fields ---
+    theme = _strip_leading_emoji(opp.get("theme") or "未命名題材")
+    tag = opp.get("category_tag", "")
+    stage = opp.get("stage", "—")
+    stage_cls = _stage_cls(stage)
+    conf = int(opp.get("confidence_pct") or 0)
+    crowd = int(opp.get("crowding_pct") or 0)
+    crowd_label = _strip_leading_emoji(opp.get("crowding_label", ""))
+    crowd_tone = _crowding_tone(crowd)
+    timeframe = opp.get("timeframe", "—")
+    headline = opp.get("headline") or opp.get("thesis", "")
+    why = opp.get("why") or opp.get("research_angle", "")
+    warning = opp.get("ai_warning", "")
+    signals = opp.get("signals") or []
+    sources = opp.get("sources") or []
+    leads = opp.get("lead_stocks") or []
+
+    # --- Build ranked rows for each lead stock ---
+    rows = []
+    for ls in leads:
+        sym = ls.get("symbol", "")
+        name = ls.get("name", "")
+        rec = lookup.get(sym, {})
+        fund = rec.get("fundamentals") or {}
+        row = {
+            "symbol": sym,
+            "name": name,
+            "price": rec.get("price"),
+            "day_pct": rec.get("day_change_pct"),
+            "pct_52w": rec.get("pct_52w"),
+            "ret_7d": rec.get("ret_7d"),
+            "ret_30d": rec.get("ret_30d"),
+            "ret_90d": rec.get("ret_90d"),
+            "ret_ytd": rec.get("ret_ytd"),
+            "pe": fund.get("pe_ttm"),
+            "pe_fwd": fund.get("pe_forward"),
+            "eps": fund.get("eps_ttm"),
+            "roe": fund.get("roe"),
+            "rev_growth": fund.get("rev_growth"),
+            "sector": fund.get("sector") or "",
+            "has_page": sym in _TICKER_ALIAS,
+            "currency": rec.get("currency", "TWD"),
+        }
+        rows.append(row)
+
+    # Sort: ascending by pct_52w so the "coldest" (low position) is on top
+    rows.sort(key=lambda r: r["pct_52w"] if r["pct_52w"] is not None else 999)
+
+    # --- Temperature buckets ---
+    def _bucket(r):
+        p = r["pct_52w"]
+        if p is None:
+            return "unknown"
+        if p < 30:
+            return "cold"
+        if p < 70:
+            return "warm"
+        return "hot"
+
+    cold_rows = [r for r in rows if _bucket(r) == "cold"]
+    hot_rows = [r for r in rows if _bucket(r) == "hot"]
+
+    # --- Table HTML ---
+    def _cell(v, digits=1, suffix=""):
+        return _fmt_fund_num(v, digits, suffix) if v is not None else "<span class='muted'>—</span>"
+
+    def _pct_cell(v, digits=2):
+        if v is None:
+            return "<span class='muted'>—</span>"
+        return f'<span class="mono tnum {_cls(v)}">{v:+.{digits}f}%</span>'
+
+    def _52w_cell(p):
+        if p is None:
+            return "<span class='muted'>—</span>"
+        tone = "cold" if p < 30 else ("hot" if p >= 70 else "warm")
+        return (
+            f'<div class="th-52w-wrap"><div class="th-52w-bar th-{tone}" '
+            f'style="width:{max(2, min(100, p)):.0f}%"></div>'
+            f'<span class="th-52w-val mono tnum">{p:.0f}</span></div>'
+        )
+
+    def _link_cell(r):
+        if r["has_page"]:
+            return f'<a class="th-chain mono" href="../holdings/{r["symbol"]}.html">DEEP →</a>'
+        return '<span class="muted small">—</span>'
+
+    table_rows = []
+    for i, r in enumerate(rows):
+        temp = _bucket(r)
+        temp_chip = {
+            "cold": '<span class="th-temp th-cold mono">COLD</span>',
+            "warm": '<span class="th-temp th-warm mono">WARM</span>',
+            "hot":  '<span class="th-temp th-hot mono">HOT</span>',
+            "unknown": '<span class="th-temp mono muted">—</span>',
+        }[temp]
+        price_str = f"{r['price']:.2f}" if r["price"] is not None else "—"
+        table_rows.append(f'''
+        <tr class="th-row th-{temp}">
+          <td class="th-rank mono tnum">{i+1:02d}</td>
+          <td>{temp_chip}</td>
+          <td><div class="th-sym mono">{html.escape(r["symbol"])}</div>
+              <div class="th-name muted small">{html.escape(r["name"])}</div></td>
+          <td class="mono tnum">{price_str}</td>
+          <td>{_pct_cell(r["day_pct"])}</td>
+          <td>{_52w_cell(r["pct_52w"])}</td>
+          <td>{_pct_cell(r["ret_7d"])}</td>
+          <td>{_pct_cell(r["ret_30d"])}</td>
+          <td>{_pct_cell(r["ret_90d"])}</td>
+          <td>{_pct_cell(r["ret_ytd"])}</td>
+          <td class="mono tnum">{_cell(r["pe"], 1)}</td>
+          <td class="mono tnum">{_cell(r["eps"], 2)}</td>
+          <td class="mono tnum">{_fmt_pct_fund(r["roe"], 1)}</td>
+          <td class="muted small">{html.escape(r["sector"] or "—")}</td>
+          <td>{_link_cell(r)}</td>
+        </tr>''')
+
+    if not table_rows:
+        table_html = '<div class="muted small" style="padding:20px">主題尚未列出具體個股。</div>'
+    else:
+        table_html = f'''
+        <div class="th-table-wrap">
+          <table class="th-table">
+            <thead>
+              <tr>
+                <th class="mono small">#</th>
+                <th class="mono small">溫度</th>
+                <th class="mono small">STOCK</th>
+                <th class="mono small">價格</th>
+                <th class="mono small">今日</th>
+                <th class="mono small">52W位階</th>
+                <th class="mono small">7D</th>
+                <th class="mono small">30D</th>
+                <th class="mono small">90D</th>
+                <th class="mono small">YTD</th>
+                <th class="mono small">P/E</th>
+                <th class="mono small">EPS</th>
+                <th class="mono small">ROE</th>
+                <th class="mono small">產業</th>
+                <th class="mono small"></th>
+              </tr>
+            </thead>
+            <tbody>{"".join(table_rows)}</tbody>
+          </table>
+        </div>'''
+
+    # --- Temperature callouts ---
+    callouts = []
+    if cold_rows:
+        cold_bits = [f'<strong>{html.escape(r["symbol"])}</strong> {html.escape(r["name"])}' for r in cold_rows[:3]]
+        callouts.append(
+            '<div class="th-callout th-cold-box"><div class="th-callout-tag mono">COLD · 還沒動</div>'
+            f'<div class="th-callout-body">題材內位階低於 30%，漲幅相對落後。若基本面確認 OK（看 P/E、EPS 成長、ROE），可列入研究候選：'
+            f'{"、".join(cold_bits)}</div>'
+            '<div class="th-callout-foot muted small">提醒：「還沒漲」不等於「會漲」，可能反映基本面差、產業鏈位置不佳，或市場暫時不關注。進場前看個股深度頁與 AI 評分。</div></div>'
+        )
+    if hot_rows:
+        hot_bits = [f'<strong>{html.escape(r["symbol"])}</strong> {html.escape(r["name"])}' for r in hot_rows[:3]]
+        callouts.append(
+            '<div class="th-callout th-hot-box"><div class="th-callout-tag mono">HOT · 已漲多</div>'
+            f'<div class="th-callout-body">位階 70% 以上，短線追高風險高：{"、".join(hot_bits)}</div>'
+            '<div class="th-callout-foot muted small">策略：等拉回 5-10% 再分批進場，或觀察 20 日均線是否守住。不要 FOMO。</div></div>'
+        )
+    callouts_html = f'<div class="th-callouts">{"".join(callouts)}</div>' if callouts else ""
+
+    # --- Signals + sources + warning ---
+    sig_chips_html = ""
+    if signals:
+        sig_chips = "".join(f'<span class="sig-chip">{html.escape(s)}</span>' for s in signals)
+        sig_chips_html = f'<div class="th-section"><div class="th-section-head mono">SIGNALS · 訊號</div><div class="sig-row">{sig_chips}</div></div>'
+
+    sources_html = ""
+    if sources:
+        src_bits = []
+        for s in sources:
+            if isinstance(s, dict):
+                url = s.get("url", "#")
+                title = s.get("title", s.get("source", url))
+                src_bits.append(f'<li class="small"><a class="src-link" href="{html.escape(url)}" target="_blank" rel="noopener">{html.escape(title)}</a></li>')
+            else:
+                # Plain string (e.g. "經濟日報", "Yahoo股市 TW")
+                src_bits.append(f'<li class="small muted">{html.escape(str(s))}</li>')
+        sources_html = f'<div class="th-section"><div class="th-section-head mono">SOURCES · 資料來源</div><ul class="src-list">{"".join(src_bits)}</ul></div>'
+
+    warn_html = ""
+    if warning:
+        warn_html = (
+            f'<div class="th-warn"><span class="th-warn-tag mono">WARN</span> '
+            f'{html.escape(warning)}</div>'
+        )
+
+    # --- Assemble ---
+    title = f"{theme} · THEME DEEP-DIVE"
+    body = f'''
+<div class="wrap th-page">
+  <a class="th-back" href="../index.html#radar">← 回 Radar</a>
+
+  <header class="th-hero">
+    <div class="th-tag-row">
+      <span class="th-tag mono">{html.escape(tag)}</span>
+      <span class="stage-chip {stage_cls} mono">{html.escape(stage)}</span>
+      <span class="th-timeframe mono muted small">{html.escape(timeframe)}</span>
+    </div>
+    <h1 class="th-title">{html.escape(theme)}</h1>
+    <div class="th-headline">{_link_tickers(headline)}</div>
+  </header>
+
+  <section class="th-stats">
+    <div class="th-stat">
+      <div class="th-stat-lbl mono small muted">CONFIDENCE</div>
+      <div class="th-stat-val mono tnum">{conf}<span class="small muted"> /100</span></div>
+    </div>
+    <div class="th-stat">
+      <div class="th-stat-lbl mono small muted">CROWDING</div>
+      <div class="th-crowd-row">
+        <div class="th-crowd-bar"><div class="th-crowd-fill {crowd_tone}" style="width:{crowd}%"></div></div>
+        <div class="th-stat-val mono tnum">{crowd}</div>
+      </div>
+      <div class="th-crowd-label {crowd_tone} small">{html.escape(crowd_label)}</div>
+    </div>
+    <div class="th-stat">
+      <div class="th-stat-lbl mono small muted">LEAD STOCKS</div>
+      <div class="th-stat-val mono tnum">{len(leads)}</div>
+    </div>
+  </section>
+
+  <section class="th-why">
+    <div class="th-section-head mono">AI 分析 · WHY</div>
+    <div class="th-why-body">{_link_tickers(why)}</div>
+  </section>
+
+  {warn_html}
+
+  {sig_chips_html}
+
+  <section class="th-stocks">
+    <div class="th-section-head mono">題材內股票 · 冷熱排行（位階低在上）</div>
+    {table_html}
+  </section>
+
+  {callouts_html}
+
+  {sources_html}
+
+  <div class="th-foot">
+    <a class="th-back" href="../index.html#radar">← 回 Radar</a>
+    <span class="muted small">Theme slug: <code>{html.escape(slug)}</code></span>
+  </div>
+</div>
+'''
+    return (
+        PAGE_HEAD.format(title=html.escape(title), css_href="../styles.css")
+        + body
+        + PAGE_FOOT.format(now=datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M"))
+    )
+
+
 def render_radar_tab(analysis: dict | None, pf: dict | None,
                      history: dict | None = None) -> str:
     """GUSHI-style Opportunity Radar with filter pills + sort, CROWD bars,
@@ -1435,9 +1736,8 @@ def render_radar_tab(analysis: dict | None, pf: dict | None,
             sig_chips = "".join(f'<span class="sig-chip">{html.escape(s)}</span>' for s in signals[:5])
             signals_html = f'<div class="sig-row">{sig_chips}</div>'
 
-        # Card
-        first_lead_sym = lead_stocks[0].get("symbol") if lead_stocks else ""
-        chain_href = f"holdings/{first_lead_sym}.html" if first_lead_sym in _TICKER_ALIAS else "#"
+        # Card — chain link goes to full theme deep-dive (all related stocks + fundamentals)
+        chain_href = f"themes/{_theme_slug(o, idx)}.html"
 
         # Data attributes for client-side filter/sort
         data_attrs = (
@@ -1787,7 +2087,7 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     picks_html = ""
     if opps:
         picks = []
-        for o in opps[:3]:
+        for idx, o in enumerate(opps[:3]):
             # Resolve a lead symbol for link target; fall back to opportunities anchor
             leads = o.get("lead_stocks") or []
             lead_sym = (leads[0].get("symbol") if leads else "") or o.get("symbol", "")
@@ -1803,10 +2103,8 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
             conf = int(o.get("confidence_pct") or 0)
             stage = o.get("stage", "")
 
-            pick_href = (
-                f"holdings/{lead_sym}.html" if lead_sym in _TICKER_ALIAS
-                else f"briefs/{latest_brief['date']}.html#opportunities"
-            )
+            # Link directly to theme deep-dive page (where user sees all related stocks)
+            pick_href = f"themes/{_theme_slug(o, idx)}.html"
 
             # Strip leading emojis the AI may have added
             theme_clean = _strip_leading_emoji(theme)
@@ -3964,16 +4262,134 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
     </nav>
     '''
 
-    # Stub panels for unbuilt tabs
-    stub_fin = '''
-    <section class="wrap dd-stub" data-dd-panel="fin">
-      <div class="dd-stub-box">
-        <div class="dd-stub-icon">''' + _icon("chart", 22) + '''</div>
-        <div class="dd-stub-title">Financials · 財報專區（規劃中）</div>
-        <div class="muted small">季度營收 / 毛利率 / EPS / 法說會重點 — 需串 TWSE / 公開資訊觀測站資料源。</div>
-      </div>
-    </section>
-    '''
+    # Financials panel — now populated from yfinance fundamentals
+    fund = data.get("fundamentals") or {}
+    fin_rows = []
+    def _frow(label_cn: str, label_en: str, val_html: str, hint: str = ""):
+        hint_html = f'<div class="dd-fin-hint muted small">{hint}</div>' if hint else ""
+        return (
+            f'<div class="dd-fin-row"><div class="dd-fin-lbl">'
+            f'<div class="dd-fin-cn">{label_cn}</div>'
+            f'<div class="dd-fin-en mono small muted">{label_en}</div></div>'
+            f'<div class="dd-fin-val mono tnum">{val_html}</div>'
+            f'{hint_html}</div>'
+        )
+    def _fin_eps(v):
+        return f"{v:.2f}" if v is not None else '<span class="muted">—</span>'
+    def _fin_ratio(v, digits=1):
+        return f"{v:.{digits}f}" if v is not None else '<span class="muted">—</span>'
+    def _fin_pct(v, digits=1):
+        return f"{v*100:+.{digits}f}%" if v is not None else '<span class="muted">—</span>'
+    def _fin_cap(v):
+        if v is None:
+            return '<span class="muted">—</span>'
+        if v >= 1e12:
+            return f"{v/1e12:.2f} 兆"
+        if v >= 1e8:
+            return f"{v/1e8:.1f} 億"
+        return f"{v:,.0f}"
+    pe_ttm = fund.get("pe_ttm")
+    pe_fwd = fund.get("pe_forward")
+    eps_ttm = fund.get("eps_ttm")
+    eps_fwd = fund.get("eps_forward")
+    roe = fund.get("roe")
+    pm = fund.get("profit_margin")
+    rev_g = fund.get("rev_growth")
+    earn_g = fund.get("earnings_growth")
+    mcap = fund.get("market_cap")
+    pb = fund.get("pb")
+    div_y = fund.get("dividend_yield")
+    beta = fund.get("beta")
+    sector = fund.get("sector") or ""
+    industry = fund.get("industry") or ""
+
+    # Green/red light scoring: 亮綠燈 = 合乎成長股 / 合理估值 的條件
+    lights = []
+    if pe_ttm is not None:
+        # Very rough heuristic: PE < 25 合理, 25-45 偏高, >45 昂貴
+        tone = "green" if pe_ttm < 25 else ("amber" if pe_ttm < 45 else "red")
+        lights.append(("估值 P/E", f"{pe_ttm:.1f}", tone, "<25 合理 / 25-45 偏高 / >45 昂貴（粗略標準）"))
+    if earn_g is not None:
+        tone = "green" if earn_g > 0.15 else ("amber" if earn_g > 0 else "red")
+        lights.append(("EPS 成長 YoY", f"{earn_g*100:+.1f}%", tone, ">15% 佳 / 0-15% 平緩 / <0 衰退"))
+    elif rev_g is not None:
+        tone = "green" if rev_g > 0.15 else ("amber" if rev_g > 0 else "red")
+        lights.append(("營收成長 YoY", f"{rev_g*100:+.1f}%", tone, ">15% 佳 / 0-15% 平緩 / <0 衰退"))
+    if roe is not None:
+        tone = "green" if roe > 0.15 else ("amber" if roe > 0.08 else "red")
+        lights.append(("ROE", f"{roe*100:.1f}%", tone, ">15% 優 / 8-15% 可接受 / <8% 偏低"))
+    if pm is not None:
+        tone = "green" if pm > 0.2 else ("amber" if pm > 0.08 else "red")
+        lights.append(("淨利率", f"{pm*100:.1f}%", tone, ">20% 高 / 8-20% 一般 / <8% 薄"))
+    if pct52 is not None:
+        tone = "green" if pct52 < 40 else ("amber" if pct52 < 75 else "red")
+        lights.append(("52週位階", f"{pct52:.0f}%", tone, "<40% 低檔 / 40-75% 中段 / >75% 高檔追高"))
+
+    lights_html = ""
+    if lights:
+        chips = []
+        green_count = sum(1 for _, _, t, _ in lights if t == "green")
+        total = len(lights)
+        for label, val, tone, hint in lights:
+            chips.append(
+                f'<div class="dd-light dd-light-{tone}">'
+                f'<div class="dd-light-head"><span class="dd-light-lbl mono small">{html.escape(label)}</span>'
+                f'<span class="dd-light-dot dd-light-dot-{tone}"></span></div>'
+                f'<div class="dd-light-val mono tnum">{html.escape(val)}</div>'
+                f'<div class="dd-light-hint muted small">{html.escape(hint)}</div></div>'
+            )
+        lights_html = f'''
+        <div class="dd-fin-score">
+          <div class="dd-fin-score-head">
+            <span class="mono small muted">基本面體檢 · FUNDAMENTAL CHECK</span>
+            <span class="mono tnum dd-fin-score-val">{green_count} / {total} 亮綠燈</span>
+          </div>
+          <div class="dd-lights-grid">{"".join(chips)}</div>
+          <div class="dd-fin-disclaimer muted small">
+            這個燈號是粗略啟發式，不是買賣訊號。投資需搭配產業分析 + 籌碼面 + 個人風險承受度。
+          </div>
+        </div>'''
+
+    fin_rows.extend([
+        _frow("本益比 (TTM)", "P/E TTM", _fin_ratio(pe_ttm), "以過去 4 季 EPS 計算"),
+        _frow("預估本益比", "P/E Forward", _fin_ratio(pe_fwd), "以分析師預估 EPS 計算"),
+        _frow("每股盈餘 (TTM)", "EPS TTM", _fin_eps(eps_ttm), "過去 4 季加總"),
+        _frow("預估 EPS", "EPS Forward", _fin_eps(eps_fwd), "下個會計年度預估"),
+        _frow("股東權益報酬率", "ROE", _fin_pct(roe), "公司運用股東資金的效率"),
+        _frow("淨利率", "Profit Margin", _fin_pct(pm), "每元營收能賺到多少"),
+        _frow("營收成長 YoY", "Revenue Growth", _fin_pct(rev_g), "近 4 季營收 vs 去年同期"),
+        _frow("EPS 成長 YoY", "Earnings Growth", _fin_pct(earn_g), ""),
+        _frow("股價淨值比", "P/B", _fin_ratio(pb, 2), ""),
+        _frow("股息殖利率", "Dividend Yield", _fin_pct(div_y, 2), ""),
+        _frow("Beta", "Beta", _fin_ratio(beta, 2), ">1 波動高於大盤"),
+        _frow("市值", "Market Cap", _fin_cap(mcap), ""),
+    ])
+
+    sector_row = ""
+    if sector or industry:
+        sector_row = f'<div class="dd-fin-sector muted small">產業：{html.escape(sector)}{" / " + html.escape(industry) if industry else ""}</div>'
+
+    if any(v is not None for v in (pe_ttm, eps_ttm, roe, pm, rev_g, earn_g, mcap, pb)):
+        stub_fin = f'''
+        <section class="wrap" data-dd-panel="fin">
+          {lights_html}
+          {sector_row}
+          <div class="dd-fin-grid">{"".join(fin_rows)}</div>
+          <div class="dd-fin-foot muted small">
+            資料來源：yfinance (Yahoo Finance)。TW 個股可能有延遲或缺漏；以公開資訊觀測站為準。
+          </div>
+        </section>
+        '''
+    else:
+        stub_fin = '''
+        <section class="wrap dd-stub" data-dd-panel="fin">
+          <div class="dd-stub-box">
+            <div class="dd-stub-icon">''' + _icon("chart", 22) + '''</div>
+            <div class="dd-stub-title">Financials · 財報資料暫缺</div>
+            <div class="muted small">yfinance 對此個股無基本面資料（可能是 ETF / ADR / 新上市）。</div>
+          </div>
+        </section>
+        '''
     stub_hold = '''
     <section class="wrap dd-stub" data-dd-panel="hold">
       <div class="dd-stub-box">
@@ -6662,6 +7078,224 @@ footer a { color: var(--tx-3); }
   .verdict-action { font-size: 24px; }
   .dd-tabs { padding: 0 14px; }
 }
+
+/* ── Stock deep-dive FINANCIALS panel (Phase B) ── */
+.dd-fin-score {
+  margin: 0 auto 20px;
+  padding: 16px 18px;
+  background: var(--bg-1); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.dd-fin-score-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 12px; letter-spacing: 0.6px;
+}
+.dd-fin-score-val { font-size: 14px; color: var(--tx-1); font-weight: 700; }
+.dd-lights-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+.dd-light {
+  padding: 10px 12px; border-radius: var(--r-sm);
+  border: 1px solid; background: var(--bg-2);
+}
+.dd-light-green { border-color: rgba(27,217,124,0.3); }
+.dd-light-amber { border-color: rgba(255,181,71,0.3); }
+.dd-light-red   { border-color: rgba(255,59,59,0.3); }
+.dd-light-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.dd-light-lbl { letter-spacing: 0.4px; color: var(--tx-3); font-weight: 700; }
+.dd-light-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dd-light-dot-green { background: var(--dn); box-shadow: 0 0 6px rgba(27,217,124,0.5); }
+.dd-light-dot-amber { background: var(--amber); box-shadow: 0 0 6px rgba(255,181,71,0.5); }
+.dd-light-dot-red   { background: var(--up); box-shadow: 0 0 6px rgba(255,59,59,0.5); }
+.dd-light-val { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.dd-light-green .dd-light-val { color: var(--dn); }
+.dd-light-amber .dd-light-val { color: var(--amber); }
+.dd-light-red   .dd-light-val { color: var(--up); }
+.dd-light-hint { font-size: 10.5px; line-height: 1.4; }
+.dd-fin-disclaimer { margin-top: 12px; line-height: 1.5; }
+.dd-fin-sector { margin-bottom: 12px; }
+.dd-fin-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px; margin-top: 8px;
+}
+.dd-fin-row {
+  padding: 10px 12px; background: var(--bg-1);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+}
+.dd-fin-lbl { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.dd-fin-cn { font-size: 12px; color: var(--tx-2); }
+.dd-fin-en { letter-spacing: 0.4px; }
+.dd-fin-val { font-size: 16px; font-weight: 700; margin-top: 4px; color: var(--tx-1); }
+.dd-fin-hint { font-size: 10px; margin-top: 2px; line-height: 1.4; }
+.dd-fin-foot { margin-top: 16px; text-align: right; font-size: 10.5px; }
+
+/* ── Theme deep-dive page (v8 Phase A) ── */
+.th-page { max-width: 1400px; margin: 0 auto; padding: 24px 20px 60px; }
+.th-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--tx-3); font-size: 12px; text-decoration: none;
+  font-family: var(--font-mono); letter-spacing: 0.5px;
+}
+.th-back:hover { color: var(--accent); }
+.th-hero {
+  padding: 24px 0 18px; border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+.th-tag-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.th-tag {
+  display: inline-block; padding: 4px 10px; border-radius: 4px;
+  background: var(--bg-2); color: var(--accent);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+  border: 1px solid var(--line-2);
+}
+.th-timeframe { padding-left: 8px; }
+.th-title {
+  font-size: 28px; margin: 0 0 8px; font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.th-headline {
+  font-size: 15px; color: var(--tx-2); line-height: 1.55;
+  max-width: 900px;
+}
+.th-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-bottom: 22px;
+}
+.th-stat {
+  padding: 14px 16px; background: var(--bg-1);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+}
+.th-stat-lbl { letter-spacing: 0.6px; margin-bottom: 6px; }
+.th-stat-val { font-size: 22px; font-weight: 700; }
+.th-crowd-row { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+.th-crowd-bar {
+  flex: 1; height: 6px; background: var(--bg-2); border-radius: 3px; overflow: hidden;
+}
+.th-crowd-fill { height: 100%; transition: width .3s; }
+.th-crowd-fill.crowd-low  { background: var(--dn); }
+.th-crowd-fill.crowd-mid  { background: var(--amber); }
+.th-crowd-fill.crowd-high { background: var(--up); }
+.th-crowd-label.crowd-low  { color: var(--dn); }
+.th-crowd-label.crowd-mid  { color: var(--amber); }
+.th-crowd-label.crowd-high { color: var(--up); }
+
+.th-section { margin: 22px 0; }
+.th-section-head {
+  font-size: 11px; letter-spacing: 1.2px; color: var(--tx-3);
+  font-weight: 700; margin-bottom: 10px;
+}
+.th-why {
+  padding: 18px 20px; background: var(--bg-1);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  margin-bottom: 18px;
+  border-left: 3px solid var(--accent);
+}
+.th-why-body { font-size: 14px; line-height: 1.7; color: var(--tx-1); }
+
+.th-warn {
+  margin: 14px 0; padding: 12px 16px;
+  background: var(--amber-bg); border: 1px solid rgba(255,181,71,0.3);
+  border-radius: var(--r-sm); color: var(--amber);
+  font-size: 13px; display: flex; align-items: center; gap: 8px;
+}
+.th-warn-tag {
+  padding: 2px 7px; font-size: 10px; border-radius: 3px;
+  border: 1px solid currentColor; letter-spacing: 0.8px;
+  background: rgba(255,181,71,0.1);
+}
+
+.th-stocks { margin-top: 24px; }
+.th-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-sm); }
+.th-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  min-width: 1100px;
+}
+.th-table thead th {
+  text-align: left; padding: 10px 12px;
+  background: var(--bg-2); color: var(--tx-3);
+  border-bottom: 1px solid var(--line-2);
+  letter-spacing: 0.5px; font-weight: 700;
+  position: sticky; top: 0; z-index: 1;
+}
+.th-table tbody td {
+  padding: 11px 12px; border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.th-table tbody tr:last-child td { border-bottom: none; }
+.th-table tbody tr:hover { background: var(--bg-2); }
+.th-rank { color: var(--tx-3); font-size: 11px; width: 32px; }
+.th-sym { font-weight: 700; font-size: 13px; }
+.th-name { margin-top: 2px; }
+.th-chain {
+  font-size: 10px; letter-spacing: 0.6px; color: var(--accent);
+  text-decoration: none; padding: 4px 8px; border-radius: 3px;
+  border: 1px solid var(--line-2); transition: all .15s;
+}
+.th-chain:hover { background: var(--bg-2); border-color: var(--accent); }
+
+.th-temp {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px;
+  border: 1px solid currentColor;
+}
+.th-temp.th-cold { color: #3b82f6; background: rgba(59,130,246,0.1); }
+.th-temp.th-warm { color: var(--amber); background: var(--amber-bg); }
+.th-temp.th-hot  { color: var(--up); background: var(--up-bg); }
+
+.th-52w-wrap { position: relative; width: 80px; height: 18px; background: var(--bg-2); border-radius: 2px; overflow: hidden; }
+.th-52w-bar {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  opacity: 0.55;
+}
+.th-52w-bar.th-cold { background: #3b82f6; }
+.th-52w-bar.th-warm { background: var(--amber); }
+.th-52w-bar.th-hot  { background: var(--up); }
+.th-52w-val {
+  position: relative; display: block;
+  font-size: 10.5px; text-align: center; line-height: 18px;
+  color: var(--tx-1); font-weight: 700;
+}
+
+.th-callouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin: 24px 0; }
+.th-callout {
+  padding: 16px 18px; border-radius: var(--r-sm);
+  border: 1px solid var(--line-2);
+}
+.th-cold-box { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.25); }
+.th-hot-box  { background: var(--up-bg);          border-color: rgba(255,59,59,0.3); }
+.th-callout-tag {
+  display: inline-block; padding: 3px 9px; border-radius: 3px;
+  font-size: 10px; letter-spacing: 0.8px; font-weight: 700;
+  margin-bottom: 8px;
+  border: 1px solid currentColor;
+}
+.th-cold-box .th-callout-tag { color: #3b82f6; background: rgba(59,130,246,0.08); }
+.th-hot-box  .th-callout-tag { color: var(--up);   background: rgba(255,59,59,0.08); }
+.th-callout-body { font-size: 13.5px; line-height: 1.6; color: var(--tx-1); }
+.th-callout-foot { margin-top: 8px; line-height: 1.55; }
+
+.src-list { list-style: disc; padding-left: 22px; }
+.src-list li { margin: 6px 0; }
+.src-link { color: var(--accent); text-decoration: none; }
+.src-link:hover { text-decoration: underline; }
+
+.th-foot {
+  margin-top: 32px; padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--tx-3);
+}
+.th-foot code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--bg-2); padding: 2px 6px; border-radius: 3px;
+}
+
+@media (max-width: 720px) {
+  .th-stats { grid-template-columns: 1fr; }
+  .th-title { font-size: 22px; }
+  .th-table { min-width: 900px; }
+}
 """
 
 
@@ -6673,6 +7307,8 @@ def main() -> int:
     DOCS_DIR.mkdir(exist_ok=True)
     DOCS_BRIEFS_DIR.mkdir(exist_ok=True)
     DOCS_HOLDINGS_DIR.mkdir(exist_ok=True)
+    DOCS_THEMES_DIR = DOCS_DIR / "themes"
+    DOCS_THEMES_DIR.mkdir(exist_ok=True)
 
     briefs = load_briefs()
     pf = load_portfolio()
@@ -6731,6 +7367,19 @@ def main() -> int:
 
         print(f"wrote {len(written)} stock pages (holdings + watchlist + universe)",
               file=sys.stderr)
+
+    # Theme deep-dive pages (from AI opportunities)
+    if pf and latest_analysis:
+        theme_count = 0
+        for idx, opp in enumerate(latest_analysis.get("opportunities", [])):
+            slug = _theme_slug(opp, idx)
+            out = DOCS_THEMES_DIR / f"{slug}.html"
+            out.write_text(
+                render_theme_page(opp, pf, history, latest_analysis, slug),
+                encoding="utf-8",
+            )
+            theme_count += 1
+        print(f"wrote {theme_count} theme pages", file=sys.stderr)
 
     return 0
 

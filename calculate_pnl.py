@@ -267,6 +267,7 @@ def main() -> int:
             "take_profit_dist_pct": _pct_distance(h.get("take_profit")),
             "sparkline": spark,
             "yf_ticker": p.get("yf_ticker", yf_ticker),
+            "fundamentals": p.get("fundamentals") or {},
         }
         entry["recommendation"] = compute_recommendation(
             entry, is_holding=True, pnl_pct=entry["pnl_pct"],
@@ -458,6 +459,7 @@ def main() -> int:
             "currency": p.get("currency"),
             "is_held": u["symbol"] in existing_syms,
             "yf_ticker": p.get("yf_ticker", yf_ticker),
+            "fundamentals": p.get("fundamentals") or {},
         }
         entry["recommendation"] = compute_recommendation(entry, is_holding=False)
         universe_out.append(entry)
@@ -487,6 +489,7 @@ def main() -> int:
             "currency": p.get("currency"),
             "sparkline": _sparkline(history.get(yf_ticker, []), 30),
             "yf_ticker": p.get("yf_ticker", yf_ticker),
+            "fundamentals": p.get("fundamentals") or {},
         }
         entry["recommendation"] = compute_recommendation(entry, is_holding=False)
         watchlist_out.append(entry)
