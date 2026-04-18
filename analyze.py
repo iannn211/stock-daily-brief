@@ -34,11 +34,11 @@ BRIEFS_DIR = ROOT / "briefs"
 ANALYSES_DIR = ROOT / "analyses"
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
-# Current stable models (2026): gemini-2.5-flash, gemini-2.5-pro, gemini-2.0-flash.
-# We try them in order — some API keys / regions have access to a subset.
+# Verified 2026-04-18: only gemini-2.5-flash is on the free tier for this key.
+# 2.0-flash returns "limit: 0", 1.5-flash is deprecated (404 on v1beta).
 GEMINI_MODELS = os.environ.get(
     "GEMINI_MODEL",
-    "gemini-2.5-flash,gemini-2.0-flash,gemini-1.5-flash",
+    "gemini-2.5-flash,gemini-2.5-flash-lite",
 ).split(",")
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
 
@@ -303,7 +303,12 @@ def call_gemini(prompt: str) -> tuple[dict | None, str | None]:
             "temperature": 0.5,
             "responseMimeType": "application/json",
             "responseSchema": RESPONSE_SCHEMA,
-            "maxOutputTokens": 8192,
+            # 2.5-flash supports up to 65k output. Give plenty of headroom so
+            # verbose narratives + action checklist + topics + learning never truncate.
+            "maxOutputTokens": 32768,
+            # Disable "thinking" mode — we want deterministic JSON out, not chain-of-thought.
+            # Thinking tokens consume part of the output budget and don't help here.
+            "thinkingConfig": {"thinkingBudget": 0},
         },
     }
     params = {"key": GEMINI_API_KEY}
@@ -334,9 +339,12 @@ def call_gemini(prompt: str) -> tuple[dict | None, str | None]:
                     continue
                 break
             except json.JSONDecodeError as e:
-                print(f"   !! non-JSON response: {e}", file=sys.stderr)
+                # Likely truncation — dump enough to diagnose, then try next model
+                # (doesn't help to retry same model with same max_tokens).
+                print(f"   !! non-JSON (likely truncated): {e}", file=sys.stderr)
                 if text:
-                    print(f"       first 500 chars: {text[:500]}", file=sys.stderr)
+                    print(f"       output length: {len(text)} chars", file=sys.stderr)
+                    print(f"       last 300 chars: …{text[-300:]}", file=sys.stderr)
                 break
             except Exception as e:
                 print(f"   !! request exception: {e}", file=sys.stderr)
