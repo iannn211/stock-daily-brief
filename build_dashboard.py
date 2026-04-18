@@ -1048,49 +1048,130 @@ def render_briefs_table(briefs: list[dict]) -> str:
 '''
 
 
+def render_daily_hero(latest_brief: dict | None, analysis: dict | None) -> str:
+    """Prominent 'today's AI take' card — always visible above the chart.
+
+    Shows: market pulse one-liner + top green action + 3 stock picks preview.
+    Anchors to AI tab + links to full brief for more.
+    """
+    if not latest_brief or not analysis:
+        return (
+            '<div class="daily-hero muted small">'
+            '今日 AI 分析尚未生成（下次排程 07:30 會自動跑）。'
+            '</div>'
+        )
+
+    mp = analysis.get("market_pulse", {})
+    actions = analysis.get("action_checklist", {}).get("green", [])
+    opps = analysis.get("opportunities", [])
+    diag = analysis.get("portfolio_diagnosis", {})
+
+    # Top action (first green)
+    top_action_html = ""
+    if actions:
+        a = actions[0]
+        top_action_html = f'''
+        <div class="hero-action">
+          <div class="hero-action-lbl">🟢 今日可以做</div>
+          <div class="hero-action-body"><strong>{html.escape(a.get("action", ""))}</strong>
+            <div class="hero-action-reason muted small">{html.escape(a.get("reason", ""))}</div>
+          </div>
+        </div>'''
+
+    # Health badge
+    health = diag.get("overall_health", "")
+    health_cls = {"良好": "up", "需調整": "amber", "高風險": "dn"}.get(health, "flat")
+    diag_pill = (
+        f'<span class="badge badge-{health_cls} small">{html.escape(health)}</span>'
+        if health else ""
+    )
+
+    # Picks strip — symbol + name + thesis one-liner
+    picks_html = ""
+    if opps:
+        picks = []
+        for o in opps[:3]:
+            picks.append(f'''
+            <a class="pick-card" href="briefs/{latest_brief["date"]}.html#opportunities">
+              <div class="pick-head">
+                <strong>{html.escape(o.get("symbol", ""))}</strong>
+                <span class="muted small">{html.escape(o.get("name", ""))}</span>
+              </div>
+              <div class="pick-thesis small">{html.escape(o.get("thesis", ""))[:80]}{"…" if len(o.get("thesis", "")) > 80 else ""}</div>
+              <div class="pick-risk muted small">⚠ {html.escape(o.get("risk", ""))[:60]}{"…" if len(o.get("risk", "")) > 60 else ""}</div>
+            </a>''')
+        picks_html = f'''
+        <div class="hero-picks">
+          <div class="hero-picks-head">
+            <span class="hero-action-lbl">🔍 今日值得研究</span>
+            <span class="muted small">{len(opps)} 檔</span>
+          </div>
+          <div class="pick-grid">{"".join(picks)}</div>
+        </div>'''
+
+    date_str = latest_brief["date"]
+    weekday = latest_brief["weekday"]
+
+    return f'''
+<div class="daily-hero">
+  <div class="hero-top">
+    <div class="hero-meta">
+      <span class="hero-badge mono">AI DAILY · {date_str} 週{weekday}</span>
+      {_sentiment_badge(mp.get("tw_sentiment", "中性"))}
+      {diag_pill}
+    </div>
+    <a href="briefs/{date_str}.html" class="btn-link small">→ 完整分析</a>
+  </div>
+  <p class="hero-oneliner">{html.escape(mp.get("summary", "今日尚未生成摘要。"))}</p>
+  {top_action_html}
+  {picks_html}
+</div>
+'''
+
+
 def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
     if not latest_brief or not analysis:
-        return '<p class="muted">尚未產生 AI 分析。請等下次排程或手動觸發。</p>'
+        return '<p class="muted" style="padding:20px">尚未產生 AI 分析。請等下次排程或手動觸發。</p>'
     mp = analysis.get("market_pulse", {})
+    macro_ctx = analysis.get("macro_context", {})
     diag = analysis.get("portfolio_diagnosis", {})
-    actions = analysis.get("action_checklist", {})
+    actions = analysis.get("action_checklist", {"green": [], "yellow": [], "red": []})
     topics = analysis.get("topics", [])
+    holdings_an = analysis.get("holdings_analysis", [])
+    opps = analysis.get("opportunities", [])
+    lp = analysis.get("learning_point", {})
+    model = analysis.get("model", "gemini")
 
-    # Action summary mini
-    def mini_actions(items, cls, icon, label):
+    # Action columns
+    def action_col(items, cls, icon, label):
         if not items:
-            return ""
-        body = "".join(
-            f'<li><strong>{html.escape(i["action"])}</strong>'
-            f'<div class="action-reason">{html.escape(i["reason"])}</div></li>'
-            for i in items
-        )
-        return f'<div class="action-col {cls}"><div class="action-header">{icon} {label}</div><ul>{body}</ul></div>'
-
-    topic_rows = "".join(
-        f'<tr onclick="location.href=\'briefs/{latest_brief["date"]}.html#{html.escape(t.get("title", ""))}\'">'
-        f'<td><strong>{html.escape(t.get("title", ""))}</strong></td>'
-        f'<td>{_sentiment_badge(t.get("sentiment", "中性"))}</td>'
-        f'<td class="muted small">{html.escape(", ".join(t.get("tickers", [])[:4]))}</td>'
-        f'</tr>' for t in topics
-    )
+            li = '<li class="empty muted">今日無建議</li>'
+        else:
+            li = "".join(
+                f'<li><strong>{html.escape(i["action"])}</strong>'
+                f'<div class="action-reason">{html.escape(i["reason"])}</div></li>'
+                for i in items
+            )
+        return f'<div class="action-col {cls}"><div class="action-header">{icon} {label}</div><ul>{li}</ul></div>'
 
     actions_html = (
         '<div class="actions-grid">'
-        + mini_actions(actions.get("green", []), "action-green", "🟢", "可以做")
-        + mini_actions(actions.get("yellow", []), "action-yellow", "🟡", "該警戒")
-        + mini_actions(actions.get("red", []), "action-red", "🔴", "不要做")
+        + action_col(actions.get("green", []), "action-green", "🟢", "可以做")
+        + action_col(actions.get("yellow", []), "action-yellow", "🟡", "該警戒")
+        + action_col(actions.get("red", []), "action-red", "🔴", "不要做")
         + '</div>'
     )
 
+    # Diagnosis
     diag_html = ""
     if diag.get("overall_health"):
-        health_cls = {"良好": "up", "需調整": "amber", "高風險": "dn"}.get(diag.get("overall_health"), "flat")
+        health = diag.get("overall_health", "")
+        health_cls = {"良好": "up", "需調整": "amber", "高風險": "dn"}.get(health, "flat")
         diag_html = f'''
 <div class="diag-compact">
   <div class="diag-compact-head">
-    <span class="muted small">健康度</span>
-    <span class="badge badge-{health_cls}">{html.escape(diag.get("overall_health"))}</span>
+    <span class="muted small">組合健康度</span>
+    <span class="badge badge-{health_cls}">{html.escape(health)}</span>
   </div>
   <div class="diag-compact-body">
     <div><strong class="small muted">關鍵議題：</strong>{html.escape(diag.get("key_issue", ""))}</div>
@@ -1099,8 +1180,122 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
 </div>
 '''
 
-    pulse_cls_tw = SENTIMENT_CLS.get(mp.get("tw_sentiment", "中性"), "flat")
-    pulse_cls_us = SENTIMENT_CLS.get(mp.get("us_sentiment", "中性"), "flat")
+    # Macro context
+    macro_html = ""
+    if macro_ctx.get("narrative"):
+        wp = macro_ctx.get("watchpoints", [])
+        wp_html = ""
+        if wp:
+            wp_html = '<ul class="watchpoint-list">' + "".join(
+                f'<li>{html.escape(w)}</li>' for w in wp
+            ) + '</ul>'
+        macro_html = f'''
+<div class="ai-block">
+  <div class="tab-subhead">🌏 總經背景</div>
+  <p class="narrative">{html.escape(macro_ctx["narrative"])}</p>
+  {wp_html}
+</div>
+'''
+
+    # Topics (rich, full narratives)
+    topic_cards = []
+    for t in topics:
+        tickers_chips = "".join(
+            f'<span class="chip chip-muted small">{html.escape(tk)}</span>'
+            for tk in t.get("tickers", [])[:6]
+        )
+        pts = "".join(f'<li>{html.escape(p)}</li>' for p in t.get("key_points", []))
+        pts_html = f'<ul class="topic-points">{pts}</ul>' if pts else ""
+        topic_cards.append(f'''
+        <article class="topic-card">
+          <div class="topic-head">
+            <h3>{html.escape(t.get("title", ""))}</h3>
+            {_sentiment_badge(t.get("sentiment", "中性"))}
+          </div>
+          <div class="topic-tickers">{tickers_chips}</div>
+          <p class="narrative">{html.escape(t.get("narrative", ""))}</p>
+          {pts_html}
+        </article>''')
+    topics_html = (
+        f'<div class="ai-block"><div class="tab-subhead">📊 今日主題 '
+        f'<span class="muted small">{len(topics)} 則</span></div>'
+        f'{"".join(topic_cards)}</div>'
+        if topic_cards else ""
+    )
+
+    # Holdings analysis with bull/bear
+    holding_cards = []
+    for h in holdings_an:
+        bb = h.get("bull_bear_breakdown", {})
+        bull, bear, neu = bb.get("bull_pct", 0), bb.get("bear_pct", 0), bb.get("neutral_pct", 0)
+        catalysts = h.get("key_catalysts", [])
+        risks = h.get("key_risks", [])
+        cat_html = (
+            "<div class='hc-list-head'>催化劑</div><ul class='hc-list up-list'>" +
+            "".join(f'<li>{html.escape(c)}</li>' for c in catalysts) + "</ul>"
+        ) if catalysts else ""
+        risk_html = (
+            "<div class='hc-list-head'>風險</div><ul class='hc-list dn-list'>" +
+            "".join(f'<li>{html.escape(r)}</li>' for r in risks) + "</ul>"
+        ) if risks else ""
+        holding_cards.append(f'''
+        <article class="holding-analysis">
+          <div class="ha-head">
+            <h3><a href="holdings/{html.escape(h.get("symbol", ""))}.html">{html.escape(h.get("symbol", ""))} {html.escape(h.get("name", ""))}</a></h3>
+            {_sentiment_badge(h.get("outlook", "中性"))}
+          </div>
+          <p class="narrative">{html.escape(h.get("commentary", ""))}</p>
+          <div class="bullbear">
+            <div class="bb-bar">
+              <div class="bb-bull" style="width:{bull}%"></div>
+              <div class="bb-neu" style="width:{neu}%"></div>
+              <div class="bb-bear" style="width:{bear}%"></div>
+            </div>
+            <div class="bb-legend">
+              <span class="bb-lbl bull">看多 {bull}%</span>
+              <span class="bb-lbl neu">觀望 {neu}%</span>
+              <span class="bb-lbl bear">看空 {bear}%</span>
+            </div>
+          </div>
+          <div class="hc-split">{cat_html}{risk_html}</div>
+        </article>''')
+    holdings_html = (
+        f'<div class="ai-block"><div class="tab-subhead">💼 持股分析</div>{"".join(holding_cards)}</div>'
+        if holding_cards else ""
+    )
+
+    # Opportunities — the star section
+    opps_html = ""
+    if opps:
+        rows = []
+        for o in opps:
+            rows.append(f'''
+            <article class="opp-card">
+              <div class="opp-head">
+                <h3>{html.escape(o.get("symbol", ""))} <span class="muted">{html.escape(o.get("name", ""))}</span></h3>
+              </div>
+              <p><span class="label-inline">論點</span>{html.escape(o.get("thesis", ""))}</p>
+              <p><span class="label-inline">研究切入點</span>{html.escape(o.get("research_angle", ""))}</p>
+              <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{html.escape(o.get("risk", ""))}</p>
+            </article>''')
+        opps_html = (
+            f'<div class="ai-block" id="opportunities"><div class="tab-subhead">🔍 值得研究的個股 '
+            f'<span class="badge-count">{len(opps)} DETECTED</span></div>'
+            f'{"".join(rows)}</div>'
+        )
+
+    # Learning
+    learning_html = ""
+    if lp:
+        learning_html = f'''
+<div class="ai-block">
+  <div class="tab-subhead">📚 新手學習點</div>
+  <div class="learning-card">
+    <h3>{html.escape(lp.get("term", ""))}</h3>
+    <p>{html.escape(lp.get("explanation", ""))}</p>
+  </div>
+</div>
+'''
 
     return f'''
 <div class="ai-tab-body">
@@ -1110,14 +1305,22 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
     <div class="pulse-mini-summary">{html.escape(mp.get("summary", ""))}</div>
   </div>
   {diag_html}
-  <div class="tab-subhead">🎯 今日行動清單</div>
-  {actions_html}
-  <div class="tab-subhead">📊 今日主題 <span class="muted small">{len(topics)} 則</span></div>
-  <table class="data-table">
-    <thead><tr><th>主題</th><th>情緒</th><th>涉及個股</th></tr></thead>
-    <tbody>{topic_rows}</tbody>
-  </table>
-  <div class="tab-footer"><a href="briefs/{latest_brief["date"]}.html" class="btn-link">→ 看完整分析</a></div>
+
+  <div class="ai-block">
+    <div class="tab-subhead">🎯 今日行動清單</div>
+    {actions_html}
+  </div>
+
+  {opps_html}
+  {holdings_html}
+  {macro_html}
+  {topics_html}
+  {learning_html}
+
+  <div class="tab-footer">
+    <span class="muted small mono">由 {html.escape(model)} 產生 · 僅供研究參考</span>
+    <a href="briefs/{latest_brief["date"]}.html" class="btn-link">→ 看完整 brief + 原始新聞</a>
+  </div>
 </div>
 '''
 
@@ -1176,6 +1379,7 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
         weekday_zh = ""
 
     sidebar = render_desk_sidebar(pf)
+    hero = render_daily_hero(latest_brief, latest_analysis)
     chart = render_big_chart(pf)
     macro_strip = render_macro_strip(pf)
     positions = render_positions_table(pf)
@@ -1196,15 +1400,16 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
   {sidebar}
   <main class="desk-main">
     {macro_strip}
+    {hero}
     {chart}
     <section class="desk-panel">
       <div class="tabs" role="tablist">
-        <button class="tab-btn active" data-tab="positions">Positions</button>
-        <button class="tab-btn" data-tab="ai">AI Analysis</button>
+        <button class="tab-btn active" data-tab="ai">🤖 AI Analysis</button>
+        <button class="tab-btn" data-tab="positions">Positions</button>
         <button class="tab-btn" data-tab="briefs">Briefs · {len(briefs)}</button>
       </div>
-      <div class="tab-panel active" data-panel="positions">{positions}</div>
-      <div class="tab-panel" data-panel="ai">{ai_tab}</div>
+      <div class="tab-panel active" data-panel="ai">{ai_tab}</div>
+      <div class="tab-panel" data-panel="positions">{positions}</div>
       <div class="tab-panel" data-panel="briefs">{briefs_table}</div>
     </section>
   </main>
@@ -2156,6 +2361,80 @@ footer a { color: var(--tx-3); }
   background: var(--accent-soft); color: var(--accent-2);
   letter-spacing: 0.5px;
 }
+
+/* Daily Hero — top of main column */
+.daily-hero {
+  position: relative;
+  background: linear-gradient(135deg, rgba(91,141,255,0.08) 0%, var(--bg-1) 50%);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px 22px 22px;
+  overflow: hidden;
+}
+.daily-hero::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), transparent);
+}
+.hero-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; gap: 12px; flex-wrap: wrap;
+}
+.hero-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.hero-badge {
+  font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 4px;
+  background: var(--accent-soft); color: var(--accent-2);
+  letter-spacing: 0.6px; text-transform: uppercase;
+}
+.hero-oneliner {
+  font-size: 15px; line-height: 1.75; color: var(--tx-1);
+  margin: 6px 0 14px;
+  font-weight: 500;
+}
+
+.hero-action {
+  background: rgba(27,217,124,0.06);
+  border: 1px solid rgba(27,217,124,0.22);
+  border-left: 3px solid var(--dn);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  margin: 8px 0 12px;
+}
+.hero-action-lbl {
+  font-size: 10px; font-weight: 700;
+  color: var(--dn-soft);
+  letter-spacing: 0.6px; text-transform: uppercase;
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+.hero-action-body strong { font-size: 14px; display: block; margin-bottom: 3px; line-height: 1.55; }
+.hero-action-reason { font-size: 12px; line-height: 1.6; }
+
+.hero-picks { margin-top: 10px; }
+.hero-picks-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.pick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+.pick-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.12s, border-color 0.12s;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.pick-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.pick-head { display: flex; gap: 6px; align-items: baseline; }
+.pick-head strong { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.3px; }
+.pick-thesis { color: var(--tx-2); line-height: 1.6; font-size: 12px; }
+.pick-risk { line-height: 1.5; font-size: 11px; }
+
+/* AI tab blocks */
+.ai-block { padding: 0 6px; margin-top: 4px; }
+.ai-block + .ai-block { padding-top: 10px; border-top: 1px solid var(--line); margin-top: 14px; }
+.opp-head h3 { margin: 0; font-size: 15px; color: var(--accent-2); }
 
 /* AI tab compact */
 .ai-tab-body { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 16px; }
