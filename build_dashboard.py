@@ -706,6 +706,58 @@ def render_analysis_section(analysis: dict) -> str:
         if opp_cards else ""
     )
 
+    # Budget allocation — also on brief page
+    budget_alloc = analysis.get("budget_allocation", {})
+    budget_section_html = ""
+    if budget_alloc.get("allocations"):
+        allocs = budget_alloc.get("allocations", [])
+        rows = []
+        for al in allocs:
+            action = al.get("action", "")
+            is_cash = "現金" in action or "不動作" in action
+            cls = "alloc-cash" if is_cash else "alloc-buy"
+            srcs = al.get("data_sources") or []
+            src_html = "".join(f'<span class="chip chip-muted small">{html.escape(s)}</span>' for s in srcs)
+            sl = al.get("stop_loss_price")
+            tp = al.get("take_profit_price")
+            shares = al.get("target_shares")
+            cost = al.get("target_cost_twd")
+            row_levels = []
+            if shares: row_levels.append(f"<strong>{shares} 股</strong>")
+            if cost: row_levels.append(f"約 {_fmt_twd(cost)}")
+            if al.get("entry_condition"): row_levels.append(f"進場：{html.escape(al['entry_condition'])}")
+            if sl: row_levels.append(f'<span class="dn">停損 {sl}</span>')
+            if tp: row_levels.append(f'<span class="up">停利 {tp}</span>')
+            levels_html = " · ".join(row_levels) if row_levels else ""
+            rows.append(f'''
+            <article class="alloc-full-card {cls}">
+              <div class="alloc-full-head">
+                <div>
+                  <div class="alloc-action-big">{html.escape(action)}</div>
+                  <h3>{html.escape(al.get("symbol", ""))} <span class="muted">{html.escape(al.get("name", ""))}</span></h3>
+                </div>
+                <div class="alloc-conf-big mono">信心度 {al.get("confidence_pct", 0)}%</div>
+              </div>
+              {f'<div class="alloc-levels-row mono small">{levels_html}</div>' if levels_html else ''}
+              <p><span class="label-inline">理由</span>{html.escape(al.get("rationale", ""))}</p>
+              {"<div class='alloc-sources'><span class='label-inline'>依據</span>" + src_html + "</div>" if src_html else ""}
+              <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{html.escape(al.get("risk", ""))}</p>
+            </article>''')
+        unalloc = budget_alloc.get("unallocated_twd", 0)
+        unalloc_line = (f'<p class="muted small">保留現金 {_fmt_twd(unalloc)}（等更好的機會）</p>'
+                        if unalloc and unalloc > 0 else "")
+        why_not = budget_alloc.get("why_not_other_picks") or ""
+        why_not_line = f'<p class="muted small"><strong>為什麼不選別檔：</strong>{html.escape(why_not)}</p>' if why_not else ""
+        budget_section_html = f'''
+<section class="a-section" id="budget">
+  <div class="section-head"><h2>💰 今日 NT${budget_alloc.get("budget_twd", 0):,.0f} 配置建議 <span class="badge-count">SNOWBALL</span></h2></div>
+  <div class="budget-plan-big">{html.escape(budget_alloc.get("plan_summary", ""))}</div>
+  {"".join(rows)}
+  {unalloc_line}
+  {why_not_line}
+</section>
+'''
+
     # Learning
     learning_html = ""
     if lp:
@@ -728,6 +780,7 @@ def render_analysis_section(analysis: dict) -> str:
 
     return (
         pulse_html + macro_html + diag_html + actions_html +
+        budget_section_html +
         topics_html + holdings_html + opps_html + learning_html + disclaimer
     )
 
