@@ -34,8 +34,13 @@ BRIEFS_DIR = ROOT / "briefs"
 ANALYSES_DIR = ROOT / "analyses"
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
-GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+# Current stable models (2026): gemini-2.5-flash, gemini-2.5-pro, gemini-2.0-flash.
+# We try them in order — some API keys / regions have access to a subset.
+GEMINI_MODELS = os.environ.get(
+    "GEMINI_MODEL",
+    "gemini-2.5-flash,gemini-2.0-flash,gemini-1.5-flash",
+).split(",")
+GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
 
 # Approx. max news-section bytes to include in the prompt.
 # Gemini 2.0 Flash has 1M token context, but smaller = faster + cheaper + less drift.
@@ -281,10 +286,11 @@ def build_prompt(brief_markdown: str) -> str:
 請輸出符合 schema 的 JSON。記住：敘事要深、要具體、要連結到使用者的持股。"""
 
 
-def call_gemini(prompt: str) -> dict | None:
+def call_gemini(prompt: str) -> tuple[dict | None, str | None]:
+    """Try each model in GEMINI_MODELS. Return (analysis_dict, model_used)."""
     if not GEMINI_API_KEY:
         print("!! GEMINI_API_KEY not set — skipping", file=sys.stderr)
-        return None
+        return None, None
 
     payload = {
         "systemInstruction": {
@@ -300,32 +306,43 @@ def call_gemini(prompt: str) -> dict | None:
             "maxOutputTokens": 8192,
         },
     }
-
     params = {"key": GEMINI_API_KEY}
-    for attempt in range(3):
-        try:
-            r = requests.post(GEMINI_URL, params=params, json=payload, timeout=90)
-            if r.status_code == 429:
-                wait = 2 ** attempt * 5
-                print(f"!! rate-limited, retrying in {wait}s…", file=sys.stderr)
-                time.sleep(wait)
-                continue
-            r.raise_for_status()
-            data = r.json()
-            text = data["candidates"][0]["content"]["parts"][0]["text"]
-            return json.loads(text)
-        except requests.HTTPError as e:
-            body = r.text[:500] if r is not None else "no body"
-            print(f"!! HTTP {r.status_code}: {body}", file=sys.stderr)
-            if r.status_code in (400, 401, 403):
-                return None  # won't recover by retrying
-        except json.JSONDecodeError as e:
-            print(f"!! gemini returned non-JSON: {e}", file=sys.stderr)
-            print(f"    text was: {text[:500]}", file=sys.stderr)
-        except Exception as e:
-            print(f"!! gemini call failed (attempt {attempt + 1}): {e}", file=sys.stderr)
-        time.sleep(2 ** attempt)
-    return None
+
+    for model in GEMINI_MODELS:
+        model = model.strip()
+        url = f"{GEMINI_BASE}/models/{model}:generateContent"
+        print(f"   trying model: {model}", file=sys.stderr)
+        r = None
+        text = None
+        for attempt in range(3):
+            try:
+                r = requests.post(url, params=params, json=payload, timeout=120)
+                if r.status_code == 200:
+                    data = r.json()
+                    text = data["candidates"][0]["content"]["parts"][0]["text"]
+                    return json.loads(text), model
+                body = r.text[:700]
+                print(f"   !! HTTP {r.status_code}: {body}", file=sys.stderr)
+                # Permanent failures: skip to next model immediately
+                if r.status_code in (400, 401, 403, 404):
+                    break
+                # Transient (429, 500, 503): retry with backoff
+                if r.status_code in (429, 500, 503):
+                    wait = 2 ** attempt * 5
+                    print(f"   …retrying in {wait}s", file=sys.stderr)
+                    time.sleep(wait)
+                    continue
+                break
+            except json.JSONDecodeError as e:
+                print(f"   !! non-JSON response: {e}", file=sys.stderr)
+                if text:
+                    print(f"       first 500 chars: {text[:500]}", file=sys.stderr)
+                break
+            except Exception as e:
+                print(f"   !! request exception: {e}", file=sys.stderr)
+                time.sleep(2 ** attempt)
+        print(f"   ✗ model {model} failed, trying next", file=sys.stderr)
+    return None, None
 
 
 def main() -> int:
@@ -354,7 +371,7 @@ def main() -> int:
     print(f"[{datetime.now(TAIPEI):%H:%M:%S}] calling gemini "
           f"({len(prompt)} chars prompt)…", file=sys.stderr)
 
-    result = call_gemini(prompt)
+    result, model_used = call_gemini(prompt)
     if not result:
         print("analysis failed — brief page will fall back to copy-prompt flow",
               file=sys.stderr)
@@ -362,7 +379,7 @@ def main() -> int:
 
     result["generated_at"] = datetime.now(TAIPEI).isoformat()
     result["date"] = date
-    result["model"] = GEMINI_MODEL
+    result["model"] = model_used
 
     out_path.write_text(
         json.dumps(result, ensure_ascii=False, indent=2),
