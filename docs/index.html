@@ -22,14 +22,20 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="7" y="6" width="10" height="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="0.8" fill="currentColor"/><circle cx="12" cy="13" r="0.8" fill="currentColor"/><circle cx="15.5" cy="13" r="0.8" fill="currentColor"/><circle cx="8.5" cy="17" r="0.8" fill="currentColor"/><circle cx="12" cy="17" r="0.8" fill="currentColor"/><circle cx="15.5" cy="17" r="0.8" fill="currentColor"/></svg><span class="sn-label">SIM</span>
     </button>
     <button class="sn-btn" data-tab="portfolio" title="Portfolio">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><polyline points="3,17 9,11 13,14 21,6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17,6 21,6 21,10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sn-label">PF</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><polyline points="3,17 9,11 13,14 21,6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17,6 21,6 21,10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sn-label">PORT</span>
     </button>
-    <button class="sn-btn" data-tab="positions" title="Holdings">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><rect x="3" y="7" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 7 V5 a1 1 0 0 1 1 -1 h4 a1 1 0 0 1 1 1 V7" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/></svg><span class="sn-label">HOLD</span>
+    <button class="sn-btn" data-tab="macro" title="Macro Pulse">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/></svg><span class="sn-label">MACRO</span>
     </button>
-    <button class="sn-btn" data-tab="briefs" title="Brief Archive">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><rect x="4" y="4" width="16" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="17" x2="13" y2="17" stroke="currentColor" stroke-width="1.5"/></svg><span class="sn-label">BRIEF</span>
+    <button class="sn-btn" data-tab="briefs" title="News Stream">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><rect x="4" y="4" width="16" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="17" x2="13" y2="17" stroke="currentColor" stroke-width="1.5"/></svg><span class="sn-label">NEWS</span>
       <span class="sn-badge">1</span>
+    </button>
+    <button class="sn-btn" data-tab="chat" title="AI Chat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><path d="M12 3 L13 8 L18 9 L13 10 L12 15 L11 10 L6 9 L11 8 Z" fill="currentColor"/><path d="M18 4 L18.6 6 L20.5 6.5 L18.6 7 L18 9 L17.4 7 L15.5 6.5 L17.4 6 Z" fill="currentColor"/></svg><span class="sn-label">CHAT</span>
+    </button>
+    <button class="sn-btn" data-tab="positions" title="Holdings (legacy)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="icon"><rect x="3" y="7" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 7 V5 a1 1 0 0 1 1 -1 h4 a1 1 0 0 1 1 1 V7" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/></svg><span class="sn-label">HOLD</span>
     </button>
   </aside>
 
@@ -95,7 +101,7 @@
   
         <div class="hero-budget">
           <div class="hero-picks-head">
-            <span class="hero-action-lbl">💰 下一筆 NT$5,000 建議</span>
+            <span class="hero-action-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="icon"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.6"/><path d="M16 7 H10 a2.5 2.5 0 0 0 0 5 H14 a2.5 2.5 0 0 1 0 5 H8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> 下一筆 NT$5,000 建議 · NEXT DEPLOY</span>
             <a href="briefs/2026-04-18.html#budget" class="btn-link small">看完整下單計畫 →</a>
           </div>
           <p class="budget-plan">今日建議將 NT$5,000 預算用於新倉試水聯亞 (3081) 零股，理由為光通訊 CPO 題材受 AI 需求帶動持續發酵，聯亞作為產業代表股具成長潛力。設定停損價為 2340 元，停利價為 3380 元，符合雪球法小倉位試水原則。</p>
@@ -120,7 +126,7 @@
   
         <div class="hero-picks">
           <div class="hero-picks-head">
-            <span class="hero-action-lbl">🔍 今日值得研究</span>
+            <span class="hero-action-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="icon"><path d="M2 12 C5 6 8 4 12 4 C16 4 19 6 22 12 C19 18 16 20 12 20 C8 20 5 18 2 12 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg> 今日值得研究 · RESEARCH PICKS</span>
             <span class="muted small">5 檔</span>
           </div>
           <div class="pick-grid">
@@ -130,7 +136,7 @@
                 <span class="muted small"></span>
               </div>
               <div class="pick-thesis small"></div>
-              <div class="pick-risk muted small">⚠ </div>
+              <div class="pick-risk muted small"><span class="mono amber">RISK</span> · </div>
             </a>
             <a class="pick-card" href="briefs/2026-04-18.html#opportunities">
               <div class="pick-head">
@@ -138,7 +144,7 @@
                 <span class="muted small"></span>
               </div>
               <div class="pick-thesis small"></div>
-              <div class="pick-risk muted small">⚠ </div>
+              <div class="pick-risk muted small"><span class="mono amber">RISK</span> · </div>
             </a>
             <a class="pick-card" href="briefs/2026-04-18.html#opportunities">
               <div class="pick-head">
@@ -146,7 +152,7 @@
                 <span class="muted small"></span>
               </div>
               <div class="pick-thesis small"></div>
-              <div class="pick-risk muted small">⚠ </div>
+              <div class="pick-risk muted small"><span class="mono amber">RISK</span> · </div>
             </a></div>
         </div>
 </div>
@@ -839,7 +845,7 @@
 
   <div class="sim-grid">
     <div class="sim-field">
-      <label class="sim-lbl">💰 預算</label>
+      <label class="sim-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="icon"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.6"/><path d="M16 7 H10 a2.5 2.5 0 0 0 0 5 H14 a2.5 2.5 0 0 1 0 5 H8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> 預算 · BUDGET</label>
       <div class="sim-budget-row">
         <span class="sim-prefix">NT$</span>
         <input type="number" id="sim-budget" value="5000" min="1000" step="500" class="sim-input">
@@ -854,7 +860,7 @@
     </div>
 
     <div class="sim-field">
-      <label class="sim-lbl">📊 標的 <span id="sim-count" class="muted small mono"></span></label>
+      <label class="sim-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="icon"><polyline points="3,17 9,11 13,14 21,6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17,6 21,6 21,10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> 標的 · TICKERS <span id="sim-count" class="muted small mono"></span></label>
       <select id="sim-ticker" class="sim-input sim-select"></select>
       <div class="sim-ticker-info mono small muted" id="sim-ticker-info">—</div>
       <div class="sim-52w-bar" id="sim-52w-bar"></div>
@@ -1123,34 +1129,32 @@
       </div>
       <div class="tab-panel" data-panel="portfolio">
         
-<div class="macro-strip">
+<div class="pfv2-wrap">
   
-        <div class="macro-strip-cell">
-          <div class="muted small">加權 ^TWII</div>
-          <div class="mono tnum macro-strip-val">36804</div>
-          <div class="macro-strip-delta"><span class="mono tnum dn">-0.88%</span> <span class="muted tnum small">YTD +25.4%</span></div>
-        </div>
+    <div class="pfv2-kpi-grid">
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">TOTAL VALUE</div>
+        <div class="pfv2-kpi-val mono tnum">NT$141,580</div>
+        <div class="pfv2-kpi-sub muted mono small">含現金 · TWD</div>
+      </div>
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">TOTAL P&amp;L</div>
+        <div class="pfv2-kpi-val mono tnum up">+NT$16,818</div>
+        <div class="pfv2-kpi-sub mono small up">+13.48% since inception</div>
+      </div>
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">TODAY P&amp;L</div>
+        <div class="pfv2-kpi-val mono tnum dn">-NT$2,120</div>
+        <div class="pfv2-kpi-sub mono small dn">-1.48% day</div>
+      </div>
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">ALPHA vs 0050</div>
+        <div class="pfv2-kpi-val mono tnum dn">-0.48%</div>
+        <div class="pfv2-kpi-sub mono small muted">bench -1.00%</div>
+      </div>
+    </div>
+    
   
-        <div class="macro-strip-cell">
-          <div class="muted small">S&P 500</div>
-          <div class="mono tnum macro-strip-val">7126</div>
-          <div class="macro-strip-delta"><span class="mono tnum up">+1.20%</span> <span class="muted tnum small">YTD +3.9%</span></div>
-        </div>
-  
-        <div class="macro-strip-cell">
-          <div class="muted small">VIX</div>
-          <div class="mono tnum macro-strip-val">17.48</div>
-          <div class="macro-strip-delta"><span class="mono tnum dn">-2.56%</span> <span class="muted tnum small">YTD +20.5%</span></div>
-        </div>
-  
-        <div class="macro-strip-cell">
-          <div class="muted small">USD/TWD</div>
-          <div class="mono tnum macro-strip-val">31.464</div>
-          <div class="macro-strip-delta"><span class="mono tnum dn">-0.39%</span> <span class="muted tnum small">YTD +0.5%</span></div>
-        </div>
-</div>
-
-        
 <div class="chart-area">
   <div class="chart-head">
     <div>
@@ -1175,32 +1179,1028 @@
   </svg>
 </div>
 
-        <section class="portfolio-detail">
-          
-<aside class="desk-sidebar">
-  <div class="stat-block">
-    <div class="stat-block-head">OVERVIEW</div>
-    <div class="stat-row"><span class="stat-lbl">TOTAL VALUE</span><span class="stat-val ">NT$141,580</span></div><div class="stat-row"><span class="stat-lbl">CASH</span><span class="stat-val ">0.0%</span></div><div class="stat-row"><span class="stat-lbl">TODAY</span><span class="stat-val dn">-NT$2,120 (-1.48%)</span></div><div class="stat-row"><span class="stat-lbl">ALL TIME</span><span class="stat-val up">+NT$16,818 (+13.48%)</span></div><div class="stat-row"><span class="stat-lbl">vs 0050</span><span class="stat-val dn">-1.00%</span></div><div class="stat-row"><span class="stat-lbl">ALPHA</span><span class="stat-val dn">-0.48%</span></div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-block-head">RETURNS</div>
-    <div class="stat-row"><span class="stat-lbl">7D</span><span class="stat-val up">+3.42%</span></div><div class="stat-row"><span class="stat-lbl">30D</span><span class="stat-val up">+7.70%</span></div><div class="stat-row"><span class="stat-lbl">90D</span><span class="stat-val up">+20.58%</span></div><div class="stat-row"><span class="stat-lbl">1Y</span><span class="stat-val up">+117.5%</span></div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-block-head">RISK (90D)</div>
-    <div class="stat-row"><span class="stat-lbl">VOLATILITY</span><span class="stat-val ">30.9%</span></div><div class="stat-row"><span class="stat-lbl">DRAWDOWN 30D</span><span class="stat-val dn">-7.18%</span></div><div class="stat-row"><span class="stat-lbl">DRAWDOWN 90D</span><span class="stat-val dn">-11.34%</span></div><div class="stat-row"><span class="stat-lbl">DRAWDOWN 1Y</span><span class="stat-val dn">-11.34%</span></div><div class="stat-row"><span class="stat-lbl">STYLE</span><span class="stat-val ">snowball-growth</span></div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-block-head">ALLOCATION</div>
-    <div class="stat-row pillar-stat"><span class="stat-lbl"><span class="pillar-dot p-growth"></span>成長核心</span><span class="stat-val"><span class="mono">100%</span><span class="muted mono"> / 100%</span> <span class="flat mono small">0</span></span></div><div class="stat-row pillar-stat"><span class="stat-lbl"><span class="pillar-dot p-defense"></span>防禦對沖</span><span class="stat-val"><span class="mono">0%</span><span class="muted mono"> / 0%</span> <span class="flat mono small">0</span></span></div><div class="stat-row pillar-stat"><span class="stat-lbl"><span class="pillar-dot p-flex"></span>機動倉位</span><span class="stat-val"><span class="mono">0%</span><span class="muted mono"> / 0%</span> <span class="flat mono small">0</span></span></div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-block-head">ALERTS <span class="badge-count">0 ACTIVE</span></div>
-    <div class="alert-line muted">無警報</div>
-  </div>
-</aside>
+  
+    <div class="pfv2-section">
+      
+<div class="sec-head">
+  <span class="sec-tick"></span>
+  <h2 class="sec-title">持倉明細</h2>
+  <span class="sec-en mono">POSITIONS</span><span class="sec-count mono">2</span>
+</div>
 
-        </section>
+      <div class="pfv2-table-wrap">
+        <table class="pfv2-table">
+          <thead>
+            <tr>
+              <th class="left">ASSET</th>
+              <th class="right">SHARES</th>
+              <th class="right">AVG COST</th>
+              <th class="right">LAST</th>
+              <th class="right">TODAY</th>
+              <th class="right">VALUE</th>
+              <th class="right">P&amp;L</th>
+              <th class="right">%</th>
+              <th class="right">WEIGHT</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr onclick="location.href='holdings/0050.html'">
+          <td class="tk-cell"><span class="pillar-dot p-growth"></span><strong class="mono">0050</strong>
+            <span class="muted">元大台灣50</span></td>
+          <td class="mono tnum right">1,200</td>
+          <td class="mono tnum right">71.76</td>
+          <td class="mono tnum right">84.15</td>
+          <td class="mono tnum right dn">-1.00%</td>
+          <td class="mono tnum right">NT$100,980</td>
+          <td class="mono tnum right up">+NT$14,868</td>
+          <td class="mono tnum right up">+17.27%</td>
+          <td class="mono tnum right"><div class="weight-bar-wrap"><div class="weight-bar-fill" style="width:71.3%"></div><span class="weight-bar-val">71.3%</span></div></td>
+        </tr>
+        <tr onclick="location.href='holdings/2330.html'">
+          <td class="tk-cell"><span class="pillar-dot p-growth"></span><strong class="mono">2330</strong>
+            <span class="muted">台積電</span></td>
+          <td class="mono tnum right">20</td>
+          <td class="mono tnum right">1932.50</td>
+          <td class="mono tnum right">2030.00</td>
+          <td class="mono tnum right dn">-2.64%</td>
+          <td class="mono tnum right">NT$40,600</td>
+          <td class="mono tnum right up">+NT$1,950</td>
+          <td class="mono tnum right up">+5.05%</td>
+          <td class="mono tnum right"><div class="weight-bar-wrap"><div class="weight-bar-fill" style="width:28.7%"></div><span class="weight-bar-val">28.7%</span></div></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+    
+  
+  
+    <div class="pfv2-section">
+      
+<div class="sec-head">
+  <span class="sec-tick"></span>
+  <h2 class="sec-title">風險指標</h2>
+  <span class="sec-en mono">RISK METRICS</span><span class="sec-meta mono">90D 統計</span>
+</div>
+
+      <div class="risk-grid-v2">
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">集中度</div>
+          <div class="risk-cell-val mono tnum amber">B-</div>
+          <div class="risk-cell-sub muted mono small">MAX 71.3%</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">波動率 (年化)</div>
+          <div class="risk-cell-val mono tnum dn">30.9%</div>
+          <div class="risk-cell-sub muted mono small">等級 C</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">Beta (vs 0050)</div>
+          <div class="risk-cell-val mono tnum">0.94</div>
+          <div class="risk-cell-sub muted mono small">30D 相對敏感度</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">Sharpe 估值</div>
+          <div class="risk-cell-val mono tnum">0.67</div>
+          <div class="risk-cell-sub muted mono small">90D 回報 ÷ 波動</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">最大回撤 30D</div>
+          <div class="risk-cell-val mono tnum dn">-7.18%</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">最大回撤 90D</div>
+          <div class="risk-cell-val mono tnum dn">-11.34%</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">最大回撤 1Y</div>
+          <div class="risk-cell-val mono tnum dn">-11.34%</div>
+        </div>
+      </div>
+    </div>
+    
+</div>
+
+      </div>
+      <div class="tab-panel" data-panel="macro">
+        
+<div class="pfv2-wrap">
+  <div class="macro-hero">
+    <h1 class="macro-hero-title">全球宏觀脈動 <span class="sec-en mono">MACRO PULSE</span></h1>
+    <p class="macro-hero-sub muted small">實時指數 · 利率 · 匯率 · 商品 · AI 風險地圖</p>
+  </div>
+  
+        <div class="macro-banner">
+          <div class="macro-banner-lbl mono">
+            <span class="live-dot accent"></span>
+            AI 本週宏觀觀點 · MACRO VIEW
+          </div>
+          <p class="macro-banner-text">昨日 (4/17) 全球市場受到中東地緣政治情勢降溫的正面影響，伊朗宣布荷莫茲海峽完全開放通行，國際油價應聲暴跌 10%，美股期貨盤後勁揚。這對全球通膨壓力有所緩解，也讓投資人對風險資產的偏好回升。台股加權指數昨日 (4/17) 雖然下跌 0.88% 至 36804 點，但櫃買指數卻逆勢上漲 6.38 點，創下歷史新高，顯示市場資金並未撤出，而是轉向中小型股避險或尋找機會。VIX 指數目前在 17.5，仍處於相對低點，顯示市場整體恐慌情緒不高，但美元兌新台幣匯率 31.464 仍在高檔，需留意外資動向。</p>
+          
+          <ul class='macro-wp-list'><li>下週三 (4/29, 11 天後) <a href="holdings/2303.html" class="tx-link">聯電</a>法說會，關注成熟製程漲價與新技術布局進度</li><li>國際油價後續走勢，是否持續反映地緣政治降溫</li><li>美股科技巨頭財報陸續公布，觀察AI需求是否持續強勁</li></ul>
+        </div>
+        
+  <div class="pfv2-section">
+    
+<div class="sec-head">
+  <span class="sec-tick"></span>
+  <h2 class="sec-title">全球指數</h2>
+  <span class="sec-en mono">GLOBAL INDICES</span><span class="sec-count mono">6</span>
+</div>
+
+    <div class="macro-idx-grid">
+    <div class="macro-idx-card">
+      <div class="macro-idx-head">
+        <span class="mono">TAIEX</span>
+        <span class="muted small">加權 ^TWII</span>
+      </div>
+      <div class="macro-idx-val mono tnum">36804</div>
+      <div class="macro-idx-delta">
+        <span class="mono tnum dn">-0.88%</span>
+        <span class="macro-idx-ytd mono small up">YTD +25.4%</span>
+        <span class="macro-idx-52w muted small mono">52w 98%</span>
+      </div>
+      <div class="macro-idx-spark"><svg class="sparkline" viewBox="0 0 180 36" width="180" height="36" preserveAspectRatio="none"><polygon points="2.0 34 2.0 22.5 8.1 22.9 14.1 31.7 20.2 27.8 26.3 19.9 32.3 23.0 38.4 24.1 44.5 24.4 50.6 21.5 56.6 18.5 62.7 22.4 68.8 23.2 74.8 28.1 80.9 28.7 87.0 23.8 93.0 24.4 99.1 25.8 105.2 29.3 111.2 34.0 117.3 25.4 123.4 29.0 129.4 25.1 135.5 16.0 141.6 15.4 147.7 12.1 153.7 11.9 159.8 6.9 165.9 4.4 171.9 2.0 178.0 3.9 178.0 34" fill="var(--up)" opacity="0.12"/><path d="M 2.0 22.5 L 8.1 22.9 L 14.1 31.7 L 20.2 27.8 L 26.3 19.9 L 32.3 23.0 L 38.4 24.1 L 44.5 24.4 L 50.6 21.5 L 56.6 18.5 L 62.7 22.4 L 68.8 23.2 L 74.8 28.1 L 80.9 28.7 L 87.0 23.8 L 93.0 24.4 L 99.1 25.8 L 105.2 29.3 L 111.2 34.0 L 117.3 25.4 L 123.4 29.0 L 129.4 25.1 L 135.5 16.0 L 141.6 15.4 L 147.7 12.1 L 153.7 11.9 L 159.8 6.9 L 165.9 4.4 L 171.9 2.0 L 178.0 3.9" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+    </div>
+    
+    <div class="macro-idx-card">
+      <div class="macro-idx-head">
+        <span class="mono">SPX</span>
+        <span class="muted small">S&amp;P 500</span>
+      </div>
+      <div class="macro-idx-val mono tnum">7126</div>
+      <div class="macro-idx-delta">
+        <span class="mono tnum up">+1.20%</span>
+        <span class="macro-idx-ytd mono small up">YTD +3.9%</span>
+        <span class="macro-idx-52w muted small mono">52w 99%</span>
+      </div>
+      <div class="macro-idx-spark"><svg class="sparkline" viewBox="0 0 180 36" width="180" height="36" preserveAspectRatio="none"><polygon points="2.0 34 2.0 17.8 8.1 15.5 14.1 16.1 20.2 16.3 26.3 20.5 32.3 22.2 38.4 19.5 44.5 18.8 50.6 22.5 56.6 23.3 62.7 27.3 68.8 24.3 74.8 25.3 80.9 23.8 87.0 28.5 93.0 33.0 99.1 34.0 105.2 26.4 111.2 24.5 117.3 24.2 123.4 23.0 129.4 22.8 135.5 16.0 141.6 14.3 147.7 14.6 153.7 11.8 159.8 8.5 165.9 6.2 171.9 5.5 178.0 2.0 178.0 34" fill="var(--up)" opacity="0.12"/><path d="M 2.0 17.8 L 8.1 15.5 L 14.1 16.1 L 20.2 16.3 L 26.3 20.5 L 32.3 22.2 L 38.4 19.5 L 44.5 18.8 L 50.6 22.5 L 56.6 23.3 L 62.7 27.3 L 68.8 24.3 L 74.8 25.3 L 80.9 23.8 L 87.0 28.5 L 93.0 33.0 L 99.1 34.0 L 105.2 26.4 L 111.2 24.5 L 117.3 24.2 L 123.4 23.0 L 129.4 22.8 L 135.5 16.0 L 141.6 14.3 L 147.7 14.6 L 153.7 11.8 L 159.8 8.5 L 165.9 6.2 L 171.9 5.5 L 178.0 2.0" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+    </div>
+    
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">NDX</span>
+            <span class="muted small">Nasdaq</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">SOX</span>
+            <span class="muted small">費半</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">N225</span>
+            <span class="muted small">日經 225</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">HSI</span>
+            <span class="muted small">恆生指數</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div></div>
+  </div>
+  <div class="pfv2-section">
+    
+<div class="sec-head">
+  <span class="sec-tick"></span>
+  <h2 class="sec-title">利率 · 匯率 · 商品</h2>
+  <span class="sec-en mono">RATES · FX · COMMODITIES</span><span class="sec-count mono">7</span>
+</div>
+
+    <div class="macro-idx-grid">
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">US10Y</span>
+            <span class="muted small">美 10Y 殖利率</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>
+    <div class="macro-idx-card">
+      <div class="macro-idx-head">
+        <span class="mono">VIX</span>
+        <span class="muted small">恐慌指數 VIX</span>
+      </div>
+      <div class="macro-idx-val mono tnum">17.48</div>
+      <div class="macro-idx-delta">
+        <span class="mono tnum dn">-2.56%</span>
+        <span class="macro-idx-ytd mono small up">YTD +20.5%</span>
+        <span class="macro-idx-52w muted small mono">52w 18%</span>
+      </div>
+      <div class="macro-idx-spark"><svg class="sparkline" viewBox="0 0 180 36" width="180" height="36" preserveAspectRatio="none"><polygon points="2.0 34 2.0 5.7 8.1 15.1 14.1 16.4 20.2 18.1 26.3 10.9 32.3 11.1 38.4 19.8 44.5 22.5 50.6 16.1 56.6 18.5 62.7 12.1 68.8 13.6 74.8 11.7 80.9 15.5 87.0 10.5 93.0 2.0 99.1 3.0 105.2 15.7 111.2 17.4 117.3 18.9 123.4 18.2 129.4 14.4 135.5 25.6 141.6 29.3 147.7 29.9 153.7 30.1 159.8 31.9 165.9 32.4 171.9 32.9 178.0 34.0 178.0 34" fill="var(--dn)" opacity="0.12"/><path d="M 2.0 5.7 L 8.1 15.1 L 14.1 16.4 L 20.2 18.1 L 26.3 10.9 L 32.3 11.1 L 38.4 19.8 L 44.5 22.5 L 50.6 16.1 L 56.6 18.5 L 62.7 12.1 L 68.8 13.6 L 74.8 11.7 L 80.9 15.5 L 87.0 10.5 L 93.0 2.0 L 99.1 3.0 L 105.2 15.7 L 111.2 17.4 L 117.3 18.9 L 123.4 18.2 L 129.4 14.4 L 135.5 25.6 L 141.6 29.3 L 147.7 29.9 L 153.7 30.1 L 159.8 31.9 L 165.9 32.4 L 171.9 32.9 L 178.0 34.0" stroke="var(--dn)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+    </div>
+    
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">DXY</span>
+            <span class="muted small">美元指數 DXY</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>
+    <div class="macro-idx-card">
+      <div class="macro-idx-head">
+        <span class="mono">FX</span>
+        <span class="muted small">USD/TWD 匯率</span>
+      </div>
+      <div class="macro-idx-val mono tnum">31.464</div>
+      <div class="macro-idx-delta">
+        <span class="mono tnum dn">-0.39%</span>
+        <span class="macro-idx-ytd mono small up">YTD +0.5%</span>
+        <span class="macro-idx-52w muted small mono">52w 73%</span>
+      </div>
+      <div class="macro-idx-spark"><svg class="sparkline" viewBox="0 0 180 36" width="180" height="36" preserveAspectRatio="none"><polygon points="2.0 34 2.0 18.5 8.1 18.5 14.1 19.8 20.2 18.1 26.3 14.2 32.3 2.0 38.4 12.0 44.5 14.7 50.6 8.0 56.6 18.5 62.7 8.5 68.8 15.8 74.8 12.9 80.9 12.4 87.0 12.7 93.0 10.5 99.1 7.7 105.2 12.3 111.2 9.4 117.3 12.3 123.4 11.2 129.4 13.4 135.5 14.3 141.6 22.3 147.7 22.0 153.7 20.1 159.8 25.9 165.9 31.6 171.9 28.4 178.0 34.0 178.0 34" fill="var(--dn)" opacity="0.12"/><path d="M 2.0 18.5 L 8.1 18.5 L 14.1 19.8 L 20.2 18.1 L 26.3 14.2 L 32.3 2.0 L 38.4 12.0 L 44.5 14.7 L 50.6 8.0 L 56.6 18.5 L 62.7 8.5 L 68.8 15.8 L 74.8 12.9 L 80.9 12.4 L 87.0 12.7 L 93.0 10.5 L 99.1 7.7 L 105.2 12.3 L 111.2 9.4 L 117.3 12.3 L 123.4 11.2 L 129.4 13.4 L 135.5 14.3 L 141.6 22.3 L 147.7 22.0 L 153.7 20.1 L 159.8 25.9 L 165.9 31.6 L 171.9 28.4 L 178.0 34.0" stroke="var(--dn)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+    </div>
+    
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">GOLD</span>
+            <span class="muted small">黃金 GC=F</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">WTI</span>
+            <span class="muted small">西德州原油</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">BTC</span>
+            <span class="muted small">比特幣</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div></div>
+  </div>
+  
+    <div class="pfv2-section">
+      
+<div class="sec-head">
+  <span class="sec-tick"></span>
+  <h2 class="sec-title">風險地圖</h2>
+  <span class="sec-en mono">RISK MAP</span><span class="sec-meta mono">rule-based</span>
+</div>
+
+      <div class="risk-map">
+        
+        <div class="risk-map-row">
+          <div class="risk-map-name">
+            <span class="mono">MARKET FEAR</span>
+            <span class="muted small">市場情緒</span>
+          </div>
+          <div class="risk-map-detail muted small">VIX 17.5 — 中性區間</div>
+          <span class="risk-map-level risk-mid mono">MID</span>
+        </div>
+        
+        
+        <div class="risk-map-row">
+          <div class="risk-map-name">
+            <span class="mono">RATE POLICY</span>
+            <span class="muted small">Fed 政策</span>
+          </div>
+          <div class="risk-map-detail muted small">US10Y 0.00% — 利率環境寬鬆</div>
+          <span class="risk-map-level risk-low mono">LOW</span>
+        </div>
+        
+        
+        <div class="risk-map-row">
+          <div class="risk-map-name">
+            <span class="mono">USD STRENGTH</span>
+            <span class="muted small">美元指數</span>
+          </div>
+          <div class="risk-map-detail muted small">資料不足</div>
+          <span class="risk-map-level risk-mid mono">—</span>
+        </div>
+        
+        
+        <div class="risk-map-row">
+          <div class="risk-map-name">
+            <span class="mono">SEMI CYCLE</span>
+            <span class="muted small">AI Capex</span>
+          </div>
+          <div class="risk-map-detail muted small">SOX +0.0% — 震盪</div>
+          <span class="risk-map-level risk-mid mono">MID</span>
+        </div>
+        
+      </div>
+    </div>
+    
+</div>
+
+      </div>
+      <div class="tab-panel" data-panel="briefs">
+        
+<div class="pfv2-wrap">
+  <div class="macro-hero">
+    <h1 class="macro-hero-title">新聞即時流 <span class="sec-en mono">NEWS STREAM</span></h1>
+    <p class="macro-hero-sub muted small">T1/T2 分級 · 券商 / 媒體 / 總經 / 財報 · 近 3 天</p>
+  </div>
+  <div class="news-filter-bar">
+    <button class="news-pill active mono" data-filter="all">ALL · 47</button>
+    <button class="news-pill mono" data-filter="tier:T2">T2</button><button class="news-pill mono" data-filter="tier:T3">T3</button>
+    <button class="news-pill mono" data-filter="kind:BROKER">BROKER</button><button class="news-pill mono" data-filter="kind:DATA">DATA</button><button class="news-pill mono" data-filter="kind:MACRO">MACRO</button><button class="news-pill mono" data-filter="kind:MEDIA">MEDIA</button>
+  </div>
+  <div class="news-feed">
+        <article class="news-card" data-tier="T2" data-kind="BROKER">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-broker mono">BROKER</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 20:30</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMi8gJBVV95cUxPSGxCZ2tteHU0VUdOZVM1M1otSmNJWGpWb1hDd2dsQXJVQy05Y2g5dGNSRlMyVlNGNXZVc0phcTV1My1KbW9JbTU5dk8wdjMyQk91WjhQYWVkRUNlbU5HVDM0Wmg4YUJqRF9MU0xpdTFlcDJZTjRWUkxVV1pyaHM0RU1fZFhROC1NUVlKcHIwQ0w1ZXFjUjVaa3JLeERnamJCXzYtRjZPbUNOZ1Y3R2pfeXhwWTdYc0dzOEw1VnJMX0tRUU5lV1FuVi1IMERBMnNjaVNGR3MzTnNqanFpWEtJWGtOS2Y3SzQya1AtSGx4QVlnd1Y5OHpHQXFuRGUzRko4eGpWN3lkTzF0R2FhYW5zd3V1VHhoVGd5WThjaWgzbG9hTURIdXpqZmhiQmUwdTR4SF9WbU8wdEF0enp1eDBVNFpOSW1UaHFEeHN5YUtfbmxjbHRlWFhxUFlNQzhsMmYwRmQzS3JQdXpFMzAxWXNCRi1B?oc=5" target="_blank" rel="noopener">PCB板大屠殺！外資本週狂砍「這檔」捲147億 華通慘被狙擊3萬張 - Yahoo股市</a>
+          <p class="news-summary muted small">PCB板大屠殺！外資本週狂砍「這檔」捲147億 華通慘被狙擊3萬張 Yahoo股市</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 18:33</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/1%E5%A4%A9%E8%B3%BA%E9%80%B2663%E8%90%AC-%E9%AD%8F%E5%93%B2%E5%AE%B624%E5%84%84%E5%A4%A9%E5%83%B9%E5%B9%B4%E8%96%AA-%E8%B7%9F%E7%BE%8E%E4%BC%81ceo%E5%BA%AB%E5%85%8B-%E9%99%B3%E7%AB%8B%E6%AD%A6%E6%AF%94-%E6%AF%94-103315238.html" target="_blank" rel="noopener">1天賺進663萬！魏哲家24億天價年薪 跟美企CEO庫克、陳立武比一比？</a>
+          <p class="news-summary muted small">受惠於 AI 需求強勁，台積電去年營收與獲利均刷新歷史紀錄。據最新出爐的年報顯示，董事長魏哲家去年領取的員工酬金大幅增至24.22億元，平均日薪約663萬元，高居全台上市櫃公司高階主管之冠，其薪酬水準</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 18:00</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMijgFBVV95cUxPWFk5cW0tQmtiTE5NUW1qSEU0NC1KcHJKRUQtN2wxREpLYU5VbHdTcUF1V1ViekhfNGdSRnBLZFFzY05MbFVHcU9BSTdBbWhoczhpYVh0bEMzMUVRaWo4SHFYVEk0UTBXZmhEQ3NlVGR5bnM5b2VCQ2JDeVZ0Nk5TUU5OVVZqRm9jV0pMYWdB?oc=5" target="_blank" rel="noopener">AI伺服器大戰全面開打！從Nvidia到Intel、Vertiv：誰能撐起下一座資料中心帝國？ - CMoney投資網誌</a>
+          <p class="news-summary muted small">AI伺服器大戰全面開打！從Nvidia到Intel、Vertiv：誰能撐起下一座資料中心帝國？ CMoney投資網誌</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 半導體</span>
+            <span class="news-time muted mono small">04-18 · 16:45</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMitgNBVV95cUxNRGt4NmJIQWlzY0xVbDlneHB4U2VTY2szd0JOVERNQlo4Z3JfaV9wNDNGelAyMHJMWVZkZ3BDMUpZcmNhQzcwbm53U2FoN1RRdTROM2QwVmFzU0QwcVEwam1OdXRoYkxJdUdpWnZBSW0tOTk4SkVzN3AtVnVOMGVpZ0p0bkhGZ0FwVVRma0djYm9hSEZiaGl3OHRmM2pvN3hrQjhZZG9HcTh6aEx5cEtaR3JnLTRHWHhFQWVCOGg3NnNaY1dzMVRjdURsTWpSN01paHIwdnM0Sm9XeThidGxoV2xLUnZ2ZGE1M1NLcVpJZnNPVEh5c1ZLM2czQnRaSzA0ZUpwbVdNMHlNTEYwSm9vem5SUDB3bldlVGZ6Y08xdUVPMUdYUU5PZU9HVU9IdWhxdEpWNGV6NlVUZ3VvbUtjVjZYYVNzbnJkRk14eWZWd2tjczVUb0d1U0V3MmozWUVYRkJNWUtuSVBHT3RueFpNX1dGdjN6NW02WXhTMTlPVW8tNHBxOG9RaGVVVFVpU2Zjb3BSTUc3VzhfVlBmZzhvVDFUWWRFMTJMblk3V3RmejVVRWpXN0E?oc=5" target="_blank" rel="noopener">0050台積電占比衝破5成 他不懂為何不直接買台積電？老手一句話點破差別 - Yahoo股市</a>
+          <p class="news-summary muted small">0050台積電占比衝破5成 他不懂為何不直接買台積電？老手一句話點破差別 Yahoo股市</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/0050.html"><span class="mono">0050</span><span class="muted small">元大台灣50</span></a><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 16:06</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%BC%B7-%E5%8F%B0%E7%A9%8D%E9%9B%BB-1%E5%A5%88%E7%B1%B3%E4%BB%A5%E4%B8%8B-%E6%99%82%E7%A8%8B%E9%9C%87%E6%92%BC%E6%9B%9D%E5%85%89-%E6%8F%AD%E7%A7%98%E7%AC%AC-080620933.html" target="_blank" rel="noopener">史上最強！台積電「1奈米以下」時程震撼曝光 揭秘第一家簽約大戶</a>
+          <p class="news-summary muted small">台積電在先進製程研發持續領先，繼1.4奈米製程定於2028年下半年啟動量產後，市場預期，台積電1奈米以下製程可望於2029年進入試產階段，蘋果（Apple）極有可能成為首批客戶之一。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/AAPL.html"><span class="mono">AAPL</span><span class="muted small">Apple</span></a><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="BROKER">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-broker mono">BROKER</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 16:02</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5710/9449909" target="_blank" rel="noopener">大聯大首季營收創新高 法人看好今年營運成長性</a>
+          <p class="news-summary muted small">大聯大（3702）3月營收創下單月營收歷史新高，第1季營收季、年雙增，並刷新單季營收歷史新高。展望後市，分析師指出，大聯大未來成長主要將以東南亞、北美地區為主，研調機構預估2026全球半導體市場將成長逾30%，AI伺服器亦有雙位數年成長，2026全年營運維持成長。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/1303.html"><span class="mono">1303</span><span class="muted small">南亞</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MACRO">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-macro mono">MACRO</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 15:25</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/%E5%84%84%E5%85%83%E6%95%99%E6%8E%88-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%9C%AC%E7%9B%8A%E6%AF%94%E5%B0%87%E6%8F%90%E9%AB%98%E8%87%B325%E5%80%8D-%E7%9F%B3%E6%B2%B9%E5%B8%B6%E8%B5%B7%E9%80%9A%E8%86%A8%E6%98%AF%E5%81%87%E8%AD%B0%E9%A1%8C-072503502.html" target="_blank" rel="noopener">億元教授:台積電本益比將提高至25倍 石油帶起通膨是假議題</a>
+          <p class="news-summary muted small">台積電16日召開線上法說，2026年首季財報表現優於預期，公司透露AI需求持續強勁，將帶動第二季營收季增1成，並調升全年美元營收成長預期至逾30％。不過台積電法說後，股價卻不漲反跌。對此，億元教授鄭廳</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 14:55</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/%E8%98%87%E5%A8%81%E5%85%83-%E5%8F%B0%E7%A9%8D%E9%9B%BB-cpo-%E8%A1%9B%E6%98%9F%E4%B8%89%E5%A4%A7%E9%A1%8C%E6%9D%90%E9%BD%8A%E8%81%9A-%E9%80%99%E6%AA%94%E9%9A%B1%E5%BD%A2%E5%86%A0%E8%BB%8D-065503770.html" target="_blank" rel="noopener">蘇威元：台積電、CPO、衛星三大題材齊聚！這檔隱形冠軍</a>
+          <p class="news-summary muted small">論壇中心／綜合報導光通訊與磷化銦題材持續發酵，市場目光多集中在晶片製造端，卻忽略了檢測環節的爆發機會。資深分析師蘇威元在《財經週日趴》點名美達科技，該公司同時卡位台積電CoWoS先進封裝、CPO光通訊</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 14:45</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/%E9%99%B3%E5%BB%BA%E5%85%A8-%E5%B7%A5%E6%A5%AD%E9%9B%BB%E8%85%A6%E5%89%B5%E6%96%B0%E9%AB%98-%E9%B4%BB%E6%B5%B7%E7%B7%AF%E5%89%B5%E8%81%AF%E7%99%BC%E7%A7%91%E4%B8%89%E5%B7%A8%E9%A0%AD%E6%8C%81%E6%9C%89%E9%80%99-%E6%AA%94-064512280.html" target="_blank" rel="noopener">陳建全：工業電腦創新高！鴻海緯創聯發科三巨頭持有這一檔</a>
+          <p class="news-summary muted small">論壇中心／綜合報導台灣工業電腦產業累積營收創逾20年新高，25家上市公司中高達21家同步成長，資深分析師陳建全在《財經週日趴》指出，龍頭研華法說會宣布第一季接單暴增、樺漢在手訂單高達1900億，產業景</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2454.html"><span class="mono">2454</span><span class="muted small">聯發科</span></a><a class="news-ticker-chip" href="holdings/2317.html"><span class="mono">2317</span><span class="muted small">鴻海</span></a><a class="news-ticker-chip" href="holdings/3231.html"><span class="mono">3231</span><span class="muted small">緯創</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="BROKER">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-broker mono">BROKER</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 14:29</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/%E8%8D%B7%E8%8E%AB%E8%8C%B2%E6%B5%B7%E5%B3%BD%E9%87%8D%E9%96%8B%E6%B2%B9%E5%83%B9%E6%8C%AB-%E6%8A%95%E9%A1%A7-%E5%8F%B0%E8%82%A1%E6%8B%9A%E5%A4%96%E8%B3%87%E5%9B%9E%E8%A3%9C%E6%94%BB%E9%AB%98-062922532.html" target="_blank" rel="noopener">荷莫茲海峽重開油價挫 投顧：台股拚外資回補攻高</a>
+          <p class="news-summary muted small">（中央社記者江明晏台北2026年04月18日電）荷莫茲海峽重新開放，國際油價重挫、美股勁揚，台指期盤後大漲664點。投顧看好，對台股下週有明顯激勵作用，外資可望出現回補潮，挹注資金動能，加上台積電法說</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 14:24</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/%E7%86%B1%E9%96%80%E8%82%A1-%E9%AB%98%E5%AE%B9%E9%AB%98%E5%A3%93%E9%9B%BB%E5%AE%B9-%E9%9B%BB%E9%98%BB%E9%9C%80%E6%B1%82%E6%97%BA-%E4%BF%A1%E6%98%8C%E9%9B%BB%E5%91%A8%E6%BC%B24%E6%88%90-%E5%89%B5%E9%80%BE7%E5%B9%B4%E5%8D%8A%E9%AB%98%E9%BB%9E-062405016.html" target="_blank" rel="noopener">〈熱門股〉高容高壓電容、電阻需求旺 信昌電周漲4成 創逾7年半高點</a>
+          <p class="news-summary muted small">被動元件廠信昌電 (6173-TW) 受惠 AI 帶動高容高壓的電容、電阻需求，加上被動元件族群近期獲資金青睞，信昌電本周股價走強，周五收漲停 92.2 元，創自 2018 年 9 月以來 7 年半高</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">Yahoo 股市 TW</span>
+            <span class="news-time muted mono small">04-18 · 14:01</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://tw.stock.yahoo.com/news/1%E5%9C%96%E7%A7%92%E6%87%82-%E5%90%8C%E9%96%80%E5%B8%AB%E5%A7%8A%E5%BC%9F00981a-00403a%E5%A4%A7pk-%E8%AA%B0%E6%98%AF-%E6%9B%B4%E5%BC%B7%E7%89%880050-060119654.html" target="_blank" rel="noopener">1圖秒懂》同門師姊弟00981A、00403A大PK 誰是「更強版0050」？達人全說了</a>
+          <p class="news-summary muted small">擁有約49.75萬名受益人的00981A，是首檔規模突破千億元的主動式ETF，掛牌不到1年受益人數與規模隨績效暴風成長，00981A同門師弟的00403A，預計5/12掛牌，同樣引發高度討論。達人分析</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/0050.html"><span class="mono">0050</span><span class="muted small">元大台灣50</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 半導體</span>
+            <span class="news-time muted mono small">04-18 · 12:25</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiowNBVV95cUxQbTBYamp0a0ZaQUpsZlJWUTRiWVd1WUY3X0Z6d2t2TWp6MHV3OGM2UnVnTVFOMTNvSVlBVk1Uc2tuZk9WOXlKcEpON2IzUlQtMkRvYVBNdHRJM1EyNERPazRsWXhROGJNck4xRnVvYnREYTVjMzRpUF83MHlvYjNRT0VJVDc1eVlnajVkN0JJbnprUzJ6NDRaV1ZEb0hXRXdBLVkyS200Z2ZJV21XYjNUbDRZUDkxcWJrY3VDZ3JlV1RHN25iQnF2bjhQQ0swM0VUWmZJTW1WRWZ0Y1hRWnhxWFZJOUJnNHdiaHpMVm1HREt4NEJMZFFiRjdORUk1aHhzRlZRbFpRdDBKTW84UzZaWV9vWElDODc2WXdkcUZTaVkwcGxhWXliZ2d2Qy0zSXVMbWpwWHF0NU9WT2d4ME5SdTRWQ2c4ajJvTGJQQWxkUHpjdGl3YlZ6RVdfbnBabTlTa2lZN0J6clFDS3FtRnVnMW9qYko5VEhNRjNkTnpWSUtNVDg0Z2tiMG5KR3dzX2tiRmlYekl1SjJZMGQxQm1BNnBIWQ?oc=5" target="_blank" rel="noopener">台積電占比逾5成！妹子拋問「為何還要買0050？」 老手點出關鍵：本質完全不一樣 - Yahoo新聞</a>
+          <p class="news-summary muted small">台積電占比逾5成！妹子拋問「為何還要買0050？」 老手點出關鍵：本質完全不一樣 Yahoo新聞</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/0050.html"><span class="mono">0050</span><span class="muted small">元大台灣50</span></a><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 半導體</span>
+            <span class="news-time muted mono small">04-18 · 10:55</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMioANBVV95cUxQSkhLZFlMRVA2dzFFd2ZmWWM2Q0s1d2QyV0M0RWtPRUpEaFV2eE45SG5NRmNvNFR3TzRGM0d2czNLcXRSUVNVQXVmLWNpX2FCaW1ESHhyNGNmd1JmT2Q0SHlLQzFCb25ZUzdVblpVZGZrajVkbTNOdjdOY0NlUzZYaFhvMEdGZ0c0cWtQaFpBelF2YlFLbkdtZkcyR3pQbVJ0Rm5rYXZjWXRvT0F0ZDlkU244b21WcVp4SDRkbWYwc3Z6TWxGSTNBemV4d1Bib0dOWV9pV3UxZzFiLXFvTFBiUHFFQXZOR3BlVHZLcTFhbUc2bEpqQmVPc1NrRHQ4Z0VnXzlVV05uck1OWlB3NUZGQ3Zrd015SmlqR0NrSWktRXZ4dXloaWFEUzBBWV82Mkt0N0ZCMHFDZWtGU2hObnF3SnZMZEs2cWdnZEUwVXpsRXZwaDJFTy00aUVFWWZzbm0tMzRKUGxlS2EyMklVelZLMk1nRFdOTng3QWdOS0d1SXg5TXVkYWpYSFM4MVZPTXhGRXFuNm9USjdyTG5OVHJ3Sw?oc=5" target="_blank" rel="noopener">0050、台積電存1年報酬率近8成！小資族曝投資心路 網點頭：這樣配最穩 - Yahoo股市</a>
+          <p class="news-summary muted small">0050、台積電存1年報酬率近8成！小資族曝投資心路 網點頭：這樣配最穩 Yahoo股市</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/0050.html"><span class="mono">0050</span><span class="muted small">元大台灣50</span></a><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 08:39</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMilANBVV95cUxQSHc4bVhCSlhyb1FyUXdYaWh6SDhkMHJ2RkxsYU1hYmZZQ1NJT2JRVERCaEEwV2FPNGtxV29VNHYyY1VaMzhzZWZMNEVyVDlIMDN4Vm1RRmRBczFLMG5VaFpXZDdibUwzM3hjSHBDV1lVQWZ6b0tqNDN1V2ZHMndPVUNuaktGaUszTktVVmd1ejZ3MnRSNTNPRzJvcFRrVXFuM0dxNXJwWEFRZHUxTXZWZTFYODBuS1JIbmVraUhhSFh4clFXZTBZejJrY09WckdoUFV0Q3VVS3VZRGREWV81WWZSNFpqOV9IbkpzY2FtRmFzUEdGRVM5OEtoSEUwMmNPajc4S0RrRXFWeTJjUkdOdDZjVVRybUVUTERDdmhENUFpTnM2M0p6Tkc1S09uN3ZPMHVmSU5LM3ZWeFFVS0xRUjctS28yMTRBUTNnS2Z5N2cwX0dhSU41VHRVMzJad2VOS3NRR09MaVdqUUY2MkRkOEh1a0QwMGhqZWNWUWdNLS0zTkozaHZrNC1NWXc4b0xMdmNSMg?oc=5" target="_blank" rel="noopener">漲價題材發威！「被動元件悍將」9天狂漲61%登強勢股王 蜜望實8天飆52%略遜一籌 - Yahoo股市</a>
+          <p class="news-summary muted small">漲價題材發威！「被動元件悍將」9天狂漲61%登強勢股王 蜜望實8天飆52%略遜一籌 Yahoo股市</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 08:29</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiX0FVX3lxTFBzdGdEbTRtendUWXQ3T050MTNDUDRBYm1oa25YT291eTBZOW9wNDRTNlg4WjZ5SG5EZGtndUx1OUtrSDk3cnhyMG9UNGcyZGM4TUhaUGZZT0FlaV9RaHdz?oc=5" target="_blank" rel="noopener">CPO大爆發！從晶片到光引擎拆解「台廠潛力股」全曝光- 產業 - 工商時報</a>
+          <p class="news-summary muted small">CPO大爆發！從晶片到光引擎拆解「台廠潛力股」全曝光- 產業 工商時報</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="DATA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-data mono">DATA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 07:48</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiiwJBVV95cUxNMThrVnVqMEd0T2pSQU9xZmViR2ljenVjLU1lX0RfaVQ0STRNUEVRVHFqU0pWQTRIQ3hEeDQwNHlRLXdPb1pqWFZlcmZoWEdlNGhNeDdCVjN3UGUxNk5laXdaX2g4QnlVUklqcHNqenN0WDZpQzBfSGpXdkV1LVZsTTFfVUQ0OHhZeXhTSTJhNWVkSVcyNWtFcXV3VVRocENQb2MwdW8xeFJqTGtMUFl4UHBESmx5ZnR3WHUtOHl3TUdKdkdjMHNvdTVYXzdaSzJVOE1tWmdLLTNfYlFncGU4SWFDTDVGUWZLOW82bDIwbWF1SlpfbnN2WFd1Nlc3NW1GYjBNZVVSQTRDcjA?oc=5" target="_blank" rel="noopener">3月EPS達3.39元！「測試設備廠」漲停飆連3漲22.6%創高 HPC、ASIC、CPO需求強勁 - Yahoo股市</a>
+          <p class="news-summary muted small">3月EPS達3.39元！「測試設備廠」漲停飆連3漲22.6%創高 HPC、ASIC、CPO需求強勁 Yahoo股市</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 07:04</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMi7wJBVV95cUxPazl5RFZ2UlB6TTFZaVN6YXlFX3RaRy1reU0tdFVWWG1OWTRDMjlWcUREZUlvckpLSTloaFhCT21BVE1zMEZ0RFZrRmFLNHA3R2R6dTF6SndVYkJSdGdCWE5CeTZCRFJMblBzOTFncFJ0N2dFeG1hYW9BZTBMbDFfdGhnenJRVGZlNlpaSWtpYUM3OGY2RzVjTGc3ZkthSUwyTXRlUk5felZGZDExUnM2Wm1pa1RNZEFrWXB6WWJFSmFjWXFCZk8wQU55YXRBQjV5SVRMLUxkSVhRLXVjUXJ0YUlrblNqQVFTQVdHTTBpNlo1NU05dy1BV0xvSlQ5NllCaUlPSzM3OTdXVE5PR04yZXFwVHFLVTRQanJocENQYWswQWprZTR5THU2WjUxSEE5YzBEWmRPcHhKS0txZXJRQkIyWVVFSGxTZ21iQ3dSbVFkV2F1UEdVaVRDdWVIZjEyTlJxTnNCT3BNRDgzaFkw?oc=5" target="_blank" rel="noopener">AI需求爆發＋原物料成本上揚！被動元件漲聲響 2台廠最有感 - Yahoo新聞</a>
+          <p class="news-summary muted small">AI需求爆發＋原物料成本上揚！被動元件漲聲響 2台廠最有感 Yahoo新聞</p>
+          
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 股市要聞</span>
+            <span class="news-time muted mono small">04-18 · 03:12</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5612/9449199" target="_blank" rel="noopener">2026台積心築藝術季以《慾望城國》揭幕 明年將隨擴廠腳步跨足海外</a>
+          <p class="news-summary muted small">台積電（2330）文教基金會舉辦「2026台積心築藝術季」邁入第23屆，今年以「召喚浪漫」為主題，期盼在AI世代，返回人心，領略德意志浪漫主義的精髓。時隔20年，台積電文教基金會以《慾望城國》作為藝術季開幕大戲，邀請朱柏澄及黃若琳作為第三代傳承者再登東門城，展現經典的魅力。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 台股</span>
+            <span class="news-time muted mono small">04-18 · 03:00</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiX0FVX3lxTE5WaWZMRlBSdkY5QXNZek9sYkRNVF9KQkdFQUIwbkNHRHdDa1dad004X0tfeDhHeTBzTDU5MUZXVEMxX2dodUtNSUluNTczM2s0bkZEYjMzYWpDSlYtUEtv?oc=5" target="_blank" rel="noopener">2名師直指台股4萬點不遠了！台積電領軍13檔護國群山成關鍵指標- 日報 - 工商時報</a>
+          <p class="news-summary muted small">2名師直指台股4萬點不遠了！台積電領軍13檔護國群山成關鍵指標- 日報 工商時報</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="BROKER">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-broker mono">BROKER</span>
+            <span class="news-source mono">GNews 台股</span>
+            <span class="news-time muted mono small">04-18 · 03:00</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiX0FVX3lxTE9mVTE3Y0dTR2RIT0JseEc1WHNEdzFSaDhNU2IxVHU0Zlp2QU5hYm1SWlpvZVZkNm9JSXRwSVVRRDNqVUhQRk1GQWpKOFJQNDdjS01qR21zbFlzSTFBWnhj?oc=5" target="_blank" rel="noopener">外資殺回來了！本周狂掃1,500億元指路亞翔、廣達等15檔「三強股」扛多頭大旗- 日報 - 工商時報</a>
+          <p class="news-summary muted small">外資殺回來了！本周狂掃1,500億元指路亞翔、廣達等15檔「三強股」扛多頭大旗- 日報 工商時報</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2382.html"><span class="mono">2382</span><span class="muted small">廣達</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 02:44</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5607/9449191" target="_blank" rel="noopener">4月18日 五件財經大事搶先看</a>
+          <p class="news-summary muted small">經濟日報整理五件不可不知的財經大事，讓讀者在每天清晨能快速掌握最重要的財經大事。 一、伊朗宣布完全開放通行十天 荷莫茲通了 油氣價格暴跌10% 伊朗17日宣布，荷莫茲海峽對商船「完全開放」，為期十天，這顯示伊朗與美國及以色列之間的戰爭，朝「結束」邁出一大步...more 二、台股第二檔 穎崴進萬元俱樂部 股價收10,3…</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a><a class="news-ticker-chip" href="holdings/6515.html"><span class="mono">6515</span><span class="muted small">穎崴</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="BROKER">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-broker mono">BROKER</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 01:04</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5607/9449064" target="_blank" rel="noopener">台積電好威 十外資升目標價 里昂喊3,030元最高</a>
+          <p class="news-summary muted small">台積電法說優於預期，各大外資券商陸續出具最新報告，統計已有花旗、野村、滙豐等十家調升台積電目標價，其中花旗調升至2,875元最高；但若統計今年來外資報告，以里昂證券先前喊出的3,030元，為目前市場最高。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 00:49</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5607/9448971" target="_blank" rel="noopener">台股第二檔 穎崴進萬元俱樂部 股價收10,305元</a>
+          <p class="news-summary muted small">台股昨（17）日受台積電法說後利多實現熄火影響，下跌327點收36,804點，終止連八紅，盤面呈現「指數跌、個股熱」現象，上市櫃高達102檔股價亮燈漲停，股后穎崴飆485元收10,305元，繼股王信驊後，首度兩檔萬元股齊聚。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a><a class="news-ticker-chip" href="holdings/5274.html"><span class="mono">5274</span><span class="muted small">信驊</span></a><a class="news-ticker-chip" href="holdings/6515.html"><span class="mono">6515</span><span class="muted small">穎崴</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 00:44</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5607/9448973" target="_blank" rel="noopener">櫃買市值突破10兆 創高</a>
+          <p class="news-summary muted small">加權指數昨（17）日在台積電法說會後出現震盪走勢，但市場資金並未撤出，轉向中小型股避風，激勵櫃買指數上漲6.38點收372.34點，連九漲，且櫃買總市值突破10兆元大關，達10.07兆元史高。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 00:44</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5607/9448975" target="_blank" rel="noopener">穎崴股價5K→10K 僅不到一個月</a>
+          <p class="news-summary muted small">股后半導體高階測試座大廠穎崴昨（17）日收10,305元，上漲485元，晉升萬元俱樂部成員，為第二家萬元股，股王信驊昨日盤中一度翻紅，終場下跌675元，收13,805元。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/5274.html"><span class="mono">5274</span><span class="muted small">信驊</span></a><a class="news-ticker-chip" href="holdings/6515.html"><span class="mono">6515</span><span class="muted small">穎崴</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 00:40</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/8543/9449042" target="_blank" rel="noopener">股海自由行／伺服器、CCL族群 前景亮</a>
+          <p class="news-summary muted small">台股短期受惠中東戰事變數衝擊降溫，外資出現回補動作，配合AI長線趨勢明確，AI股主導大盤漲勢，預期指數仍有再創高實力。操作面可關注AI相關CoWoS、先進封裝、伺服器、CPO及CCL等族群。</p>
+          
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="DATA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-data mono">DATA</span>
+            <span class="news-source mono">經濟日報 股市要聞</span>
+            <span class="news-time muted mono small">04-18 · 00:38</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5612/9449028" target="_blank" rel="noopener">聯電下半年漲價 營運吃補 29日召開法說會</a>
+          <p class="news-summary muted small">近期成熟製程傳出漲價議題，聯電近期股價強勢，市場傳出聯電對預告下半年將調整價格，聯電昨（17）日回應本報記者提問證實此事，聯電指出，將按照產品組合策略、產能協議及長期合作夥伴關係等因素決定漲價服務，也感謝客戶支持。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2303.html"><span class="mono">2303</span><span class="muted small">聯電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 00:36</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5739/9448708" target="_blank" rel="noopener">台光電、金像電 四檔亮眼</a>
+          <p class="news-summary muted small">地緣政治降溫，台股行情再創新高，基本面佳的個股受資金追捧。分析師看好台光電（2383）、金像電（2368）等業績成長股後市表現，權證券商建議，可利用資金門檻低的認購權證參與相關個股走勢。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2368.html"><span class="mono">2368</span><span class="muted small">金像電</span></a><a class="news-ticker-chip" href="holdings/2383.html"><span class="mono">2383</span><span class="muted small">台光電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 證券</span>
+            <span class="news-time muted mono small">04-18 · 00:33</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5739/9448714" target="_blank" rel="noopener">最牛一輪／聯電聚光 台新59拉風</a>
+          <p class="news-summary muted small">聯電（2303）將在29日舉行法說會，40奈米以上及八吋晶圓成熟進程受惠台積電成熟製程訂單外溢效應、AI伺服器對於電源管理IC需求提升，帶動聯電進入長期結構性獲利改善循環，估第2季、第3季營收季增高個位數百分比。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2303.html"><span class="mono">2303</span><span class="muted small">聯電</span></a><a class="news-ticker-chip" href="holdings/2330.html"><span class="mono">2330</span><span class="muted small">台積電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T2" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t2 mono">T2</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">經濟日報 股市要聞</span>
+            <span class="news-time muted mono small">04-18 · 00:28</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://money.udn.com/money/story/5612/9449032" target="_blank" rel="noopener">聯電布局新技術 先進封裝、矽光子 扮新動能</a>
+          <p class="news-summary muted small">聯電近兩年來布局新技術，跨足先進封裝與矽光子技術，成為新的成長動能，因應AI、網路通訊、消費電子及車用電子等高效能應用領域不斷演進的市場需求，預期將是4月底法說會關注的焦點。</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2303.html"><span class="mono">2303</span><span class="muted small">聯電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 21:50</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMihgNBVV95cUxQOXh2dXBqMHRkQWcxdzlIUG9PbGNzQkhXc1AxSHNWcHhmY1Vvdk5JNGhEekNQUk1XdXR5UDEwSGJiekRHamZmMThMUk5KN1FaS1l0NzgtTm9YVzI1eXhJZkxYR2N0ZHNMMVNQbkpmcExqX1dPMF9pWEthYXA2UXNkdWJ4Z2F6M3NjUWJMLXotbmMzV3Z1djVDNEFQMkFnaWlzcDYxUnVOMFB2M081cElhbFRpcFJ1b1dUMkJMQURMTGs3b1prQ2VGTk1jX2d0YmJJYm9ZSnh1R21HLWVQUHVOTHlKX0pZblFJTzhjeno3RzRuSDFTOS1kLWs5c2pPSDd0QWg3emJkT2kzeGxKUzYyYnhNOFM3emh4TGJDdDBfQTNWV1ZHbU1KMFFzT19OMmVYd3RDemhqZXpTVFpsaEpldU9iY29ET0NXYXJoT216cHY4NFR5amlvMlBveTRMZGl3VHZIaU1XZFVxN2N0RU5xUHQ5cjhpWWVCNFRhYU9TVVpOMFhoU2c?oc=5" target="_blank" rel="noopener">矽光子發威！「光通訊大廠」11天爆噴89%寫新高 今年來股價翻倍漲 - Yahoo股市</a>
+          <p class="news-summary muted small">矽光子發威！「光通訊大廠」11天爆噴89%寫新高 今年來股價翻倍漲 Yahoo股市</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">Yahoo Finance</span>
+            <span class="news-time muted mono small">04-18 · 19:30</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://finance.yahoo.com/markets/stocks/articles/mark-zuckerberg-moves-desk-ai-113002258.html" target="_blank" rel="noopener">As Mark Zuckerberg Moves His Desk to the AI Lab to Double Down on Innovation, META Stock Lags the S&amp;P 500. Should You Bet on a Turnaround?</a>
+          
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 17:22</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiZkFVX3lxTFBoaEZCdmxIbU40Q1J2cWtZRklLWlgyT0JBTUZ0ZVgwYVhnQ21ycENCQ2R0R0ZMckV5dkFQWHVpR2U2UG5oWDAtZk83MmluTUNYY3hVOGdkU0txckVqREVUNlJsQ3M4Zw?oc=5" target="_blank" rel="noopener">打破AI傳輸極限！矽光子是什麼？CPO技術、台廠布局與概念股一次看 - 商周</a>
+          <p class="news-summary muted small">打破AI傳輸極限！矽光子是什麼？CPO技術、台廠布局與概念股一次看 商周</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 17:00</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiWkFVX3lxTFBKbXhqd2ZMX3VGWGVrLUstRFdaRW1YeDdDcW1sajNLSEY2UjJWd1RUbGxfNzhVdG11UVFRbnZ1Zm4xUXFTRGdFTk11dkh1X1VvNXIyeEdha2JjQdIBX0FVX3lxTE54ejBXMGYyazN4dnh0YWNsMGZqcnF0dXg1cUJuLWdHeU9RX2dGOHJCNmt5T0F5TTBiWk9Obm1lOFBSUGl2Z3EwZ19WSmFGRUNnSlNTOG5rS2RrenkwT1NZ?oc=5" target="_blank" rel="noopener">PCB 大廠、IC 載板龍頭欣興入列臺灣50指數成分股 今日生效 - 經濟日報</a>
+          <p class="news-summary muted small">PCB 大廠、IC 載板龍頭欣興入列臺灣50指數成分股 今日生效 經濟日報</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/3037.html"><span class="mono">3037</span><span class="muted small">欣興</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 17:00</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMirgJBVV95cUxNRWw2XzV0VFIxUDJnM2E3ZnUxSEhFVGllUGZtdWFIWTlONFVFbGJreU5BOU5CWFZoZWlHbTF1VXFiNnJFcnZVX2hEQWxwSWdYMy05SFRJYktET2p6cFdWdGJxMnZxcm5kajZ4WnV4SlhScDQzTFo5Z0NXOHFPSmdOaF9MZ0lBXy1zNHcwTFBWbnhVVmhCUk9iejFsTlFHQ093Y0dHU3c2Y2xUcjBNWElKWWFtTTBnTXB1WVJaUTBNM1NFNFF6U09wUTd1dzdVU1ZRc1pTeElmeHVXb3gySWpwSC1zR0RMVzZBbHlQWTVqaGk1cDRoOV81dHFmXzhmSlUxaUQyWmVTX1FnWGExc2Y2Q0dXMHM0NUFjTlhYTXVYLVJYU0ljQXZndVFQb1Z2QQ?oc=5" target="_blank" rel="noopener">PCB族群全面噴發 AI需求點火多檔強勢創高 - 商傳媒</a>
+          <p class="news-summary muted small">PCB族群全面噴發 AI需求點火多檔強勢創高 商傳媒</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 14:31</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiwgJBVV95cUxQR1UzTHc3QmF6R053a0NmOVA3QlF5WVpsRThFVUNFUlhMdVl3ME10bmNYM1VVS1VFd1drdm1SQkMtYko2T2xub0xIUkM2RWt3RE5fYVZxU29MX294OHFQbnhSLTVtN05EMG5Kal94bGNGa2p0RFVHYjN3UkNjQnppc3huYzhndzhqQlNLZE9MNlEtN2k1NTB6RUs4N2tGSDhkcHNTSWRKS09XcEVYdEpJZjZBMzNpRXUyb1pNZV9iS1Ytc3lRcEdqSjl4OUFxd2NkY2FncHpFYlYyT0ZYakZlbk4zSW03cmJURGxSYmNzcmVLc3lFUnJxMWx6UjlfSjc5d0s1RWRZZlpuM0F2eHZ3dXA0MWtsdzBiMGhTVTRGbWRyZWdsYWwzTWNWTnpXamVwOV9OSnFaODF1VEZrUms4MWFR?oc=5" target="_blank" rel="noopener">玻纖布、CCL點火！PCB多檔漲停「富喬、德宏6檔寫新天價」 台表科迎8漲狂飆68% - Yahoo股市</a>
+          <p class="news-summary muted small">玻纖布、CCL點火！PCB多檔漲停「富喬、德宏6檔寫新天價」 台表科迎8漲狂飆68% Yahoo股市</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 12:58</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMib0FVX3lxTE5hNzhZRFhJUlFYTGh0d2RzZVozMFpFLTFpNUNSdWdSR0hRMEo4Y1pNS3NrdEhJLWtTbXZ0bjBKWmxJSXptRHRjLVkwZFJsSElIUVVXbS1kYWJaUG5mZWhPci1OTzNrcDBxM1c3NUw1dw?oc=5" target="_blank" rel="noopener">CPO擴散效應 中揚光憑高精度模具卡位CPO 供應鏈股價帶量突破橫盤區 - 理財周刊</a>
+          <p class="news-summary muted small">CPO擴散效應 中揚光憑高精度模具卡位CPO 供應鏈股價帶量突破橫盤區 理財周刊</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="DATA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-data mono">DATA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 12:38</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMi8AJBVV95cUxOOERsOXRseWhwVTdRQmp2STBUWmRhVWpZczNNUmZDaF9YaTRpSHJvZGdiYmRkS1pUbHZxc2ZqWWsyLTRUSVlQX3pKMVR3YS1kbzNhY2pzbkpvdlB4SzZpc2NaUUVsTDNqSXNQREVSZjZrYnk5VmVJcWtCcXpVYlNEYm53S1dWZ1J2MjBiZzdWQ0NrM3VaM1FUazQ2U0NkOVpRLTJhNDNSRTVfLW9hcWlZMjFxR3E4RWcwbDBmYWNoMU1pMWJLSEpxTkhabXlRRVRrenNvcE9admZoSUlaLThOTnlvY05KTTBiWEtBV3hsd2JtZWowTVhwdUgyMHZmQ3dXZTEwZl9La3U2QnBqaHJHUVo4M01rdWdSNXg0aXg1eDVmYTlfQjVaSDRCekxIRWc4MFl1NmFhYzRrSkdwMndfTnZOMjA2dGpJdE9feDZYSXZzTEE4dHo2RHZnbnZUZlhuNmIxaFN1SmY3bkJXRlFHaw?oc=5" target="_blank" rel="noopener">今年EPS上看1股本！「連接線廠」切亞馬遜、微軟供應鏈 AI伺服器、CPO業績爆發再創高 - Yahoo股市</a>
+          <p class="news-summary muted small">今年EPS上看1股本！「連接線廠」切亞馬遜、微軟供應鏈 AI伺服器、CPO業績爆發再創高 Yahoo股市</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 12:23</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMilwNBVV95cUxPRnJMMy1OOHdvSHVtTGs0bE9nYW9LV2JEZVpCMV9MdmdkRmN3eHB6VjhuQ29Xc1B0M0didDgtclo1YndrOXViU3R5b2NBUkZ2OGxpX0VQaW9PVTNRTTU0X3dlLVBBZEhWVlFCUGlmSGRHZ1RxS1dVT0ZRZC0yTFBySXd6eGlwQlVleWhqa3ZPU2NkRy02NGl4MDBZUUVZQW5QelR1TTNYaVBVVmVHUV84dkxZTEFDS1FVc2xmSGo5Qi1zUlpHR2Y5Z09WNGZsc2hkSlZNVGZwVTdPUGlRNXpFRE51YkFNZFVpdFc2Q3pFcjF5ZkpNT0FqUW1KeXdqLXJyLURBM3FQTjF6MlVLd3hRb2k1alJ0TUR2UjYxakZEQkJHY2hwME1OeWo5dF8tYlFubDdwLVhFRjJ1MGlqbjlNODZpOXRHVkZ2WjZBSHllV1ZNTnpUb0d6LTl1SUNDYkwyX2pISXhiMXptWWF3TXhkLVM1UlNYbDFKT0ZEd3o5MHp5X19ieGhNWDZrVV9fNHVIQmhaWU1RVQ?oc=5" target="_blank" rel="noopener">PCB滿面紅光！「這檔」週飆3根攜臻鼎、毅嘉等7檔漲停 金居亮燈衝連9漲59.8%寫史高 - Yahoo股市</a>
+          <p class="news-summary muted small">PCB滿面紅光！「這檔」週飆3根攜臻鼎、毅嘉等7檔漲停 金居亮燈衝連9漲59.8%寫史高 Yahoo股市</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/4958.html"><span class="mono">4958</span><span class="muted small">臻鼎-KY</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 12:06</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE1qbUNVazRZdUEybkg4OWduUlBhSGk4NXpRUU9weGNzWGZ2VnVFNi1QMkJWdDdzZ2lhczRONEhfWEJscWwxdDVmcmVNYjcyTmtqTmNCQldIVDR2UdIBX0FVX3lxTE5wZTl6ci0tU3VZVUkzQnc5X0dfWXE2dUtUTUphSnNsaHhKQ0FTeW1QQjllTmhUWXBsM0p2M2VjcktFa3IxOG1keWJDS2N4WkVJZFJoMzNUMXhFbGNEaGdj?oc=5" target="_blank" rel="noopener">PCB 一路往上游漲 高階 CCL 材料股走強 這檔被處置仍攻漲停 - 經濟日報</a>
+          <p class="news-summary muted small">PCB 一路往上游漲 高階 CCL 材料股走強 這檔被處置仍攻漲停 經濟日報</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 12:01</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMifkFVX3lxTFBka0FMalVyT1JVQVgyX3MtYlA1Z1Z5UkZGREhQdGw1X2NzVDNOVkdSRzRVbEJhbW5lelhMRVNxeEtqZDhta0RFeDl3Q3VrUjNsTzlhUTRfeWhBcXQ4dU1vR3pQTjJqa2VzdWs1cG53VkxCeWR6WWFRU1d0UDM5Zw?oc=5" target="_blank" rel="noopener">【產業焦點】先進封裝戰場升溫！CoWoS吃緊，4檔受益股搶先卡位 - CMoney投資網誌</a>
+          <p class="news-summary muted small">【產業焦點】先進封裝戰場升溫！CoWoS吃緊，4檔受益股搶先卡位 CMoney投資網誌</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 11:47</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMikgFBVV95cUxQbDM2cXJqamUtUXJsaExCT2xrSVRoMjBrV0Z5a1hGMkVYNEtzeHVKcGJNZzJoV21sZWUxZERlMnYtRGR5cHVjWGZwU1l3emxDblZHZmJ3SHFwTmdVS3o2M3N2aG0ydXVjdGN4c2ZZTU9USFdlYUczbVVkVG5jNktObU4yQks1ZnA0SDdWb1J5S0E0QQ?oc=5" target="_blank" rel="noopener">《DJ在線》量價齊揚，被動元件廠Q1獲利可期- 新聞 - MoneyDJ理財網</a>
+          <p class="news-summary muted small">《DJ在線》量價齊揚，被動元件廠Q1獲利可期- 新聞 MoneyDJ理財網</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 台股</span>
+            <span class="news-time muted mono small">04-18 · 11:19</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMipARBVV95cUxOcjlVcGhzZlBGa3gtd2xYX2x5OGdnMlhTLWhNYUY0b1RyUUIxaFFKLUxEZUtGeVJlOUh0ZGpxRW51eE5tZUVPeUx6X0w0VTBBWFhGRFdJN1djalNDc3ppSE5IQUJ4QU9nSjQycUdUcEZDa0oxNUtrRHAxc0ZSZ0NubFU4SmhMajV5Sno4VHdISS1mV292VS1TS3Uyb2QyU01mT2N5S3RzNUJIU25jVGhxenRRelgweVhKeUpiaHkzaExxY2FEem9WcEhodzRBaFY4aWlndldvTE5nQV9tUHNNVUtndm9kNUZKNEdqTTF6ZkVwWHNXVGpnZVFhZUFyZE94WEkyLVBWUDhSc09UVFpUWDZZVjBqWDluLUhFMUlBN2NjcUVGRi1YWEdyNlltYWlpcGE5NlN3MHZRdzRKaExNMDNLU0FNVEhpRWhvMUl6V1NNTnpCeEVWVlJaNVphakZBME5rVkozZ2dvdzhGTXJqd1BxNld6cVJiVUZrQ0d0WmVjaTI1anRXbktYTzFodFo0Y3NFQkVoN24wTXpPdG5BVzRzY2hLM0lKV0RYaU0zOUt3RTU1OTJuc3kzX0xFN3NCVFY5VE5MeUlhRnVCVG52NGFUZF9lTlhGU0hVTWllTDhlV3FwZXhDeEdHVlFmVjVPRUxfUlRBR3pHbTZXNzI3cVhJZzVLdmVackx4c1FoakdEQ3VzSXBlWWtlY1ZzYzNaa09aRw?oc=5" target="_blank" rel="noopener">【Hot台股】聯電吸金250億元爆35萬張巨量 網喊「再不燈就一堆人住套房了」 分析師：有難度 - Yahoo股市</a>
+          <p class="news-summary muted small">【Hot台股】聯電吸金250億元爆35萬張巨量 網喊「再不燈就一堆人住套房了」 分析師：有難度 Yahoo股市</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/2303.html"><span class="mono">2303</span><span class="muted small">聯電</span></a></div>
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="DATA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-data mono">DATA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 10:35</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-mid mono">IMPACT · MID</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiT0FVX3lxTE1QNWlyN3d3Z3ltUTNXTFBFNTd3VVNPcDlUdjdQMk5tZk0tZmlITEpCcnE2aW01SGVXT2lHX2F5cTA4STl0Rzd2YUZNX3ZxYU0?oc=5" target="_blank" rel="noopener">〈焦點股〉邁科AI伺服器帶動全年營收有望倍增 漲停創新天價 - news.cnyes.com</a>
+          <p class="news-summary muted small">〈焦點股〉邁科AI伺服器帶動全年營收有望倍增 漲停創新天價 news.cnyes.com</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews 產業</span>
+            <span class="news-time muted mono small">04-18 · 10:11</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMikgFBVV95cUxPRzM2dnFudjVjaVRCNEhYN2dYR0lVQXl3WU5Oc1ZmTjVHNWUxbDJYR19nbnZUWG83R2tGNzRocThjLXk0czZWNG8tTzYzUlI2TDdqZGM4V2Nja1ZPbTdKeldWWVFPMlpKNTg3NFZSZlNEajJxb1NYN2JvNjl5SGQtckFkb21aZkt3ck5YNWUzMVhmQQ?oc=5" target="_blank" rel="noopener">《DJ在線》AI世代技術難度升與缺料並行PCB結盟潮升溫- 新聞 - MoneyDJ理財網</a>
+          <p class="news-summary muted small">《DJ在線》AI世代技術難度升與缺料並行PCB結盟潮升溫- 新聞 MoneyDJ理財網</p>
+          
+        </article>
+        <article class="news-card" data-tier="T3" data-kind="MEDIA">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-t3 mono">T3</span>
+            <span class="news-kind news-kind-media mono">MEDIA</span>
+            <span class="news-source mono">GNews AI光通訊</span>
+            <span class="news-time muted mono small">04-18 · 09:07</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-low mono">IMPACT · LOW</span>
+          </div>
+          <a class="news-title" href="https://news.google.com/rss/articles/CBMiT0FVX3lxTE1LOFdJeU9wdFhDWV9TcVE2UE1NZzNqMk01R3BnUGhjSEFvTmdBOHFjeGtxTW5WcUl4TXJiT1FwYnNHNHM4dVZYMjhBWkVFN2c?oc=5" target="_blank" rel="noopener">別只盯著CPO華星光、聯亞..鎖定2026主升段，最可能翻倍的7檔AI潛力股 - news.cnyes.com</a>
+          <p class="news-summary muted small">別只盯著CPO華星光、聯亞..鎖定2026主升段，最可能翻倍的7檔AI潛力股 news.cnyes.com</p>
+          <div class="news-tickers"><a class="news-ticker-chip" href="holdings/4979.html"><span class="mono">4979</span><span class="muted small">華星光</span></a><a class="news-ticker-chip" href="holdings/3081.html"><span class="mono">3081</span><span class="muted small">聯亞</span></a></div>
+        </article></div>
+</div>
+<script>
+(function() {
+  const bar = document.querySelector('.news-filter-bar');
+  const cards = document.querySelectorAll('.news-feed .news-card');
+  if (!bar) return;
+  bar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.news-pill');
+    if (!btn) return;
+    bar.querySelectorAll('.news-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    cards.forEach(c => {
+      if (f === 'all') { c.style.display = ''; return; }
+      const [k, v] = f.split(':');
+      c.style.display = (c.dataset[k] === v) ? '' : 'none';
+    });
+  });
+})();
+</script>
+
+      </div>
+      <div class="tab-panel" data-panel="chat">
+        
+<div class="chat-shell">
+  <aside class="chat-sidebar">
+    <div class="chat-sidebar-head">
+      <span class="mono">對話歷史</span>
+      <button class="chat-new-btn mono">+ 新對話</button>
+    </div>
+    <div class="chat-thread-list"><a class="chat-thread active" href="#">
+          <div class="chat-thread-title">組合今天有什麼需要注意的？</div>
+          <div class="chat-thread-meta muted small mono">剛剛</div>
+          <div class="chat-thread-preview muted small">AI 正在分析 TSMC 法說會前的倉位…</div>
+        </a><a class="chat-thread" href="#">
+          <div class="chat-thread-title">0050 vs 006208 哪個比較適合存股？</div>
+          <div class="chat-thread-meta muted small mono">昨天</div>
+          <div class="chat-thread-preview muted small">費用率 / 流動性 / 追蹤誤差比較…</div>
+        </a><a class="chat-thread" href="#">
+          <div class="chat-thread-title">我能在 5000 元內切進光通訊嗎？</div>
+          <div class="chat-thread-meta muted small mono">3 天前</div>
+          <div class="chat-thread-preview muted small">雪球法 · 第一筆 3081 試水…</div>
+        </a></div>
+  </aside>
+  <main class="chat-main">
+    <div class="chat-main-head">
+      <div>
+        <h2 class="chat-title">組合今天有什麼需要注意的？</h2>
+        <span class="muted small mono">CLAUDE 4.5 · GPT-5 · INTERNAL QUANT v3.2 · 多模型協作</span>
+      </div>
+      <div class="chat-model-chips">
+        <span class="chat-model-chip mono">CLAUDE 4.5</span>
+        <span class="chat-model-chip mono">GPT-5</span>
+        <span class="chat-model-chip mono">QUANT v3.2</span>
+      </div>
+    </div>
+    <div class="chat-feed">
+      <div class="chat-msg chat-msg-user">
+        <div class="chat-msg-body">組合今天有什麼需要注意的？</div>
+      </div>
+      <div class="chat-msg chat-msg-ai">
+        <div class="chat-msg-meta mono small"><span class="live-dot accent"></span> QUANT v3.2 · 剛剛</div>
+        <div class="chat-msg-body">台股昨日 (4/17) 雖受<a href="holdings/2330.html" class="tx-link">台積電</a>法說後利多出盡影響下跌 327 點，但資金轉往中小型股，櫃買指數創歷史新高，顯示市場資金仍在。美股則因中東地緣政治降溫消息而勁揚，國際油價重挫，對全球股市氛圍帶來正面影響。整體而言，台股在大型權值股休息時，中小型股表現活絡，市場情緒偏向中性偏多。</div>
+        <div class="chat-sources">
+          <span class="mono small muted">來源 · SOURCES</span>
+          <a class="chat-source-chip mono" href="#">analysis.json</a>
+          <a class="chat-source-chip mono" href="#">portfolio.json</a>
+          <a class="chat-source-chip mono" href="#">今日 Brief</a>
+        </div>
+      </div>
+      <div class="chat-empty-note muted small">
+        * 本頁為 UI 原型。多模型對話整合將透過 serverless endpoint 啟動；
+        目前你可以用今日 Brief 的 "Copy Prompt" 按鈕貼到 Claude.ai / ChatGPT。
+      </div>
+    </div>
+    <div class="chat-suggest-bar"><button class="chat-suggest-chip mono">我的組合目前最大風險是什麼？</button><button class="chat-suggest-chip mono">下一筆 NT$5,000 怎麼配？</button><button class="chat-suggest-chip mono">0050 比重會不會太高？</button><button class="chat-suggest-chip mono">台積電現在可以加碼嗎？</button><button class="chat-suggest-chip mono">光通訊這個題材還能追嗎？</button></div>
+    <form class="chat-input-bar" onsubmit="event.preventDefault();">
+      <input type="text" class="chat-input mono" placeholder="問問組合 / 題材 / 風險 … (enter 送出)" disabled>
+      <button class="chat-send mono" disabled>送出</button>
+    </form>
+  </main>
+</div>
+
       </div>
       <div class="tab-panel" data-panel="positions">
         
@@ -1303,22 +2303,32 @@
   </tbody>
 </table>
 
-      </div>
-      <div class="tab-panel" data-panel="briefs">
-        
-<table class="data-table">
-  <thead>
-    <tr><th>DATE</th><th>NEWS</th><th>TAGS</th><th>AI</th></tr>
-  </thead>
-  <tbody>
-        <tr onclick="location.href='briefs/2026-04-18.html'">
-          <td><strong>2026-04-18</strong> <span class="muted">週六 Sat</span></td>
-          <td>342</td>
-          <td class="left muted small">2330 台積電 · 0050 元大台灣50 · VOO (關注中) · 半導體代工</td>
-          <td><span class="badge-ai">AI</span></td>
-        </tr></tbody>
-</table>
+        <section class="portfolio-detail">
+          
+<aside class="desk-sidebar">
+  <div class="stat-block">
+    <div class="stat-block-head">OVERVIEW</div>
+    <div class="stat-row"><span class="stat-lbl">TOTAL VALUE</span><span class="stat-val ">NT$141,580</span></div><div class="stat-row"><span class="stat-lbl">CASH</span><span class="stat-val ">0.0%</span></div><div class="stat-row"><span class="stat-lbl">TODAY</span><span class="stat-val dn">-NT$2,120 (-1.48%)</span></div><div class="stat-row"><span class="stat-lbl">ALL TIME</span><span class="stat-val up">+NT$16,818 (+13.48%)</span></div><div class="stat-row"><span class="stat-lbl">vs 0050</span><span class="stat-val dn">-1.00%</span></div><div class="stat-row"><span class="stat-lbl">ALPHA</span><span class="stat-val dn">-0.48%</span></div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">RETURNS</div>
+    <div class="stat-row"><span class="stat-lbl">7D</span><span class="stat-val up">+3.42%</span></div><div class="stat-row"><span class="stat-lbl">30D</span><span class="stat-val up">+7.70%</span></div><div class="stat-row"><span class="stat-lbl">90D</span><span class="stat-val up">+20.58%</span></div><div class="stat-row"><span class="stat-lbl">1Y</span><span class="stat-val up">+117.5%</span></div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">RISK (90D)</div>
+    <div class="stat-row"><span class="stat-lbl">VOLATILITY</span><span class="stat-val ">30.9%</span></div><div class="stat-row"><span class="stat-lbl">DRAWDOWN 30D</span><span class="stat-val dn">-7.18%</span></div><div class="stat-row"><span class="stat-lbl">DRAWDOWN 90D</span><span class="stat-val dn">-11.34%</span></div><div class="stat-row"><span class="stat-lbl">DRAWDOWN 1Y</span><span class="stat-val dn">-11.34%</span></div><div class="stat-row"><span class="stat-lbl">STYLE</span><span class="stat-val ">snowball-growth</span></div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">ALLOCATION</div>
+    <div class="stat-row pillar-stat"><span class="stat-lbl"><span class="pillar-dot p-growth"></span>成長核心</span><span class="stat-val"><span class="mono">100%</span><span class="muted mono"> / 100%</span> <span class="flat mono small">0</span></span></div><div class="stat-row pillar-stat"><span class="stat-lbl"><span class="pillar-dot p-defense"></span>防禦對沖</span><span class="stat-val"><span class="mono">0%</span><span class="muted mono"> / 0%</span> <span class="flat mono small">0</span></span></div><div class="stat-row pillar-stat"><span class="stat-lbl"><span class="pillar-dot p-flex"></span>機動倉位</span><span class="stat-val"><span class="mono">0%</span><span class="muted mono"> / 0%</span> <span class="flat mono small">0</span></span></div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-head">ALERTS <span class="badge-count">0 ACTIVE</span></div>
+    <div class="alert-line muted">無警報</div>
+  </div>
+</aside>
 
+        </section>
       </div>
     </main>
 
@@ -1342,7 +2352,7 @@
 (function() {
   const clock = document.getElementById('sb-clock');
   const viewEl = document.getElementById('sb-view');
-  const viewMap = {ai: 'AI', radar: 'RADAR', sim: 'SIM', portfolio: 'PORT', positions: 'HOLD', briefs: 'NEWS'};
+  const viewMap = {ai: 'AI', radar: 'RADAR', sim: 'SIM', portfolio: 'PORT', macro: 'MACRO', briefs: 'NEWS', chat: 'CHAT', positions: 'HOLD'};
   function tick() {
     const d = new Date();
     const hh = String(d.getHours()).padStart(2, '0');
@@ -1446,7 +2456,7 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 21:10 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 21:50 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>

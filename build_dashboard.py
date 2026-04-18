@@ -1754,7 +1754,7 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
         budget_html = f'''
         <div class="hero-budget">
           <div class="hero-picks-head">
-            <span class="hero-action-lbl">💰 下一筆 NT${budget_amt:,.0f} 建議</span>
+            <span class="hero-action-lbl">{_icon("dollar", 14)} 下一筆 NT${budget_amt:,.0f} 建議 · NEXT DEPLOY</span>
             <a href="briefs/{latest_brief["date"]}.html#budget" class="btn-link small">看完整下單計畫 →</a>
           </div>
           <p class="budget-plan">{html.escape(plan)}</p>
@@ -1783,12 +1783,12 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
                 <span class="muted small">{html.escape(o.get("name", ""))}</span>
               </div>
               <div class="pick-thesis small">{html.escape(o.get("thesis", ""))[:80]}{"…" if len(o.get("thesis", "")) > 80 else ""}</div>
-              <div class="pick-risk muted small">⚠ {html.escape(o.get("risk", ""))[:60]}{"…" if len(o.get("risk", "")) > 60 else ""}</div>
+              <div class="pick-risk muted small"><span class="mono amber">RISK</span> · {html.escape(o.get("risk", ""))[:60]}{"…" if len(o.get("risk", "")) > 60 else ""}</div>
             </a>''')
         picks_html = f'''
         <div class="hero-picks">
           <div class="hero-picks-head">
-            <span class="hero-action-lbl">🔍 今日值得研究</span>
+            <span class="hero-action-lbl">{_icon("eye", 14)} 今日值得研究 · RESEARCH PICKS</span>
             <span class="muted small">{len(opps)} 檔</span>
           </div>
           <div class="pick-grid">{"".join(picks)}</div>
@@ -2189,7 +2189,7 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
 
   <div class="sim-grid">
     <div class="sim-field">
-      <label class="sim-lbl">💰 預算</label>
+      <label class="sim-lbl">{_icon("dollar", 14)} 預算 · BUDGET</label>
       <div class="sim-budget-row">
         <span class="sim-prefix">NT$</span>
         <input type="number" id="sim-budget" value="{cfg_budget}" min="1000" step="500" class="sim-input">
@@ -2204,7 +2204,7 @@ def render_simulator(pf: dict, analysis: dict | None) -> tuple[str, str]:
     </div>
 
     <div class="sim-field">
-      <label class="sim-lbl">📊 標的 <span id="sim-count" class="muted small mono"></span></label>
+      <label class="sim-lbl">{_icon("chart", 14)} 標的 · TICKERS <span id="sim-count" class="muted small mono"></span></label>
       <select id="sim-ticker" class="sim-input sim-select"></select>
       <div class="sim-ticker-info mono small muted" id="sim-ticker-info">—</div>
       <div class="sim-52w-bar" id="sim-52w-bar"></div>
@@ -2503,6 +2503,775 @@ def render_macro_strip(pf: dict) -> str:
 '''
 
 
+# ---------------------------------------------------------------------------
+# GUSHI-style v3 — Portfolio / Macro / News / Chat tab renderers
+# ---------------------------------------------------------------------------
+
+def _risk_grade(val: float, thresholds: list[tuple[float, str]]) -> str:
+    """Return letter grade from (threshold, grade) list. First match wins."""
+    for t, g in thresholds:
+        if val <= t:
+            return g
+    return thresholds[-1][1]
+
+
+def render_portfolio_tab(pf: dict) -> str:
+    """GUSHI-style Portfolio tab: 4 big KPI cards + full holdings table +
+    weekly attribution bars + risk metrics panel. No emojis, all mono."""
+    if not pf:
+        return '<p class="muted" style="padding:20px">無組合資料。</p>'
+
+    s = pf.get("summary", {})
+    bench = pf.get("benchmark", {})
+    risk = pf.get("risk", {})
+    holdings = pf.get("holdings", [])
+    weekly = pf.get("weekly_attribution", [])
+
+    total_value = s.get("total_value_twd", 0)
+    total_pnl = s.get("total_pnl_twd", 0)
+    total_pct = s.get("total_pnl_pct", 0)
+    day_pnl = s.get("day_pnl_twd", 0)
+    day_pct = s.get("day_pnl_pct", 0)
+    alpha = s.get("alpha_vs_benchmark_pct", 0)
+    bench_sym = bench.get("symbol", "0050")
+
+    # 4 big KPI cards (GUSHI style)
+    kpi_cards = f'''
+    <div class="pfv2-kpi-grid">
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">TOTAL VALUE</div>
+        <div class="pfv2-kpi-val mono tnum">{_fmt_twd(total_value)}</div>
+        <div class="pfv2-kpi-sub muted mono small">含現金 · TWD</div>
+      </div>
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">TOTAL P&amp;L</div>
+        <div class="pfv2-kpi-val mono tnum {_cls(total_pnl)}">{_fmt_twd(total_pnl, sign=True)}</div>
+        <div class="pfv2-kpi-sub mono small {_cls(total_pct)}">{_fmt_pct(total_pct)} since inception</div>
+      </div>
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">TODAY P&amp;L</div>
+        <div class="pfv2-kpi-val mono tnum {_cls(day_pnl)}">{_fmt_twd(day_pnl, sign=True)}</div>
+        <div class="pfv2-kpi-sub mono small {_cls(day_pct)}">{_fmt_pct(day_pct)} day</div>
+      </div>
+      <div class="pfv2-kpi">
+        <div class="pfv2-kpi-lbl mono">ALPHA vs {html.escape(bench_sym)}</div>
+        <div class="pfv2-kpi-val mono tnum {_cls(alpha)}">{_fmt_pct(alpha)}</div>
+        <div class="pfv2-kpi-sub mono small muted">bench {_fmt_pct(bench.get("day_change_pct", 0))}</div>
+      </div>
+    </div>
+    '''
+
+    # Full holdings table (SHARES / AVG COST / LAST / TODAY / VALUE / P&L / % / WEIGHT)
+    total_val_incl_cash = s.get("total_value_twd", 0) or 1
+    rows = []
+    for h in holdings:
+        weight = (h.get("value", 0) / total_val_incl_cash * 100) if total_val_incl_cash else 0
+        day_cls = _cls(h.get("day_change_pct"))
+        pnl_cls = _cls(h.get("pnl"))
+        pillar_cls = PILLAR_CLS.get(h.get("pillar", "growth"), "")
+        rows.append(f'''
+        <tr onclick="location.href='holdings/{h["symbol"]}.html'">
+          <td class="tk-cell"><span class="pillar-dot {pillar_cls}"></span><strong class="mono">{h["symbol"]}</strong>
+            <span class="muted">{html.escape(h.get("name", ""))}</span></td>
+          <td class="mono tnum right">{h.get("shares", 0):,}</td>
+          <td class="mono tnum right">{h.get("cost_basis", 0):.2f}</td>
+          <td class="mono tnum right">{h.get("price", 0):.2f}</td>
+          <td class="mono tnum right {day_cls}">{_fmt_pct(h.get("day_change_pct"))}</td>
+          <td class="mono tnum right">{_fmt_twd(h.get("value", 0))}</td>
+          <td class="mono tnum right {pnl_cls}">{_fmt_twd(h.get("pnl", 0), sign=True)}</td>
+          <td class="mono tnum right {pnl_cls}">{_fmt_pct(h.get("pnl_pct"))}</td>
+          <td class="mono tnum right"><div class="weight-bar-wrap"><div class="weight-bar-fill" style="width:{min(weight, 100):.1f}%"></div><span class="weight-bar-val">{weight:.1f}%</span></div></td>
+        </tr>''')
+    positions_html = f'''
+    <div class="pfv2-section">
+      {_sec_head("持倉明細", "POSITIONS", count=len(holdings))}
+      <div class="pfv2-table-wrap">
+        <table class="pfv2-table">
+          <thead>
+            <tr>
+              <th class="left">ASSET</th>
+              <th class="right">SHARES</th>
+              <th class="right">AVG COST</th>
+              <th class="right">LAST</th>
+              <th class="right">TODAY</th>
+              <th class="right">VALUE</th>
+              <th class="right">P&amp;L</th>
+              <th class="right">%</th>
+              <th class="right">WEIGHT</th>
+            </tr>
+          </thead>
+          <tbody>{"".join(rows)}</tbody>
+        </table>
+      </div>
+    </div>
+    '''
+
+    # Weekly attribution bars (5 trading days)
+    weekly_html = ""
+    if weekly:
+        max_abs = max((abs(w["pnl"]) for w in weekly), default=1) or 1
+        bars = []
+        for w in weekly:
+            pnl = w["pnl"]
+            pct = w["pct"]
+            h_pct = abs(pnl) / max_abs * 100
+            cls = _cls(pnl)
+            direction = "up" if pnl >= 0 else "dn"
+            bars.append(f'''
+            <div class="wk-bar-col">
+              <div class="wk-bar-stack">
+                <div class="wk-bar-val mono tnum small {cls}">{_fmt_twd(pnl, sign=True)}</div>
+                <div class="wk-bar-bg">
+                  <div class="wk-bar-fill wk-bar-{direction}" style="height:{h_pct:.1f}%"></div>
+                </div>
+              </div>
+              <div class="wk-bar-pct mono tnum small {cls}">{_fmt_pct(pct)}</div>
+              <div class="wk-bar-day muted small mono">{w["date"][-5:]} · 週{w["weekday"]}</div>
+            </div>''')
+        weekly_html = f'''
+        <div class="pfv2-section">
+          {_sec_head("本週歸因", "WEEKLY ATTRIBUTION", meta=f"{len(weekly)} trading days")}
+          <div class="wk-bars">{"".join(bars)}</div>
+        </div>
+        '''
+
+    # Risk metrics panel (B- grade concentration, volatility, beta, sharpe)
+    vol = risk.get("volatility_annualized_pct", 0) or 0
+    dd_30 = risk.get("drawdown_30d_pct", 0) or 0
+    dd_90 = risk.get("drawdown_90d_pct", 0) or 0
+    dd_1y = risk.get("drawdown_1y_pct", 0) or 0
+    # Concentration grade — based on largest single position weight
+    max_weight = max(((h.get("value", 0) / total_val_incl_cash * 100) for h in holdings), default=0)
+    conc_grade = _risk_grade(max_weight, [(30, "A"), (50, "B+"), (65, "B"), (75, "B-"), (85, "C"), (100, "D")])
+    conc_tone = "up" if max_weight < 50 else ("amber" if max_weight < 75 else "dn")
+    # Volatility grade
+    vol_grade = _risk_grade(vol, [(10, "A"), (15, "B+"), (20, "B"), (25, "B-"), (35, "C"), (100, "D")])
+    vol_tone = "up" if vol < 15 else ("amber" if vol < 25 else "dn")
+    # Simple beta / sharpe estimates (placeholder — refine with proper regression later)
+    ret_30d = s.get("ret_30d_pct") or 0
+    beta_proxy = round((ret_30d / (bench.get("ret_30d_pct") or 1)) if bench.get("ret_30d_pct") else 1.0, 2)
+    sharpe_proxy = round((s.get("ret_90d_pct") or 0) / (vol or 1), 2)
+
+    risk_html = f'''
+    <div class="pfv2-section">
+      {_sec_head("風險指標", "RISK METRICS", meta="90D 統計")}
+      <div class="risk-grid-v2">
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">集中度</div>
+          <div class="risk-cell-val mono tnum {conc_tone}">{conc_grade}</div>
+          <div class="risk-cell-sub muted mono small">MAX {max_weight:.1f}%</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">波動率 (年化)</div>
+          <div class="risk-cell-val mono tnum {vol_tone}">{vol:.1f}%</div>
+          <div class="risk-cell-sub muted mono small">等級 {vol_grade}</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">Beta (vs {html.escape(bench_sym)})</div>
+          <div class="risk-cell-val mono tnum">{beta_proxy}</div>
+          <div class="risk-cell-sub muted mono small">30D 相對敏感度</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">Sharpe 估值</div>
+          <div class="risk-cell-val mono tnum">{sharpe_proxy}</div>
+          <div class="risk-cell-sub muted mono small">90D 回報 ÷ 波動</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">最大回撤 30D</div>
+          <div class="risk-cell-val mono tnum {_cls(dd_30)}">{dd_30:.2f}%</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">最大回撤 90D</div>
+          <div class="risk-cell-val mono tnum {_cls(dd_90)}">{dd_90:.2f}%</div>
+        </div>
+        <div class="risk-cell-v2">
+          <div class="risk-cell-lbl muted mono small">最大回撤 1Y</div>
+          <div class="risk-cell-val mono tnum {_cls(dd_1y)}">{dd_1y:.2f}%</div>
+        </div>
+      </div>
+    </div>
+    '''
+
+    return f'''
+<div class="pfv2-wrap">
+  {kpi_cards}
+  {render_big_chart(pf)}
+  {positions_html}
+  {weekly_html}
+  {risk_html}
+</div>
+'''
+
+
+# ── Macro tab ────────────────────────────────────────────────────────────
+
+_MACRO_GRID_DEF = [
+    # (key, label_cn, label_en, fmt)
+    ("twii",  "加權 ^TWII",   "TAIEX",        "{:.0f}"),
+    ("spx",   "S&P 500",       "SPX",          "{:.0f}"),
+    ("ndx",   "Nasdaq",        "NDX",          "{:.0f}"),
+    ("sox",   "費半",          "SOX",          "{:.0f}"),
+    ("n225",  "日經 225",      "N225",         "{:.0f}"),
+    ("hsi",   "恆生指數",      "HSI",          "{:.0f}"),
+]
+
+_MACRO_RATES_DEF = [
+    ("us10y", "美 10Y 殖利率", "US10Y",        "{:.2f}%"),
+    ("vix",   "恐慌指數 VIX",  "VIX",          "{:.2f}"),
+    ("dxy",   "美元指數 DXY",  "DXY",          "{:.2f}"),
+    ("usdtwd","USD/TWD 匯率",  "FX",           "{:.3f}"),
+    ("gold",  "黃金 GC=F",     "GOLD",         "{:.0f}"),
+    ("oil",   "西德州原油",    "WTI",          "{:.2f}"),
+    ("btc",   "比特幣",        "BTC",          "{:,.0f}"),
+]
+
+
+def _macro_cell(pf: dict, key: str, label_cn: str, label_en: str, fmt: str,
+                history: dict | None = None) -> str:
+    macro = pf.get("macro", {}) if pf else {}
+    d = macro.get(key) or {}
+    close = d.get("close")
+    if close is None:
+        return f'''
+        <div class="macro-idx-card empty">
+          <div class="macro-idx-head">
+            <span class="mono">{html.escape(label_en)}</span>
+            <span class="muted small">{html.escape(label_cn)}</span>
+          </div>
+          <div class="macro-idx-val muted">—</div>
+        </div>'''
+    day = d.get("day_change_pct") or 0
+    ytd = d.get("ret_ytd")
+    pct52 = d.get("pct_52w")
+    # Build sparkline from history if available
+    history = history or {}
+    hist_key_map = {
+        "twii": "^TWII", "spx": "^GSPC", "ndx": "^IXIC", "sox": "^SOX",
+        "n225": "^N225", "hsi": "^HSI", "vix": "^VIX", "us10y": "^TNX",
+        "dxy": "DX-Y.NYB", "usdtwd": "TWD=X", "gold": "GC=F",
+        "oil": "CL=F", "btc": "BTC-USD",
+    }
+    spark_svg = ""
+    hist = history.get(hist_key_map.get(key, key)) or []
+    if len(hist) >= 2:
+        spark_svg = _spark_svg(
+            [{"c": r["close"]} for r in hist[-30:]],
+            width=180, height=36,
+            stroke=("var(--up)" if day >= 0 else "var(--dn)"),
+        )
+    ytd_html = f'<span class="macro-idx-ytd mono small {_cls(ytd)}">YTD {_fmt_pct(ytd, 1)}</span>' if ytd is not None else ""
+    pct52_html = f'<span class="macro-idx-52w muted small mono">52w {pct52:.0f}%</span>' if pct52 is not None else ""
+    return f'''
+    <div class="macro-idx-card">
+      <div class="macro-idx-head">
+        <span class="mono">{html.escape(label_en)}</span>
+        <span class="muted small">{html.escape(label_cn)}</span>
+      </div>
+      <div class="macro-idx-val mono tnum">{fmt.format(close)}</div>
+      <div class="macro-idx-delta">
+        <span class="mono tnum {_cls(day)}">{_fmt_pct(day, 2)}</span>
+        {ytd_html}
+        {pct52_html}
+      </div>
+      <div class="macro-idx-spark">{spark_svg}</div>
+    </div>
+    '''
+
+
+def render_macro_tab(pf: dict, analysis: dict | None,
+                     history: dict | None = None) -> str:
+    """GUSHI-style Macro tab: AI 本週宏觀觀點 banner + GLOBAL INDICES grid +
+    RATES · FX · COMMODITIES + RISK MAP."""
+    if not pf:
+        return '<p class="muted" style="padding:20px">無組合資料。</p>'
+
+    # AI macro banner
+    macro_ctx = (analysis or {}).get("macro_context", {}) or {}
+    macro_narr = macro_ctx.get("narrative") or macro_ctx.get("summary") or ""
+    macro_impact = macro_ctx.get("impact") or ""
+    watchpoints = macro_ctx.get("watchpoints") or []
+    wp_html = ""
+    if watchpoints:
+        wp_html = "<ul class='macro-wp-list'>" + "".join(
+            f"<li>{_link_tickers(w)}</li>" for w in watchpoints[:5]
+        ) + "</ul>"
+    banner_html = ""
+    if macro_narr:
+        banner_html = f'''
+        <div class="macro-banner">
+          <div class="macro-banner-lbl mono">
+            <span class="live-dot accent"></span>
+            AI 本週宏觀觀點 · MACRO VIEW
+          </div>
+          <p class="macro-banner-text">{_link_tickers(macro_narr)}</p>
+          {f'<p class="macro-banner-impact muted small">{_link_tickers(macro_impact)}</p>' if macro_impact else ""}
+          {wp_html}
+        </div>
+        '''
+
+    # Global indices grid
+    idx_cells = "".join(
+        _macro_cell(pf, key, cn, en, fmt, history)
+        for key, cn, en, fmt in _MACRO_GRID_DEF
+    )
+
+    # Rates · FX · Commodities table
+    rates_cells = "".join(
+        _macro_cell(pf, key, cn, en, fmt, history)
+        for key, cn, en, fmt in _MACRO_RATES_DEF
+    )
+
+    # Risk map — rule-based from macro values
+    macro = pf.get("macro", {})
+    vix_val = (macro.get("vix") or {}).get("close") or 0
+    us10y_val = (macro.get("us10y") or {}).get("close") or 0
+    dxy_val = (macro.get("dxy") or {}).get("close") or 0
+    sox_day = (macro.get("sox") or {}).get("day_change_pct") or 0
+
+    def _risk_row(name_cn: str, name_en: str, level: str, tone: str, detail: str) -> str:
+        return f'''
+        <div class="risk-map-row">
+          <div class="risk-map-name">
+            <span class="mono">{html.escape(name_en)}</span>
+            <span class="muted small">{html.escape(name_cn)}</span>
+          </div>
+          <div class="risk-map-detail muted small">{html.escape(detail)}</div>
+          <span class="risk-map-level risk-{tone} mono">{level}</span>
+        </div>
+        '''
+
+    # VIX-based market risk
+    if vix_val < 16:
+        vix_level, vix_tone, vix_detail = "LOW", "low", f"VIX {vix_val:.1f} — 風險偏好高"
+    elif vix_val < 22:
+        vix_level, vix_tone, vix_detail = "MID", "mid", f"VIX {vix_val:.1f} — 中性區間"
+    else:
+        vix_level, vix_tone, vix_detail = "HIGH", "high", f"VIX {vix_val:.1f} — 避險升溫"
+
+    # 10Y based rate policy risk
+    if us10y_val < 3.8:
+        r_level, r_tone, r_detail = "LOW", "low", f"US10Y {us10y_val:.2f}% — 利率環境寬鬆"
+    elif us10y_val < 4.5:
+        r_level, r_tone, r_detail = "MID", "mid", f"US10Y {us10y_val:.2f}% — 中性"
+    else:
+        r_level, r_tone, r_detail = "HIGH", "high", f"US10Y {us10y_val:.2f}% — 壓制成長股"
+
+    # DXY-based EM risk
+    if dxy_val == 0:
+        dxy_level, dxy_tone, dxy_detail = "—", "mid", "資料不足"
+    elif dxy_val < 100:
+        dxy_level, dxy_tone, dxy_detail = "LOW", "low", f"DXY {dxy_val:.1f} — 弱美元利台股外資"
+    elif dxy_val < 105:
+        dxy_level, dxy_tone, dxy_detail = "MID", "mid", f"DXY {dxy_val:.1f} — 中性"
+    else:
+        dxy_level, dxy_tone, dxy_detail = "HIGH", "high", f"DXY {dxy_val:.1f} — 強美元抽離新興"
+
+    # AI capex / SOX-based tech risk
+    if sox_day > 1.5:
+        sox_level, sox_tone, sox_detail = "LOW", "low", f"SOX +{sox_day:.1f}% — 半導體強勢"
+    elif sox_day > -1.5:
+        sox_level, sox_tone, sox_detail = "MID", "mid", f"SOX {sox_day:+.1f}% — 震盪"
+    else:
+        sox_level, sox_tone, sox_detail = "HIGH", "high", f"SOX {sox_day:+.1f}% — 半導體走弱警戒"
+
+    risk_map_html = f'''
+    <div class="pfv2-section">
+      {_sec_head("風險地圖", "RISK MAP", meta="rule-based")}
+      <div class="risk-map">
+        {_risk_row("市場情緒", "MARKET FEAR", vix_level, vix_tone, vix_detail)}
+        {_risk_row("Fed 政策", "RATE POLICY", r_level, r_tone, r_detail)}
+        {_risk_row("美元指數", "USD STRENGTH", dxy_level, dxy_tone, dxy_detail)}
+        {_risk_row("AI Capex", "SEMI CYCLE", sox_level, sox_tone, sox_detail)}
+      </div>
+    </div>
+    '''
+
+    return f'''
+<div class="pfv2-wrap">
+  <div class="macro-hero">
+    <h1 class="macro-hero-title">全球宏觀脈動 <span class="sec-en mono">MACRO PULSE</span></h1>
+    <p class="macro-hero-sub muted small">實時指數 · 利率 · 匯率 · 商品 · AI 風險地圖</p>
+  </div>
+  {banner_html}
+  <div class="pfv2-section">
+    {_sec_head("全球指數", "GLOBAL INDICES", count=len(_MACRO_GRID_DEF))}
+    <div class="macro-idx-grid">{idx_cells}</div>
+  </div>
+  <div class="pfv2-section">
+    {_sec_head("利率 · 匯率 · 商品", "RATES · FX · COMMODITIES", count=len(_MACRO_RATES_DEF))}
+    <div class="macro-idx-grid">{rates_cells}</div>
+  </div>
+  {risk_map_html}
+</div>
+'''
+
+
+# ── News tab with tier badges ─────────────────────────────────────────────
+
+# Source → (tier, kind). Tier: T1 = 頂級財經媒體, T2 = 一般媒體, T3 = 聚合.
+# Kind: BREAKING/BROKER/MEDIA/MACRO/DATA.
+_NEWS_SOURCE_TIER = {
+    # T1 財經頂級
+    "Bloomberg": ("T1", "MEDIA"),
+    "Reuters":   ("T1", "MEDIA"),
+    "路透":      ("T1", "MEDIA"),
+    "彭博":      ("T1", "MEDIA"),
+    "FT":        ("T1", "MEDIA"),
+    "WSJ":       ("T1", "MEDIA"),
+    "華爾街日報": ("T1", "MEDIA"),
+    "Nikkei":    ("T1", "MEDIA"),
+    "日經":      ("T1", "MEDIA"),
+    # T2 台灣主流
+    "經濟日報":   ("T2", "MEDIA"),
+    "工商時報":   ("T2", "MEDIA"),
+    "自由時報":   ("T2", "MEDIA"),
+    "聯合新聞網": ("T2", "MEDIA"),
+    "中央社":     ("T2", "MEDIA"),
+    "ETtoday":    ("T2", "MEDIA"),
+    "鉅亨":       ("T2", "MEDIA"),
+    "鉅亨網":     ("T2", "MEDIA"),
+    "Anue鉅亨":  ("T2", "MEDIA"),
+    "TVBS":       ("T2", "MEDIA"),
+    "科技新報":   ("T2", "MEDIA"),
+    "科技報橘":   ("T2", "MEDIA"),
+    "數位時代":   ("T2", "MEDIA"),
+    "CTEE":       ("T2", "MEDIA"),
+    "MoneyDJ":    ("T2", "DATA"),
+    "TechNews":   ("T2", "MEDIA"),
+    # T2 券商 / 法人
+    "富邦投顧":   ("T2", "BROKER"),
+    "元大投顧":   ("T2", "BROKER"),
+    "凱基投顧":   ("T2", "BROKER"),
+    "群益投顧":   ("T2", "BROKER"),
+    "國泰證券":   ("T2", "BROKER"),
+    # T3 aggregators
+    "Google News": ("T3", "MEDIA"),
+    "Yahoo 新聞":  ("T3", "MEDIA"),
+    "Yahoo":       ("T3", "MEDIA"),
+}
+
+
+def _classify_source(source: str) -> tuple[str, str]:
+    """Return (tier, kind) for a news source."""
+    src = (source or "").strip()
+    if src in _NEWS_SOURCE_TIER:
+        return _NEWS_SOURCE_TIER[src]
+    # substring match
+    for key, val in _NEWS_SOURCE_TIER.items():
+        if key in src or src in key:
+            return val
+    # default fallback
+    return ("T3", "MEDIA")
+
+
+def _classify_article(title: str, source: str) -> tuple[str, str]:
+    """Return (tier, kind) with kind overrides based on title keywords."""
+    tier, kind = _classify_source(source)
+    t = title or ""
+    # Breaking news override
+    if any(kw in t for kw in ("快訊", "即時", "BREAKING", "速報", "突發")):
+        return ("T1", "BREAKING")
+    # Broker report
+    if any(kw in t for kw in ("目標價", "喊買", "評等", "調升", "調降", "投顧", "券商", "外資", "法人", "買進", "賣出")):
+        return (tier, "BROKER") if tier != "T3" else ("T2", "BROKER")
+    # Macro
+    if any(kw in t for kw in ("Fed", "聯準會", "升息", "降息", "GDP", "CPI", "通膨", "失業率", "PMI", "FOMC", "央行", "利率")):
+        return (tier, "MACRO")
+    # Data / research
+    if any(kw in t for kw in ("財報", "EPS", "營收", "毛利", "法說", "研究報告")):
+        return (tier, "DATA")
+    return (tier, kind)
+
+
+def _parse_brief_articles(brief: dict, limit: int = 40) -> list[dict]:
+    """Extract article entries from a brief's markdown content."""
+    content = brief.get("content", "")
+    entry_re = re.compile(
+        r"^- \[([^\]]+)\]\(([^)]+)\)\s*·\s*([^·]+?)\s*·\s*(\d{2}-\d{2} \d{2}:\d{2})",
+        re.MULTILINE,
+    )
+    summary_re = re.compile(r"^\s*>\s*(.+)", re.MULTILINE)
+    section_re = re.compile(r"^### (.+)$", re.MULTILINE)
+
+    # Map position → section heading
+    sections: list[tuple[int, str]] = [
+        (m.start(), m.group(1).strip()) for m in section_re.finditer(content)
+    ]
+
+    def _section_at(pos: int) -> str:
+        cur = ""
+        for s_pos, s_name in sections:
+            if s_pos < pos:
+                cur = s_name
+            else:
+                break
+        return cur
+
+    out: list[dict] = []
+    for m in entry_re.finditer(content):
+        title = m.group(1)
+        url = m.group(2)
+        source = m.group(3).strip()
+        time_str = m.group(4)
+        end_pos = m.end()
+        next_bound = content.find("\n- [", end_pos)
+        section_bound = content.find("\n## ", end_pos)
+        bounds = [b for b in (next_bound, section_bound) if b > 0]
+        bound = min(bounds) if bounds else len(content)
+        following = content[end_pos:bound]
+        sm = summary_re.search(following)
+        summary = sm.group(1).strip() if sm else ""
+        tier, kind = _classify_article(title, source)
+        out.append({
+            "date": brief["date"],
+            "title": title,
+            "url": url,
+            "source": source,
+            "time": time_str,
+            "summary": summary,
+            "tier": tier,
+            "kind": kind,
+            "section": _section_at(m.start()),
+        })
+        if len(out) >= limit:
+            break
+    return out
+
+
+def render_news_tab(briefs: list[dict], pf: dict | None) -> str:
+    """GUSHI-style News feed with tier badges and kind labels.
+
+    Pulls articles from the most recent briefs (up to 3 days),
+    classifies each with T1/T2/T3 tier + BREAKING/BROKER/MEDIA/MACRO/DATA kind.
+    """
+    if not briefs:
+        return '<p class="muted" style="padding:20px">還沒有 brief。</p>'
+
+    # Gather articles from the newest 3 briefs
+    articles: list[dict] = []
+    for b in briefs[:3]:
+        articles.extend(_parse_brief_articles(b, limit=50))
+
+    if not articles:
+        return '<p class="muted" style="padding:20px">Brief 內找不到可解析的新聞條目。</p>'
+
+    # Dedupe by URL, keep order
+    seen = set()
+    unique: list[dict] = []
+    for a in articles:
+        if a["url"] in seen:
+            continue
+        seen.add(a["url"])
+        unique.append(a)
+
+    # Sort by date desc, time desc
+    unique.sort(key=lambda a: (a["date"], a["time"]), reverse=True)
+
+    # Build ticker-name index for "related tickers" chips
+    name_to_sym = dict(_TICKER_ALIAS)
+
+    def _related_tickers(text: str, max_chips: int = 3) -> list[tuple[str, str]]:
+        found: list[tuple[str, str]] = []
+        seen_syms: set[str] = set()
+        for alias in sorted(name_to_sym.keys(), key=len, reverse=True):
+            if len(alias) < 2:
+                continue
+            if alias in text:
+                sym = name_to_sym[alias]
+                if sym in seen_syms:
+                    continue
+                seen_syms.add(sym)
+                # Find display name
+                disp = sym
+                if pf:
+                    for coll in ("holdings", "watchlist", "simulator_universe"):
+                        for item in pf.get(coll, []) or []:
+                            if item.get("symbol") == sym:
+                                disp = item.get("name") or sym
+                                break
+                        if disp != sym:
+                            break
+                found.append((sym, disp))
+                if len(found) >= max_chips:
+                    break
+        return found
+
+    # Impact heuristic based on tier + kind
+    def _impact(tier: str, kind: str) -> tuple[str, str]:
+        if kind == "BREAKING":
+            return "HIGH", "high"
+        if tier == "T1":
+            return "HIGH", "high"
+        if kind in ("BROKER", "DATA", "MACRO"):
+            return "MID", "mid"
+        return "LOW", "low"
+
+    # Filter pills: all / tiers / kinds
+    tiers = sorted({a["tier"] for a in unique})
+    kinds = sorted({a["kind"] for a in unique})
+
+    tier_pills = "".join(
+        f'<button class="news-pill mono" data-filter="tier:{t}">{t}</button>'
+        for t in tiers
+    )
+    kind_pills = "".join(
+        f'<button class="news-pill mono" data-filter="kind:{k}">{html.escape(k)}</button>'
+        for k in kinds
+    )
+
+    # Card list
+    cards: list[str] = []
+    for a in unique[:80]:
+        tier = a["tier"]
+        kind = a["kind"]
+        impact_label, impact_tone = _impact(tier, kind)
+        related = _related_tickers(f"{a['title']} {a.get('summary', '')}", max_chips=3)
+        chips_html = "".join(
+            f'<a class="news-ticker-chip" href="holdings/{sym}.html">'
+            f'<span class="mono">{html.escape(sym)}</span>'
+            f'<span class="muted small">{html.escape(nm[:8])}</span></a>'
+            for sym, nm in related
+        )
+        summary_html = (
+            f'<p class="news-summary muted small">{html.escape(a["summary"][:160])}'
+            f'{"…" if len(a.get("summary", "")) > 160 else ""}</p>'
+            if a.get("summary") else ""
+        )
+        cards.append(f'''
+        <article class="news-card" data-tier="{tier}" data-kind="{kind}">
+          <div class="news-card-head">
+            <span class="news-tier news-tier-{tier.lower()} mono">{tier}</span>
+            <span class="news-kind news-kind-{kind.lower()} mono">{kind}</span>
+            <span class="news-source mono">{html.escape(a["source"])}</span>
+            <span class="news-time muted mono small">{html.escape(a["date"][-5:])} · {html.escape(a["time"][-5:])}</span>
+            <span class="news-spacer"></span>
+            <span class="news-impact news-impact-{impact_tone} mono">IMPACT · {impact_label}</span>
+          </div>
+          <a class="news-title" href="{html.escape(a["url"])}" target="_blank" rel="noopener">{html.escape(a["title"])}</a>
+          {summary_html}
+          {f'<div class="news-tickers">{chips_html}</div>' if chips_html else ""}
+        </article>''')
+
+    return f'''
+<div class="pfv2-wrap">
+  <div class="macro-hero">
+    <h1 class="macro-hero-title">新聞即時流 <span class="sec-en mono">NEWS STREAM</span></h1>
+    <p class="macro-hero-sub muted small">T1/T2 分級 · 券商 / 媒體 / 總經 / 財報 · 近 3 天</p>
+  </div>
+  <div class="news-filter-bar">
+    <button class="news-pill active mono" data-filter="all">ALL · {len(unique)}</button>
+    {tier_pills}
+    {kind_pills}
+  </div>
+  <div class="news-feed">{"".join(cards)}</div>
+</div>
+<script>
+(function() {{
+  const bar = document.querySelector('.news-filter-bar');
+  const cards = document.querySelectorAll('.news-feed .news-card');
+  if (!bar) return;
+  bar.addEventListener('click', (e) => {{
+    const btn = e.target.closest('.news-pill');
+    if (!btn) return;
+    bar.querySelectorAll('.news-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    cards.forEach(c => {{
+      if (f === 'all') {{ c.style.display = ''; return; }}
+      const [k, v] = f.split(':');
+      c.style.display = (c.dataset[k] === v) ? '' : 'none';
+    }});
+  }});
+}})();
+</script>
+'''
+
+
+# ── Chat tab (stub) ─────────────────────────────────────────────────────
+
+def render_chat_tab(pf: dict | None, analysis: dict | None) -> str:
+    """Multi-model chat layout stub — no live backend yet, but functional UI
+    with prefilled thread list + suggested questions."""
+    threads = [
+        {"title": "組合今天有什麼需要注意的？", "time": "剛剛", "preview": "AI 正在分析 TSMC 法說會前的倉位…"},
+        {"title": "0050 vs 006208 哪個比較適合存股？", "time": "昨天", "preview": "費用率 / 流動性 / 追蹤誤差比較…"},
+        {"title": "我能在 5000 元內切進光通訊嗎？", "time": "3 天前", "preview": "雪球法 · 第一筆 3081 試水…"},
+    ]
+    thread_html = "".join(
+        f'''<a class="chat-thread{"" if i else " active"}" href="#">
+          <div class="chat-thread-title">{html.escape(t["title"])}</div>
+          <div class="chat-thread-meta muted small mono">{html.escape(t["time"])}</div>
+          <div class="chat-thread-preview muted small">{html.escape(t["preview"])}</div>
+        </a>''' for i, t in enumerate(threads)
+    )
+    suggestions = [
+        "我的組合目前最大風險是什麼？",
+        "下一筆 NT$5,000 怎麼配？",
+        "0050 比重會不會太高？",
+        "台積電現在可以加碼嗎？",
+        "光通訊這個題材還能追嗎？",
+    ]
+    suggestion_html = "".join(
+        f'<button class="chat-suggest-chip mono">{html.escape(s)}</button>'
+        for s in suggestions
+    )
+    # Sample conversation
+    sample_narrative = ""
+    if analysis:
+        mp = analysis.get("market_pulse", {})
+        sample_narrative = mp.get("summary", "") or (analysis.get("morning_brief") or {}).get("one_liner", "")
+    sample_narrative = sample_narrative or "今天台股震盪，TSMC 法說會前的 AI 產業鏈做反覆整理。"
+
+    return f'''
+<div class="chat-shell">
+  <aside class="chat-sidebar">
+    <div class="chat-sidebar-head">
+      <span class="mono">對話歷史</span>
+      <button class="chat-new-btn mono">+ 新對話</button>
+    </div>
+    <div class="chat-thread-list">{thread_html}</div>
+  </aside>
+  <main class="chat-main">
+    <div class="chat-main-head">
+      <div>
+        <h2 class="chat-title">組合今天有什麼需要注意的？</h2>
+        <span class="muted small mono">CLAUDE 4.5 · GPT-5 · INTERNAL QUANT v3.2 · 多模型協作</span>
+      </div>
+      <div class="chat-model-chips">
+        <span class="chat-model-chip mono">CLAUDE 4.5</span>
+        <span class="chat-model-chip mono">GPT-5</span>
+        <span class="chat-model-chip mono">QUANT v3.2</span>
+      </div>
+    </div>
+    <div class="chat-feed">
+      <div class="chat-msg chat-msg-user">
+        <div class="chat-msg-body">組合今天有什麼需要注意的？</div>
+      </div>
+      <div class="chat-msg chat-msg-ai">
+        <div class="chat-msg-meta mono small"><span class="live-dot accent"></span> QUANT v3.2 · 剛剛</div>
+        <div class="chat-msg-body">{_link_tickers(sample_narrative)}</div>
+        <div class="chat-sources">
+          <span class="mono small muted">來源 · SOURCES</span>
+          <a class="chat-source-chip mono" href="#">analysis.json</a>
+          <a class="chat-source-chip mono" href="#">portfolio.json</a>
+          <a class="chat-source-chip mono" href="#">今日 Brief</a>
+        </div>
+      </div>
+      <div class="chat-empty-note muted small">
+        * 本頁為 UI 原型。多模型對話整合將透過 serverless endpoint 啟動；
+        目前你可以用今日 Brief 的 "Copy Prompt" 按鈕貼到 Claude.ai / ChatGPT。
+      </div>
+    </div>
+    <div class="chat-suggest-bar">{suggestion_html}</div>
+    <form class="chat-input-bar" onsubmit="event.preventDefault();">
+      <input type="text" class="chat-input mono" placeholder="問問組合 / 題材 / 風險 … (enter 送出)" disabled>
+      <button class="chat-send mono" disabled>送出</button>
+    </form>
+  </main>
+</div>
+'''
+
+
 def render_index(briefs: list[dict], pf: dict | None,
                  history: dict | None = None) -> str:
     history = history or {}
@@ -2540,6 +3309,11 @@ def render_index(briefs: list[dict], pf: dict | None,
     ai_tab = render_ai_tab(latest_brief, latest_analysis)
     radar_tab = render_radar_tab(latest_analysis, pf, history)
     sim_html, _ = render_simulator(pf, latest_analysis)
+    # New GUSHI-style tabs
+    portfolio_tab = render_portfolio_tab(pf)
+    macro_tab = render_macro_tab(pf, latest_analysis, history)
+    news_tab = render_news_tab(briefs, pf)
+    chat_tab = render_chat_tab(pf, latest_analysis)
 
     # Thin portfolio summary strip values
     s = pf.get("summary", {})
@@ -2566,14 +3340,20 @@ def render_index(briefs: list[dict], pf: dict | None,
       {_icon("sim")}<span class="sn-label">SIM</span>
     </button>
     <button class="sn-btn" data-tab="portfolio" title="Portfolio">
-      {_icon("chart")}<span class="sn-label">PF</span>
+      {_icon("chart")}<span class="sn-label">PORT</span>
     </button>
-    <button class="sn-btn" data-tab="positions" title="Holdings">
-      {_icon("case")}<span class="sn-label">HOLD</span>
+    <button class="sn-btn" data-tab="macro" title="Macro Pulse">
+      {_icon("globe")}<span class="sn-label">MACRO</span>
     </button>
-    <button class="sn-btn" data-tab="briefs" title="Brief Archive">
-      {_icon("news")}<span class="sn-label">BRIEF</span>
+    <button class="sn-btn" data-tab="briefs" title="News Stream">
+      {_icon("news")}<span class="sn-label">NEWS</span>
       <span class="sn-badge">{len(briefs)}</span>
+    </button>
+    <button class="sn-btn" data-tab="chat" title="AI Chat">
+      {_icon("ai")}<span class="sn-label">CHAT</span>
+    </button>
+    <button class="sn-btn" data-tab="positions" title="Holdings (legacy)">
+      {_icon("case")}<span class="sn-label">HOLD</span>
     </button>
   </aside>
 
@@ -2622,17 +3402,22 @@ def render_index(briefs: list[dict], pf: dict | None,
         {sim_html}
       </div>
       <div class="tab-panel" data-panel="portfolio">
-        {macro_strip}
-        {chart}
-        <section class="portfolio-detail">
-          {sidebar}
-        </section>
+        {portfolio_tab}
+      </div>
+      <div class="tab-panel" data-panel="macro">
+        {macro_tab}
+      </div>
+      <div class="tab-panel" data-panel="briefs">
+        {news_tab}
+      </div>
+      <div class="tab-panel" data-panel="chat">
+        {chat_tab}
       </div>
       <div class="tab-panel" data-panel="positions">
         {positions}
-      </div>
-      <div class="tab-panel" data-panel="briefs">
-        {briefs_table}
+        <section class="portfolio-detail">
+          {sidebar}
+        </section>
       </div>
     </main>
 
@@ -2656,7 +3441,7 @@ def render_index(briefs: list[dict], pf: dict | None,
 (function() {{
   const clock = document.getElementById('sb-clock');
   const viewEl = document.getElementById('sb-view');
-  const viewMap = {{ai: 'AI', radar: 'RADAR', sim: 'SIM', portfolio: 'PORT', positions: 'HOLD', briefs: 'NEWS'}};
+  const viewMap = {{ai: 'AI', radar: 'RADAR', sim: 'SIM', portfolio: 'PORT', macro: 'MACRO', briefs: 'NEWS', chat: 'CHAT', positions: 'HOLD'}};
   function tick() {{
     const d = new Date();
     const hh = String(d.getHours()).padStart(2, '0');
@@ -2920,7 +3705,7 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
     low52 = data.get("low_52w", 0)
     pos = max(0, min(100, pct52))
 
-    # Stop / Take-profit
+    # Stop / Take-profit — no emojis, dot indicators
     sl = data.get("stop_loss")
     tp = data.get("take_profit")
     rules_html = ""
@@ -2928,10 +3713,10 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
         rows = []
         if sl:
             d = data.get("stop_loss_dist_pct") or 0
-            rows.append(f'<div class="rule-row"><span class="dn">🔴 停損</span><span class="mono tnum">{sl}</span><span class="muted mono tnum small">距離 {d:+.1f}%</span></div>')
+            rows.append(f'<div class="rule-row"><span class="dn mono"><span class="dot dot-dn"></span>STOP</span><span class="mono tnum">{sl}</span><span class="muted mono tnum small">距離 {d:+.1f}%</span></div>')
         if tp:
             d = data.get("take_profit_dist_pct") or 0
-            rows.append(f'<div class="rule-row"><span class="up">🟢 停利</span><span class="mono tnum">{tp}</span><span class="muted mono tnum small">距離 {d:+.1f}%</span></div>')
+            rows.append(f'<div class="rule-row"><span class="up mono"><span class="dot dot-up"></span>TARGET</span><span class="mono tnum">{tp}</span><span class="muted mono tnum small">距離 {d:+.1f}%</span></div>')
         rules_html = f'<div class="dd-rules"><div class="pf-sub-head small">規則</div>{"".join(rows)}</div>'
 
     # AI commentary from latest analysis
@@ -2947,7 +3732,7 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
                 risk_items = "".join(f'<li>{html.escape(r)}</li>' for r in risks)
                 ai_html = f'''
 <section class="dd-ai wrap">
-  <div class="section-head"><h2>🤖 AI Verdict</h2>{_sentiment_badge(ha.get("outlook", "中性"))}</div>
+  <div class="section-head"><h2>{_icon("ai", 18)} AI 觀點 · <span class="sec-en">AI ANALYSIS</span></h2>{_sentiment_badge(ha.get("outlook", "中性"))}</div>
   <p class="narrative">{html.escape(ha.get("commentary", ""))}</p>
   <div class="bullbear">
     <div class="bb-bar">
@@ -3023,6 +3808,131 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
 </section>
 '''
 
+    # ── AI VERDICT big rating circle ──────────────────────────
+    # Score = blend of rule tone, 52w percentile, day change, AI bull/bear
+    rec_tone = (data.get("recommendation") or {}).get("tone", "flat")
+    tone_score = {"up": 4.2, "dn": 1.8, "amber": 2.7, "flat": 3.0}.get(rec_tone, 3.0)
+    # 52w contribution: low = +, high = -
+    p52 = data.get("pct_52w") or 50
+    p52_adj = (50 - p52) / 100  # -0.5 to +0.5
+    # Day adjustment (small)
+    day_adj = max(-0.3, min(0.3, (day_pct or 0) / 20))
+    # Bull/bear adjustment from AI if present
+    bull_adj = 0.0
+    ai_bull = ai_bear = ai_neu = 0
+    ai_outlook_str = ""
+    ai_narrative = ""
+    if latest_analysis:
+        for ha in latest_analysis.get("holdings_analysis", []):
+            if ha.get("symbol") == sym:
+                bb = ha.get("bull_bear_breakdown", {})
+                ai_bull = bb.get("bull_pct", 0) or 0
+                ai_bear = bb.get("bear_pct", 0) or 0
+                ai_neu = bb.get("neutral_pct", 0) or 0
+                bull_adj = (ai_bull - ai_bear) / 100  # -1 to +1
+                ai_outlook_str = ha.get("outlook", "")
+                ai_narrative = ha.get("commentary", "")
+                break
+    score = max(1.0, min(5.0, tone_score + p52_adj + day_adj + bull_adj))
+    # Action label + tone
+    if score >= 4.2:
+        verdict_label, verdict_tone = "STRONG BUY", "up"
+    elif score >= 3.6:
+        verdict_label, verdict_tone = "BUY", "up"
+    elif score >= 2.8:
+        verdict_label, verdict_tone = "HOLD", "flat"
+    elif score >= 2.0:
+        verdict_label, verdict_tone = "TRIM", "amber"
+    else:
+        verdict_label, verdict_tone = "SELL", "dn"
+
+    # Circle SVG — big rating dial
+    circle_r = 56
+    circle_c = 2 * 3.1415926 * circle_r
+    progress = circle_c * (score / 5.0)
+    verdict_svg = f'''
+    <svg class="verdict-dial" viewBox="0 0 140 140" width="140" height="140">
+      <circle cx="70" cy="70" r="{circle_r}" fill="none" stroke="var(--bg-3)" stroke-width="10"/>
+      <circle cx="70" cy="70" r="{circle_r}" fill="none"
+              stroke="var(--{verdict_tone})" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="{progress:.1f} {circle_c:.1f}"
+              transform="rotate(-90 70 70)"/>
+      <text x="70" y="76" text-anchor="middle"
+            fill="var(--tx-1)" font-size="32" font-weight="700"
+            font-family="var(--font-mono)">{score:.1f}</text>
+      <text x="70" y="96" text-anchor="middle"
+            fill="var(--tx-3)" font-size="10" font-weight="600"
+            letter-spacing="1" font-family="var(--font-mono)">OUT OF 5</text>
+    </svg>
+    '''
+    ai_narrative_short = (ai_narrative[:160] + "…") if len(ai_narrative) > 160 else ai_narrative
+    if not ai_narrative_short:
+        ai_narrative_short = (data.get("recommendation") or {}).get("reason", "") or "依規則引擎綜合判斷。"
+
+    verdict_card = f'''
+    <section class="dd-verdict-card wrap">
+      <div class="verdict-left">
+        <div class="verdict-dial-wrap tone-{verdict_tone}">{verdict_svg}</div>
+      </div>
+      <div class="verdict-mid">
+        <div class="verdict-lbl mono">AI VERDICT · 綜合評等</div>
+        <div class="verdict-action {verdict_tone}">{verdict_label}</div>
+        <div class="verdict-narrative">{_link_tickers(ai_narrative_short)}</div>
+        <div class="verdict-meta muted small mono">
+          規則 · Gemini 2.5 · 52週 {p52:.0f}% · {ai_outlook_str or "中性"}
+        </div>
+      </div>
+      <div class="verdict-right">
+        <div class="sentiment-bar-box">
+          <div class="sentiment-bar-head mono small">
+            <span>市場情緒 · SENTIMENT</span>
+            <span class="muted">{ai_bull + ai_bear + ai_neu}%</span>
+          </div>
+          <div class="sentiment-bar">
+            <div class="sentiment-seg sb-bull" style="width:{ai_bull}%"><span>多 {ai_bull}</span></div>
+            <div class="sentiment-seg sb-neu"  style="width:{ai_neu}%"><span>平 {ai_neu}</span></div>
+            <div class="sentiment-seg sb-bear" style="width:{ai_bear}%"><span>空 {ai_bear}</span></div>
+          </div>
+          <div class="sentiment-counts mono small muted">
+            看多 {ai_bull}% · 觀望 {ai_neu}% · 看空 {ai_bear}%
+          </div>
+        </div>
+      </div>
+    </section>
+    '''
+
+    # Tab navigation (OVERVIEW / AI / FINANCIALS / HOLDERS / FILINGS)
+    # Only OVERVIEW + AI have real data — rest are placeholders.
+    tabs_nav = '''
+    <nav class="dd-tabs wrap">
+      <button class="dd-tab active" data-dd-tab="overview">概覽 · OVERVIEW</button>
+      <button class="dd-tab" data-dd-tab="ai">AI 觀點 · AI</button>
+      <button class="dd-tab" data-dd-tab="fin">財報 · FINANCIALS</button>
+      <button class="dd-tab" data-dd-tab="hold">股東 · HOLDERS</button>
+      <button class="dd-tab" data-dd-tab="news">新聞 · NEWS</button>
+    </nav>
+    '''
+
+    # Stub panels for unbuilt tabs
+    stub_fin = '''
+    <section class="wrap dd-stub" data-dd-panel="fin">
+      <div class="dd-stub-box">
+        <div class="dd-stub-icon">''' + _icon("chart", 22) + '''</div>
+        <div class="dd-stub-title">Financials · 財報專區（規劃中）</div>
+        <div class="muted small">季度營收 / 毛利率 / EPS / 法說會重點 — 需串 TWSE / 公開資訊觀測站資料源。</div>
+      </div>
+    </section>
+    '''
+    stub_hold = '''
+    <section class="wrap dd-stub" data-dd-panel="hold">
+      <div class="dd-stub-box">
+        <div class="dd-stub-icon">''' + _icon("case", 22) + '''</div>
+        <div class="dd-stub-title">Holders · 股東結構（規劃中）</div>
+        <div class="muted small">大股東持股比例 / 法人買賣超 / 融資券餘額 — 需串券商 API。</div>
+      </div>
+    </section>
+    '''
+
     price_str = f"{price:.2f}" if price is not None else "—"
     status_str = {"holding": "持有中", "watchlist": "觀察中", "universe": "可查詢"}.get(page_kind, "—")
     body = f'''
@@ -3044,29 +3954,64 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
   </div>
 </header>
 
-<section class="wrap">
-  {big_spark}
-</section>
+{verdict_card}
+{tabs_nav}
 
-<section class="wrap dd-metrics">
-  <div class="dd-grid">
-    {pnl_section}
-  </div>
-  <div class="dd-rets">{"".join(rets)}</div>
-  <div class="dd-52w">
-    <div class="dd-52w-labels muted small mono">
-      <span>52w 低 {low52:.2f}</span>
-      <span class="mono">目前 {pct52:.0f}% 位階</span>
-      <span>52w 高 {high52:.2f}</span>
+<div class="dd-panel active" data-dd-panel="overview">
+  <section class="wrap">
+    {big_spark}
+  </section>
+
+  <section class="wrap dd-metrics">
+    <div class="dd-grid">
+      {pnl_section}
     </div>
-    <div class="dd-52w-bar"><div class="dd-52w-pos" style="left:{pos}%"></div></div>
-  </div>
-  {rules_html}
-</section>
+    <div class="dd-rets">{"".join(rets)}</div>
+    <div class="dd-52w">
+      <div class="dd-52w-labels muted small mono">
+        <span>52w 低 {low52:.2f}</span>
+        <span class="mono">目前 {pct52:.0f}% 位階</span>
+        <span>52w 高 {high52:.2f}</span>
+      </div>
+      <div class="dd-52w-bar"><div class="dd-52w-pos" style="left:{pos}%"></div></div>
+    </div>
+    {rules_html}
+  </section>
 
-{rec_html}
-{ai_html}
-{news_html}
+  {rec_html}
+</div>
+
+<div class="dd-panel" data-dd-panel="ai">
+  {ai_html or '<section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股今日暫無 AI 個別觀點</div><div class="muted small">AI 會挑選當日優先分析的持股／機會清單中的票。</div></div></section>'}
+</div>
+
+{stub_fin}
+{stub_hold}
+
+<div class="dd-panel" data-dd-panel="news">
+  {news_html or '<section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股近期無相關新聞</div><div class="muted small">Brief 中未偵測到此 ticker 的提及。</div></div></section>'}
+</div>
+
+<script>
+(function() {{
+  const tabs = document.querySelectorAll('.dd-tab');
+  const panels = document.querySelectorAll('.dd-panel, .dd-stub[data-dd-panel]');
+  tabs.forEach(t => t.addEventListener('click', () => {{
+    const key = t.dataset.ddTab;
+    tabs.forEach(x => x.classList.toggle('active', x === t));
+    panels.forEach(p => {{
+      const match = p.dataset.ddPanel === key;
+      if (p.classList.contains('dd-stub')) {{
+        p.style.display = match ? '' : 'none';
+      }} else {{
+        p.classList.toggle('active', match);
+      }}
+    }});
+  }}));
+  // Hide stubs initially (only overview active)
+  document.querySelectorAll('.dd-stub[data-dd-panel]').forEach(s => s.style.display = 'none');
+}})();
+</script>
 '''
     now = datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M")
     title = f'{sym} {name} · Stock AI Desk'
@@ -5027,6 +5972,614 @@ footer a { color: var(--tx-3); }
   .actions-grid { gap: 8px; }
   .topic-card, .holding-analysis { padding: 14px; }
   .narrative { font-size: 13.5px; }
+}
+
+/* ================================================================= */
+/* ── GUSHI-style v3 · PORT / MACRO / NEWS / CHAT ────────────────── */
+/* ================================================================= */
+
+.pfv2-wrap {
+  padding: 20px 24px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex; flex-direction: column; gap: 22px;
+}
+
+/* 4 big KPI cards */
+.pfv2-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.pfv2-kpi {
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.pfv2-kpi::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 80% at 0% 0%, var(--accent-soft), transparent 60%);
+  pointer-events: none;
+  opacity: 0.7;
+}
+.pfv2-kpi-lbl {
+  font-size: 10px; letter-spacing: 1.5px;
+  color: var(--tx-3);
+  font-weight: 600;
+  margin-bottom: 8px;
+  position: relative;
+}
+.pfv2-kpi-val {
+  font-size: 26px; font-weight: 700;
+  letter-spacing: -0.4px;
+  line-height: 1.1;
+  position: relative;
+}
+.pfv2-kpi-sub {
+  margin-top: 6px;
+  font-size: 11px;
+  position: relative;
+}
+
+/* Section wrapper reused across PORT / MACRO */
+.pfv2-section {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px 20px 22px;
+}
+.pfv2-section .sec-head { margin-bottom: 14px; }
+
+/* Positions table (GUSHI wide) */
+.pfv2-table-wrap { overflow-x: auto; }
+.pfv2-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px;
+}
+.pfv2-table thead th {
+  text-align: left; padding: 10px 12px;
+  font-size: 10px; letter-spacing: 1px; font-weight: 600;
+  color: var(--tx-3); border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+}
+.pfv2-table thead th.right { text-align: right; }
+.pfv2-table tbody td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.pfv2-table tbody tr { cursor: pointer; transition: background 0.12s; }
+.pfv2-table tbody tr:hover { background: var(--bg-2); }
+.pfv2-table td.right { text-align: right; }
+.pfv2-table td.left { text-align: left; }
+.pfv2-table .tk-cell { min-width: 200px; }
+.weight-bar-wrap {
+  position: relative;
+  width: 100px; margin-left: auto;
+  height: 18px; background: var(--bg-3);
+  border-radius: 3px; overflow: hidden;
+}
+.weight-bar-fill {
+  position: absolute; inset: 0 auto 0 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+.weight-bar-val {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-family: var(--font-mono); font-weight: 600;
+  color: var(--tx-1);
+  text-shadow: 0 0 4px rgba(0,0,0,0.6);
+}
+
+/* Weekly attribution bars */
+.wk-bars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+}
+.wk-bar-col {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 12px 8px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.wk-bar-stack {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; height: 120px;
+  width: 100%; justify-content: flex-end;
+}
+.wk-bar-val { font-size: 11px; font-weight: 600; }
+.wk-bar-bg {
+  width: 28px; height: 80px; background: var(--bg-3);
+  border-radius: 4px; overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.wk-bar-fill {
+  width: 100%;
+  border-radius: 4px;
+  transition: height 0.5s;
+}
+.wk-bar-fill.wk-bar-up { background: linear-gradient(180deg, var(--up-soft), var(--up)); }
+.wk-bar-fill.wk-bar-dn { background: linear-gradient(0deg, var(--dn-soft), var(--dn)); }
+.wk-bar-pct { font-size: 11px; font-weight: 600; }
+.wk-bar-day { font-size: 10px; letter-spacing: 0.3px; }
+
+/* Risk metrics grid */
+.risk-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+.risk-cell-v2 {
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+}
+.risk-cell-lbl { font-size: 10px; letter-spacing: 0.8px; margin-bottom: 6px; text-transform: uppercase; }
+.risk-cell-val { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.risk-cell-sub { font-size: 10px; margin-top: 4px; letter-spacing: 0.3px; }
+
+/* ── Macro tab ────────────────────────────────────────────── */
+.macro-hero {
+  padding: 4px 0 6px;
+}
+.macro-hero-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.macro-hero-title .sec-en { font-size: 11px; margin-left: 8px; }
+.macro-hero-sub { margin: 0; letter-spacing: 0.4px; }
+
+.macro-banner {
+  background: linear-gradient(120deg, rgba(91,141,255,0.08), rgba(91,141,255,0.02));
+  border: 1px solid var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 16px 18px 14px;
+  position: relative;
+}
+.macro-banner-lbl {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--accent-2);
+  font-weight: 600; letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.macro-banner-text {
+  margin: 0 0 6px;
+  font-size: 14.5px; line-height: 1.75;
+  color: var(--tx-1);
+}
+.macro-banner-impact { margin: 6px 0 0; line-height: 1.6; }
+.macro-wp-list {
+  margin: 8px 0 0; padding-left: 20px;
+  font-size: 12.5px; color: var(--tx-2);
+}
+.macro-wp-list li { margin: 3px 0; line-height: 1.65; }
+
+/* Global indices grid */
+.macro-idx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+.macro-idx-card {
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: border-color 0.12s, background 0.12s;
+}
+.macro-idx-card:hover { border-color: var(--accent); background: var(--bg-3); }
+.macro-idx-card.empty { opacity: 0.5; }
+.macro-idx-head {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 11px; letter-spacing: 0.5px;
+}
+.macro-idx-head .mono { font-weight: 700; color: var(--tx-1); }
+.macro-idx-val {
+  font-size: 20px; font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.3px;
+}
+.macro-idx-delta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  font-size: 11px;
+}
+.macro-idx-ytd, .macro-idx-52w { letter-spacing: 0.3px; }
+.macro-idx-spark { margin-top: 2px; }
+.macro-idx-spark svg { display: block; width: 100%; height: 36px; }
+
+/* Risk map */
+.risk-map {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.risk-map-row {
+  display: grid; grid-template-columns: 1fr 2fr auto;
+  gap: 14px; align-items: center;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+}
+.risk-map-name { display: flex; flex-direction: column; gap: 2px; }
+.risk-map-name .mono { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: var(--tx-1); }
+.risk-map-name .muted { font-size: 11px; letter-spacing: 0.3px; }
+.risk-map-detail { font-size: 12px; line-height: 1.55; }
+.risk-map-level {
+  font-size: 11px; font-weight: 700; padding: 4px 12px;
+  letter-spacing: 1px; border-radius: 4px;
+  border: 1px solid;
+}
+.risk-low  { color: var(--dn); background: var(--dn-bg); border-color: rgba(27,217,124,0.3); }
+.risk-mid  { color: var(--amber); background: var(--amber-bg); border-color: rgba(255,181,71,0.3); }
+.risk-high { color: var(--up); background: var(--up-bg); border-color: rgba(255,59,59,0.3); }
+
+/* ── News tab · tier badges ─────────────────────────────────── */
+.news-filter-bar {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 4px 0 8px;
+}
+.news-pill {
+  padding: 6px 12px;
+  background: var(--bg-2); color: var(--tx-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 11px; letter-spacing: 0.6px;
+  cursor: pointer; transition: all 0.12s;
+}
+.news-pill:hover { border-color: var(--accent); color: var(--tx-1); }
+.news-pill.active {
+  background: var(--accent-soft); color: var(--accent-2);
+  border-color: var(--accent); font-weight: 600;
+}
+.news-feed {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.news-card {
+  background: var(--bg-1); border: 1px solid var(--line);
+  border-left: 3px solid var(--line-2);
+  border-radius: var(--r-sm);
+  padding: 14px 16px 12px;
+  transition: border-color 0.12s, background 0.12s;
+}
+.news-card:hover { border-color: var(--accent); background: var(--bg-2); }
+.news-card[data-tier="T1"] { border-left-color: var(--up); }
+.news-card[data-tier="T2"] { border-left-color: var(--accent); }
+.news-card[data-tier="T3"] { border-left-color: var(--tx-4); }
+.news-card[data-kind="BREAKING"] { border-left-color: var(--up); background: rgba(255,59,59,0.04); }
+
+.news-card-head {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 8px;
+  font-size: 10px; letter-spacing: 0.5px;
+}
+.news-tier {
+  padding: 2px 7px; border-radius: 3px;
+  font-weight: 700; letter-spacing: 1px;
+  border: 1px solid;
+}
+.news-tier-t1 { color: var(--up); background: var(--up-bg); border-color: rgba(255,59,59,0.3); }
+.news-tier-t2 { color: var(--accent-2); background: var(--accent-soft); border-color: var(--accent-soft); }
+.news-tier-t3 { color: var(--tx-3); background: var(--bg-2); border-color: var(--line); }
+
+.news-kind {
+  padding: 2px 7px; border-radius: 3px;
+  font-weight: 700;
+  background: var(--bg-3); color: var(--tx-2);
+  border: 1px solid var(--line);
+}
+.news-kind-breaking { color: var(--up); background: var(--up-bg); border-color: rgba(255,59,59,0.3); }
+.news-kind-broker   { color: var(--purple); background: var(--purple-bg); border-color: rgba(181,132,255,0.3); }
+.news-kind-media    { color: var(--tx-2); }
+.news-kind-macro    { color: var(--accent-2); background: var(--accent-soft); border-color: var(--accent-soft); }
+.news-kind-data     { color: var(--amber); background: var(--amber-bg); border-color: rgba(255,181,71,0.3); }
+
+.news-source { font-weight: 600; color: var(--tx-2); }
+.news-time { font-family: var(--font-mono); }
+.news-spacer { flex: 1; }
+.news-impact {
+  padding: 2px 7px; border-radius: 3px; font-weight: 700; letter-spacing: 0.8px;
+  border: 1px solid;
+}
+.news-impact-high { color: var(--up); background: var(--up-bg); border-color: rgba(255,59,59,0.3); }
+.news-impact-mid  { color: var(--amber); background: var(--amber-bg); border-color: rgba(255,181,71,0.3); }
+.news-impact-low  { color: var(--tx-3); background: var(--bg-2); border-color: var(--line); }
+
+.news-title {
+  display: block;
+  font-size: 15px; font-weight: 600;
+  color: var(--tx-1); margin: 2px 0 4px;
+  line-height: 1.5; letter-spacing: -0.1px;
+}
+.news-title:hover { color: var(--accent-2); }
+.news-summary {
+  margin: 4px 0 8px; line-height: 1.65;
+}
+.news-tickers {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.news-ticker-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px;
+  background: var(--bg-2); border: 1px solid var(--line-2);
+  border-radius: 999px;
+  color: var(--tx-2); font-size: 11px;
+}
+.news-ticker-chip:hover { border-color: var(--accent); color: var(--accent-2); background: var(--bg-3); }
+.news-ticker-chip .mono { font-weight: 700; color: var(--tx-1); }
+
+/* ── Chat tab ─────────────────────────────────────────────── */
+.chat-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1px; background: var(--line);
+  min-height: calc(100vh - 140px);
+  margin: 0; padding: 0;
+}
+.chat-sidebar {
+  background: var(--bg-1);
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  overflow-y: auto;
+}
+.chat-sidebar-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 11px; letter-spacing: 1px;
+  color: var(--tx-3); font-weight: 600;
+  text-transform: uppercase;
+}
+.chat-new-btn {
+  background: var(--accent-soft); color: var(--accent-2);
+  border: 1px solid var(--accent-soft);
+  border-radius: var(--r-sm);
+  padding: 5px 10px; font-size: 11px;
+  cursor: pointer;
+}
+.chat-new-btn:hover { background: var(--accent); color: #fff; }
+.chat-thread-list {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.chat-thread {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 12px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--tx-1); text-decoration: none;
+  transition: border-color 0.12s, background 0.12s;
+}
+.chat-thread:hover { border-color: var(--accent); background: var(--bg-3); }
+.chat-thread.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.chat-thread-title { font-size: 13px; font-weight: 600; line-height: 1.4; }
+.chat-thread-meta, .chat-thread-preview { font-size: 11px; line-height: 1.4; }
+
+.chat-main {
+  background: var(--bg-0);
+  display: flex; flex-direction: column;
+}
+.chat-main-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 18px 22px 14px; border-bottom: 1px solid var(--line);
+  gap: 16px; flex-wrap: wrap;
+}
+.chat-title { margin: 0 0 4px; font-size: 18px; font-weight: 700; letter-spacing: -0.2px; }
+.chat-model-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chat-model-chip {
+  padding: 3px 9px;
+  background: var(--bg-2); border: 1px solid var(--line-2);
+  border-radius: 999px; font-size: 10px; letter-spacing: 0.8px;
+  color: var(--tx-2); font-weight: 600;
+}
+.chat-feed {
+  flex: 1; overflow-y: auto;
+  padding: 22px; display: flex; flex-direction: column; gap: 16px;
+}
+.chat-msg { display: flex; flex-direction: column; gap: 4px; max-width: 760px; }
+.chat-msg-user { align-self: flex-end; align-items: flex-end; }
+.chat-msg-user .chat-msg-body {
+  background: var(--accent); color: #fff;
+  padding: 10px 14px; border-radius: 14px 14px 4px 14px;
+  font-size: 14px; line-height: 1.6;
+}
+.chat-msg-ai .chat-msg-body {
+  background: var(--bg-1); border: 1px solid var(--line);
+  padding: 14px 16px; border-radius: 4px 14px 14px 14px;
+  font-size: 14px; line-height: 1.7; color: var(--tx-1);
+}
+.chat-msg-meta {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--tx-3);
+  letter-spacing: 0.5px;
+}
+.chat-sources {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  padding: 8px 0 0;
+}
+.chat-source-chip {
+  display: inline-flex; align-items: center;
+  padding: 3px 8px;
+  background: var(--bg-2); border: 1px solid var(--line-2);
+  border-radius: 4px;
+  font-size: 10px; color: var(--tx-2); letter-spacing: 0.5px;
+}
+.chat-source-chip:hover { border-color: var(--accent); color: var(--accent-2); }
+.chat-empty-note {
+  margin: 20px 0 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  line-height: 1.65;
+}
+
+.chat-suggest-bar {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 10px 22px; border-top: 1px solid var(--line);
+  background: var(--bg-1);
+}
+.chat-suggest-chip {
+  padding: 6px 12px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 11px; letter-spacing: 0.3px;
+  color: var(--tx-2); cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+.chat-suggest-chip:hover { border-color: var(--accent); color: var(--accent-2); }
+
+.chat-input-bar {
+  display: flex; gap: 8px;
+  padding: 14px 22px 20px;
+  background: var(--bg-1); border-top: 1px solid var(--line);
+}
+.chat-input {
+  flex: 1;
+  padding: 12px 14px;
+  background: var(--bg-2); color: var(--tx-1);
+  border: 1px solid var(--line-2); border-radius: var(--r-sm);
+  font-size: 13px;
+  outline: none;
+}
+.chat-input:focus { border-color: var(--accent); background: var(--bg-3); }
+.chat-input:disabled { opacity: 0.6; cursor: not-allowed; }
+.chat-send {
+  padding: 10px 20px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: var(--r-sm);
+  font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer;
+}
+.chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Stock deep page · AI VERDICT + tabs ─────────────────── */
+.dd-verdict-card {
+  display: grid;
+  grid-template-columns: auto 1fr 320px;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 24px;
+  margin: 20px auto 0;
+  background: linear-gradient(120deg, var(--bg-1), var(--bg-2));
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  max-width: 1120px;
+}
+.verdict-left { display: flex; align-items: center; justify-content: center; }
+.verdict-dial-wrap { position: relative; }
+.verdict-dial { display: block; filter: drop-shadow(0 0 14px var(--accent-glow)); }
+.verdict-dial-wrap.tone-up .verdict-dial { filter: drop-shadow(0 0 14px rgba(255,59,59,0.4)); }
+.verdict-dial-wrap.tone-dn .verdict-dial { filter: drop-shadow(0 0 14px rgba(27,217,124,0.4)); }
+.verdict-dial-wrap.tone-amber .verdict-dial { filter: drop-shadow(0 0 14px rgba(255,181,71,0.4)); }
+
+.verdict-mid { display: flex; flex-direction: column; gap: 6px; }
+.verdict-lbl {
+  font-size: 11px; letter-spacing: 1.5px; font-weight: 600;
+  color: var(--tx-3);
+}
+.verdict-action {
+  font-size: 32px; font-weight: 800;
+  letter-spacing: 1.5px; line-height: 1.1;
+  font-family: var(--font-mono);
+}
+.verdict-narrative { font-size: 14px; line-height: 1.7; color: var(--tx-1); margin-top: 4px; }
+.verdict-meta { margin-top: 6px; letter-spacing: 0.4px; }
+
+.verdict-right { padding-left: 6px; }
+.sentiment-bar-box {
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+}
+.sentiment-bar-head {
+  display: flex; justify-content: space-between;
+  font-size: 10px; letter-spacing: 0.8px; font-weight: 600;
+  color: var(--tx-3);
+  margin-bottom: 8px;
+}
+.sentiment-bar {
+  display: flex;
+  height: 10px;
+  background: var(--bg-3);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.sentiment-seg {
+  height: 100%;
+  position: relative;
+  transition: width 0.5s;
+}
+.sentiment-seg span {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-family: var(--font-mono); font-weight: 700;
+  color: rgba(255,255,255,0.85);
+}
+.sb-bull { background: linear-gradient(90deg, var(--up-soft), var(--up)); }
+.sb-neu  { background: var(--tx-4); }
+.sb-bear { background: linear-gradient(90deg, var(--dn), var(--dn-soft)); }
+.sentiment-counts { margin-top: 6px; letter-spacing: 0.4px; }
+
+/* Deep page tabs */
+.dd-tabs {
+  display: flex; flex-wrap: wrap; gap: 2px;
+  margin: 18px auto 0;
+  border-bottom: 1px solid var(--line);
+  max-width: 1120px;
+}
+.dd-tab {
+  padding: 10px 16px;
+  background: transparent; color: var(--tx-3);
+  border: none; border-bottom: 2px solid transparent;
+  font-size: 12px; letter-spacing: 0.5px; font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+.dd-tab:hover { color: var(--tx-1); }
+.dd-tab.active {
+  color: var(--accent-2);
+  border-bottom-color: var(--accent);
+}
+.dd-panel { display: none; padding: 14px 0 32px; }
+.dd-panel.active { display: block; }
+.dd-panel > section:first-child { margin-top: 16px; }
+
+.dd-stub { padding: 14px 0 32px; }
+.dd-stub-box {
+  max-width: 720px; margin: 14px auto;
+  padding: 28px 24px;
+  background: var(--bg-1); border: 1px dashed var(--line-2);
+  border-radius: var(--r);
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.dd-stub-icon { color: var(--accent); opacity: 0.6; }
+.dd-stub-title { font-size: 15px; font-weight: 600; color: var(--tx-1); }
+
+/* ── Mobile adjustments for v3 ───────────────────────────── */
+@media (max-width: 860px) {
+  .pfv2-wrap { padding: 14px; gap: 16px; }
+  .pfv2-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .pfv2-kpi-val { font-size: 20px; }
+  .risk-map-row { grid-template-columns: 1fr; gap: 4px; }
+  .risk-map-level { align-self: flex-start; }
+  .chat-shell { grid-template-columns: 1fr; }
+  .chat-sidebar { max-height: 200px; }
+  .weight-bar-wrap { width: 80px; }
+  .dd-verdict-card { grid-template-columns: auto 1fr; gap: 16px; padding: 16px; }
+  .verdict-right { grid-column: 1 / -1; padding-left: 0; }
+  .verdict-action { font-size: 24px; }
+  .dd-tabs { padding: 0 14px; }
 }
 """
 

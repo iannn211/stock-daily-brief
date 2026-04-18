@@ -27,15 +27,71 @@
   </div>
 </header>
 
-<section class="wrap">
-  <svg class="sparkline" viewBox="0 0 600 100" width="600" height="100" preserveAspectRatio="none"><polygon points="2.0 98 2.0 98.0 8.7 95.2 15.4 94.6 22.1 95.8 28.8 95.6 35.5 95.2 42.2 94.3 48.9 94.3 55.6 91.1 62.3 88.7 69.0 89.1 75.7 87.2 82.4 88.3 89.1 92.1 95.8 92.0 102.4 93.0 109.1 91.6 115.8 89.3 122.5 88.1 129.2 88.2 135.9 88.0 142.6 88.9 149.3 87.7 156.0 87.2 162.7 85.2 169.4 87.5 176.1 88.9 182.8 89.4 189.5 89.6 196.2 89.9 202.9 91.2 209.6 92.9 216.3 90.7 223.0 90.5 229.7 91.0 236.4 92.1 243.1 89.9 249.8 90.4 256.5 89.8 263.2 88.9 269.9 88.5 276.6 84.6 283.3 80.5 290.0 79.9 296.7 81.5 303.3 84.1 310.0 81.4 316.7 78.2 323.4 79.9 330.1 78.3 336.8 73.5 343.5 70.6 350.2 68.4 356.9 62.6 363.6 56.3 370.3 49.3 377.0 49.9 383.7 46.7 390.4 47.6 397.1 55.3 403.8 55.6 410.5 55.1 417.2 62.2 423.9 57.4 430.6 50.5 437.3 43.4 444.0 38.8 450.7 31.7 457.4 39.5 464.1 38.8 470.8 35.8 477.5 36.4 484.2 45.4 490.9 43.6 497.6 37.8 504.2 46.6 510.9 42.2 517.6 40.1 524.3 48.7 531.0 41.0 537.7 32.5 544.4 23.3 551.1 13.4 557.8 6.0 564.5 2.0 571.2 7.9 577.9 7.9 584.6 6.9 591.3 14.4 598.0 5.5 598.0 98" fill="var(--up)" opacity="0.12"/><path d="M 2.0 98.0 L 8.7 95.2 L 15.4 94.6 L 22.1 95.8 L 28.8 95.6 L 35.5 95.2 L 42.2 94.3 L 48.9 94.3 L 55.6 91.1 L 62.3 88.7 L 69.0 89.1 L 75.7 87.2 L 82.4 88.3 L 89.1 92.1 L 95.8 92.0 L 102.4 93.0 L 109.1 91.6 L 115.8 89.3 L 122.5 88.1 L 129.2 88.2 L 135.9 88.0 L 142.6 88.9 L 149.3 87.7 L 156.0 87.2 L 162.7 85.2 L 169.4 87.5 L 176.1 88.9 L 182.8 89.4 L 189.5 89.6 L 196.2 89.9 L 202.9 91.2 L 209.6 92.9 L 216.3 90.7 L 223.0 90.5 L 229.7 91.0 L 236.4 92.1 L 243.1 89.9 L 249.8 90.4 L 256.5 89.8 L 263.2 88.9 L 269.9 88.5 L 276.6 84.6 L 283.3 80.5 L 290.0 79.9 L 296.7 81.5 L 303.3 84.1 L 310.0 81.4 L 316.7 78.2 L 323.4 79.9 L 330.1 78.3 L 336.8 73.5 L 343.5 70.6 L 350.2 68.4 L 356.9 62.6 L 363.6 56.3 L 370.3 49.3 L 377.0 49.9 L 383.7 46.7 L 390.4 47.6 L 397.1 55.3 L 403.8 55.6 L 410.5 55.1 L 417.2 62.2 L 423.9 57.4 L 430.6 50.5 L 437.3 43.4 L 444.0 38.8 L 450.7 31.7 L 457.4 39.5 L 464.1 38.8 L 470.8 35.8 L 477.5 36.4 L 484.2 45.4 L 490.9 43.6 L 497.6 37.8 L 504.2 46.6 L 510.9 42.2 L 517.6 40.1 L 524.3 48.7 L 531.0 41.0 L 537.7 32.5 L 544.4 23.3 L 551.1 13.4 L 557.8 6.0 L 564.5 2.0 L 571.2 7.9 L 577.9 7.9 L 584.6 6.9 L 591.3 14.4 L 598.0 5.5" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
-</section>
 
-<section class="wrap dd-metrics">
-  <div class="dd-grid">
+    <section class="dd-verdict-card wrap">
+      <div class="verdict-left">
+        <div class="verdict-dial-wrap tone-dn">
+    <svg class="verdict-dial" viewBox="0 0 140 140" width="140" height="140">
+      <circle cx="70" cy="70" r="56" fill="none" stroke="var(--bg-3)" stroke-width="10"/>
+      <circle cx="70" cy="70" r="56" fill="none"
+              stroke="var(--dn)" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="115.4 351.9"
+              transform="rotate(-90 70 70)"/>
+      <text x="70" y="76" text-anchor="middle"
+            fill="var(--tx-1)" font-size="32" font-weight="700"
+            font-family="var(--font-mono)">1.6</text>
+      <text x="70" y="96" text-anchor="middle"
+            fill="var(--tx-3)" font-size="10" font-weight="600"
+            letter-spacing="1" font-family="var(--font-mono)">OUT OF 5</text>
+    </svg>
+    </div>
+      </div>
+      <div class="verdict-mid">
+        <div class="verdict-lbl mono">AI VERDICT · 綜合評等</div>
+        <div class="verdict-action dn">SELL</div>
+        <div class="verdict-narrative">52週位階 96%（歷史高檔），絕不追高</div>
+        <div class="verdict-meta muted small mono">
+          規則 · Gemini 2.5 · 52週 96% · 中性
+        </div>
+      </div>
+      <div class="verdict-right">
+        <div class="sentiment-bar-box">
+          <div class="sentiment-bar-head mono small">
+            <span>市場情緒 · SENTIMENT</span>
+            <span class="muted">0%</span>
+          </div>
+          <div class="sentiment-bar">
+            <div class="sentiment-seg sb-bull" style="width:0%"><span>多 0</span></div>
+            <div class="sentiment-seg sb-neu"  style="width:0%"><span>平 0</span></div>
+            <div class="sentiment-seg sb-bear" style="width:0%"><span>空 0</span></div>
+          </div>
+          <div class="sentiment-counts mono small muted">
+            看多 0% · 觀望 0% · 看空 0%
+          </div>
+        </div>
+      </div>
+    </section>
     
-  </div>
-  <div class="dd-rets">
+
+    <nav class="dd-tabs wrap">
+      <button class="dd-tab active" data-dd-tab="overview">概覽 · OVERVIEW</button>
+      <button class="dd-tab" data-dd-tab="ai">AI 觀點 · AI</button>
+      <button class="dd-tab" data-dd-tab="fin">財報 · FINANCIALS</button>
+      <button class="dd-tab" data-dd-tab="hold">股東 · HOLDERS</button>
+      <button class="dd-tab" data-dd-tab="news">新聞 · NEWS</button>
+    </nav>
+    
+
+<div class="dd-panel active" data-dd-panel="overview">
+  <section class="wrap">
+    <svg class="sparkline" viewBox="0 0 600 100" width="600" height="100" preserveAspectRatio="none"><polygon points="2.0 98 2.0 98.0 8.7 95.2 15.4 94.6 22.1 95.8 28.8 95.6 35.5 95.2 42.2 94.3 48.9 94.3 55.6 91.1 62.3 88.7 69.0 89.1 75.7 87.2 82.4 88.3 89.1 92.1 95.8 92.0 102.4 93.0 109.1 91.6 115.8 89.3 122.5 88.1 129.2 88.2 135.9 88.0 142.6 88.9 149.3 87.7 156.0 87.2 162.7 85.2 169.4 87.5 176.1 88.9 182.8 89.4 189.5 89.6 196.2 89.9 202.9 91.2 209.6 92.9 216.3 90.7 223.0 90.5 229.7 91.0 236.4 92.1 243.1 89.9 249.8 90.4 256.5 89.8 263.2 88.9 269.9 88.5 276.6 84.6 283.3 80.5 290.0 79.9 296.7 81.5 303.3 84.1 310.0 81.4 316.7 78.2 323.4 79.9 330.1 78.3 336.8 73.5 343.5 70.6 350.2 68.4 356.9 62.6 363.6 56.3 370.3 49.3 377.0 49.9 383.7 46.7 390.4 47.6 397.1 55.3 403.8 55.6 410.5 55.1 417.2 62.2 423.9 57.4 430.6 50.5 437.3 43.4 444.0 38.8 450.7 31.7 457.4 39.5 464.1 38.8 470.8 35.8 477.5 36.4 484.2 45.4 490.9 43.6 497.6 37.8 504.2 46.6 510.9 42.2 517.6 40.1 524.3 48.7 531.0 41.0 537.7 32.5 544.4 23.3 551.1 13.4 557.8 6.0 564.5 2.0 571.2 7.9 577.9 7.9 584.6 6.9 591.3 14.4 598.0 5.5 598.0 98" fill="var(--up)" opacity="0.12"/><path d="M 2.0 98.0 L 8.7 95.2 L 15.4 94.6 L 22.1 95.8 L 28.8 95.6 L 35.5 95.2 L 42.2 94.3 L 48.9 94.3 L 55.6 91.1 L 62.3 88.7 L 69.0 89.1 L 75.7 87.2 L 82.4 88.3 L 89.1 92.1 L 95.8 92.0 L 102.4 93.0 L 109.1 91.6 L 115.8 89.3 L 122.5 88.1 L 129.2 88.2 L 135.9 88.0 L 142.6 88.9 L 149.3 87.7 L 156.0 87.2 L 162.7 85.2 L 169.4 87.5 L 176.1 88.9 L 182.8 89.4 L 189.5 89.6 L 196.2 89.9 L 202.9 91.2 L 209.6 92.9 L 216.3 90.7 L 223.0 90.5 L 229.7 91.0 L 236.4 92.1 L 243.1 89.9 L 249.8 90.4 L 256.5 89.8 L 263.2 88.9 L 269.9 88.5 L 276.6 84.6 L 283.3 80.5 L 290.0 79.9 L 296.7 81.5 L 303.3 84.1 L 310.0 81.4 L 316.7 78.2 L 323.4 79.9 L 330.1 78.3 L 336.8 73.5 L 343.5 70.6 L 350.2 68.4 L 356.9 62.6 L 363.6 56.3 L 370.3 49.3 L 377.0 49.9 L 383.7 46.7 L 390.4 47.6 L 397.1 55.3 L 403.8 55.6 L 410.5 55.1 L 417.2 62.2 L 423.9 57.4 L 430.6 50.5 L 437.3 43.4 L 444.0 38.8 L 450.7 31.7 L 457.4 39.5 L 464.1 38.8 L 470.8 35.8 L 477.5 36.4 L 484.2 45.4 L 490.9 43.6 L 497.6 37.8 L 504.2 46.6 L 510.9 42.2 L 517.6 40.1 L 524.3 48.7 L 531.0 41.0 L 537.7 32.5 L 544.4 23.3 L 551.1 13.4 L 557.8 6.0 L 564.5 2.0 L 571.2 7.9 L 577.9 7.9 L 584.6 6.9 L 591.3 14.4 L 598.0 5.5" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  </section>
+
+  <section class="wrap dd-metrics">
+    <div class="dd-grid">
+      
+    </div>
+    <div class="dd-rets">
         <div class="dd-ret-cell">
           <div class="muted small">今日</div>
           <div class="mono tnum up">+7.93%</div>
@@ -56,18 +112,18 @@
           <div class="muted small">YTD</div>
           <div class="mono tnum up">+192.7%</div>
         </div></div>
-  <div class="dd-52w">
-    <div class="dd-52w-labels muted small mono">
-      <span>52w 低 136.00</span>
-      <span class="mono">目前 96% 位階</span>
-      <span>52w 高 1270.00</span>
+    <div class="dd-52w">
+      <div class="dd-52w-labels muted small mono">
+        <span>52w 低 136.00</span>
+        <span class="mono">目前 96% 位階</span>
+        <span>52w 高 1270.00</span>
+      </div>
+      <div class="dd-52w-bar"><div class="dd-52w-pos" style="left:96.03%"></div></div>
     </div>
-    <div class="dd-52w-bar"><div class="dd-52w-pos" style="left:96.03%"></div></div>
-  </div>
+    
+  </section>
+
   
-</section>
-
-
 <section class="wrap dd-rec-section">
   <div class="dd-rec-card tone-dn">
     <div class="dd-rec-head">
@@ -94,11 +150,58 @@
   </div>
 </section>
 
+</div>
+
+<div class="dd-panel" data-dd-panel="ai">
+  <section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股今日暫無 AI 個別觀點</div><div class="muted small">AI 會挑選當日優先分析的持股／機會清單中的票。</div></div></section>
+</div>
 
 
+    <section class="wrap dd-stub" data-dd-panel="fin">
+      <div class="dd-stub-box">
+        <div class="dd-stub-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="icon"><polyline points="3,17 9,11 13,14 21,6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17,6 21,6 21,10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="dd-stub-title">Financials · 財報專區（規劃中）</div>
+        <div class="muted small">季度營收 / 毛利率 / EPS / 法說會重點 — 需串 TWSE / 公開資訊觀測站資料源。</div>
+      </div>
+    </section>
+    
+
+    <section class="wrap dd-stub" data-dd-panel="hold">
+      <div class="dd-stub-box">
+        <div class="dd-stub-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="icon"><rect x="3" y="7" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 7 V5 a1 1 0 0 1 1 -1 h4 a1 1 0 0 1 1 1 V7" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="dd-stub-title">Holders · 股東結構（規劃中）</div>
+        <div class="muted small">大股東持股比例 / 法人買賣超 / 融資券餘額 — 需串券商 API。</div>
+      </div>
+    </section>
+    
+
+<div class="dd-panel" data-dd-panel="news">
+  <section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股近期無相關新聞</div><div class="muted small">Brief 中未偵測到此 ticker 的提及。</div></div></section>
+</div>
+
+<script>
+(function() {
+  const tabs = document.querySelectorAll('.dd-tab');
+  const panels = document.querySelectorAll('.dd-panel, .dd-stub[data-dd-panel]');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    const key = t.dataset.ddTab;
+    tabs.forEach(x => x.classList.toggle('active', x === t));
+    panels.forEach(p => {
+      const match = p.dataset.ddPanel === key;
+      if (p.classList.contains('dd-stub')) {
+        p.style.display = match ? '' : 'none';
+      } else {
+        p.classList.toggle('active', match);
+      }
+    });
+  }));
+  // Hide stubs initially (only overview active)
+  document.querySelectorAll('.dd-stub[data-dd-panel]').forEach(s => s.style.display = 'none');
+})();
+</script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 21:10 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 21:50 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>

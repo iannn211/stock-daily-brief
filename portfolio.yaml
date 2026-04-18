@@ -86,15 +86,33 @@ watchlist:
   - { symbol: "3017", name: "奇鋐",          market: "TW", pillar: "growth" }
 
 # Macro tickers (fetched for context, not tradable from here):
-#   ^TWII     台股加權
-#   ^GSPC     S&P 500 指數
-#   ^VIX      VIX 恐慌指數
-#   TWD=X     USD/TWD 匯率
+#   ^TWII      台股加權
+#   ^GSPC      S&P 500 指數
+#   ^IXIC      Nasdaq 指數
+#   ^SOX       費半指數 (PHLX Semiconductor)
+#   ^N225      日經 225
+#   ^HSI       香港恆生
+#   ^VIX       VIX 恐慌指數
+#   TWD=X      USD/TWD 匯率
+#   DX-Y.NYB   美元指數 DXY
+#   ^TNX       美國 10 年期公債殖利率
+#   GC=F       黃金期貨
+#   CL=F       西德州原油
+#   BTC-USD    比特幣
 macro_tickers:
   - "^TWII"
   - "^GSPC"
+  - "^IXIC"
+  - "^SOX"
+  - "^N225"
+  - "^HSI"
   - "^VIX"
   - "TWD=X"
+  - "DX-Y.NYB"
+  - "^TNX"
+  - "GC=F"
+  - "CL=F"
+  - "BTC-USD"
 
 # Simulator universe — 可以在 🧮 試算 tab 挑選的股票池。
 # 這些只抓最新價格 + 52 週高低（不追蹤 P&L），不會顯示在持股卡片上。

@@ -348,6 +348,23 @@ def main() -> int:
         "negative": [h for h in reversed(sorted_contrib) if h["day_contribution"] < 0][:3],
     }
 
+    # Weekly attribution — last 5 trading days of P&L (daily diffs on portfolio_series)
+    weekly_attribution: list[dict] = []
+    if len(portfolio_series) >= 2:
+        tail = portfolio_series[-6:]  # 6 points → 5 diffs
+        for i in range(1, len(tail)):
+            prev_v = tail[i - 1]["v"]
+            cur_v = tail[i]["v"]
+            pnl_d = cur_v - prev_v
+            pct_d = (pnl_d / prev_v * 100) if prev_v else 0
+            weekday_zh = "一二三四五六日"[datetime.strptime(tail[i]["d"], "%Y-%m-%d").weekday()]
+            weekly_attribution.append({
+                "date": tail[i]["d"],
+                "weekday": weekday_zh,
+                "pnl": round(pnl_d, 0),
+                "pct": round(pct_d, 2),
+            })
+
     # Alerts: stop-loss / take-profit / concentration / pillar imbalance
     concentration_alerts = []
     if total_value_incl_cash:
@@ -402,8 +419,17 @@ def main() -> int:
     macro = {
         "twii":   _macro("^TWII"),
         "spx":    _macro("^GSPC"),
+        "ndx":    _macro("^IXIC"),
+        "sox":    _macro("^SOX"),
+        "n225":   _macro("^N225"),
+        "hsi":    _macro("^HSI"),
         "vix":    _macro("^VIX"),
         "usdtwd": _macro("TWD=X"),
+        "dxy":    _macro("DX-Y.NYB"),
+        "us10y":  _macro("^TNX"),
+        "gold":   _macro("GC=F"),
+        "oil":    _macro("CL=F"),
+        "btc":    _macro("BTC-USD"),
     }
 
     # Simulator universe (light: price + 52w only, no history)
@@ -510,6 +536,7 @@ def main() -> int:
         "macro": macro,
         "holdings": holdings_out,
         "attribution": attribution,
+        "weekly_attribution": weekly_attribution,
         "alerts": alerts,
         "alert_count": alert_count,
         "watchlist": watchlist_out,
