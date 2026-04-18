@@ -1,0 +1,75 @@
+{
+  "fetched_at": "2026-04-18T16:31:41.960306+08:00",
+  "prices": {
+    "0050.TW": {
+      "close": 84.15,
+      "prev_close": 85.0,
+      "day_change": -0.85,
+      "day_change_pct": -1.0,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "0050.TW",
+      "symbol": "0050"
+    },
+    "2330.TW": {
+      "close": 2030.0,
+      "prev_close": 2085.0,
+      "day_change": -55.0,
+      "day_change_pct": -2.6379,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "2330.TW",
+      "symbol": "2330"
+    },
+    "VOO": {
+      "close": 652.78,
+      "prev_close": 644.86,
+      "day_change": 7.92,
+      "day_change_pct": 1.2282,
+      "currency": "USD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "VOO",
+      "symbol": "VOO"
+    },
+    "2303.TW": {
+      "close": 73.0,
+      "prev_close": 68.3,
+      "day_change": 4.7,
+      "day_change_pct": 6.8814,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "2303.TW",
+      "symbol": "2303"
+    },
+    "3081.TW": {
+      "close": 2600.0,
+      "prev_close": 2365.0,
+      "day_change": 235.0,
+      "day_change_pct": 9.9366,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "3081.TWO",
+      "symbol": "3081"
+    },
+    "3324.TW": {
+      "close": 1035.0,
+      "prev_close": 1045.0,
+      "day_change": -10.0,
+      "day_change_pct": -0.9569,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "3324.TWO",
+      "symbol": "3324"
+    },
+    "3017.TW": {
+      "close": 2400.0,
+      "prev_close": 2440.0,
+      "day_change": -40.0,
+      "day_change_pct": -1.6393,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "3017.TW",
+      "symbol": "3017"
+    }
+  }
+}

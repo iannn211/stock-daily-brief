@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parent
 BRIEFS_DIR = ROOT / "briefs"
 DOCS_DIR = ROOT / "docs"
 DOCS_BRIEFS_DIR = DOCS_DIR / "briefs"
+PORTFOLIO_JSON = ROOT / "portfolio.json"
 
 DATE_RE = re.compile(r"^# Daily Brief — (\d{4}-\d{2}-\d{2}) \(週(.)\)", re.MULTILINE)
 COUNT_RE = re.compile(r"抓到 (\d+) 則新聞")
@@ -99,6 +100,165 @@ PAGE_FOOT = """
 """
 
 
+# ---------------------------------------------------------------------------
+# Portfolio card
+# ---------------------------------------------------------------------------
+
+def _fmt_twd(n: float, sign: bool = False) -> str:
+    sign_ch = "+" if (sign and n > 0) else ("-" if n < 0 else "")
+    return f"{sign_ch}NT${abs(n):,.0f}"
+
+
+def _fmt_pct(n: float) -> str:
+    return f"{n:+.2f}%"
+
+
+def _cls(n: float) -> str:
+    """CSS class for red (negative) / green (positive) — Taiwan convention."""
+    if n > 0:
+        return "up"
+    if n < 0:
+        return "down"
+    return "flat"
+
+
+def render_portfolio_card() -> str:
+    if not PORTFOLIO_JSON.exists():
+        return ""
+    try:
+        pf = json.loads(PORTFOLIO_JSON.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+
+    s = pf.get("summary", {})
+    bench = pf.get("benchmark", {})
+    attr = pf.get("attribution", {})
+    alerts = pf.get("alerts", {})
+    holdings = pf.get("holdings", [])
+    watchlist = pf.get("watchlist", [])
+
+    as_of = pf.get("as_of", "")
+    try:
+        dt = datetime.fromisoformat(as_of)
+        as_of_str = dt.strftime("%Y-%m-%d %H:%M")
+    except Exception:
+        as_of_str = as_of
+
+    day_pnl = s.get("day_pnl_twd", 0)
+    day_pct = s.get("day_pnl_pct", 0)
+    total_pnl = s.get("total_pnl_twd", 0)
+    total_pct = s.get("total_pnl_pct", 0)
+    total_value = s.get("total_value_twd", 0)
+    alpha = s.get("alpha_vs_benchmark_pct", 0)
+    bench_pct = bench.get("day_change_pct", 0)
+    bench_sym = bench.get("symbol", "")
+
+    # Attribution chips
+    pos_chips = "".join(
+        f'<span class="chip up">{h["symbol"]} {_fmt_twd(h["day_contribution"], sign=True)}</span>'
+        for h in attr.get("positive", [])
+    ) or '<span class="chip muted">無</span>'
+    neg_chips = "".join(
+        f'<span class="chip down">{h["symbol"]} {_fmt_twd(h["day_contribution"], sign=True)}</span>'
+        for h in attr.get("negative", [])
+    ) or '<span class="chip muted">無</span>'
+
+    # Alerts
+    alerts_html = ""
+    if alerts.get("stop_loss"):
+        items = "".join(
+            f'<li><strong>{h["symbol"]} {h["name"]}</strong> '
+            f'現價 <span class="down">{h["price"]}</span> ≤ 停損價 {h["stop_loss"]}</li>'
+            for h in alerts["stop_loss"]
+        )
+        alerts_html += f'<div class="alert-box alert-stop"><div class="alert-title">🔴 停損警告</div><ul>{items}</ul></div>'
+    if alerts.get("take_profit"):
+        items = "".join(
+            f'<li><strong>{h["symbol"]} {h["name"]}</strong> '
+            f'現價 <span class="up">{h["price"]}</span> ≥ 停利目標 {h["take_profit"]}</li>'
+            for h in alerts["take_profit"]
+        )
+        alerts_html += f'<div class="alert-box alert-target"><div class="alert-title">🟢 停利訊號</div><ul>{items}</ul></div>'
+
+    # Holdings table
+    holding_rows = "".join(
+        f'<tr>'
+        f'<td><strong>{h["symbol"]}</strong> {html.escape(h["name"])}</td>'
+        f'<td class="num">{h["shares"]:,}</td>'
+        f'<td class="num">{h["cost_basis"]:.2f}</td>'
+        f'<td class="num">{h["price"]:.2f}</td>'
+        f'<td class="num {_cls(h["day_change_pct"])}">{_fmt_pct(h["day_change_pct"])}</td>'
+        f'<td class="num">{_fmt_twd(h["value"])}</td>'
+        f'<td class="num {_cls(h["pnl"])}">{_fmt_twd(h["pnl"], sign=True)}</td>'
+        f'<td class="num {_cls(h["pnl_pct"])}">{_fmt_pct(h["pnl_pct"])}</td>'
+        f'</tr>'
+        for h in holdings
+    )
+
+    # Watchlist row (compact)
+    watch_rows = "".join(
+        f'<tr>'
+        f'<td><strong>{w["symbol"]}</strong> {html.escape(w["name"])}</td>'
+        f'<td class="num">{w["price"]:.2f}</td>'
+        f'<td class="num {_cls(w["day_change_pct"])}">{_fmt_pct(w["day_change_pct"])}</td>'
+        f'<td class="num muted">{w["currency"]}</td>'
+        f'</tr>'
+        for w in watchlist
+    )
+
+    return f'''
+<section class="pf-card wrap">
+  <div class="pf-head">
+    <h2>📊 投資組合</h2>
+    <div class="pf-asof">{html.escape(as_of_str)}</div>
+  </div>
+
+  <div class="pf-metrics">
+    <div class="pf-metric">
+      <div class="pf-label">總市值</div>
+      <div class="pf-val">{_fmt_twd(total_value)}</div>
+    </div>
+    <div class="pf-metric">
+      <div class="pf-label">今日損益</div>
+      <div class="pf-val {_cls(day_pnl)}">{_fmt_twd(day_pnl, sign=True)} <span class="pf-sub">({_fmt_pct(day_pct)})</span></div>
+    </div>
+    <div class="pf-metric">
+      <div class="pf-label">總損益</div>
+      <div class="pf-val {_cls(total_pnl)}">{_fmt_twd(total_pnl, sign=True)} <span class="pf-sub">({_fmt_pct(total_pct)})</span></div>
+    </div>
+  </div>
+
+  <div class="pf-alpha">
+    vs <strong>{bench_sym}</strong> <span class="{_cls(bench_pct)}">({_fmt_pct(bench_pct)})</span>
+    → alpha <span class="{_cls(alpha)}"><strong>{_fmt_pct(alpha)}</strong></span>
+  </div>
+
+  <div class="pf-attr">
+    <div class="pf-attr-row"><span class="pf-attr-lbl">正貢獻</span>{pos_chips}</div>
+    <div class="pf-attr-row"><span class="pf-attr-lbl">負貢獻</span>{neg_chips}</div>
+  </div>
+
+  {alerts_html}
+
+  <details class="pf-details">
+    <summary>持股明細 ({len(holdings)})</summary>
+    <table>
+      <thead><tr><th>標的</th><th>股數</th><th>成本</th><th>現價</th><th>今日</th><th>市值</th><th>損益</th><th>%</th></tr></thead>
+      <tbody>{holding_rows}</tbody>
+    </table>
+  </details>
+
+  <details class="pf-details">
+    <summary>追蹤清單 ({len(watchlist)})</summary>
+    <table>
+      <thead><tr><th>標的</th><th>現價</th><th>今日</th><th>幣別</th></tr></thead>
+      <tbody>{watch_rows}</tbody>
+    </table>
+  </details>
+</section>
+'''
+
+
 def render_index(briefs: list[dict]) -> str:
     if briefs:
         latest = briefs[0]["date"]
@@ -128,6 +288,8 @@ def render_index(briefs: list[dict]) -> str:
         </a>''')
     cards_html = "\n".join(cards) if cards else '<p class="empty">還沒有 brief，等第一次排程跑完就會出現。</p>'
 
+    portfolio_html = render_portfolio_card()
+
     body = f'''
 <header class="site-header">
   <div class="wrap">
@@ -135,6 +297,7 @@ def render_index(briefs: list[dict]) -> str:
     <p class="subtitle">{html.escape(subtitle)}</p>
   </div>
 </header>
+{portfolio_html}
 <div class="search-wrap wrap">
   <input type="search" id="search" placeholder="🔍 搜尋日期、產業標籤..." autocomplete="off">
 </div>
@@ -400,6 +563,121 @@ footer {
 }
 footer a { color: #8a95a5; }
 
+/* ---- portfolio card ---- */
+.pf-card {
+  background: #141920;
+  border: 1px solid #1f2530;
+  border-radius: 14px;
+  padding: 22px 22px 16px;
+  margin: 20px auto;
+}
+.pf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+.pf-head h2 { margin: 0; font-size: 18px; letter-spacing: 0.3px; }
+.pf-asof { color: #8a95a5; font-size: 12px; }
+.pf-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1f2530;
+}
+.pf-metric { }
+.pf-label { color: #8a95a5; font-size: 12px; margin-bottom: 4px; }
+.pf-val { font-size: 20px; font-weight: 600; letter-spacing: 0.3px; }
+.pf-sub { font-size: 13px; font-weight: 500; color: inherit; opacity: 0.85; }
+
+/* Taiwan convention: up = red 🔴 / down = green 🟢 */
+.up   { color: #ff5b5b; }
+.down { color: #2ab687; }
+.flat { color: #b4bcc7; }
+
+.pf-alpha {
+  font-size: 14px;
+  color: #b4bcc7;
+  margin: 6px 0 16px;
+  padding: 10px 12px;
+  background: #0f141a;
+  border-radius: 8px;
+}
+
+.pf-attr { margin-bottom: 14px; }
+.pf-attr-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.pf-attr-lbl {
+  color: #8a95a5;
+  min-width: 60px;
+  font-size: 12px;
+}
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid;
+}
+.chip.up    { color: #ff8585; background: #2a1414; border-color: #4a2020; }
+.chip.down  { color: #40c99d; background: #0f2620; border-color: #20443a; }
+.chip.muted { color: #5a6374; background: #141920; border-color: #222a36; }
+
+.alert-box {
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border: 1px solid;
+}
+.alert-stop   { background: #2a1414; border-color: #5a2020; }
+.alert-target { background: #0f2620; border-color: #20443a; }
+.alert-title  { font-weight: 600; margin-bottom: 6px; font-size: 13px; }
+.alert-box ul { margin: 4px 0 0; padding-left: 20px; font-size: 13px; }
+.alert-box li { margin: 4px 0; }
+
+.pf-details {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #1f2530;
+}
+.pf-details summary {
+  cursor: pointer;
+  color: #9fd8c1;
+  font-size: 13px;
+  padding: 4px 0;
+  user-select: none;
+}
+.pf-details summary:hover { color: #2ab687; }
+.pf-details table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+.pf-details th {
+  text-align: left;
+  padding: 8px 6px;
+  color: #8a95a5;
+  border-bottom: 1px solid #1f2530;
+  font-weight: 500;
+  font-size: 12px;
+}
+.pf-details td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #1a1f27;
+}
+.pf-details td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.pf-details td.muted { color: #5a6374; font-size: 11px; }
+
 /* ---- mobile ---- */
 @media (max-width: 540px) {
   .site-header { padding: 24px 0 20px; }
@@ -408,6 +686,10 @@ footer a { color: #8a95a5; }
   .brief-body { font-size: 14px; padding: 20px 16px 50px; }
   .brief-body h2 { font-size: 17px; }
   .btn-primary, .btn-secondary { width: 100%; text-align: center; justify-content: center; }
+  .pf-card { padding: 16px 14px 12px; margin: 14px 12px; border-radius: 12px; }
+  .pf-val { font-size: 17px; }
+  .pf-details table { font-size: 11px; }
+  .pf-details th, .pf-details td { padding: 6px 3px; }
 }
 """
 

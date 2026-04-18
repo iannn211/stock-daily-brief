@@ -1,0 +1,50 @@
+# Your portfolio — edit this file to add/remove/adjust holdings.
+# Shares and cost basis come from your 國泰證券 帳務 screenshot (2026-04-18).
+#
+# Fields per holding:
+#   symbol        TWSE ticker (numbers only, e.g. "2330") or US ticker ("VOO")
+#   name          Display name
+#   shares        Number of shares held
+#   cost_basis    Average cost per share (same currency as market data)
+#   market        "TW" or "US"
+#   stop_loss     (optional) alert if price falls below this
+#   take_profit   (optional) alert if price rises above this
+#
+# Benchmark: 0050 is used as the TW portfolio benchmark (台版 SPY).
+# Alpha = portfolio daily return − benchmark daily return.
+
+benchmark_tw: "0050"
+benchmark_us: "VOO"
+
+holdings:
+  - symbol: "0050"
+    name: "元大台灣50"
+    shares: 1200
+    cost_basis: 71.76
+    market: "TW"
+    # 0050 is itself the benchmark — no stop/target
+  - symbol: "2330"
+    name: "台積電"
+    shares: 20
+    cost_basis: 1932.5
+    market: "TW"
+    stop_loss: 1800     # TSMC breaking 1800 = law of facts gone
+    take_profit: 2500   # outer-resistance zone per 外資 target range
+
+# Watchlist: stocks you track but don't own yet. Priced daily, but no P&L.
+watchlist:
+  - symbol: "VOO"
+    name: "S&P 500 ETF"
+    market: "US"
+  - symbol: "2303"
+    name: "聯電"
+    market: "TW"
+  - symbol: "3081"
+    name: "聯亞"
+    market: "TW"
+  - symbol: "3324"
+    name: "雙鴻"
+    market: "TW"
+  - symbol: "3017"
+    name: "奇鋐"
+    market: "TW"
