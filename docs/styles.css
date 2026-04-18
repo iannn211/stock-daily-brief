@@ -452,19 +452,154 @@ footer { padding: 24px 20px 36px; text-align: center; color: var(--tx-4); font-s
 footer a { color: var(--tx-3); }
 
 /* ────────────────────────────────────────────────────────────
-   CLEAN TOP LAYOUT — main index.html (focus on clarity)
+   APP SHELL — Gushi-Terminal style: left icon nav + top bar + status
    ──────────────────────────────────────────────────────────── */
-.top-header {
-  padding: 20px 24px 0;
-  max-width: 1200px;
+.shell {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  min-height: 100vh;
+}
+.sidenav {
+  position: sticky; top: 0;
+  height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 14px 0 16px;
+  gap: 4px;
+  background: var(--bg-1);
+  border-right: 1px solid var(--line);
+  z-index: 40;
+}
+.sidenav-logo {
+  font-size: 22px;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-soft), transparent);
+  border: 1px solid var(--accent-soft);
+}
+.sn-btn {
+  position: relative;
+  width: 48px; height: 52px;
+  background: transparent; border: none; border-radius: 10px;
+  color: var(--tx-3); font-family: inherit; cursor: pointer;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  transition: all 0.15s;
+}
+.sn-icon { font-size: 18px; line-height: 1; }
+.sn-label {
+  font-size: 9px; font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.4px;
+  opacity: 0.6;
+}
+.sn-btn:hover { background: var(--bg-2); color: var(--tx-1); }
+.sn-btn.active {
+  background: var(--accent-soft); color: var(--accent-2);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.sn-btn.active .sn-label { opacity: 1; }
+.sn-badge {
+  position: absolute; top: 4px; right: 4px;
+  min-width: 16px; padding: 1px 4px;
+  font-size: 9px; font-weight: 700;
+  background: var(--accent); color: #fff;
+  border-radius: 8px; font-family: var(--font-mono);
+}
+
+.shell-main { display: flex; flex-direction: column; min-width: 0; min-height: 100vh; }
+
+.top-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 24px;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: saturate(180%) blur(10px);
+}
+.top-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 0; }
+.top-title {
+  margin: 0; font-size: 13px; font-weight: 700;
+  letter-spacing: 0.6px; font-family: var(--font-mono);
+}
+.top-date {
+  font-size: 10px; color: var(--tx-3);
+  letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 2px 8px; background: var(--bg-3); border-radius: 4px;
+}
+.top-search-wrap { max-width: 420px; margin: 0 auto; width: 100%; }
+
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; padding: 8px 24px;
+  background: var(--bg-1);
+  border-top: 1px solid var(--line);
+  font-size: 10px; color: var(--tx-3);
+  letter-spacing: 0.4px;
+  position: sticky; bottom: 0; z-index: 20;
+  margin-top: auto;
+}
+.sb-left, .sb-right { display: flex; align-items: center; gap: 8px; }
+.sb-lbl { text-transform: uppercase; color: var(--tx-4); font-weight: 700; }
+.sb-sep { color: var(--tx-4); }
+
+.main-panel {
+  flex: 1;
+  padding: 22px 28px 40px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
 }
-.top-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.top-title { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.2px; }
-.top-date {
-  font-size: 11px; color: var(--tx-3);
-  letter-spacing: 0.5px; text-transform: uppercase;
+
+.main-panel > .tab-panel { display: none; }
+.main-panel > .tab-panel.active { display: block; }
+
+.portfolio-detail {
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
 }
+.portfolio-detail .desk-sidebar { position: static; max-height: none; padding: 0; }
+.portfolio-detail .stat-block { padding-bottom: 10px; margin-bottom: 0; }
+
+/* Mobile: sidenav becomes bottom bar */
+@media (max-width: 720px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidenav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0; top: auto;
+    height: auto; width: 100%;
+    flex-direction: row; justify-content: space-around;
+    padding: 8px 4px max(8px, env(safe-area-inset-bottom, 8px));
+    border-right: none; border-top: 1px solid var(--line);
+    gap: 0;
+  }
+  .sidenav-logo { display: none; }
+  .sn-btn { height: 44px; width: auto; flex: 1; }
+  .sn-btn.active { box-shadow: inset 0 3px 0 var(--accent); }
+  .sn-badge { top: 0; right: 0; }
+  .top-bar { grid-template-columns: 1fr; gap: 10px; padding: 10px 14px; }
+  .top-brand { justify-content: space-between; }
+  .summary-strip { flex-wrap: wrap; }
+  .ss-cell { flex: 1; min-width: 0; padding: 6px 10px; }
+  .ss-val { font-size: 12px; }
+  .main-panel { padding: 14px 14px 80px; }
+  .status-bar { display: none; }
+}
+
+/* Legacy class stubs — hide the old top-header and main-tabs so nothing double-renders */
+.top-header, .main-tabs { display: none; }
+
 
 .summary-strip {
   display: grid;

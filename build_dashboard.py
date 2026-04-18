@@ -2304,111 +2304,124 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     alert_count = pf.get("alert_count", 0)
 
     body = f'''
-<header class="top-header wrap">
-  <div class="top-brand">
-    <h1 class="top-title">📈 Stock AI Desk</h1>
-    <span class="top-date mono">{date_str} · 週{weekday_zh}</span>
-    <span class="live-dot accent"></span>
-  </div>
+<div class="shell">
+  <aside class="sidenav" aria-label="主導航">
+    <div class="sidenav-logo">📈</div>
+    <button class="sn-btn active" data-tab="ai" title="AI 建議">
+      <span class="sn-icon">🤖</span><span class="sn-label">AI</span>
+    </button>
+    <button class="sn-btn" data-tab="radar" title="機會雷達">
+      <span class="sn-icon">📡</span><span class="sn-label">RADAR</span>
+    </button>
+    <button class="sn-btn" data-tab="sim" title="試算">
+      <span class="sn-icon">🧮</span><span class="sn-label">SIM</span>
+    </button>
+    <button class="sn-btn" data-tab="portfolio" title="組合">
+      <span class="sn-icon">📊</span><span class="sn-label">PF</span>
+    </button>
+    <button class="sn-btn" data-tab="positions" title="持股">
+      <span class="sn-icon">💼</span><span class="sn-label">HOLD</span>
+    </button>
+    <button class="sn-btn" data-tab="briefs" title="Brief">
+      <span class="sn-icon">📰</span><span class="sn-label">BRIEF</span>
+      <span class="sn-badge">{len(briefs)}</span>
+    </button>
+  </aside>
 
-  <div class="top-search-wrap">
-    <span class="top-search-icon">🔍</span>
-    <input type="text" id="top-search" class="top-search-input" placeholder="搜尋股票代號或名稱（2330、台積電、NVDA…）" autocomplete="off">
-    <div class="top-search-results" id="top-search-results"></div>
-  </div>
+  <div class="shell-main">
+    <header class="top-bar">
+      <div class="top-brand">
+        <h1 class="top-title">STOCK AI DESK</h1>
+        <span class="top-date mono">{date_str} · 週{weekday_zh}</span>
+        <span class="live-dot accent"></span>
+      </div>
+      <div class="top-search-wrap">
+        <span class="top-search-icon">🔍</span>
+        <input type="text" id="top-search" class="top-search-input" placeholder="搜尋 2330 · 台積電 · NVDA · 光通訊 …" autocomplete="off">
+        <div class="top-search-results" id="top-search-results"></div>
+      </div>
+      <div class="summary-strip">
+        <div class="ss-cell ss-main">
+          <span class="ss-lbl">組合</span>
+          <span class="ss-val mono tnum">{_fmt_twd(total_value)}</span>
+        </div>
+        <div class="ss-cell">
+          <span class="ss-lbl">今日</span>
+          <span class="ss-val mono tnum {_cls(day_pnl)}">{_fmt_pct(day_pct)}</span>
+        </div>
+        <div class="ss-cell">
+          <span class="ss-lbl">α</span>
+          <span class="ss-val mono tnum {_cls(alpha)}">{_fmt_pct(alpha)}</span>
+        </div>
+        {f'<div class="ss-cell ss-alert"><span class="ss-lbl">⚠</span><span class="ss-val mono tnum amber">{alert_count}</span></div>' if alert_count > 0 else ''}
+      </div>
+    </header>
 
-  <div class="summary-strip">
-    <div class="ss-cell ss-main">
-      <span class="ss-lbl">組合市值</span>
-      <span class="ss-val mono tnum">{_fmt_twd(total_value)}</span>
-    </div>
-    <div class="ss-cell">
-      <span class="ss-lbl">今日</span>
-      <span class="ss-val mono tnum {_cls(day_pnl)}">{_fmt_twd(day_pnl, sign=True)} ({_fmt_pct(day_pct)})</span>
-    </div>
-    <div class="ss-cell">
-      <span class="ss-lbl">總損益</span>
-      <span class="ss-val mono tnum {_cls(total_pnl)}">{_fmt_twd(total_pnl, sign=True)} ({_fmt_pct(total_pct)})</span>
-    </div>
-    <div class="ss-cell">
-      <span class="ss-lbl">α vs {html.escape(bench.get("symbol", "—"))}</span>
-      <span class="ss-val mono tnum {_cls(alpha)}">{_fmt_pct(alpha)}</span>
-    </div>
-    {f'<div class="ss-cell ss-alert"><span class="ss-lbl">⚠ 警報</span><span class="ss-val mono tnum amber">{alert_count} 個</span></div>' if alert_count > 0 else ''}
-  </div>
-</header>
+    <main class="main-panel">
+      <div class="tab-panel active" data-panel="ai">
+        {hero}
+        <div class="mood-cat-row">
+          {mood_panel}
+          {catalyst_panel}
+        </div>
+        {ai_tab}
+      </div>
+      <div class="tab-panel" data-panel="radar">
+        {radar_tab}
+      </div>
+      <div class="tab-panel" data-panel="sim">
+        {sim_html}
+      </div>
+      <div class="tab-panel" data-panel="portfolio">
+        {macro_strip}
+        {chart}
+        <section class="portfolio-detail">
+          {sidebar}
+        </section>
+      </div>
+      <div class="tab-panel" data-panel="positions">
+        {positions}
+      </div>
+      <div class="tab-panel" data-panel="briefs">
+        {briefs_table}
+      </div>
+    </main>
 
-<nav class="main-tabs wrap">
-  <button class="mt-btn active" data-tab="ai">
-    <span class="mt-icon">🤖</span>
-    <span class="mt-label">今日 AI 建議</span>
-  </button>
-  <button class="mt-btn" data-tab="radar">
-    <span class="mt-icon">📡</span>
-    <span class="mt-label">機會雷達</span>
-  </button>
-  <button class="mt-btn" data-tab="sim">
-    <span class="mt-icon">🧮</span>
-    <span class="mt-label">試算看看</span>
-  </button>
-  <button class="mt-btn" data-tab="portfolio">
-    <span class="mt-icon">📊</span>
-    <span class="mt-label">組合 & 風險</span>
-  </button>
-  <button class="mt-btn" data-tab="positions">
-    <span class="mt-icon">💼</span>
-    <span class="mt-label">持股明細</span>
-  </button>
-  <button class="mt-btn" data-tab="briefs">
-    <span class="mt-icon">📰</span>
-    <span class="mt-label">歷史 Brief</span>
-    <span class="mt-count">{len(briefs)}</span>
-  </button>
-</nav>
-
-<main class="main-panel wrap">
-  <div class="tab-panel active" data-panel="ai">
-    {hero}
-    <div class="mood-cat-row">
-      {mood_panel}
-      {catalyst_panel}
-    </div>
-    {ai_tab}
+    <footer class="status-bar">
+      <div class="sb-left mono">
+        <span class="live-dot accent"></span>
+        <span class="sb-lbl">LIVE</span>
+        <span class="sb-sep">·</span>
+        <span>AS OF {html.escape(as_of_str)}</span>
+        <span class="sb-sep">·</span>
+        <span>{len(pf.get("simulator_universe", []))} TICKERS</span>
+        <span class="sb-sep">·</span>
+        <span>{len(briefs)} BRIEFS</span>
+      </div>
+      <div class="sb-right mono">
+        <span class="sb-lbl">YTD</span>
+        <span class="{_cls(s.get('ret_1y_pct'))}">{_fmt_pct(s.get('ret_1y_pct'), 1)}</span>
+        <span class="sb-sep">·</span>
+        <span class="sb-lbl">VOL</span>
+        <span>{pf.get("risk", {}).get("volatility_annualized_pct", 0):.1f}%</span>
+      </div>
+    </footer>
   </div>
-  <div class="tab-panel" data-panel="radar">
-    {radar_tab}
-  </div>
-  <div class="tab-panel" data-panel="sim">
-    {sim_html}
-  </div>
-  <div class="tab-panel" data-panel="portfolio">
-    {macro_strip}
-    {chart}
-    <section class="portfolio-detail">
-      {sidebar}
-    </section>
-  </div>
-  <div class="tab-panel" data-panel="positions">
-    {positions}
-  </div>
-  <div class="tab-panel" data-panel="briefs">
-    {briefs_table}
-  </div>
-</main>
+</div>
 
 <script>
-// Tab switching with URL hash persistence
+// Tab switching with URL hash persistence (sidenav-based)
 function setTab(t) {{
-  document.querySelectorAll('.mt-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  document.querySelectorAll('.sn-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === t));
   if (location.hash !== '#' + t) history.replaceState(null, '', '#' + t);
 }}
-document.querySelectorAll('.mt-btn').forEach(btn => {{
+document.querySelectorAll('.sn-btn').forEach(btn => {{
   btn.addEventListener('click', () => setTab(btn.dataset.tab));
 }});
 // Restore from hash (only if matches a tab)
 const initTab = (location.hash || '').replace('#', '');
-if (initTab && document.querySelector(`.mt-btn[data-tab="${{initTab}}"]`)) setTab(initTab);
+if (initTab && document.querySelector(`.sn-btn[data-tab="${{initTab}}"]`)) setTab(initTab);
 
 // --- Search: autocomplete any stock, navigate to /holdings/<sym>.html ---
 (function() {{
@@ -3229,19 +3242,154 @@ footer { padding: 24px 20px 36px; text-align: center; color: var(--tx-4); font-s
 footer a { color: var(--tx-3); }
 
 /* ────────────────────────────────────────────────────────────
-   CLEAN TOP LAYOUT — main index.html (focus on clarity)
+   APP SHELL — Gushi-Terminal style: left icon nav + top bar + status
    ──────────────────────────────────────────────────────────── */
-.top-header {
-  padding: 20px 24px 0;
-  max-width: 1200px;
+.shell {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  min-height: 100vh;
+}
+.sidenav {
+  position: sticky; top: 0;
+  height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 14px 0 16px;
+  gap: 4px;
+  background: var(--bg-1);
+  border-right: 1px solid var(--line);
+  z-index: 40;
+}
+.sidenav-logo {
+  font-size: 22px;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-soft), transparent);
+  border: 1px solid var(--accent-soft);
+}
+.sn-btn {
+  position: relative;
+  width: 48px; height: 52px;
+  background: transparent; border: none; border-radius: 10px;
+  color: var(--tx-3); font-family: inherit; cursor: pointer;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  transition: all 0.15s;
+}
+.sn-icon { font-size: 18px; line-height: 1; }
+.sn-label {
+  font-size: 9px; font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.4px;
+  opacity: 0.6;
+}
+.sn-btn:hover { background: var(--bg-2); color: var(--tx-1); }
+.sn-btn.active {
+  background: var(--accent-soft); color: var(--accent-2);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.sn-btn.active .sn-label { opacity: 1; }
+.sn-badge {
+  position: absolute; top: 4px; right: 4px;
+  min-width: 16px; padding: 1px 4px;
+  font-size: 9px; font-weight: 700;
+  background: var(--accent); color: #fff;
+  border-radius: 8px; font-family: var(--font-mono);
+}
+
+.shell-main { display: flex; flex-direction: column; min-width: 0; min-height: 100vh; }
+
+.top-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 24px;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: saturate(180%) blur(10px);
+}
+.top-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 0; }
+.top-title {
+  margin: 0; font-size: 13px; font-weight: 700;
+  letter-spacing: 0.6px; font-family: var(--font-mono);
+}
+.top-date {
+  font-size: 10px; color: var(--tx-3);
+  letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 2px 8px; background: var(--bg-3); border-radius: 4px;
+}
+.top-search-wrap { max-width: 420px; margin: 0 auto; width: 100%; }
+
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; padding: 8px 24px;
+  background: var(--bg-1);
+  border-top: 1px solid var(--line);
+  font-size: 10px; color: var(--tx-3);
+  letter-spacing: 0.4px;
+  position: sticky; bottom: 0; z-index: 20;
+  margin-top: auto;
+}
+.sb-left, .sb-right { display: flex; align-items: center; gap: 8px; }
+.sb-lbl { text-transform: uppercase; color: var(--tx-4); font-weight: 700; }
+.sb-sep { color: var(--tx-4); }
+
+.main-panel {
+  flex: 1;
+  padding: 22px 28px 40px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
 }
-.top-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.top-title { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.2px; }
-.top-date {
-  font-size: 11px; color: var(--tx-3);
-  letter-spacing: 0.5px; text-transform: uppercase;
+
+.main-panel > .tab-panel { display: none; }
+.main-panel > .tab-panel.active { display: block; }
+
+.portfolio-detail {
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
 }
+.portfolio-detail .desk-sidebar { position: static; max-height: none; padding: 0; }
+.portfolio-detail .stat-block { padding-bottom: 10px; margin-bottom: 0; }
+
+/* Mobile: sidenav becomes bottom bar */
+@media (max-width: 720px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidenav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0; top: auto;
+    height: auto; width: 100%;
+    flex-direction: row; justify-content: space-around;
+    padding: 8px 4px max(8px, env(safe-area-inset-bottom, 8px));
+    border-right: none; border-top: 1px solid var(--line);
+    gap: 0;
+  }
+  .sidenav-logo { display: none; }
+  .sn-btn { height: 44px; width: auto; flex: 1; }
+  .sn-btn.active { box-shadow: inset 0 3px 0 var(--accent); }
+  .sn-badge { top: 0; right: 0; }
+  .top-bar { grid-template-columns: 1fr; gap: 10px; padding: 10px 14px; }
+  .top-brand { justify-content: space-between; }
+  .summary-strip { flex-wrap: wrap; }
+  .ss-cell { flex: 1; min-width: 0; padding: 6px 10px; }
+  .ss-val { font-size: 12px; }
+  .main-panel { padding: 14px 14px 80px; }
+  .status-bar { display: none; }
+}
+
+/* Legacy class stubs — hide the old top-header and main-tabs so nothing double-renders */
+.top-header, .main-tabs { display: none; }
+
 
 .summary-strip {
   display: grid;

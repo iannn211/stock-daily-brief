@@ -9,71 +9,62 @@
 </head>
 <body>
 
-<header class="top-header wrap">
-  <div class="top-brand">
-    <h1 class="top-title">📈 Stock AI Desk</h1>
-    <span class="top-date mono">2026-04-18 · 週六</span>
-    <span class="live-dot accent"></span>
-  </div>
+<div class="shell">
+  <aside class="sidenav" aria-label="主導航">
+    <div class="sidenav-logo">📈</div>
+    <button class="sn-btn active" data-tab="ai" title="AI 建議">
+      <span class="sn-icon">🤖</span><span class="sn-label">AI</span>
+    </button>
+    <button class="sn-btn" data-tab="radar" title="機會雷達">
+      <span class="sn-icon">📡</span><span class="sn-label">RADAR</span>
+    </button>
+    <button class="sn-btn" data-tab="sim" title="試算">
+      <span class="sn-icon">🧮</span><span class="sn-label">SIM</span>
+    </button>
+    <button class="sn-btn" data-tab="portfolio" title="組合">
+      <span class="sn-icon">📊</span><span class="sn-label">PF</span>
+    </button>
+    <button class="sn-btn" data-tab="positions" title="持股">
+      <span class="sn-icon">💼</span><span class="sn-label">HOLD</span>
+    </button>
+    <button class="sn-btn" data-tab="briefs" title="Brief">
+      <span class="sn-icon">📰</span><span class="sn-label">BRIEF</span>
+      <span class="sn-badge">1</span>
+    </button>
+  </aside>
 
-  <div class="top-search-wrap">
-    <span class="top-search-icon">🔍</span>
-    <input type="text" id="top-search" class="top-search-input" placeholder="搜尋股票代號或名稱（2330、台積電、NVDA…）" autocomplete="off">
-    <div class="top-search-results" id="top-search-results"></div>
-  </div>
+  <div class="shell-main">
+    <header class="top-bar">
+      <div class="top-brand">
+        <h1 class="top-title">STOCK AI DESK</h1>
+        <span class="top-date mono">2026-04-18 · 週六</span>
+        <span class="live-dot accent"></span>
+      </div>
+      <div class="top-search-wrap">
+        <span class="top-search-icon">🔍</span>
+        <input type="text" id="top-search" class="top-search-input" placeholder="搜尋 2330 · 台積電 · NVDA · 光通訊 …" autocomplete="off">
+        <div class="top-search-results" id="top-search-results"></div>
+      </div>
+      <div class="summary-strip">
+        <div class="ss-cell ss-main">
+          <span class="ss-lbl">組合</span>
+          <span class="ss-val mono tnum">NT$141,580</span>
+        </div>
+        <div class="ss-cell">
+          <span class="ss-lbl">今日</span>
+          <span class="ss-val mono tnum dn">-1.48%</span>
+        </div>
+        <div class="ss-cell">
+          <span class="ss-lbl">α</span>
+          <span class="ss-val mono tnum dn">-0.48%</span>
+        </div>
+        
+      </div>
+    </header>
 
-  <div class="summary-strip">
-    <div class="ss-cell ss-main">
-      <span class="ss-lbl">組合市值</span>
-      <span class="ss-val mono tnum">NT$141,580</span>
-    </div>
-    <div class="ss-cell">
-      <span class="ss-lbl">今日</span>
-      <span class="ss-val mono tnum dn">-NT$2,120 (-1.48%)</span>
-    </div>
-    <div class="ss-cell">
-      <span class="ss-lbl">總損益</span>
-      <span class="ss-val mono tnum up">+NT$16,818 (+13.48%)</span>
-    </div>
-    <div class="ss-cell">
-      <span class="ss-lbl">α vs 0050</span>
-      <span class="ss-val mono tnum dn">-0.48%</span>
-    </div>
-    
-  </div>
-</header>
-
-<nav class="main-tabs wrap">
-  <button class="mt-btn active" data-tab="ai">
-    <span class="mt-icon">🤖</span>
-    <span class="mt-label">今日 AI 建議</span>
-  </button>
-  <button class="mt-btn" data-tab="radar">
-    <span class="mt-icon">📡</span>
-    <span class="mt-label">機會雷達</span>
-  </button>
-  <button class="mt-btn" data-tab="sim">
-    <span class="mt-icon">🧮</span>
-    <span class="mt-label">試算看看</span>
-  </button>
-  <button class="mt-btn" data-tab="portfolio">
-    <span class="mt-icon">📊</span>
-    <span class="mt-label">組合 & 風險</span>
-  </button>
-  <button class="mt-btn" data-tab="positions">
-    <span class="mt-icon">💼</span>
-    <span class="mt-label">持股明細</span>
-  </button>
-  <button class="mt-btn" data-tab="briefs">
-    <span class="mt-icon">📰</span>
-    <span class="mt-label">歷史 Brief</span>
-    <span class="mt-count">1</span>
-  </button>
-</nav>
-
-<main class="main-panel wrap">
-  <div class="tab-panel active" data-panel="ai">
-    
+    <main class="main-panel">
+      <div class="tab-panel active" data-panel="ai">
+        
 <div class="brief-hero">
   <div class="bh-top">
     <span class="live-dot accent"></span>
@@ -143,8 +134,8 @@
         </div>
 </div>
 
-    <div class="mood-cat-row">
-      
+        <div class="mood-cat-row">
+          
 <div class="mood-panel">
   <div class="mood-head">
     <div>
@@ -192,7 +183,7 @@
         </div></div>
 </div>
 
-      
+          
 <div class="catalyst-panel">
   <div class="cat-head">
     <span class="cat-title mono">🗓 TODAY & UPCOMING</span>
@@ -222,8 +213,8 @@
         </div></div>
 </div>
 
-    </div>
-    
+        </div>
+        
 <div class="ai-tab-body">
   <div class="pulse-mini">
     <div class="pulse-mini-cell"><span class="muted small">台股</span> <span class="badge badge-flat">⚪ 中性</span></div>
@@ -409,9 +400,9 @@
   </div>
 </div>
 
-  </div>
-  <div class="tab-panel" data-panel="radar">
-    
+      </div>
+      <div class="tab-panel" data-panel="radar">
+        
 <div class="radar-body">
   
 <div class="radar-intro">
@@ -547,9 +538,9 @@
 
 </div>
 
-  </div>
-  <div class="tab-panel" data-panel="sim">
-    
+      </div>
+      <div class="tab-panel" data-panel="sim">
+        
 <div class="sim-tab-body">
   <div class="sim-intro muted small">
     本地即時計算。調參數看「如果我要買某檔、用多少錢、設停損停利在哪，會變怎樣」。不呼叫 AI、不花錢。
@@ -838,9 +829,9 @@
 })();
 </script>
 
-  </div>
-  <div class="tab-panel" data-panel="portfolio">
-    
+      </div>
+      <div class="tab-panel" data-panel="portfolio">
+        
 <div class="macro-strip">
   
         <div class="macro-strip-cell">
@@ -868,7 +859,7 @@
         </div>
 </div>
 
-    
+        
 <div class="chart-area">
   <div class="chart-head">
     <div>
@@ -893,8 +884,8 @@
   </svg>
 </div>
 
-    <section class="portfolio-detail">
-      
+        <section class="portfolio-detail">
+          
 <aside class="desk-sidebar">
   <div class="stat-block">
     <div class="stat-block-head">OVERVIEW</div>
@@ -918,10 +909,10 @@
   </div>
 </aside>
 
-    </section>
-  </div>
-  <div class="tab-panel" data-panel="positions">
-    
+        </section>
+      </div>
+      <div class="tab-panel" data-panel="positions">
+        
 <table class="data-table">
   <thead>
     <tr>
@@ -1021,9 +1012,9 @@
   </tbody>
 </table>
 
-  </div>
-  <div class="tab-panel" data-panel="briefs">
-    
+      </div>
+      <div class="tab-panel" data-panel="briefs">
+        
 <table class="data-table">
   <thead>
     <tr><th>DATE</th><th>NEWS</th><th>TAGS</th><th>AI</th></tr>
@@ -1037,22 +1028,44 @@
         </tr></tbody>
 </table>
 
+      </div>
+    </main>
+
+    <footer class="status-bar">
+      <div class="sb-left mono">
+        <span class="live-dot accent"></span>
+        <span class="sb-lbl">LIVE</span>
+        <span class="sb-sep">·</span>
+        <span>AS OF 2026-04-18 20:29</span>
+        <span class="sb-sep">·</span>
+        <span>42 TICKERS</span>
+        <span class="sb-sep">·</span>
+        <span>1 BRIEFS</span>
+      </div>
+      <div class="sb-right mono">
+        <span class="sb-lbl">YTD</span>
+        <span class="up">+117.5%</span>
+        <span class="sb-sep">·</span>
+        <span class="sb-lbl">VOL</span>
+        <span>30.9%</span>
+      </div>
+    </footer>
   </div>
-</main>
+</div>
 
 <script>
-// Tab switching with URL hash persistence
+// Tab switching with URL hash persistence (sidenav-based)
 function setTab(t) {
-  document.querySelectorAll('.mt-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  document.querySelectorAll('.sn-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === t));
   if (location.hash !== '#' + t) history.replaceState(null, '', '#' + t);
 }
-document.querySelectorAll('.mt-btn').forEach(btn => {
+document.querySelectorAll('.sn-btn').forEach(btn => {
   btn.addEventListener('click', () => setTab(btn.dataset.tab));
 });
 // Restore from hash (only if matches a tab)
 const initTab = (location.hash || '').replace('#', '');
-if (initTab && document.querySelector(`.mt-btn[data-tab="${initTab}"]`)) setTab(initTab);
+if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(initTab);
 
 // --- Search: autocomplete any stock, navigate to /holdings/<sym>.html ---
 (function() {
@@ -1102,7 +1115,7 @@ if (initTab && document.querySelector(`.mt-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-18 20:32 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-18 20:38 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 </body>
 </html>
