@@ -1769,46 +1769,106 @@ def render_index(briefs: list[dict], pf: dict | None) -> str:
     ai_tab = render_ai_tab(latest_brief, latest_analysis)
     sim_html, _ = render_simulator(pf, latest_analysis)
 
+    # Thin portfolio summary strip values
+    s = pf.get("summary", {})
+    bench = pf.get("benchmark", {})
+    total_value = s.get("total_value_twd", 0)
+    day_pnl = s.get("day_pnl_twd", 0)
+    day_pct = s.get("day_pnl_pct", 0)
+    total_pnl = s.get("total_pnl_twd", 0)
+    total_pct = s.get("total_pnl_pct", 0)
+    alpha = s.get("alpha_vs_benchmark_pct", 0)
+    alert_count = pf.get("alert_count", 0)
+
     body = f'''
-<header class="desk-topbar">
-  <div class="desk-brand">
-    <span class="desk-logo">📈 Stock AI Desk</span>
+<header class="top-header wrap">
+  <div class="top-brand">
+    <h1 class="top-title">📈 Stock AI Desk</h1>
+    <span class="top-date mono">{date_str} · 週{weekday_zh}</span>
     <span class="live-dot accent"></span>
   </div>
-  <div class="desk-breadcrumb mono">HOME / {date_str} · 週{weekday_zh} / AS OF {html.escape(as_of_str)}</div>
-  <div class="desk-spacer"></div>
+
+  <div class="summary-strip">
+    <div class="ss-cell ss-main">
+      <span class="ss-lbl">組合市值</span>
+      <span class="ss-val mono tnum">{_fmt_twd(total_value)}</span>
+    </div>
+    <div class="ss-cell">
+      <span class="ss-lbl">今日</span>
+      <span class="ss-val mono tnum {_cls(day_pnl)}">{_fmt_twd(day_pnl, sign=True)} ({_fmt_pct(day_pct)})</span>
+    </div>
+    <div class="ss-cell">
+      <span class="ss-lbl">總損益</span>
+      <span class="ss-val mono tnum {_cls(total_pnl)}">{_fmt_twd(total_pnl, sign=True)} ({_fmt_pct(total_pct)})</span>
+    </div>
+    <div class="ss-cell">
+      <span class="ss-lbl">α vs {html.escape(bench.get("symbol", "—"))}</span>
+      <span class="ss-val mono tnum {_cls(alpha)}">{_fmt_pct(alpha)}</span>
+    </div>
+    {f'<div class="ss-cell ss-alert"><span class="ss-lbl">⚠ 警報</span><span class="ss-val mono tnum amber">{alert_count} 個</span></div>' if alert_count > 0 else ''}
+  </div>
 </header>
 
-<div class="desk">
-  {sidebar}
-  <main class="desk-main">
-    {macro_strip}
+<nav class="main-tabs wrap">
+  <button class="mt-btn active" data-tab="ai">
+    <span class="mt-icon">🤖</span>
+    <span class="mt-label">今日 AI 建議</span>
+  </button>
+  <button class="mt-btn" data-tab="sim">
+    <span class="mt-icon">🧮</span>
+    <span class="mt-label">試算看看</span>
+  </button>
+  <button class="mt-btn" data-tab="portfolio">
+    <span class="mt-icon">📊</span>
+    <span class="mt-label">組合 & 風險</span>
+  </button>
+  <button class="mt-btn" data-tab="positions">
+    <span class="mt-icon">💼</span>
+    <span class="mt-label">持股明細</span>
+  </button>
+  <button class="mt-btn" data-tab="briefs">
+    <span class="mt-icon">📰</span>
+    <span class="mt-label">歷史 Brief</span>
+    <span class="mt-count">{len(briefs)}</span>
+  </button>
+</nav>
+
+<main class="main-panel wrap">
+  <div class="tab-panel active" data-panel="ai">
     {hero}
+    {ai_tab}
+  </div>
+  <div class="tab-panel" data-panel="sim">
+    {sim_html}
+  </div>
+  <div class="tab-panel" data-panel="portfolio">
+    {macro_strip}
     {chart}
-    <section class="desk-panel">
-      <div class="tabs" role="tablist">
-        <button class="tab-btn active" data-tab="ai">🤖 AI Analysis</button>
-        <button class="tab-btn" data-tab="sim">🧮 Simulator</button>
-        <button class="tab-btn" data-tab="positions">Positions</button>
-        <button class="tab-btn" data-tab="briefs">Briefs · {len(briefs)}</button>
-      </div>
-      <div class="tab-panel active" data-panel="ai">{ai_tab}</div>
-      <div class="tab-panel" data-panel="sim">{sim_html}</div>
-      <div class="tab-panel" data-panel="positions">{positions}</div>
-      <div class="tab-panel" data-panel="briefs">{briefs_table}</div>
+    <section class="portfolio-detail">
+      {sidebar}
     </section>
-  </main>
-</div>
+  </div>
+  <div class="tab-panel" data-panel="positions">
+    {positions}
+  </div>
+  <div class="tab-panel" data-panel="briefs">
+    {briefs_table}
+  </div>
+</main>
 
 <script>
-// Tab switching
-document.querySelectorAll('.tab-btn').forEach(btn => {{
-  btn.addEventListener('click', () => {{
-    const t = btn.dataset.tab;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === t));
-  }});
+// Tab switching with URL hash persistence
+function setTab(t) {{
+  document.querySelectorAll('.mt-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === t));
+  if (location.hash !== '#' + t) history.replaceState(null, '', '#' + t);
+}}
+document.querySelectorAll('.mt-btn').forEach(btn => {{
+  btn.addEventListener('click', () => setTab(btn.dataset.tab));
 }});
+// Restore from hash
+const initTab = (location.hash || '').replace('#', '');
+if (initTab && document.querySelector(`.mt-btn[data-tab="${{initTab}}"]`)) setTab(initTab);
 </script>
 '''
     now = datetime.now(TAIPEI).strftime("%Y-%m-%d %H:%M")
@@ -2515,7 +2575,131 @@ footer { padding: 24px 20px 36px; text-align: center; color: var(--tx-4); font-s
 footer a { color: var(--tx-3); }
 
 /* ────────────────────────────────────────────────────────────
-   DESK LAYOUT (Hyperdash-style) — main index.html
+   CLEAN TOP LAYOUT — main index.html (focus on clarity)
+   ──────────────────────────────────────────────────────────── */
+.top-header {
+  padding: 20px 24px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.top-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.top-title { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.2px; }
+.top-date {
+  font-size: 11px; color: var(--tx-3);
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+
+.summary-strip {
+  display: grid;
+  grid-template-columns: 2fr repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.ss-cell {
+  background: var(--bg-1);
+  padding: 12px 18px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.ss-cell.ss-main { background: linear-gradient(90deg, var(--bg-1), var(--bg-2)); }
+.ss-cell.ss-alert { background: var(--amber-bg); }
+.ss-lbl {
+  font-size: 10px; color: var(--tx-3);
+  letter-spacing: 0.6px; text-transform: uppercase;
+  font-weight: 600;
+}
+.ss-val { font-size: 15px; font-weight: 700; }
+.ss-cell.ss-main .ss-val { font-size: 22px; font-weight: 800; }
+
+.main-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 18px 24px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.main-tabs::-webkit-scrollbar { display: none; }
+.mt-btn {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 20px;
+  background: var(--bg-1);
+  color: var(--tx-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.mt-btn:hover { background: var(--bg-2); color: var(--tx-1); border-color: var(--line-2); }
+.mt-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+.mt-icon { font-size: 16px; }
+.mt-count {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--bg-3);
+  color: var(--tx-3);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+.mt-btn.active .mt-count { background: var(--accent); color: #fff; }
+
+.main-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px 60px;
+}
+
+.portfolio-detail {
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.portfolio-detail .desk-sidebar { position: static; max-height: none; padding: 0; }
+.portfolio-detail .stat-block { padding-bottom: 10px; margin-bottom: 0; }
+
+/* Tab panel reset */
+.main-panel > .tab-panel { display: none; }
+.main-panel > .tab-panel.active { display: block; }
+
+/* Mobile: tabs become horizontal scroll, narrower */
+@media (max-width: 720px) {
+  .top-header { padding: 14px 14px 0; }
+  .top-title { font-size: 17px; }
+  .summary-strip { grid-template-columns: 1fr 1fr; font-size: 11px; }
+  .ss-cell { padding: 10px 12px; }
+  .ss-cell.ss-main { grid-column: 1 / -1; }
+  .ss-cell.ss-main .ss-val { font-size: 20px; }
+  .ss-val { font-size: 13px; }
+  .main-tabs { padding: 14px 14px 0; gap: 6px; }
+  .mt-btn { padding: 10px 14px; font-size: 13px; }
+  .mt-label { display: none; }
+  .mt-btn.active .mt-label { display: inline; }  /* Show label only on active on mobile */
+  .mt-icon { font-size: 18px; }
+  .main-panel { padding: 14px 14px 40px; }
+  .portfolio-detail { grid-template-columns: 1fr; padding: 14px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   DESK LAYOUT (Hyperdash-style) — (now inside Portfolio tab)
    ──────────────────────────────────────────────────────────── */
 .desk-topbar {
   display: flex; align-items: center; gap: 14px;
@@ -2533,13 +2717,12 @@ footer a { color: var(--tx-3); }
 }
 .desk-spacer { flex: 1; }
 
+/* Legacy .desk class — kept for compatibility; only used inside Portfolio tab's grid now */
 .desk {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 20px;
-  padding: 20px 24px 40px;
-  max-width: 1600px;
-  margin: 0 auto;
+  display: block;
+  padding: 0;
+  max-width: none;
+  margin: 0;
 }
 .desk-sidebar {
   position: sticky; top: 70px;

@@ -452,7 +452,131 @@ footer { padding: 24px 20px 36px; text-align: center; color: var(--tx-4); font-s
 footer a { color: var(--tx-3); }
 
 /* ────────────────────────────────────────────────────────────
-   DESK LAYOUT (Hyperdash-style) — main index.html
+   CLEAN TOP LAYOUT — main index.html (focus on clarity)
+   ──────────────────────────────────────────────────────────── */
+.top-header {
+  padding: 20px 24px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.top-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.top-title { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.2px; }
+.top-date {
+  font-size: 11px; color: var(--tx-3);
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+
+.summary-strip {
+  display: grid;
+  grid-template-columns: 2fr repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.ss-cell {
+  background: var(--bg-1);
+  padding: 12px 18px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.ss-cell.ss-main { background: linear-gradient(90deg, var(--bg-1), var(--bg-2)); }
+.ss-cell.ss-alert { background: var(--amber-bg); }
+.ss-lbl {
+  font-size: 10px; color: var(--tx-3);
+  letter-spacing: 0.6px; text-transform: uppercase;
+  font-weight: 600;
+}
+.ss-val { font-size: 15px; font-weight: 700; }
+.ss-cell.ss-main .ss-val { font-size: 22px; font-weight: 800; }
+
+.main-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 18px 24px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.main-tabs::-webkit-scrollbar { display: none; }
+.mt-btn {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 20px;
+  background: var(--bg-1);
+  color: var(--tx-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.mt-btn:hover { background: var(--bg-2); color: var(--tx-1); border-color: var(--line-2); }
+.mt-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+.mt-icon { font-size: 16px; }
+.mt-count {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--bg-3);
+  color: var(--tx-3);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+.mt-btn.active .mt-count { background: var(--accent); color: #fff; }
+
+.main-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px 60px;
+}
+
+.portfolio-detail {
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.portfolio-detail .desk-sidebar { position: static; max-height: none; padding: 0; }
+.portfolio-detail .stat-block { padding-bottom: 10px; margin-bottom: 0; }
+
+/* Tab panel reset */
+.main-panel > .tab-panel { display: none; }
+.main-panel > .tab-panel.active { display: block; }
+
+/* Mobile: tabs become horizontal scroll, narrower */
+@media (max-width: 720px) {
+  .top-header { padding: 14px 14px 0; }
+  .top-title { font-size: 17px; }
+  .summary-strip { grid-template-columns: 1fr 1fr; font-size: 11px; }
+  .ss-cell { padding: 10px 12px; }
+  .ss-cell.ss-main { grid-column: 1 / -1; }
+  .ss-cell.ss-main .ss-val { font-size: 20px; }
+  .ss-val { font-size: 13px; }
+  .main-tabs { padding: 14px 14px 0; gap: 6px; }
+  .mt-btn { padding: 10px 14px; font-size: 13px; }
+  .mt-label { display: none; }
+  .mt-btn.active .mt-label { display: inline; }  /* Show label only on active on mobile */
+  .mt-icon { font-size: 18px; }
+  .main-panel { padding: 14px 14px 40px; }
+  .portfolio-detail { grid-template-columns: 1fr; padding: 14px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   DESK LAYOUT (Hyperdash-style) — (now inside Portfolio tab)
    ──────────────────────────────────────────────────────────── */
 .desk-topbar {
   display: flex; align-items: center; gap: 14px;
@@ -470,13 +594,12 @@ footer a { color: var(--tx-3); }
 }
 .desk-spacer { flex: 1; }
 
+/* Legacy .desk class — kept for compatibility; only used inside Portfolio tab's grid now */
 .desk {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 20px;
-  padding: 20px 24px 40px;
-  max-width: 1600px;
-  margin: 0 auto;
+  display: block;
+  padding: 0;
+  max-width: none;
+  margin: 0;
 }
 .desk-sidebar {
   position: sticky; top: 70px;
