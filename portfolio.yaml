@@ -20,6 +20,10 @@ benchmark_us: "VOO"
 # Cash sitting in broker account, NT dollars. Included in total value + cash ratio.
 cash_twd: 0
 
+# Deploy budget — AI 每天依此金額產生具體「下一筆錢」配置建議（雪球法試水倉）。
+# 修改這個數字會讓 Gemini 下次跑時以新金額規劃。
+trade_budget_twd: 5000
+
 # Risk preferences — fed into the AI so it tunes recommendations
 risk_profile:
   style: "snowball-growth"     # custom: 小額滾雪球、0050 當存款、利潤分批入存款/滾下一檔

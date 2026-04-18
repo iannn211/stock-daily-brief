@@ -1078,6 +1078,51 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None) -> str:
           </div>
         </div>'''
 
+    # Budget allocation summary
+    budget_alloc = analysis.get("budget_allocation", {})
+    budget_html = ""
+    if budget_alloc.get("allocations"):
+        allocs = budget_alloc.get("allocations", [])
+        budget_amt = budget_alloc.get("budget_twd", 0)
+        plan = budget_alloc.get("plan_summary", "")
+        alloc_cards = []
+        for al in allocs:
+            action = al.get("action", "")
+            is_cash = "現金" in action or "不動作" in action
+            cls = "alloc-cash" if is_cash else "alloc-buy"
+            sym = al.get("symbol", "")
+            name = al.get("name", "")
+            shares = al.get("target_shares")
+            cost = al.get("target_cost_twd")
+            sl = al.get("stop_loss_price")
+            tp = al.get("take_profit_price")
+            conf = al.get("confidence_pct", 0)
+            rat = al.get("rationale", "")
+            shares_str = f"{shares} 股" if shares else ""
+            cost_str = f"≈{_fmt_twd(cost)}" if cost else ""
+            sl_str = f"停損 {sl}" if sl else ""
+            tp_str = f"停利 {tp}" if tp else ""
+            levels = " · ".join(s for s in (shares_str, cost_str, sl_str, tp_str) if s)
+            alloc_cards.append(f'''
+            <div class="alloc-card {cls}">
+              <div class="alloc-head">
+                <span class="alloc-action">{html.escape(action)}</span>
+                <span class="alloc-conf mono">{conf}%</span>
+              </div>
+              <div class="alloc-sym"><strong>{html.escape(sym)}</strong> <span class="muted small">{html.escape(name)}</span></div>
+              <div class="alloc-levels mono small">{html.escape(levels)}</div>
+              <div class="alloc-rat small">{html.escape(rat)[:140]}{"…" if len(rat) > 140 else ""}</div>
+            </div>''')
+        budget_html = f'''
+        <div class="hero-budget">
+          <div class="hero-picks-head">
+            <span class="hero-action-lbl">💰 下一筆 NT${budget_amt:,.0f} 建議</span>
+            <a href="briefs/{latest_brief["date"]}.html#budget" class="btn-link small">看完整下單計畫 →</a>
+          </div>
+          <p class="budget-plan">{html.escape(plan)}</p>
+          <div class="alloc-grid">{"".join(alloc_cards)}</div>
+        </div>'''
+
     # Health badge
     health = diag.get("overall_health", "")
     health_cls = {"良好": "up", "需調整": "amber", "高風險": "dn"}.get(health, "flat")
@@ -1123,6 +1168,7 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None) -> str:
     <a href="briefs/{date_str}.html" class="btn-link small">→ 完整分析</a>
   </div>
   <p class="hero-oneliner">{html.escape(mp.get("summary", "今日尚未生成摘要。"))}</p>
+  {budget_html}
   {top_action_html}
   {picks_html}
 </div>
@@ -1264,6 +1310,57 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
         if holding_cards else ""
     )
 
+    # Budget allocation — full detail
+    budget_alloc = analysis.get("budget_allocation", {})
+    budget_full_html = ""
+    if budget_alloc.get("allocations"):
+        allocs = budget_alloc.get("allocations", [])
+        rows = []
+        for al in allocs:
+            action = al.get("action", "")
+            is_cash = "現金" in action or "不動作" in action
+            cls = "alloc-cash" if is_cash else "alloc-buy"
+            srcs = al.get("data_sources") or []
+            src_html = "".join(f'<span class="chip chip-muted small">{html.escape(s)}</span>' for s in srcs)
+            sl = al.get("stop_loss_price")
+            tp = al.get("take_profit_price")
+            shares = al.get("target_shares")
+            cost = al.get("target_cost_twd")
+            row_levels = []
+            if shares: row_levels.append(f"<strong>{shares} 股</strong>")
+            if cost: row_levels.append(f"約 {_fmt_twd(cost)}")
+            if al.get("entry_condition"): row_levels.append(f"進場：{html.escape(al['entry_condition'])}")
+            if sl: row_levels.append(f'<span class="dn">停損 {sl}</span>')
+            if tp: row_levels.append(f'<span class="up">停利 {tp}</span>')
+            rows.append(f'''
+            <article class="alloc-full-card {cls}">
+              <div class="alloc-full-head">
+                <div>
+                  <div class="alloc-action-big">{html.escape(action)}</div>
+                  <h3>{html.escape(al.get("symbol", ""))} <span class="muted">{html.escape(al.get("name", ""))}</span></h3>
+                </div>
+                <div class="alloc-conf-big mono">信心度 {al.get("confidence_pct", 0)}%</div>
+              </div>
+              <div class="alloc-levels-row mono small">{" · ".join(row_levels)}</div>
+              <p><span class="label-inline">理由</span>{html.escape(al.get("rationale", ""))}</p>
+              {"<div class='alloc-sources'><span class='label-inline'>依據</span>" + src_html + "</div>" if src_html else ""}
+              <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{html.escape(al.get("risk", ""))}</p>
+            </article>''')
+        unalloc = budget_alloc.get("unallocated_twd", 0)
+        unalloc_line = (f'<p class="muted small">保留現金 {_fmt_twd(unalloc)}（等更好的機會）</p>'
+                        if unalloc and unalloc > 0 else "")
+        why_not = budget_alloc.get("why_not_other_picks") or ""
+        why_not_line = f'<p class="muted small">為什麼不選別檔：{html.escape(why_not)}</p>' if why_not else ""
+        budget_full_html = f'''
+<div class="ai-block" id="budget">
+  <div class="tab-subhead">💰 今日 NT${budget_alloc.get("budget_twd", 0):,.0f} 配置建議 <span class="badge-count">SNOWBALL</span></div>
+  <div class="budget-plan-big">{html.escape(budget_alloc.get("plan_summary", ""))}</div>
+  {"".join(rows)}
+  {unalloc_line}
+  {why_not_line}
+</div>
+'''
+
     # Opportunities — the star section
     opps_html = ""
     if opps:
@@ -1311,6 +1408,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
     {actions_html}
   </div>
 
+  {budget_full_html}
   {opps_html}
   {holdings_html}
   {macro_html}
@@ -2430,6 +2528,72 @@ footer a { color: var(--tx-3); }
 .pick-head strong { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.3px; }
 .pick-thesis { color: var(--tx-2); line-height: 1.6; font-size: 12px; }
 .pick-risk { line-height: 1.5; font-size: 11px; }
+
+/* Budget allocation — hero + full detail */
+.hero-budget {
+  background: linear-gradient(135deg, rgba(255,181,71,0.08) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(255,181,71,0.25);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  margin: 8px 0 12px;
+}
+.budget-plan {
+  font-size: 13px; line-height: 1.65;
+  color: var(--tx-1);
+  margin: 6px 0 10px;
+}
+.alloc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+.alloc-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.alloc-card.alloc-buy { border-left: 3px solid var(--dn); }
+.alloc-card.alloc-cash { border-left: 3px solid var(--tx-4); }
+.alloc-head { display: flex; justify-content: space-between; align-items: center; }
+.alloc-action {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px;
+  background: var(--amber-bg); color: var(--amber);
+  letter-spacing: 0.3px;
+}
+.alloc-conf { font-size: 11px; color: var(--tx-3); }
+.alloc-sym strong { font-family: var(--font-mono); font-size: 14px; }
+.alloc-levels { color: var(--tx-2); font-size: 11px; line-height: 1.5; }
+.alloc-rat { color: var(--tx-2); font-size: 11px; line-height: 1.55; margin-top: 2px; }
+
+.budget-plan-big {
+  font-size: 14.5px; line-height: 1.8; padding: 12px 14px;
+  background: var(--bg-2); border-radius: var(--r-sm);
+  border-left: 3px solid var(--amber);
+  margin-bottom: 12px;
+}
+.alloc-full-card {
+  background: var(--bg-1); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 14px 18px; margin-bottom: 10px;
+}
+.alloc-full-card.alloc-buy { border-left: 3px solid var(--dn); }
+.alloc-full-card.alloc-cash { border-left: 3px solid var(--tx-4); }
+.alloc-full-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 14px; margin-bottom: 8px;
+}
+.alloc-action-big {
+  font-size: 11px; font-weight: 700;
+  color: var(--amber); letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.alloc-full-card h3 { margin: 0; font-size: 17px; }
+.alloc-conf-big { font-size: 12px; color: var(--tx-3); }
+.alloc-levels-row { background: var(--bg-2); padding: 8px 12px; border-radius: var(--r-sm); font-size: 12px; margin: 8px 0 10px; line-height: 1.7; }
+.alloc-sources { margin: 6px 0; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
 
 /* AI tab blocks */
 .ai-block { padding: 0 6px; margin-top: 4px; }

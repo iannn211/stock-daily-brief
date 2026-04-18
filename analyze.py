@@ -128,6 +128,39 @@ RESPONSE_SCHEMA = {
                 "required": ["symbol", "name", "thesis", "research_angle", "risk"],
             },
         },
+        "budget_allocation": {
+            "type": "object",
+            "properties": {
+                "budget_twd": {"type": "integer"},
+                "plan_summary": {"type": "string"},
+                "allocations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "symbol": {"type": "string"},
+                            "name": {"type": "string"},
+                            "action": {"type": "string", "enum": [
+                                "新倉試水", "加碼", "觀望等進場", "不動作 / 保留現金"
+                            ]},
+                            "target_shares": {"type": "integer"},
+                            "target_cost_twd": {"type": "integer"},
+                            "entry_condition": {"type": "string"},
+                            "stop_loss_price": {"type": "number"},
+                            "take_profit_price": {"type": "number"},
+                            "rationale": {"type": "string"},
+                            "data_sources": {"type": "array", "items": {"type": "string"}},
+                            "confidence_pct": {"type": "integer"},
+                            "risk": {"type": "string"},
+                        },
+                        "required": ["symbol", "name", "action", "rationale", "confidence_pct", "risk"],
+                    },
+                },
+                "unallocated_twd": {"type": "integer"},
+                "why_not_other_picks": {"type": "string"},
+            },
+            "required": ["budget_twd", "plan_summary", "allocations"],
+        },
         "action_checklist": {
             "type": "object",
             "properties": {
@@ -177,7 +210,7 @@ RESPONSE_SCHEMA = {
         },
     },
     "required": ["market_pulse", "macro_context", "portfolio_diagnosis", "topics",
-                 "action_checklist", "learning_point"],
+                 "action_checklist", "learning_point", "budget_allocation"],
 }
 
 
@@ -222,6 +255,13 @@ def build_portfolio_context() -> str:
         lines.append("")
         lines.append("## 使用者的個人策略（必須嚴格遵守，高於任何通用教科書建議）")
         lines.append(notes.strip())
+
+    # Trade budget — drives budget_allocation
+    budget = cfg.get("trade_budget_twd")
+    if budget:
+        lines.append("")
+        lines.append(f"## 今日待部署資金：NT${budget:,.0f}")
+        lines.append("請依此金額產生 budget_allocation（1-2 檔具體下單建議或不動作保留現金）。")
     lines.append("")
     lines.append("### 現有持股")
     for h in cfg.get("holdings", []):
@@ -401,6 +441,36 @@ rebalance_advice 要具體、符合雪球法語境。例如：
 每項必須包含「具體條件 + 時間點 + 預期反應」。例如：
 ❌ 壞："關注聯電法說會"
 ✅ 好："下週三 (4/29, 11 天後) 聯電法說會，當天盤前查 guidance，若上修 Q2 營收 >10% 則為題材延續，未達則警戒"
+
+【budget_allocation · 極重要 · 每日必產出】
+使用者有一筆「trade_budget」（從 portfolio context 取得，通常 NT$5,000-10,000）要**今日或下個交易日**部署。你要綜合以下所有訊號產生具體下單計畫：
+- 今日所有新聞（RSS 原文）
+- 現有持倉（避免重複押同題材）
+- 追蹤清單現價 + 52 週位階
+- 年化波動率 / 近期走勢
+- 使用者策略規則（strategy_notes，尤其雪球法試水）
+
+產出 allocations 陣列，每項是一個具體下單建議：
+- symbol + name：目標個股（一定要是使用者追蹤清單、現有持股、或今天機會清單的其中之一）
+- action：「新倉試水」「加碼」「觀望等進場」「不動作 / 保留現金」
+- target_shares：建議股數（台股可買零股；試算: budget/price → 整數）
+- target_cost_twd：約略總金額
+- entry_condition：進場條件（例：「盤前開盤價直接進」「拉回至 2500 以下再進」「等法說後觀察 3 天」）
+- stop_loss_price：建議停損價（通常 -8% ~ -12%）
+- take_profit_price：建議停利價（雪球法常用 +30%，也可依個股波動調整）
+- rationale：**具體**為什麼選這檔（引用今日新聞、法人動作、歷史數據）
+- data_sources：依據的來源（例：「Goldman Sachs 報告 4/17」「外資買超 5 日」「52 週位階 98%」「高盛上修聯亞目標價」）
+- confidence_pct：你的信心度 0-100
+- risk：主要風險一句話
+
+**分配邏輯準則：**
+- 通常 1-2 檔即可（NT$5k 買 1 檔零股試水最乾淨）
+- 不要把預算分得太碎（< NT$2k 的倉位沒意義）
+- 如果今日沒有好機會，可以 unallocated_twd = 全額、action = 「不動作 / 保留現金」並在 plan_summary 解釋為什麼
+- 雪球法精髓：小倉位試水、設停損停利、漲到目標就分批收割回 0050
+- why_not_other_picks：解釋為什麼不選 opportunities 其他檔或 watchlist 其他檔（使用者看了會覺得你有想過、而不是亂挑）
+
+plan_summary：一句 30-50 字總結（例：「今日建議用 NT$5,000 試水聯亞 1 股，理由：光通訊受高盛上修 + 52 週位階雖高但法人連續買超；停損 2340、停利 3380 分批。」）
 
 """
 
