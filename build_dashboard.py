@@ -5876,13 +5876,16 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${{initTab}}"]`)) setTa
     if (!matches.length) {{ results.classList.remove('open'); results.innerHTML=''; return; }}
     results.innerHTML = matches.slice(0, 12).map((m, i) => {{
       const isTracked = TRACKED_SYMS.has(m.symbol);
+      // Untracked stocks now open the universal inspect page (速查) which
+      // fetches FinMind data client-side and renders a rule-based Chinese
+      // verdict — instead of punting the user to Yahoo with no interpretation.
       const href = isTracked
         ? `holdings/${{m.symbol}}.html`
-        : `https://tw.stock.yahoo.com/quote/${{m.symbol}}.TW`;
-      const target = isTracked ? '' : 'target="_blank" rel="noopener"';
+        : `inspect.html?sym=${{encodeURIComponent(m.symbol)}}&name=${{encodeURIComponent(m.name || '')}}`;
+      const target = '';  // always same-tab now — both destinations are ours
       const badge = isTracked
         ? `<span class="search-result-cat tracked">${{m.category || '追蹤中'}}</span>`
-        : `<span class="search-result-cat untracked">Yahoo ↗</span>`;
+        : `<span class="search-result-cat untracked">速查 →</span>`;
       return `
       <a class="search-result${{i === activeIdx ? ' active' : ''}}" href="${{href}}" ${{target}}>
         <span class="search-result-sym">${{m.symbol}}</span>

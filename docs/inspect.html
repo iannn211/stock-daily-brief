@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="dark" data-density="comfortable" data-accent="blue">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>速查 · DAILY BRIEF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Inspect-page-only styles (keep lightweight; most layout reuses styles.css) */
+.ins-wrap { max-width: 920px; margin: 0 auto; padding: 24px 20px 60px; }
+.ins-back { color: var(--muted); text-decoration: none; font-size: 13px; }
+.ins-back:hover { color: var(--text); }
+.ins-hero { margin-top: 18px; padding: 22px 24px; border: 1px solid var(--border);
+            border-radius: 12px; background: var(--panel); }
+.ins-hero-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.ins-sym { font-family: 'JetBrains Mono', monospace; font-size: 34px; font-weight: 600; letter-spacing: 0.5px; }
+.ins-name { font-size: 22px; font-weight: 500; color: var(--text); }
+.ins-industry { font-size: 13px; color: var(--muted); padding: 3px 10px;
+                border: 1px solid var(--border); border-radius: 999px; }
+.ins-price-row { display: flex; align-items: baseline; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+.ins-price { font-family: 'JetBrains Mono', monospace; font-size: 38px; font-weight: 600; }
+.ins-change { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500; }
+.ins-change.up { color: var(--up, #26a69a); }
+.ins-change.dn { color: var(--dn, #ef5350); }
+.ins-asof { font-size: 12px; color: var(--muted); margin-left: auto; }
+.ins-loading { color: var(--muted); font-style: italic; padding: 40px 0; text-align: center; }
+.ins-error { color: var(--dn, #ef5350); padding: 20px; border: 1px solid var(--border);
+             border-radius: 8px; margin-top: 18px; background: rgba(239, 83, 80, 0.06); }
+.ins-source { font-size: 11px; color: var(--muted); margin-top: 8px; }
+
+.ins-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px; margin-top: 20px; }
+.ins-stat { padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--panel); }
+.ins-stat-lbl { font-size: 11px; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
+.ins-stat-val { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 600;
+                margin-top: 4px; }
+.ins-stat-val.muted { color: var(--muted); font-size: 16px; font-weight: 400; }
+.ins-stat-help { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+.ins-tag { display: inline-block; padding: 2px 8px; border-radius: 6px;
+           font-size: 11px; font-weight: 600; letter-spacing: 0.3px; margin-left: 6px; }
+.ins-tag.cheap  { background: rgba(38, 166, 154, 0.18); color: #26a69a; }
+.ins-tag.fair   { background: rgba(251, 191, 36, 0.16); color: #fbbf24; }
+.ins-tag.rich   { background: rgba(249, 115, 22, 0.16); color: #f97316; }
+.ins-tag.bubble { background: rgba(239, 83, 80, 0.18); color: #ef5350; }
+.ins-tag.loss   { background: rgba(148, 163, 184, 0.18); color: #94a3b8; }
+
+.ins-52w { position: relative; height: 6px; background: var(--border); border-radius: 3px;
+           margin-top: 12px; overflow: hidden; }
+.ins-52w-bar { height: 100%; background: linear-gradient(90deg, #ef5350, #fbbf24, #26a69a); }
+.ins-52w-dot { position: absolute; top: -4px; width: 14px; height: 14px;
+               border-radius: 50%; background: var(--text); border: 2px solid var(--panel);
+               transform: translateX(-50%); }
+.ins-52w-labels { display: flex; justify-content: space-between; font-size: 11px;
+                  color: var(--muted); margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+
+.ins-verdict { margin-top: 24px; padding: 20px 22px; border-radius: 10px;
+               border: 1px solid var(--border); background: var(--panel); }
+.ins-verdict-head { font-size: 12px; color: var(--muted); letter-spacing: 1px;
+                    text-transform: uppercase; margin-bottom: 10px; }
+.ins-verdict-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.ins-verdict-body { font-size: 15px; line-height: 1.7; color: var(--text); }
+.ins-verdict-body ul { margin: 10px 0 0; padding-left: 22px; }
+.ins-verdict-body li { margin: 4px 0; }
+.ins-verdict-disclaimer { font-size: 12px; color: var(--muted); margin-top: 14px;
+                          padding-top: 12px; border-top: 1px dashed var(--border); }
+
+.ins-spark { margin-top: 18px; padding: 18px; border: 1px solid var(--border);
+             border-radius: 10px; background: var(--panel); }
+.ins-spark-head { font-size: 12px; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; }
+.ins-spark svg { width: 100%; height: 80px; display: block; }
+
+.ins-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.ins-btn { padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border);
+           background: var(--panel); color: var(--text); text-decoration: none;
+           font-size: 14px; font-weight: 500; }
+.ins-btn:hover { border-color: var(--accent, #3b82f6); color: var(--accent, #3b82f6); }
+.ins-btn.primary { background: var(--accent, #3b82f6); color: white; border-color: var(--accent, #3b82f6); }
+.ins-btn.primary:hover { color: white; filter: brightness(1.1); }
+</style>
+</head>
+<body>
+<div class="ins-wrap">
+  <a class="ins-back" href="index.html">← 回 Daily Brief</a>
+  <div id="ins-root">
+    <div class="ins-loading">載入中…</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const sym = (params.get('sym') || '').trim();
+  const nameHint = (params.get('name') || '').trim();
+  const root = document.getElementById('ins-root');
+
+  if (!sym || !/^\d{4,6}[A-Z]?$/.test(sym)) {
+    root.innerHTML = '<div class="ins-error">網址缺少有效的台股代碼（4-6 位數字）。請從搜尋欄進入此頁。</div>';
+    return;
+  }
+
+  document.title = `速查 · ${sym}${nameHint ? ' ' + nameHint : ''} · DAILY BRIEF`;
+
+  // ---------- Data loading ----------
+  // Prefer our local prices.json (has yfinance fundamentals when available);
+  // fallback to FinMind free API for coverage gaps.
+  async function loadLocal(sym) {
+    try {
+      const r = await fetch('prices.json', { cache: 'default' });
+      if (!r.ok) return null;
+      const d = await r.json();
+      for (const [yft, rec] of Object.entries(d.prices || {})) {
+        if ((rec.symbol || yft.split('.')[0]) === sym) return rec;
+      }
+      return null;
+    } catch (e) { return null; }
+  }
+
+  async function loadFinMindPrice(sym) {
+    const start = new Date(Date.now() - 400 * 86400 * 1000).toISOString().slice(0, 10);
+    const url = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=${sym}&start_date=${start}`;
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const d = await r.json();
+    return (d.data && d.data.length) ? d.data : null;
+  }
+
+  async function loadFinMindPER(sym) {
+    const start = new Date(Date.now() - 15 * 86400 * 1000).toISOString().slice(0, 10);
+    const url = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPER&data_id=${sym}&start_date=${start}`;
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const d = await r.json();
+    return (d.data && d.data.length) ? d.data[d.data.length - 1] : null;
+  }
+
+  async function loadFinMindInfo(sym) {
+    const url = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInfo&data_id=${sym}`;
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const d = await r.json();
+    return (d.data && d.data.length) ? d.data[0] : null;
+  }
+
+  // ---------- Derivation helpers ----------
+  function peBand(pe) {
+    if (pe == null || pe <= 0) return { label: '—', cls: 'loss' };
+    if (pe <= 15) return { label: '🟢 便宜', cls: 'cheap' };
+    if (pe <= 30) return { label: '🟡 合理',  cls: 'fair' };
+    if (pe <= 50) return { label: '🟠 偏貴',  cls: 'rich' };
+    if (pe <= 100) return { label: '🔴 昂貴', cls: 'bubble' };
+    return { label: '🔴 泡沫', cls: 'bubble' };
+  }
+
+  function roeBand(roe) {
+    if (roe == null) return { label: '—', cls: 'loss' };
+    if (roe < 0)   return { label: '🔴 虧損', cls: 'bubble' };
+    if (roe < 0.08) return { label: '🟡 平庸', cls: 'fair' };
+    if (roe < 0.15) return { label: '🟢 不錯', cls: 'cheap' };
+    return { label: '🟢 優異', cls: 'cheap' };
+  }
+
+  function fmt(n, dp = 2) {
+    if (n == null || isNaN(n)) return '—';
+    return Number(n).toFixed(dp);
+  }
+  function fmtPct(n, dp = 1) {
+    if (n == null || isNaN(n)) return '—';
+    return (n >= 0 ? '+' : '') + Number(n).toFixed(dp) + '%';
+  }
+
+  // Rule-based verdict for untracked stocks (we can't run Gemini client-side).
+  // Philosophy: tell the user what each number MEANS, not just the number.
+  function buildVerdict({ pe, eps, pb, roe, ret30, pct52, revGrowth, epsGrowth }) {
+    const bullets = [];
+    let overall = '';
+    let tone = 'neutral';
+
+    // Valuation bucket
+    if (eps != null && eps < 0) {
+      bullets.push('❗ <b>目前虧錢</b>：EPS 為負，沒有 PE 可參考。除非你對它的轉機故事很確定，否則先觀望。');
+      overall = '虧損期公司';
+      tone = 'bubble';
+    } else if (pe != null && pe > 0) {
+      if (pe <= 15) {
+        bullets.push(`✅ <b>估值便宜</b>：PE ${pe.toFixed(1)} 屬於合理偏低區間（&le;15），代表市場沒給它成長溢價。`);
+      } else if (pe <= 30) {
+        bullets.push(`🟡 <b>估值合理</b>：PE ${pe.toFixed(1)} 在 15~30 是健康範圍，不算便宜但也不追高。`);
+      } else if (pe <= 50) {
+        bullets.push(`🟠 <b>估值偏高</b>：PE ${pe.toFixed(1)} 已超過 30，市場預期它未來幾季獲利要跳漲，任何失望都會壓價。`);
+      } else if (pe <= 100) {
+        bullets.push(`🔴 <b>估值昂貴</b>：PE ${pe.toFixed(1)} 在 50~100 區間，屬於熱門題材股，本夢比居多，建議等回檔。`);
+      } else {
+        bullets.push(`🔴 <b>極度泡沫</b>：PE ${pe.toFixed(1)} 超過 100，這個價已經把未來 5 年都折現了，風險很高。`);
+        tone = 'bubble';
+      }
+    }
+
+    // Profitability
+    if (roe != null) {
+      if (roe < 0) bullets.push(`❗ <b>ROE 負值（${(roe*100).toFixed(1)}%）</b>：公司在虧股東的錢。`);
+      else if (roe < 0.08) bullets.push(`🟡 <b>ROE ${(roe*100).toFixed(1)}%</b>：獲利能力平庸，不是品質股。`);
+      else if (roe < 0.15) bullets.push(`🟢 <b>ROE ${(roe*100).toFixed(1)}%</b>：獲利能力不錯。`);
+      else bullets.push(`✅ <b>ROE ${(roe*100).toFixed(1)}%（&gt;15%）</b>：品質股特徵，資本運用效率高。`);
+    }
+
+    // Momentum
+    if (pct52 != null) {
+      if (pct52 >= 95) bullets.push(`📈 <b>52 週高點附近（${pct52.toFixed(0)}%）</b>：強勢但追高風險升高。`);
+      else if (pct52 <= 20) bullets.push(`📉 <b>52 週低點附近（${pct52.toFixed(0)}%）</b>：可能有利空或被市場忽略，要查清楚原因。`);
+    }
+
+    if (ret30 != null) {
+      if (ret30 >= 30) bullets.push(`🚀 近 30 天漲 ${ret30.toFixed(1)}% — 已經是強勢股，注意高波動。`);
+      else if (ret30 <= -15) bullets.push(`📉 近 30 天跌 ${ret30.toFixed(1)}% — 修正中，觀察有沒有止穩。`);
+    }
+
+    // Growth
+    if (revGrowth != null) {
+      if (revGrowth >= 0.15) bullets.push(`📈 營收年增 ${(revGrowth*100).toFixed(0)}% — 成長動能足。`);
+      else if (revGrowth < 0) bullets.push(`📉 營收年減 ${(revGrowth*100).toFixed(1)}% — 基本面逆風。`);
+    }
+    if (epsGrowth != null && Math.abs(epsGrowth) > 0.1) {
+      const dir = epsGrowth > 0 ? '📈' : '📉';
+      bullets.push(`${dir} EPS 年${epsGrowth > 0 ? '增' : '減'} ${(epsGrowth*100).toFixed(0)}%。`);
+    }
+
+    // Overall combined verdict
+    if (!overall) {
+      if (pe != null && pe > 0 && pe <= 15 && roe != null && roe >= 0.15) {
+        overall = '便宜 + 會賺錢 — 值得深入研究';
+        tone = 'cheap';
+      } else if (pe != null && pe > 100) {
+        overall = '極度泡沫 — 強烈建議先等回檔';
+        tone = 'bubble';
+      } else if (pe != null && pe > 50) {
+        overall = '熱門題材股 — 追高要保守，考慮小倉位';
+        tone = 'rich';
+      } else if (pe != null && pe > 30) {
+        overall = '估值偏高 — 要有信心它能持續高成長';
+        tone = 'fair';
+      } else if (eps != null && eps < 0) {
+        overall = '虧損期公司 — 沒有獲利支撐，當題材股看待';
+        tone = 'bubble';
+      } else if (pe != null && roe != null) {
+        overall = '估值與獲利均衡 — 屬於波段操作標的';
+        tone = 'fair';
+      } else {
+        overall = '資料不足以下結論 — 請查財報';
+        tone = 'neutral';
+      }
+    }
+
+    return { bullets, overall, tone };
+  }
+
+  // Simple SVG sparkline
+  function sparkline(closes) {
+    if (!closes || closes.length < 2) return '';
+    const W = 600, H = 80, P = 4;
+    const min = Math.min(...closes), max = Math.max(...closes);
+    const rng = max - min || 1;
+    const step = (W - 2*P) / (closes.length - 1);
+    const pts = closes.map((c, i) => {
+      const x = P + i * step;
+      const y = H - P - ((c - min) / rng) * (H - 2*P);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const last = closes[closes.length - 1];
+    const first = closes[0];
+    const color = last >= first ? '#26a69a' : '#ef5350';
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8"/>
+    </svg>`;
+  }
+
+  // ---------- Main flow ----------
+  async function main() {
+    let local = await loadLocal(sym);
+
+    // Unify into a single render struct
+    let data = {
+      sym, name: nameHint, industry: '',
+      price: null, prevClose: null, dayChangePct: null, asOf: '',
+      high52: null, low52: null, pct52: null,
+      ret7: null, ret30: null, ret90: null,
+      pe: null, eps: null, pb: null, roe: null,
+      revGrowth: null, epsGrowth: null,
+      closes30: [], source: ''
+    };
+
+    if (local) {
+      data.price = local.close;
+      data.prevClose = local.prev_close;
+      data.dayChangePct = local.day_change_pct;
+      data.asOf = local.as_of;
+      data.high52 = local.high_52w; data.low52 = local.low_52w; data.pct52 = local.pct_52w;
+      data.ret7 = local.ret_7d; data.ret30 = local.ret_30d; data.ret90 = local.ret_90d;
+      const f = local.fundamentals || {};
+      data.pe = f.pe_ttm; data.eps = f.eps_ttm; data.pb = f.pb; data.roe = f.roe;
+      data.revGrowth = f.rev_growth; data.epsGrowth = f.earnings_growth;
+      data.industry = f.industry || f.sector || '';
+      data.source = '每日快取 (今日更新)';
+    }
+
+    // Info + live prices from FinMind (for name/industry fallback, and if local missing)
+    const [info, fmPrice, fmPER] = await Promise.all([
+      loadFinMindInfo(sym).catch(() => null),
+      (!local) ? loadFinMindPrice(sym).catch(() => null) : Promise.resolve(null),
+      (!local || !data.pe) ? loadFinMindPER(sym).catch(() => null) : Promise.resolve(null),
+    ]);
+
+    if (info) {
+      if (!data.name) data.name = info.stock_name || '';
+      if (!data.industry) data.industry = info.industry_category || '';
+    }
+
+    if (fmPrice && fmPrice.length) {
+      const latest = fmPrice[fmPrice.length - 1];
+      const prev = fmPrice.length > 1 ? fmPrice[fmPrice.length - 2] : null;
+      data.price = latest.close;
+      data.prevClose = prev ? prev.close : latest.open;
+      data.dayChangePct = data.prevClose ? ((data.price - data.prevClose) / data.prevClose * 100) : 0;
+      data.asOf = latest.date;
+      // 52w
+      const highs = fmPrice.map(r => r.max), lows = fmPrice.map(r => r.min);
+      data.high52 = Math.max(...highs); data.low52 = Math.min(...lows);
+      const rng = data.high52 - data.low52;
+      data.pct52 = rng ? ((data.price - data.low52) / rng * 100) : 50;
+      // returns
+      const n = fmPrice.length;
+      const priceAt = (k) => (n > k) ? fmPrice[n - 1 - k].close : null;
+      const retN = (k) => {
+        const p = priceAt(k);
+        return (p && data.price) ? ((data.price - p) / p * 100) : null;
+      };
+      data.ret7 = retN(5); data.ret30 = retN(20); data.ret90 = retN(60);
+      // sparkline last 30
+      data.closes30 = fmPrice.slice(-30).map(r => r.close);
+      data.source = 'FinMind 即時抓取';
+    } else if (local) {
+      // local has no closes30 directly — build from price_history.json if needed later
+      // for now, skip sparkline when only local data available
+    }
+
+    if (fmPER) {
+      if (!data.pe && fmPER.PER && fmPER.PER > 0) data.pe = fmPER.PER;
+      if (!data.pb && fmPER.PBR) data.pb = fmPER.PBR;
+      if (data.pe && !data.eps && data.price) data.eps = data.price / data.pe;
+    }
+
+    if (!data.price) {
+      root.innerHTML = `<div class="ins-error">找不到 <b>${sym}</b> 的資料。這個代碼可能不正確，或資料源暫時沒有收錄。</div>`;
+      return;
+    }
+
+    render(data);
+  }
+
+  // ---------- Render ----------
+  function render(d) {
+    const peInfo = peBand(d.pe);
+    const roeInfo = roeBand(d.roe);
+    const changeCls = (d.dayChangePct || 0) >= 0 ? 'up' : 'dn';
+    const verdict = buildVerdict({
+      pe: d.pe, eps: d.eps, pb: d.pb, roe: d.roe,
+      ret30: d.ret30, pct52: d.pct52,
+      revGrowth: d.revGrowth, epsGrowth: d.epsGrowth,
+    });
+
+    const dotPct = Math.max(0, Math.min(100, d.pct52 || 0));
+
+    root.innerHTML = `
+      <header class="ins-hero">
+        <div class="ins-hero-row">
+          <span class="ins-sym">${d.sym}</span>
+          <span class="ins-name">${d.name || ''}</span>
+          ${d.industry ? `<span class="ins-industry">${d.industry}</span>` : ''}
+        </div>
+        <div class="ins-price-row">
+          <span class="ins-price mono">${fmt(d.price, 2)}</span>
+          <span class="ins-change mono ${changeCls}">${fmtPct(d.dayChangePct, 2)}</span>
+          ${d.asOf ? `<span class="ins-asof">收盤 ${d.asOf}</span>` : ''}
+        </div>
+        <div class="ins-source">資料源：${d.source || '混合'}</div>
+      </header>
+
+      <section class="ins-grid">
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">本益比 PE TTM <span class="ins-tag ${peInfo.cls}">${peInfo.label}</span></div>
+          <div class="ins-stat-val">${fmt(d.pe, 1)}</div>
+          <div class="ins-stat-help">越低越便宜。&le;15 便宜／&le;30 合理／&gt;50 昂貴／&gt;100 泡沫</div>
+        </div>
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">每股盈餘 EPS TTM</div>
+          <div class="ins-stat-val">${fmt(d.eps, 2)}</div>
+          <div class="ins-stat-help">過去 4 季加總。負數代表虧錢。</div>
+        </div>
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">股價淨值比 P/B</div>
+          <div class="ins-stat-val">${fmt(d.pb, 2)}</div>
+          <div class="ins-stat-help">&lt;1 可能破產價／1-3 合理／&gt;5 偏貴</div>
+        </div>
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">股東權益報酬率 ROE <span class="ins-tag ${roeInfo.cls}">${roeInfo.label}</span></div>
+          <div class="ins-stat-val">${d.roe != null ? (d.roe*100).toFixed(1) + '%' : '—'}</div>
+          <div class="ins-stat-help">&gt;15% 是品質股。巴菲特門檻。</div>
+        </div>
+      </section>
+
+      <section class="ins-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">近 7 日</div>
+          <div class="ins-stat-val ${d.ret7 == null ? 'muted' : (d.ret7 >= 0 ? 'up' : 'dn')}">${fmtPct(d.ret7, 1)}</div>
+        </div>
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">近 30 日</div>
+          <div class="ins-stat-val ${d.ret30 == null ? 'muted' : (d.ret30 >= 0 ? 'up' : 'dn')}">${fmtPct(d.ret30, 1)}</div>
+        </div>
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">近 90 日</div>
+          <div class="ins-stat-val ${d.ret90 == null ? 'muted' : (d.ret90 >= 0 ? 'up' : 'dn')}">${fmtPct(d.ret90, 1)}</div>
+        </div>
+        <div class="ins-stat">
+          <div class="ins-stat-lbl">52 週位置</div>
+          <div class="ins-stat-val">${fmt(d.pct52, 0)}%</div>
+          <div class="ins-52w">
+            <div class="ins-52w-bar"></div>
+            <div class="ins-52w-dot" style="left:${dotPct}%"></div>
+          </div>
+          <div class="ins-52w-labels">
+            <span>${fmt(d.low52, 1)}</span>
+            <span>${fmt(d.high52, 1)}</span>
+          </div>
+        </div>
+      </section>
+
+      ${d.closes30 && d.closes30.length ? `
+      <section class="ins-spark">
+        <div class="ins-spark-head">近 30 天走勢</div>
+        ${sparkline(d.closes30)}
+      </section>` : ''}
+
+      <section class="ins-verdict">
+        <div class="ins-verdict-head">速讀評語 · 規則式判讀</div>
+        <div class="ins-verdict-title">${verdict.overall}</div>
+        <div class="ins-verdict-body">
+          <ul>
+            ${verdict.bullets.map(b => `<li>${b}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="ins-verdict-disclaimer">
+          ⓘ 這是規則式速判，不是 Gemini 深度分析。這檔如果你常關注，<a href="#" id="add-track" style="color: var(--accent, #3b82f6);">加入追蹤清單</a> 之後每天 14:40 會跟其他題材一起幫你看故事。
+        </div>
+      </section>
+
+      <section class="ins-actions">
+        <a class="ins-btn" href="https://tw.stock.yahoo.com/quote/${d.sym}.TW" target="_blank" rel="noopener">Yahoo 財經 ↗</a>
+        <a class="ins-btn" href="https://statementdog.com/analysis/${d.sym}" target="_blank" rel="noopener">財報狗 ↗</a>
+        <a class="ins-btn" href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=${d.sym}" target="_blank" rel="noopener">Goodinfo ↗</a>
+        <a class="ins-btn" href="index.html">← 回 Daily Brief</a>
+      </section>
+    `;
+
+    // Hook up "add to watchlist" link — opens a GitHub issue form
+    const addLink = document.getElementById('add-track');
+    if (addLink) {
+      addLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const title = `加入追蹤：${d.sym} ${d.name || ''}`.trim();
+        const body = `想加入追蹤清單，請幫我納入每天的分析：\n\n- 代號：${d.sym}\n- 名稱：${d.name || ''}\n- 產業：${d.industry || ''}\n- 今日價：${d.price}\n- PE：${fmt(d.pe, 1)} / EPS：${fmt(d.eps, 2)} / ROE：${d.roe != null ? (d.roe*100).toFixed(1)+'%' : '—'}`;
+        const url = `https://github.com/iannn211/stock-daily-brief/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=watchlist`;
+        window.open(url, '_blank');
+      });
+    }
+  }
+
+  main().catch(err => {
+    console.error(err);
+    root.innerHTML = `<div class="ins-error">載入失敗：${err.message || err}</div>`;
+  });
+})();
+</script>
+</body>
+</html>
