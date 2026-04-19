@@ -1421,6 +1421,68 @@ footer a { color: var(--tx-3); }
 .hero-action-body strong { font-size: 14px; display: block; margin-bottom: 3px; line-height: 1.55; }
 .hero-action-reason { font-size: 12px; line-height: 1.6; }
 
+/* A.1 Change-anchored framing (2026-04-19) */
+.hero-action-checklist {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed rgba(255,255,255,0.14);
+  border-radius: var(--r-sm);
+}
+.checklist-label {
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.4px;
+}
+.checklist-list {
+  margin: 0 0 8px 18px;
+  padding: 0;
+  line-height: 1.7;
+  color: var(--fg);
+}
+.checklist-list li { margin-bottom: 2px; }
+.checklist-risk {
+  padding: 6px 8px;
+  background: rgba(255,193,7,0.08);
+  border-left: 2px solid rgba(255,193,7,0.6);
+  border-radius: 3px;
+  margin-bottom: 6px;
+  line-height: 1.55;
+}
+.checklist-case {
+  font-style: italic;
+  line-height: 1.55;
+  padding-left: 4px;
+  border-left: 2px solid rgba(255,255,255,0.08);
+}
+
+/* Empty state ("今天什麼都不用做") */
+.hero-action-empty {
+  background: rgba(120,130,160,0.06);
+  border-color: rgba(120,130,160,0.22);
+  border-left-color: var(--muted);
+}
+.hero-action-empty .hero-action-lbl {
+  color: var(--muted);
+}
+.hero-action-triggers {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(120,170,255,0.04);
+  border: 1px solid rgba(120,170,255,0.14);
+  border-radius: var(--r-sm);
+}
+.triggers-label {
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.4px;
+}
+.triggers-list {
+  margin: 0 0 0 18px;
+  padding: 0;
+  line-height: 1.8;
+}
+
 .hero-picks { margin-top: 10px; }
 .hero-picks-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
 .pick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }

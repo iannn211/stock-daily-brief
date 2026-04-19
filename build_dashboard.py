@@ -36,6 +36,7 @@ from provenance_enrich import (  # noqa: E402
     enrich_chips,
     load_supply_chains,
 )
+from framing import next_triggers_from_portfolio  # noqa: E402
 
 TAIPEI = ZoneInfo("Asia/Taipei")
 ROOT = Path(__file__).resolve().parent
@@ -4065,15 +4066,65 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     opps = analysis.get("opportunities", [])
     diag = analysis.get("portfolio_diagnosis", {})
 
-    # Top action (first green)
+    # Top action (first green) — Spec A.1 re-framing (2026-04-19):
+    # Label changed from "TODAY · GO" (naked prediction) to
+    # "今日訊號變化" (change-anchored framing). Every action now ships
+    # with a generic checklist template that forces the reader to
+    # verify the signal before acting. When no green actions exist,
+    # we render an explicit empty-state card with concrete "next
+    # triggers" computed from the user's own holdings + watchlist —
+    # NOT generic examples. See framing.py + specs/fix-08-provenance-layer.md §A.1.
+    CHECKLIST_BLOCK = '''
+            <div class="hero-action-checklist">
+              <div class="checklist-label mono small">🔎 變化解讀的 checklist：</div>
+              <ol class="checklist-list small">
+                <li>訊號來源機構是否有對沖部位／利益關係？</li>
+                <li>你的單檔部位是否已達組合 5% 上限？</li>
+                <li>若訊號是「目標價上修」，該機構 2-4 個月前的目標價是多少？</li>
+              </ol>
+              <div class="checklist-risk small">
+                <span class="mono">⚠ 風險：</span>快速上修／下修常是 sell-side FOMO／止損踩踏，不是中長期訊號。
+              </div>
+              <div class="checklist-case muted small">
+                歷史案例：台光電 2024 年 4 個月目標價 1985 → 4570，之後回落 30%。
+              </div>
+            </div>'''
+
     top_action_html = ""
     if actions:
         a = actions[0]
         top_action_html = f'''
         <div class="hero-action">
-          <div class="hero-action-lbl"><span class="dot dot-up"></span>TODAY · GO</div>
-          <div class="hero-action-body"><strong>{html.escape(a.get("action", ""))}</strong>
-            <div class="hero-action-reason muted small">{html.escape(a.get("reason", ""))}</div>
+          <div class="hero-action-lbl">🔄 今日訊號變化 · SIGNAL vs 昨日</div>
+          <div class="hero-action-body">
+            <strong>{html.escape(a.get("action", ""))}</strong>
+            <div class="hero-action-reason muted small">{html.escape(a.get("reason", ""))}</div>{CHECKLIST_BLOCK}
+          </div>
+        </div>'''
+    else:
+        # Empty state — "今天什麼都不用做" is itself a valid conclusion.
+        # Triggers are synthesized from user's real holdings + watchlist
+        # via framing.next_triggers_from_portfolio (never generic examples).
+        trigger_list = next_triggers_from_portfolio(pf, analysis)
+        triggers_html = (
+            "".join(
+                f'<li>{html.escape(t)}</li>'
+                for t in trigger_list
+            )
+            or '<li class="muted small">無即時觸發點（安靜日）</li>'
+        )
+        top_action_html = f'''
+        <div class="hero-action hero-action-empty">
+          <div class="hero-action-lbl">🔄 今日訊號變化 · SIGNAL vs 昨日</div>
+          <div class="hero-action-body">
+            <strong>今天什麼都不用做</strong>
+            <div class="hero-action-reason muted small">
+              持股訊號穩定、無新的一手研報 / 收斂訊號。「什麼都不用做」本身是有價值的結論。
+            </div>
+            <div class="hero-action-triggers">
+              <div class="triggers-label mono small">📌 下一個觸發（來自你的持股 + watchlist）：</div>
+              <ul class="triggers-list small">{triggers_html}</ul>
+            </div>
           </div>
         </div>'''
 
@@ -9324,6 +9375,68 @@ footer a { color: var(--tx-3); }
 }
 .hero-action-body strong { font-size: 14px; display: block; margin-bottom: 3px; line-height: 1.55; }
 .hero-action-reason { font-size: 12px; line-height: 1.6; }
+
+/* A.1 Change-anchored framing (2026-04-19) */
+.hero-action-checklist {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed rgba(255,255,255,0.14);
+  border-radius: var(--r-sm);
+}
+.checklist-label {
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.4px;
+}
+.checklist-list {
+  margin: 0 0 8px 18px;
+  padding: 0;
+  line-height: 1.7;
+  color: var(--fg);
+}
+.checklist-list li { margin-bottom: 2px; }
+.checklist-risk {
+  padding: 6px 8px;
+  background: rgba(255,193,7,0.08);
+  border-left: 2px solid rgba(255,193,7,0.6);
+  border-radius: 3px;
+  margin-bottom: 6px;
+  line-height: 1.55;
+}
+.checklist-case {
+  font-style: italic;
+  line-height: 1.55;
+  padding-left: 4px;
+  border-left: 2px solid rgba(255,255,255,0.08);
+}
+
+/* Empty state ("今天什麼都不用做") */
+.hero-action-empty {
+  background: rgba(120,130,160,0.06);
+  border-color: rgba(120,130,160,0.22);
+  border-left-color: var(--muted);
+}
+.hero-action-empty .hero-action-lbl {
+  color: var(--muted);
+}
+.hero-action-triggers {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(120,170,255,0.04);
+  border: 1px solid rgba(120,170,255,0.14);
+  border-radius: var(--r-sm);
+}
+.triggers-label {
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.4px;
+}
+.triggers-list {
+  margin: 0 0 0 18px;
+  padding: 0;
+  line-height: 1.8;
+}
 
 .hero-picks { margin-top: 10px; }
 .hero-picks-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }

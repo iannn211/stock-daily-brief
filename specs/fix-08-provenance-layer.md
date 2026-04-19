@@ -123,7 +123,7 @@ tagged `source="user_input"` with `source_ref="supply_chains.yaml
 
 ## Phase 1 scope (shipped 2026-04-19)
 
-**In scope this ship:**
+**A.0 — Provenance layer (shipped in earlier commit `6c19296`):**
 - TWSE/TAIFEX chips (`foreign_futures.latest.*`, `margin_total.latest.*`,
   `change_1d`, `change_1d_yi`) → 🟢 envelopes, rendered as dots in the
   chips strip.
@@ -131,6 +131,45 @@ tagged `source="user_input"` with `source_ref="supply_chains.yaml
   rendered on the lead-chip row of each radar card. 🔵/🔴 mix visible
   immediately in the UI.
 - Opportunity Radar legend — small text row explaining the four dots.
+
+**A.1 — Change-anchored framing (shipped 2026-04-19, this commit):**
+- Top hero label "TODAY · GO" → "🔄 今日訊號變化 · SIGNAL vs 昨日".
+  No more naked-prediction framing on the most prominent card.
+- Every action body gets an appended checklist template block:
+  - 3 verification questions (hedged position / 5% cap / historical comparison)
+  - ⚠ Risk callout on sell-side FOMO pattern
+  - Historical cautionary case (台光電 1985→4570→回落 30%)
+- Empty state: when `action_checklist.green = []`, render
+  "今天什麼都不用做" card with concrete triggers synthesized from
+  user's OWN holdings + watchlist (never generic examples).
+  See `framing.next_triggers_from_portfolio()`.
+- `framing.validate_change_anchored_action()` validator shipped but not
+  wired — A.2 diff engine will call it as the gate before rendering
+  any action as "change-anchored".
+
+**A.1.5 observation phase (next 2-3 days):**
+- Track the actual 🟢/🔵/🟡/🔴 distribution in dashboards. The B (synthesis
+  card) copy has to be designed around what the data actually looks
+  like, not a priori. Do NOT start B before observation is complete.
+
+**A.2 (deferred):**
+- Diff engine: compare today's `analyses/YYYY-MM-DD.json` vs the most
+  recent prior analysis. Gap > 5 trading days → skip diff entirely
+  and force empty state (per user's Q1 answer 2026-04-19).
+- Gemini schema extension: emit `change_from` / `exit_condition` fields
+  on each action so validator has something to check.
+- Wire `validate_change_anchored_action()` into render path: reject
+  actions that fail validator, fall through to empty state.
+
+**B (deferred to after A.1.5 observation):**
+- Single-card synthesis view — rolls up changes across chips / holdings /
+  themes into one "今日發生了什麼" card.
+
+**Out of scope (this ship) — explicitly held for later:**
+- **3081 位階-100 硬 veto + 4566 散熱 demote list** — held for separate
+  commit after A.1.5 observation. Two-step for clean rollback.
+- **Naked-prediction validator enforcement** — validator ships in A.1
+  but is NOT yet called. Wiring comes in A.2.
 
 **Out of scope (Phase 2, deferred):**
 - Narrative text fields: `morning_brief.headline / one_liner`,
