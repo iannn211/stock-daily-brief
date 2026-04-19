@@ -36,6 +36,33 @@ python daily_brief.py
 - v4：LINE Bot 推播（LINE Messaging API）
 - v5：加證券商研究報告、法說會逐字稿、外資買賣超
 
+## Provenance 怎麼讀（dashboard 上的彩色小點）
+
+Dashboard 上每個關鍵數字旁邊可能會看到一個彩色圓點 — 那是**資料來源**。
+（spec：`specs/fix-08-provenance-layer.md`）
+
+| 圓點 | 意思 | 例子 |
+|:---:|------|------|
+| 🟢 | **官方／原始報告** (primary_report) | TWSE 三大法人期貨未平倉、TAIFEX 融資融券、分析師研報 |
+| 🔵 | **使用者確認** (user_input) | `supply_chains.yaml` 裡明確寫的題材→股票對應 |
+| 🟡 | **媒體綜合** (secondary_news) | Gemini 綜合多家財經媒體的陳述 |
+| 🔴 | **LLM 推論** (llm_inference) | Gemini 自行推論、無第一手引用 → 最要存疑 |
+
+**信任順序：🟢 > 🔵 > 🟡 > 🔴**。
+
+滑鼠移到點上會看到：資料來源 / 日期 / 幾天前 / LLM 信心分數。如果資料太舊
+（例如散熱股 target price 30 天前），旁邊會出現 `⚠ N 天` 過期提醒 — 過期
+天數按產業速度分級（半導體嚴、金融寬）。
+
+### 例：Opportunity Radar 的 lead stocks
+
+一個題材 Gemini 挑 5 檔時，會看到混合 🔵 和 🔴：
+- 🔵 = 該檔在你 `supply_chains.yaml` 的同題材名單裡（**雙重確認**）
+- 🔴 = Gemini 自己選的、yaml 沒收錄（需要你判斷這檔到底算不算該題材）
+
+想調整：編輯 `supply_chains.yaml`，下次 rebuild 後新增的股票自動從 🔴 升級 🔵。
+可用 `.venv/bin/python scripts/provenance_audit.py` 看整體 🔵/🔴 分布。
+
 ## 疑難排解
 
 - **某個 RSS 源 404**：腳本會印警告然後跳過，不會整個掛掉。多試幾天如果還是壞，就把那條 FEEDS 拿掉。

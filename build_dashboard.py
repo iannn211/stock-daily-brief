@@ -26,6 +26,17 @@ from zoneinfo import ZoneInfo
 import markdown as md
 import yaml
 
+# Spec fix-08: provenance layer (source + as_of tracking for every field).
+# `unwrap` is backward-compatible on raw values, so sprinkling it at read
+# sites is safe even for pre-envelope data.
+from provenance import unwrap, render_dot_html, is_enveloped  # noqa: E402
+from provenance_speed_map import speed_of  # noqa: E402
+from provenance_enrich import (  # noqa: E402
+    enrich_analysis,
+    enrich_chips,
+    load_supply_chains,
+)
+
 TAIPEI = ZoneInfo("Asia/Taipei")
 ROOT = Path(__file__).resolve().parent
 BRIEFS_DIR = ROOT / "briefs"
@@ -36,6 +47,12 @@ DOCS_HOLDINGS_DIR = DOCS_DIR / "holdings"
 PORTFOLIO_JSON = ROOT / "portfolio.json"
 HISTORY_JSON = ROOT / "price_history.json"
 STOCK_UNIVERSE_JSON = ROOT / "stock_universe.json"  # all TW stocks from TWSE/TPEx
+SUPPLY_CHAINS_YAML = ROOT / "supply_chains.yaml"
+
+# Spec fix-08: load once at module level so every analysis file reuses the
+# same theme → ticker index (used to upgrade Gemini lead_stocks from 🔴 to 🔵
+# when the user has confirmed the mapping in supply_chains.yaml).
+_SUPPLY_CHAINS_IDX = load_supply_chains(str(SUPPLY_CHAINS_YAML))
 
 DATE_RE = re.compile(r"^# Daily Brief — (\d{4}-\d{2}-\d{2}) \(週(.)\)", re.MULTILINE)
 COUNT_RE = re.compile(r"抓到 (\d+) 則新聞")
@@ -302,6 +319,14 @@ def load_analysis(date: str) -> dict | None:
                 analysis = apply_validation_fixes(analysis, validation)
         except Exception:
             pass
+    # Spec fix-08: enrich with provenance envelopes for Phase-1 whitelist
+    # fields (morning_brief, topics, opportunities, budget, holdings).
+    # `unwrap()` at read sites keeps this backward-compatible.
+    try:
+        enrich_analysis(analysis, _SUPPLY_CHAINS_IDX)
+    except Exception:
+        # Never block rendering on enrichment failure — fall back to raw.
+        pass
     return analysis
 
 
@@ -1145,6 +1170,12 @@ def load_market_chips() -> dict | None:
     mc = data.get("market_chips") or {}
     if not mc.get("foreign_futures") and not mc.get("margin_total"):
         return None
+    # Spec fix-08: wrap chips with 🟢 primary_report envelopes (TWSE/TAIFEX
+    # official data, so staleness gets tracked too).
+    try:
+        enrich_chips(mc)
+    except Exception:
+        pass
     return mc
 
 
@@ -1165,9 +1196,11 @@ def render_market_chips_strip(mc: dict | None) -> str:
     # ---- Foreign futures net OI ----
     fx = mc.get("foreign_futures") or {}
     latest_fx = fx.get("latest") or {}
-    net = latest_fx.get("net_oi")
+    net_env = latest_fx.get("net_oi")
+    net = unwrap(net_env)
     if net is not None:
-        ch = fx.get("change_1d")
+        ch_env = fx.get("change_1d")
+        ch = unwrap(ch_env)
         lots_w = abs(net) / 10000.0  # 台灣慣例：萬口
         direction = "空單" if net < 0 else "多單"
         ch_bit = ""
@@ -1191,19 +1224,24 @@ def render_market_chips_strip(mc: dict | None) -> str:
         else:
             interp = "外資倉位平衡"
             tone = "neutral"
+        # Spec fix-08: provenance dot — TAIFEX data is 🟢 primary_report with
+        # its own staleness cadence (chips data should update every trading day).
+        prov_dot = render_dot_html(net_env, "fast", "chips")
         items.append(f'''
         <div class="mcs-item mcs-{tone}">
           <div class="mcs-k">外資期貨{direction}淨額</div>
-          <div class="mcs-v">{lots_w:.1f} <span class="mcs-unit">萬口</span>{ch_bit}</div>
+          <div class="mcs-v">{lots_w:.1f} <span class="mcs-unit">萬口</span>{ch_bit}{prov_dot}</div>
           <div class="mcs-i">{html.escape(interp)}</div>
         </div>''')
 
     # ---- Margin balance ----
     mg = mc.get("margin_total") or {}
     latest_mg = mg.get("latest") or {}
-    bal = latest_mg.get("balance_yi")
+    bal_env = latest_mg.get("balance_yi")
+    bal = unwrap(bal_env)
     if bal is not None:
-        ch = mg.get("change_1d_yi")
+        ch_env = mg.get("change_1d_yi")
+        ch = unwrap(ch_env)
         ch_bit = ""
         tone = "neutral"
         interp = ""
@@ -1219,21 +1257,24 @@ def render_market_chips_strip(mc: dict | None) -> str:
             else:
                 interp = "融資變動不大"
                 tone = "neutral"
+        prov_dot = render_dot_html(bal_env, "fast", "chips")
         items.append(f'''
         <div class="mcs-item mcs-{tone}">
           <div class="mcs-k">融資餘額</div>
-          <div class="mcs-v">{bal:,.0f} <span class="mcs-unit">億</span>{ch_bit}</div>
+          <div class="mcs-v">{bal:,.0f} <span class="mcs-unit">億</span>{ch_bit}{prov_dot}</div>
           <div class="mcs-i">{html.escape(interp)}</div>
         </div>''')
 
     # ---- Short lots ----
-    short_lots = latest_mg.get("short_lots")
+    short_lots_env = latest_mg.get("short_lots")
+    short_lots = unwrap(short_lots_env)
     if short_lots is not None:
         # NT: small changes don't matter; just display the level
+        prov_dot = render_dot_html(short_lots_env, "fast", "chips")
         items.append(f'''
         <div class="mcs-item mcs-neutral">
           <div class="mcs-k">融券餘額</div>
-          <div class="mcs-v">{short_lots/10000:.1f} <span class="mcs-unit">萬張</span></div>
+          <div class="mcs-v">{short_lots/10000:.1f} <span class="mcs-unit">萬張</span>{prov_dot}</div>
           <div class="mcs-i">空方倉位水位</div>
         </div>''')
 
@@ -3581,20 +3622,32 @@ def render_radar_tab(analysis: dict | None, pf: dict | None,
         signals = o.get("signals") or []
         warning = o.get("ai_warning", "")
 
+        # Provenance sidecar: parallel list of envelope dicts for each lead
+        # stock. Attached by provenance_enrich.enrich_analysis(). Indicates
+        # 🔵 user_input (supply_chains.yaml confirmed) vs 🔴 llm_inference
+        # (Gemini-only pick, no yaml confirmation).
+        lead_prov = o.get("_lead_stocks_prov") or []
+        # Speed class for lead stocks: driven by the theme string. Most AI
+        # themes are 2nd-tier tech → medium (PCB, 散熱 etc.), but 半導體/伺服器
+        # themes speed them up to fast. Slow for financials/staples themes.
+        speed = speed_of(theme_hint=theme)
+
         # Lead stocks chips
         chips = []
-        for ls in lead_stocks[:5]:
+        for i, ls in enumerate(lead_stocks[:5]):
             sym = ls.get("symbol", "")
             name = ls.get("name", "")
             day_pct = 0.0
             if sym in price_lookup:
                 day_pct = price_lookup[sym].get("day_change_pct") or 0
             href = f"holdings/{sym}.html" if sym in _TICKER_ALIAS else "#"
+            prov_env = lead_prov[i] if i < len(lead_prov) else None
+            prov_dot = render_dot_html(prov_env, speed, "default") if prov_env else ""
             chips.append(f'''
               <a class="lead-chip" href="{href}">
                 <span class="lead-sym mono">{html.escape(sym)}</span>
                 <span class="lead-name muted small">{html.escape(name)}</span>
-                <span class="lead-chg mono {_cls(day_pct)}">{_fmt_pct(day_pct, 2)}</span>
+                <span class="lead-chg mono {_cls(day_pct)}">{_fmt_pct(day_pct, 2)}</span>{prov_dot}
               </a>''')
         chips_html = "".join(chips) if chips else ""
 
@@ -3731,6 +3784,7 @@ def render_radar_tab(analysis: dict | None, pf: dict | None,
   <div class="radar-intro">
     <h2 class="radar-title mono">OPPORTUNITY RADAR · 機會雷達</h2>
     <p class="muted small">AI 橫掃全市場找出「你可能錯過」的題材 · {len(opps)} 個機會 · {len(topics)} 個主題</p>
+    <p class="prov-legend small muted">資料來源圖示：<span class="prov-dot prov-primary_report" title="官方報告／TWSE／TAIFEX">🟢</span>官方/原始報告 · <span class="prov-dot prov-user_input" title="使用者 supply_chains.yaml 確認">🔵</span>使用者確認 · <span class="prov-dot prov-secondary_news" title="媒體綜合">🟡</span>媒體綜合 · <span class="prov-dot prov-llm_inference" title="LLM 推論 (Gemini)">🔴</span>LLM 推論</p>
   </div>
   {controls}
   <div class="radar-grid" id="radar-grid">{"".join(cards)}</div>
@@ -8143,6 +8197,69 @@ a:hover { color: #b8d0ff; }
 .mcs-i { font-size: 12px; color: var(--tx-2); line-height: 1.4; margin-top: 2px; }
 .mcs-item.mcs-warn .mcs-i { color: var(--amber); }
 .mcs-item.mcs-good .mcs-i { color: var(--dn-soft); }
+
+/* Spec fix-08: Provenance dots & staleness chips.
+   Dots appear next to data values whose source has been tagged — user
+   hovers to see the full tooltip (source · date · age · confidence).
+   Staleness chips are amber / red depending on industry-tiered thresholds.
+
+   Trust order encoded by colour:
+     🟢 primary_report — TAIFEX / TWSE / 券商報告
+     🟡 secondary_news — 媒體綜合
+     🔵 user_input     — 使用者手動輸入（supply_chains.yaml 等）
+     🔴 llm_inference  — Gemini 推論，無第一手引用
+*/
+.prov-dot {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.85;
+  cursor: help;
+  transition: opacity 0.15s;
+}
+.prov-dot:hover { opacity: 1; }
+.prov-stale-yellow { opacity: 1; }
+.prov-stale-red { opacity: 1; }
+.prov-stale-chip {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  font-variant-numeric: tabular-nums;
+  cursor: help;
+}
+.prov-stale-chip-yellow {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+}
+.prov-stale-chip-red {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+/* "Provenance 這是什麼" hint — appears on hover over the dot-cluster. */
+.prov-legend {
+  display: inline-flex;
+  gap: 4px;
+  font-size: 10.5px;
+  color: var(--tx-3);
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: help;
+}
+.prov-legend:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--tx-2);
+}
 
 /* Validator banner — sits above the AI hero when Python QA catches
    issues in today's Gemini output. Narrative layout: 結論 → 每一筆 影響 + 下一步.

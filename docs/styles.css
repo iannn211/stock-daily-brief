@@ -294,6 +294,69 @@ a:hover { color: #b8d0ff; }
 .mcs-item.mcs-warn .mcs-i { color: var(--amber); }
 .mcs-item.mcs-good .mcs-i { color: var(--dn-soft); }
 
+/* Spec fix-08: Provenance dots & staleness chips.
+   Dots appear next to data values whose source has been tagged — user
+   hovers to see the full tooltip (source · date · age · confidence).
+   Staleness chips are amber / red depending on industry-tiered thresholds.
+
+   Trust order encoded by colour:
+     🟢 primary_report — TAIFEX / TWSE / 券商報告
+     🟡 secondary_news — 媒體綜合
+     🔵 user_input     — 使用者手動輸入（supply_chains.yaml 等）
+     🔴 llm_inference  — Gemini 推論，無第一手引用
+*/
+.prov-dot {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.85;
+  cursor: help;
+  transition: opacity 0.15s;
+}
+.prov-dot:hover { opacity: 1; }
+.prov-stale-yellow { opacity: 1; }
+.prov-stale-red { opacity: 1; }
+.prov-stale-chip {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  font-variant-numeric: tabular-nums;
+  cursor: help;
+}
+.prov-stale-chip-yellow {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+}
+.prov-stale-chip-red {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+/* "Provenance 這是什麼" hint — appears on hover over the dot-cluster. */
+.prov-legend {
+  display: inline-flex;
+  gap: 4px;
+  font-size: 10.5px;
+  color: var(--tx-3);
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: help;
+}
+.prov-legend:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--tx-2);
+}
+
 /* Validator banner — sits above the AI hero when Python QA catches
    issues in today's Gemini output. Narrative layout: 結論 → 每一筆 影響 + 下一步.
    Goal: insight + next step, not raw flags. */
