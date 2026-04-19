@@ -1168,7 +1168,7 @@ def render_market_chips_strip(mc: dict | None) -> str:
     net = latest_fx.get("net_oi")
     if net is not None:
         ch = fx.get("change_1d")
-        lots_k = abs(net) / 1000.0  # in 千口 for display
+        lots_w = abs(net) / 10000.0  # 台灣慣例：萬口
         direction = "空單" if net < 0 else "多單"
         ch_bit = ""
         if ch is not None:
@@ -1194,7 +1194,7 @@ def render_market_chips_strip(mc: dict | None) -> str:
         items.append(f'''
         <div class="mcs-item mcs-{tone}">
           <div class="mcs-k">外資期貨{direction}淨額</div>
-          <div class="mcs-v">{lots_k:.1f} <span class="mcs-unit">千口</span>{ch_bit}</div>
+          <div class="mcs-v">{lots_w:.1f} <span class="mcs-unit">萬口</span>{ch_bit}</div>
           <div class="mcs-i">{html.escape(interp)}</div>
         </div>''')
 
