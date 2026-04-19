@@ -685,6 +685,35 @@ plan_summary：一句 30-50 字總結（例：「今日建議用 NT$5,000 試水
 - symbol: "AI 受惠股" ❌（沒具體 ticker）
 - why_now: "AI 受惠股、長線看好" ❌（沒有今日催化、沒有相對估值論述）
 
+---
+
+**估值守則 · EPS / P/E / P/B / ROE 納入判斷（使用者明講「需要納入考慮 EPS P/E P/B 這些」）**
+
+所有的 lead_stocks / coverage_suggestions / budget_allocation / holdings_analysis 都**必須引用 prompt 裡「基本面資料」區塊的實際數字**（PE_TTM、EPS_TTM、P/B、ROE、earnings_growth）。不要編造數字。
+
+**硬規則：**
+1. why_now / rationale 必須點名 PE 或 EPS 的**實際數字與標籤**（🟢 合理 / 🟡 偏高 / 🟠 昂貴 / 🔴 泡沫），讓使用者看得懂這是便宜還貴。
+2. **禁止推薦** PE > 50 的中小型股（hidden / small tier）**除非** earnings_growth > +50% 且 why_now 明確解釋「為何貴也要買」。
+3. **禁止推薦** EPS < 0（虧損）的公司**除非**明確標註「此為轉機股、催化為 ___」並給出虧損轉盈的量化預估。
+4. **優先推薦** 條件：PE 在 🟢 合理區（<20）+ earnings_growth 🟢 成長（>+10%）+ ROE > 10%。這三者齊備是「雪球夢幻配」。
+5. 若基本面資料沒有該檔（fundamentals 無數據），why_now 要坦白寫「基本面資料尚待 yfinance 補齊，建議先小倉位試水」，不要裝作有數據。
+6. holdings_analysis 的 bull_bear_breakdown 要把估值納入考慮：例如 2330 PE 22 + EPS 成長 34% → bull 65 / bear 15 / neutral 20（估值合理+成長佳）。
+
+**產業估值基準（粗略、Gemini 要判斷）：**
+- 半導體 / AI：PE < 25 合理，> 40 昂貴
+- 電子代工 / PCB：PE < 18 合理，> 28 昂貴
+- 金融 / 金控：PE < 12 合理，> 18 昂貴；**P/B 更關鍵**（< 1.2 便宜）
+- 傳產 / 金屬 / 航運：PE < 15 合理（景氣循環要同時看 P/B）
+- 生技 / 未獲利：看 P/S 或 EPS 趨勢，PE 數字可能失真
+
+**好範例（why_now 引用估值）：**
+- why_now: "今日 M 平方報告點名 GB200 機櫃內部高速銅纜線需求翻倍；3665 貿聯-KY 是直接供 NVIDIA 的小型冠軍（PE 18.5 🟢 合理、EPS TTM 12.3、ROE 22% 🟢、earnings_growth +35% 🟢），估值尚未反映 2026 訂單能見度，52 週位階僅 60% 還有空間。"
+
+**壞範例：**
+- why_now: "PE 合理、獲利成長" ❌（沒數字）
+- why_now: "長線看好 AI 題材" ❌（沒估值論述、沒今日催化）
+- why_now: "estimated PE 25" ❌（不是估計的，你有 prompt 裡實際的 PE_TTM）
+
 """
 
 
@@ -777,10 +806,198 @@ def build_coverage_context() -> str:
     return "\n".join(lines)
 
 
+def _pe_flag(pe: float | None) -> str:
+    """Color-word flag for a P/E ratio — tells Gemini 'is this cheap?'."""
+    if pe is None:
+        return "—"
+    if pe < 0:
+        return "🔴 負值（虧損）"
+    if pe < 12:
+        return "🟢 便宜"
+    if pe < 20:
+        return "🟢 合理"
+    if pe < 30:
+        return "🟡 偏高"
+    if pe < 50:
+        return "🟠 昂貴"
+    return "🔴 泡沫"
+
+
+def _growth_flag(g: float | None) -> str:
+    """EPS / 營收 YoY 成長標籤。yfinance 回傳 0.18 = 18%。"""
+    if g is None:
+        return "—"
+    pct = g * 100
+    if pct < -10:
+        return f"🔴 {pct:+.0f}%（衰退）"
+    if pct < 0:
+        return f"🟠 {pct:+.0f}%（微幅下滑）"
+    if pct < 10:
+        return f"🟡 {pct:+.0f}%（持平）"
+    if pct < 30:
+        return f"🟢 {pct:+.0f}%（成長）"
+    return f"🟢 {pct:+.0f}%（高速成長）"
+
+
+def build_valuation_context() -> str:
+    """Inject EPS / P/E / P/B / ROE / growth so Gemini can gate recommendations
+    on actual valuation instead of hallucinating 'P/E 22 合理' when it doesn't
+    know the real number.
+
+    User critique (2026-04-18): 「你在分析的時候需要納入考慮 EPS P/E P/B 這些誒」
+
+    Data flow: fetch_prices.py already pulls fundamentals from yfinance into
+    prices.json. We just need to surface them in the prompt.
+    """
+    prices_path = ROOT / "prices.json"
+    if not prices_path.exists():
+        return ""
+
+    try:
+        prices_blob = json.loads(prices_path.read_text(encoding="utf-8"))
+        prices = prices_blob.get("prices") or {}
+    except Exception:
+        return ""
+
+    # Map symbol -> fundamentals (ignoring yf ticker suffix).
+    sym_to_fund: dict[str, dict] = {}
+    sym_to_meta: dict[str, dict] = {}
+    for yf_ticker, rec in prices.items():
+        sym = rec.get("symbol") or yf_ticker
+        fund = rec.get("fundamentals") or {}
+        if fund:
+            sym_to_fund[str(sym)] = fund
+            sym_to_meta[str(sym)] = {
+                "close": rec.get("close"),
+                "pct_52w": rec.get("pct_52w"),
+                "ret_30d": rec.get("ret_30d"),
+            }
+
+    if not sym_to_fund:
+        return ""
+
+    # Load portfolio + watchlist symbols
+    watch_syms: list[str] = []
+    hold_syms: list[str] = []
+    try:
+        cfg = yaml.safe_load(PORTFOLIO_YAML.read_text(encoding="utf-8"))
+        hold_syms = [str(h["symbol"]) for h in (cfg.get("holdings") or [])]
+        watch_syms = [str(w["symbol"]) for w in (cfg.get("watchlist") or [])]
+    except Exception:
+        pass
+
+    # Load supply_chains.yaml stocks grouped by tier
+    chain_syms_by_tier: dict[str, list[tuple[str, str, str]]] = {
+        "hidden": [], "small": [], "mid": [], "large": [], "mega": [],
+    }
+    try:
+        sc = yaml.safe_load((ROOT / "supply_chains.yaml").read_text(encoding="utf-8")) or {}
+        for slug, chain in (sc.get("chains") or {}).items():
+            for layer in chain.get("layers") or []:
+                for s in layer.get("stocks") or []:
+                    tier = (s.get("tier") or "").strip().lower()
+                    sym = str(s.get("symbol") or "").strip()
+                    name = s.get("name") or ""
+                    if sym and tier in chain_syms_by_tier:
+                        chain_syms_by_tier[tier].append((sym, name, slug))
+    except Exception:
+        pass
+
+    def _row(sym: str, name: str = "", extra: str = "") -> str | None:
+        f = sym_to_fund.get(sym)
+        if not f:
+            return None
+        pe = f.get("pe_ttm")
+        pe_f = f.get("pe_forward")
+        eps = f.get("eps_ttm")
+        pb = f.get("pb")
+        roe = f.get("roe")
+        eg = f.get("earnings_growth")
+        rg = f.get("rev_growth")
+        margin = f.get("profit_margin")
+        meta = sym_to_meta.get(sym, {})
+        bits: list[str] = []
+        if pe is not None:
+            bits.append(f"PE={pe:.1f} {_pe_flag(pe)}")
+        if pe_f is not None and pe_f != pe:
+            bits.append(f"fwdPE={pe_f:.1f}")
+        if eps is not None:
+            bits.append(f"EPS={eps:.2f}")
+        if pb is not None:
+            bits.append(f"PB={pb:.2f}")
+        if roe is not None:
+            bits.append(f"ROE={roe*100:.0f}%")
+        if margin is not None:
+            bits.append(f"淨利率={margin*100:.0f}%")
+        if eg is not None:
+            bits.append(f"EPS成長={_growth_flag(eg)}")
+        elif rg is not None:
+            bits.append(f"營收成長={_growth_flag(rg)}")
+        if meta.get("pct_52w") is not None:
+            bits.append(f"52週位階={meta['pct_52w']:.0f}%")
+        if not bits:
+            return None
+        label = f"{sym} {name}".strip()
+        suffix = f" {extra}" if extra else ""
+        return f"- {label}：{' · '.join(bits)}{suffix}"
+
+    out: list[str] = ["## 基本面資料（yfinance · 每個 ticker 的 EPS / P/E / P/B / ROE / 成長率）", ""]
+    out.append("⚠️ **極重要規則 · Gemini 必讀**：")
+    out.append("- 任何 lead_stocks / coverage_suggestions / budget_allocation 的 why_now / rationale **必須引用下方的實際 PE、EPS 或 ROE 數字**，不要自己編造「PE 22 合理」這種幻覺數字。")
+    out.append("- 若某檔 PE > 50 卻要推薦，why_now 必須明確解釋「為何昂貴估值仍合理」（例：EPS 年增 > 80%、產能擴張、題材剛啟動）。")
+    out.append("- 若某檔 EPS 為負（虧損）卻要推薦，必須寫「此為轉機股、主要催化是___」。")
+    out.append("- 若下方找不到某 ticker 的基本面，就直接寫「基本面資料待補」，不要瞎編。")
+    out.append("- 便宜不代表買、貴不代表賣：要結合題材動能 + 52 週位階 + 法人籌碼一起判斷。")
+    out.append("")
+
+    # Holdings section
+    hold_rows = [r for s in hold_syms for r in [_row(s)] if r]
+    if hold_rows:
+        out.append("### 使用者持股的估值現況")
+        out.extend(hold_rows)
+        out.append("")
+
+    # Watchlist section
+    watch_rows = [r for s in watch_syms for r in [_row(s)] if r]
+    if watch_rows:
+        out.append("### 追蹤清單的估值現況")
+        out.extend(watch_rows)
+        out.append("")
+
+    # Hidden / small tier — highlight "雪球級" valuation picture
+    for tier_key, tier_label in [
+        ("hidden", "🎯 HIDDEN tier（隱形冠軍）· 最優先的雪球候選"),
+        ("small",  "SMALL tier · 次優先雪球候選"),
+        ("mid",    "MID tier · 波段"),
+    ]:
+        rows = []
+        seen: set[str] = set()
+        for sym, name, slug in chain_syms_by_tier.get(tier_key, []):
+            if sym in seen:
+                continue
+            seen.add(sym)
+            r = _row(sym, name, extra=f"[{slug}]")
+            if r:
+                rows.append(r)
+        if rows:
+            out.append(f"### {tier_label}")
+            out.extend(rows[:20])  # cap each tier at 20 to keep prompt size sane
+            out.append("")
+
+    # Legend
+    out.append("### P/E 分級（粗略標準，細看產業）")
+    out.append("🟢 <12 便宜 · 🟢 12-20 合理 · 🟡 20-30 偏高 · 🟠 30-50 昂貴 · 🔴 >50 泡沫 · 🔴 負值 虧損")
+    out.append("（金融/傳產 PE<15 才算便宜；半導體/AI PE<25 才算便宜；生技/未獲利公司看 P/S 或 EPS 趨勢）")
+    out.append("")
+
+    return "\n".join(out)
+
+
 def build_prompt(brief_markdown: str) -> str:
     trimmed = trim_brief(brief_markdown)
     portfolio_ctx = build_portfolio_context()
     coverage_ctx = build_coverage_context()
+    valuation_ctx = build_valuation_context()
 
     # Today / key upcoming dates — prevents AI from misreading forward dates as past.
     now = datetime.now(TAIPEI)
@@ -788,6 +1005,7 @@ def build_prompt(brief_markdown: str) -> str:
     today_str = f"{now:%Y-%m-%d} (週{weekday_zh})"
 
     coverage_block = f"\n---\n\n{coverage_ctx}\n" if coverage_ctx else ""
+    valuation_block = f"\n---\n\n{valuation_ctx}\n" if valuation_ctx else ""
 
     return f"""【今日日期】{today_str}
 
@@ -800,8 +1018,7 @@ def build_prompt(brief_markdown: str) -> str:
 ## 今日新聞彙整（從 RSS 抓取，已按產業/持股分類）
 
 {trimmed}
-{coverage_block}
----
+{coverage_block}{valuation_block}---
 
 請輸出符合 schema 的 JSON。檢核清單：
 - [ ] 敘事段落有 3-5 句，不是條列
@@ -811,7 +1028,8 @@ def build_prompt(brief_markdown: str) -> str:
 - [ ] action_checklist 的每項都是具體可執行的觀察/條件單
 - [ ] learning_point 是今天新聞裡真的出現過的名詞
 - [ ] faq 有 5-8 題，每題都連結到今日新聞或使用者持倉，答案有具體 ticker/數字
-- [ ] coverage_suggestions 有 3-5 檔台股新票，每檔綁定今日新聞催化劑 + 對應 supply_chains.yaml 的某條鏈某層"""
+- [ ] coverage_suggestions 有 3-5 檔台股新票，每檔綁定今日新聞催化劑 + 對應 supply_chains.yaml 的某條鏈某層
+- [ ] **每個 lead_stocks / coverage_suggestions / budget_allocation 的 why_now 都引用了基本面實際數字**（上方「基本面資料」區塊的 PE / EPS / ROE / 成長率），不是瞎猜「PE 22 合理」"""
 
 
 def call_gemini(prompt: str) -> tuple[dict | None, str | None]:

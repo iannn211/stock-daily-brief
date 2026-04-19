@@ -1409,6 +1409,35 @@ def _fmt_pct_fund(v: float | None, digits: int = 1) -> str:
     return f"{v * 100:.{digits}f}%"
 
 
+def _pe_tone(pe: float | None) -> str:
+    """Return CSS class for P/E colouring on supply-chain map cards.
+    🟢 合理 = up · 🟡 偏高 = (no class, neutral) · 🟠 昂貴 = amber · 🔴 泡沫 / 虧損 = dn.
+    Kept loose — Gemini gets sharper tier context; dashboard just needs eyeball signal."""
+    if pe is None:
+        return ""
+    if pe < 0:
+        return "dn"
+    if pe < 20:
+        return "up"
+    if pe < 30:
+        return ""
+    if pe < 50:
+        return "amber"
+    return "dn"
+
+
+def _growth_tone(g: float | None) -> str:
+    """CSS class for growth (0.25 = +25%)."""
+    if g is None:
+        return ""
+    pct = g * 100
+    if pct < -5:
+        return "dn"
+    if pct < 5:
+        return ""
+    return "up"
+
+
 # ---------- 籌碼 (chips) formatting helpers ----------
 # TW convention: 紅=net buy (up), 綠=net sell (down). Values are in 股 (shares);
 # we display in 張 (lots of 1000 shares) for readability.
@@ -1588,6 +1617,12 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
             price = rec.get("price")
             day_pct = rec.get("day_change_pct")
             pct_52w = rec.get("pct_52w")
+            fund = rec.get("fundamentals") or {}
+            pe_ttm = fund.get("pe_ttm")
+            eps_ttm = fund.get("eps_ttm")
+            roe = fund.get("roe")
+            earn_g = fund.get("earnings_growth")
+            rev_g = fund.get("rev_growth")
             is_lead = sym in lead_syms
             has_page = sym in _TICKER_ALIAS
 
@@ -1600,6 +1635,26 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
                 card_cls += " sc-map-stock-snowball"
             card_cls += f" sc-map-tier-{tier_cls}"
 
+            # Valuation badge (on the right, next to tier) — quick eyeball:
+            # is this cheap / expensive at a glance?
+            val_badge = ""
+            if pe_ttm is not None:
+                pe_cls = _pe_tone(pe_ttm)
+                if pe_ttm < 0:
+                    val_label = "虧損"
+                elif pe_ttm < 20:
+                    val_label = "🟢 合理"
+                elif pe_ttm < 30:
+                    val_label = "🟡 偏高"
+                elif pe_ttm < 50:
+                    val_label = "🟠 昂貴"
+                else:
+                    val_label = "🔴 泡沫"
+                val_badge = (
+                    f'<span class="sc-map-val-badge mono small {pe_cls}" '
+                    f'title="P/E TTM = {pe_ttm:.1f}">{val_label}</span>'
+                )
+
             badges: list[str] = []
             if is_lead:
                 badges.append('<span class="sc-map-lead-badge mono small">AI 選</span>')
@@ -1607,6 +1662,8 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
                 f'<span class="sc-map-tier-badge sc-map-tier-badge-{tier_cls} mono small" '
                 f'title="{html.escape(tier_tooltip)}">{html.escape(tier_label)}</span>'
             )
+            if val_badge:
+                badges.append(val_badge)
             badges_html = " ".join(badges)
 
             # Link to holding page if exists
@@ -1615,6 +1672,47 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
                 f'<strong class="mono">{html.escape(sym)}</strong></a>'
                 if has_page else
                 f'<strong class="mono">{html.escape(sym)}</strong>'
+            )
+
+            # Fundamentals row (below role, above price) — compact 4-cell
+            # summary so user can eyeball PE/EPS/ROE/成長 at a glance
+            # without leaving the map. Dash '—' when yfinance has no data.
+            fund_bits: list[str] = []
+            if pe_ttm is not None:
+                fund_bits.append(
+                    f'<span class="sc-map-fund-cell" title="本益比 TTM（越低越便宜，> 50 泡沫）">'
+                    f'<span class="muted">PE</span> '
+                    f'<span class="mono tnum {_pe_tone(pe_ttm)}">{pe_ttm:.1f}</span>'
+                    f'</span>'
+                )
+            if eps_ttm is not None:
+                fund_bits.append(
+                    f'<span class="sc-map-fund-cell" title="每股盈餘 TTM（過去 4 季加總）">'
+                    f'<span class="muted">EPS</span> '
+                    f'<span class="mono tnum">{eps_ttm:.2f}</span>'
+                    f'</span>'
+                )
+            if roe is not None:
+                fund_bits.append(
+                    f'<span class="sc-map-fund-cell" title="股東權益報酬率（> 15% 是品質股）">'
+                    f'<span class="muted">ROE</span> '
+                    f'<span class="mono tnum {"up" if roe > 0.15 else ("dn" if roe < 0 else "")}">'
+                    f'{roe * 100:.0f}%</span>'
+                    f'</span>'
+                )
+            growth = earn_g if earn_g is not None else rev_g
+            if growth is not None:
+                glabel = "EPS成長" if earn_g is not None else "營收成長"
+                fund_bits.append(
+                    f'<span class="sc-map-fund-cell" title="年增率（YoY）">'
+                    f'<span class="muted">{glabel}</span> '
+                    f'<span class="mono tnum {_growth_tone(growth)}">{growth * 100:+.0f}%</span>'
+                    f'</span>'
+                )
+            fund_html = (
+                f'<div class="sc-map-fund">{" ".join(fund_bits)}</div>'
+                if fund_bits else
+                '<div class="sc-map-fund muted small">基本面資料待補</div>'
             )
 
             # Price line (if we have it)
@@ -1640,6 +1738,7 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
                 <span class="sc-map-badges">{badges_html}</span>
               </div>
               <div class="sc-map-stock-role muted small">{html.escape(sub_role)}</div>
+              {fund_html}
               {price_html}
             </div>''')
 
@@ -1695,8 +1794,13 @@ def render_supply_chain_map(slug: str, chains: dict, lookup: dict,
           <span class="sc-map-tier-badge-mega mono small">MEGA</span>/<span class="sc-map-tier-badge-large mono small">LARGE</span> 是「存款柱」（2330、鴻海那種，覆蓋過多漲不動）·
           <span class="sc-map-tier-badge-mid mono small">MID</span> 是波段（題材來才動）·
           <span class="sc-map-tier-badge-small mono small">SMALL</span>/<span class="sc-map-tier-badge-hidden mono small">HIDDEN</span> 是<strong>雪球能滾大的位置</strong>（NT$5,000 試水能變 50,000+）。<br>
-          黃底 = AI 今天挑中的 lead · 綠框 = 雪球級（小型/隱形）。
-          來源：<code class="mono">supply_chains.yaml</code>（人工策畫 + audit_coverage 自動維護）
+          <strong>估值標籤（PE TTM）：</strong>
+          <span class="sc-map-val-badge up mono small">🟢 合理</span> &lt; 20 ·
+          <span class="sc-map-val-badge mono small">🟡 偏高</span> 20-30 ·
+          <span class="sc-map-val-badge amber mono small">🟠 昂貴</span> 30-50 ·
+          <span class="sc-map-val-badge dn mono small">🔴 泡沫</span> &gt; 50（半導體業可放寬至 25/40/60）。<br>
+          黃底 = AI 今天挑中的 lead · 綠框 = 雪球級（小型/隱形）· 每卡底下一排是 PE / EPS / ROE / 成長（看一眼就知便宜還貴）。
+          來源：<code class="mono">supply_chains.yaml</code> + <code class="mono">prices.json</code>（yfinance 每日更新）
         </div>
       </div>
       {filter_bar}
@@ -9358,11 +9462,38 @@ footer a { color: var(--tx-3); }
 }
 .sc-map-stock.is-filtered-out { display: none; }
 
+/* ---- fundamentals row on each supply-chain card (Phase H) ---- */
+.sc-map-fund {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 6px 0;
+  margin-bottom: 6px;
+  border-top: 1px dashed var(--line);
+  font-size: 11.5px;
+  color: var(--tx-2);
+}
+.sc-map-fund-cell {
+  display: inline-flex; gap: 4px; align-items: baseline;
+  white-space: nowrap;
+}
+.sc-map-fund-cell .muted { font-size: 10.5px; letter-spacing: 0.3px; }
+
+/* Eyeball valuation badge on the head row (next to tier badge) */
+.sc-map-val-badge {
+  padding: 1px 6px; border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg-0);
+  letter-spacing: 0.3px;
+}
+.sc-map-val-badge.up     { color: var(--up);    border-color: rgba(27,217,124,0.30); background: rgba(27,217,124,0.08); }
+.sc-map-val-badge.amber  { color: var(--amber); border-color: rgba(255,181,71,0.35); background: rgba(255,181,71,0.10); }
+.sc-map-val-badge.dn     { color: var(--dn);    border-color: rgba(255,59,59,0.30);  background: rgba(255,59,59,0.08);  }
+
 @media (max-width: 720px) {
   .sc-map-layer-stocks { grid-template-columns: 1fr; }
   .sc-map-layer { padding: 12px 14px; }
   .sc-map-filter { padding: 8px 10px; }
   .sc-map-filter-btn { padding: 3px 8px; font-size: 11px; }
+  .sc-map-fund { gap: 6px; font-size: 11px; }
 }
 """
 

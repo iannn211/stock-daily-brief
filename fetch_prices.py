@@ -189,6 +189,31 @@ def main() -> int:
     for u in cfg.get("simulator_universe", []):
         tickers.setdefault(to_yf_ticker(u["symbol"], u["market"]), u["symbol"])
 
+    # supply_chains.yaml universe — auto-include every ticker (esp. hidden-tier
+    # champions) so analyze.py can feed Gemini real valuation data. Without
+    # this, coverage_suggestions would flag PE/EPS as "資料待補" for every
+    # hidden name, defeating the whole valuation-gate design.
+    sc_path = ROOT / "supply_chains.yaml"
+    if sc_path.exists():
+        try:
+            sc = yaml.safe_load(sc_path.read_text(encoding="utf-8")) or {}
+            sc_added = 0
+            for slug, chain in (sc.get("chains") or {}).items():
+                for layer in chain.get("layers") or []:
+                    for s in layer.get("stocks") or []:
+                        sym = str(s.get("symbol") or "").strip()
+                        if not sym:
+                            continue
+                        yf_t = to_yf_ticker(sym, "TW")  # supply_chains is TW-only today
+                        if yf_t not in tickers:
+                            tickers[yf_t] = sym
+                            sc_added += 1
+            if sc_added:
+                print(f"  + supply_chains.yaml added {sc_added} extra tickers for fundamentals coverage",
+                      file=sys.stderr)
+        except Exception as e:
+            print(f"  ! supply_chains fetch expansion failed: {e}", file=sys.stderr)
+
     print(f"[{datetime.now(TAIPEI):%Y-%m-%d %H:%M}] fetching {len(tickers)} tickers + 1y history…",
           file=sys.stderr)
 
