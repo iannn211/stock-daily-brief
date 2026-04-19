@@ -166,7 +166,7 @@ chains:
           - {symbol: "3533", name: "嘉澤",        role: "CPU socket 獨家 + AI 連接器",    pillar: "growth", tier: "large"}
           - {symbol: "6269", name: "台郡",        role: "軟板",                           pillar: "growth", tier: "small"}
           - {symbol: "3665", name: "貿聯-KY",     role: "NVIDIA GB200 高速線束、隱形冠軍", pillar: "growth", tier: "hidden"}
-          - {symbol: "6088", name: "鴻碩",        role: "車用 / 工業連接器小型股",        pillar: "growth", tier: "hidden"}
+          - {symbol: "3092", name: "鴻碩",        role: "車用 / 工業連接器小型股",        pillar: "growth", tier: "hidden"}
 
   passives:
     title: "AI 被動元件 · MLCC / 電感 / 電阻"

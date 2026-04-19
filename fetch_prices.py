@@ -11,11 +11,12 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import pandas as pd
+import requests
 import yaml
 import yfinance as yf
 
@@ -26,6 +27,13 @@ PRICES_PATH = ROOT / "prices.json"
 HISTORY_PATH = ROOT / "price_history.json"
 
 HISTORY_PERIOD = "1y"  # 1-year daily
+
+# FinMind fallback — free open-source TW market data (TaiwanStockPrice + PER/PBR).
+# Used when yfinance has no data for a .TW / .TWO ticker (delisted-on-Yahoo,
+# TPEx quirks, etc.). Anonymous tier gives 600 req/hr which is plenty for
+# daily fetches of a few dozen symbols.
+FINMIND_BASE = "https://api.finmindtrade.com/api/v4/data"
+FINMIND_ENABLED = True
 
 
 def to_yf_ticker(symbol: str, market: str) -> str:
@@ -99,10 +107,87 @@ def _is_equity(yf_ticker: str) -> bool:
     return True
 
 
+def _fetch_finmind_history(tw_code: str) -> pd.DataFrame | None:
+    """Fallback: pull ~1y daily OHLC from FinMind free API. Returns a
+    DataFrame matching yfinance's shape (index=Date, columns=Open/High/Low/Close/Volume)
+    so fetch_one can process it without special-casing."""
+    if not FINMIND_ENABLED or not tw_code.isdigit():
+        return None
+    try:
+        start = (datetime.now(TAIPEI).date() - timedelta(days=400)).isoformat()
+        r = requests.get(
+            FINMIND_BASE,
+            params={"dataset": "TaiwanStockPrice", "data_id": tw_code, "start_date": start},
+            timeout=12,
+        )
+        if r.status_code != 200:
+            return None
+        payload = r.json() or {}
+        data = payload.get("data") or []
+        if not data:
+            return None
+        df = pd.DataFrame(data)
+        df["Date"] = pd.to_datetime(df["date"])
+        df = df.set_index("Date").sort_index()
+        # FinMind → yfinance column rename
+        df = df.rename(columns={
+            "open": "Open",
+            "max": "High",
+            "min": "Low",
+            "close": "Close",
+            "Trading_Volume": "Volume",
+        })
+        # Only keep what fetch_one needs
+        cols = [c for c in ["Open", "High", "Low", "Close", "Volume"] if c in df.columns]
+        return df[cols] if cols else None
+    except Exception as e:
+        print(f"  ! FinMind history fetch failed for {tw_code}: {e}", file=sys.stderr)
+        return None
+
+
+def _fetch_finmind_fundamentals(tw_code: str, close_price: float | None) -> dict:
+    """Fallback fundamentals from FinMind: PER + PBR + dividend yield.
+    EPS is back-computed from close/PE since FinMind's EPS endpoint is quarterly."""
+    if not FINMIND_ENABLED or not tw_code.isdigit():
+        return {}
+    try:
+        start = (datetime.now(TAIPEI).date() - timedelta(days=15)).isoformat()
+        r = requests.get(
+            FINMIND_BASE,
+            params={"dataset": "TaiwanStockPER", "data_id": tw_code, "start_date": start},
+            timeout=8,
+        )
+        if r.status_code != 200:
+            return {}
+        data = (r.json() or {}).get("data") or []
+        if not data:
+            return {}
+        last = data[-1]
+        per = _safe_num(last.get("PER"))
+        pbr = _safe_num(last.get("PBR"))
+        div_yield = _safe_num(last.get("dividend_yield"))
+        out: dict = {}
+        # FinMind returns PER=0 for loss-making stocks → treat as unknown
+        if per and per > 0:
+            out["pe_ttm"] = per
+            if close_price:
+                out["eps_ttm"] = round(close_price / per, 2)
+        if pbr:
+            out["pb"] = pbr
+        if div_yield:
+            out["dividend_yield"] = div_yield / 100.0  # yfinance uses fraction, FinMind uses %
+        return out
+    except Exception as e:
+        print(f"  ! FinMind fundamentals fetch failed for {tw_code}: {e}", file=sys.stderr)
+        return {}
+
+
 def fetch_one(yf_ticker: str, with_fundamentals: bool = True) -> tuple[dict | None, pd.DataFrame | None]:
-    """Fetch latest + 1y history. Fall back to .TWO for TW tickers if .TW fails."""
+    """Fetch latest + 1y history. Fall back order for TW tickers:
+       .TW → .TWO → FinMind free API (catches delisted-on-Yahoo quirks)."""
     hist = _fetch_history(yf_ticker)
     actual = yf_ticker
+    used_finmind = False
 
     if (hist is None or hist.empty) and yf_ticker.endswith(".TW"):
         alt = yf_ticker[:-3] + ".TWO"
@@ -110,8 +195,17 @@ def fetch_one(yf_ticker: str, with_fundamentals: bool = True) -> tuple[dict | No
         if hist is not None and not hist.empty:
             actual = alt
 
+    # FinMind fallback: if yfinance found nothing for a TW ticker
+    if (hist is None or hist.empty) and yf_ticker.endswith((".TW", ".TWO")):
+        tw_code = yf_ticker.split(".")[0]
+        fm_hist = _fetch_finmind_history(tw_code)
+        if fm_hist is not None and not fm_hist.empty:
+            hist = fm_hist
+            actual = yf_ticker  # keep original display ticker; source noted below
+            used_finmind = True
+
     if hist is None or hist.empty:
-        print(f"  ⚠️  {yf_ticker}: no history", file=sys.stderr)
+        print(f"  ⚠️  {yf_ticker}: no history (yfinance + FinMind)", file=sys.stderr)
         return None, None
 
     close = float(hist["Close"].iloc[-1])
@@ -161,7 +255,22 @@ def fetch_one(yf_ticker: str, with_fundamentals: bool = True) -> tuple[dict | No
 
     # Fundamentals (equities only — skip indices/FX/commodity)
     if with_fundamentals and _is_equity(actual):
-        fund = _fetch_fundamentals(actual)
+        fund: dict = {}
+        if used_finmind:
+            tw_code = yf_ticker.split(".")[0]
+            fund = _fetch_finmind_fundamentals(tw_code, close)
+            latest["source"] = "FinMind"
+        else:
+            fund = _fetch_fundamentals(actual)
+            # Belt-and-braces: if yfinance returned empty PE/EPS for a TW stock,
+            # ask FinMind to fill the gap (covers cases where Yahoo has price
+            # history but no .info fundamentals).
+            if yf_ticker.endswith((".TW", ".TWO")) and not fund.get("pe_ttm"):
+                tw_code = yf_ticker.split(".")[0]
+                fm_fund = _fetch_finmind_fundamentals(tw_code, close)
+                for k, v in fm_fund.items():
+                    if not fund.get(k):
+                        fund[k] = v
         if fund:
             latest["fundamentals"] = fund
 

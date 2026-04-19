@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-19T11:13:13.626881+08:00",
+  "fetched_at": "2026-04-19T11:25:30.018661+08:00",
   "prices": {
     "0050.TW": {
       "close": 84.15,
@@ -453,20 +453,20 @@
       "symbol": "CL=F"
     },
     "BTC-USD": {
-      "close": 75507.6562,
+      "close": 75540.4766,
       "prev_close": 77126.875,
-      "day_change": -1619.2188,
-      "day_change_pct": -2.0994,
+      "day_change": -1586.3984,
+      "day_change_pct": -2.0569,
       "currency": "USD",
       "as_of": "2026-04-19",
       "yf_ticker": "BTC-USD",
       "high_52w": 126198.0703,
       "low_52w": 60074.2031,
-      "pct_52w": 23.34,
-      "ret_7d": 1.37,
-      "ret_30d": 14.48,
-      "ret_90d": 11.87,
-      "ret_ytd": -14.9,
+      "pct_52w": 23.39,
+      "ret_7d": 1.42,
+      "ret_30d": 14.53,
+      "ret_90d": 11.92,
+      "ret_ytd": -14.87,
       "symbol": "BTC-USD"
     },
     "2454.TW": {
@@ -3340,6 +3340,24 @@
       },
       "symbol": "3583"
     },
+    "3202.TW": {
+      "close": 3.96,
+      "prev_close": 4.4,
+      "day_change": -0.44,
+      "day_change_pct": -10.0,
+      "currency": "TWD",
+      "as_of": "2025-04-02",
+      "yf_ticker": "3202.TW",
+      "high_52w": 5.8,
+      "low_52w": 3.96,
+      "pct_52w": 0.0,
+      "ret_7d": -16.46,
+      "ret_30d": null,
+      "ret_90d": null,
+      "ret_ytd": -26.39,
+      "source": "FinMind",
+      "symbol": "3202"
+    },
     "3296.TW": {
       "close": 21.3,
       "prev_close": 21.55,
@@ -3867,6 +3885,39 @@
         "industry": "Electrical Equipment & Parts"
       },
       "symbol": "3665"
+    },
+    "3092.TW": {
+      "close": 35.3,
+      "prev_close": 34.3,
+      "day_change": 1.0,
+      "day_change_pct": 2.9155,
+      "currency": "TWD",
+      "as_of": "2026-04-17",
+      "yf_ticker": "3092.TW",
+      "high_52w": 40.5,
+      "low_52w": 13.0,
+      "pct_52w": 81.09,
+      "ret_7d": 20.68,
+      "ret_30d": 3.82,
+      "ret_90d": 27.9,
+      "ret_ytd": 31.72,
+      "fundamentals": {
+        "pe_ttm": null,
+        "pe_forward": null,
+        "eps_ttm": -5.14,
+        "eps_forward": null,
+        "pb": 2.62727,
+        "roe": -0.32839,
+        "profit_margin": -0.33403,
+        "rev_growth": -0.069,
+        "earnings_growth": null,
+        "market_cap": 3764718336.0,
+        "dividend_yield": null,
+        "beta": 0.888,
+        "sector": "Industrials",
+        "industry": "Electrical Equipment & Parts"
+      },
+      "symbol": "3092"
     },
     "3026.TW": {
       "close": 233.5,
