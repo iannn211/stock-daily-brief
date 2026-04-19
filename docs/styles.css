@@ -2001,7 +2001,8 @@ footer a { color: var(--tx-3); }
   display: flex; flex-direction: column; gap: 8px;
   align-items: flex-end; flex-shrink: 0;
 }
-.alloc-levels-row { background: var(--bg-2); padding: 8px 12px; border-radius: var(--r-sm); font-size: 12px; margin: 8px 0 10px; line-height: 1.7; }
+.alloc-levels-row { background: var(--bg-2); padding: 8px 12px; border-radius: var(--r-sm); font-size: 12px; margin: 8px 0 6px; line-height: 1.7; }
+.alloc-cond { margin: 0 0 10px 12px; font-size: 11.5px; line-height: 1.5; }
 .alloc-sources { margin: 6px 0; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
 
 /* Basket builder — client-side budget-aware picker on hero + #budget section. */

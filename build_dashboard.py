@@ -378,6 +378,12 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
         sym = str(a.get("symbol") or "").strip()
         stop = a.get("stop_loss_price")
         current = prices_all.get(sym)
+        # Backfill entry_price for any allocation that lacks one (older Gemini
+        # runs didn't produce this field). Uses current market price as a safe
+        # default — if the action is 觀望等進場, synthetic code already set a
+        # pullback-aware entry; this only fills the gap for 新倉試水/加碼 etc.
+        if sym and current and current > 0 and not a.get("entry_price"):
+            a["entry_price"] = round(float(current), 1)
         if not sym or not stop or not current or current <= 0:
             continue
         try:
@@ -395,7 +401,10 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
         return ("現金" in act) or ("不動作" in act)
 
     non_cash = [a for a in allocs if not _is_cash(a)]
-    target = 6
+    # 2026-04-19: target bumped 6→10 after user flagged basket felt thin —
+    # once red-list veto kicked in the basket collapsed to 6 candidates with
+    # no breathing room. 10 gives the user real choice across themes.
+    target = 10
     if len(non_cash) >= target:
         return allocs
 
@@ -485,6 +494,14 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
             shares = max(1, int(budget_basis // price))
             cost = int(round(shares * price))
 
+            # Entry zone: 觀望等進場 means "wait for better price" — give the
+            # user a concrete pullback target (-3% to -5% from current). But
+            # also the market entry price (=current) for sizing consistency.
+            entry_price = round(price, 1)  # ≈ current market price (sizing basis)
+            entry_low = round(price * 0.95, 1)  # 拉回 5% 的理想進場
+            entry_high = round(price * 1.00, 1)  # 不超過現價
+            entry_zone_text = f"{entry_low}–{entry_high}"
+
             rationale = f"題材「{meta['theme']}」的同業候選。"
             if meta["headline"]:
                 clip = meta["headline"][:90] + ("…" if len(meta["headline"]) > 90 else "")
@@ -498,7 +515,12 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
                 "action": "觀望等進場",
                 "target_shares": shares,
                 "target_cost_twd": cost,
-                "entry_condition": "盤中觀察量能，等回檔或突破再分批進",
+                # entry_price = concrete number shown in the basket row.
+                # entry_zone = pullback range shown beside it ("進場 87.5–92.2").
+                # entry_condition = the long-form sentence explaining WHY.
+                "entry_price": entry_price,
+                "entry_zone": entry_zone_text,
+                "entry_condition": f"等拉回 {entry_low} 以下分批進，或確認突破量能再追",
                 "stop_loss_price": round(price * 0.90, 1),
                 "take_profit_price": round(price * 1.30, 1),
                 "rationale": rationale,
@@ -1313,13 +1335,26 @@ def render_analysis_section(analysis: dict) -> str:
             shares = al.get("target_shares") or 0
             cost = al.get("target_cost_twd") or 0
             conf = int(al.get("confidence_pct") or 0)
+            ep = al.get("entry_price")
+            ez = al.get("entry_zone")
             row_levels = []
             if shares: row_levels.append(f"<strong>{shares} 股</strong>")
             if cost: row_levels.append(f"約 {_fmt_twd(cost)}")
-            if al.get("entry_condition"): row_levels.append(f"進場：{html.escape(al['entry_condition'])}")
+            # Entry price/zone first — user specifically asked for concrete
+            # 建議買入 number alongside stop/profit (2026-04-19 feedback).
+            if ez:
+                row_levels.append(f'<span class="up">建議買入 {html.escape(str(ez))}</span>')
+            elif ep:
+                row_levels.append(f'<span class="up">建議買入 {ep}</span>')
             if sl: row_levels.append(f'<span class="dn">停損 {sl}</span>')
             if tp: row_levels.append(f'<span class="up">停利 {tp}</span>')
             levels_html = " · ".join(row_levels) if row_levels else ""
+            # Entry condition now rendered as separate secondary line — it's
+            # long-form context, not a price cell.
+            cond_html = (
+                f'<div class="alloc-cond small muted">進場條件：{html.escape(al["entry_condition"])}</div>'
+                if al.get("entry_condition") else ""
+            )
             check_id = f"full-alloc-{idx}"
             if is_cash:
                 pick_input = (
@@ -1349,6 +1384,7 @@ def render_analysis_section(analysis: dict) -> str:
                 </div>
               </div>
               {f'<div class="alloc-levels-row mono small">{levels_html}</div>' if levels_html else ''}
+              {cond_html}
               <p><span class="label-inline">理由</span>{html.escape(al.get("rationale", ""))}</p>
               {"<div class='alloc-sources'><span class='label-inline'>依據</span>" + src_html + "</div>" if src_html else ""}
               <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{html.escape(al.get("risk", ""))}</p>
@@ -3409,13 +3445,23 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
             cost = al.get("target_cost_twd") or 0
             sl = al.get("stop_loss_price")
             tp = al.get("take_profit_price")
+            ep = al.get("entry_price")
+            ez = al.get("entry_zone")
             conf = int(al.get("confidence_pct") or 0)
             rat = al.get("rationale", "")
             shares_str = f"{shares} 股" if shares else ""
             cost_str = f"≈{_fmt_twd(cost)}" if cost else ""
+            # Compact hero card: keep the one-liner short — entry price +
+            # stop + profit are the 3 decision-critical numbers.
+            if ez:
+                entry_str = f"買 {ez}"
+            elif ep:
+                entry_str = f"買 {ep}"
+            else:
+                entry_str = ""
             sl_str = f"停損 {sl}" if sl else ""
             tp_str = f"停利 {tp}" if tp else ""
-            levels = " · ".join(s for s in (shares_str, cost_str, sl_str, tp_str) if s)
+            levels = " · ".join(s for s in (shares_str, cost_str, entry_str, sl_str, tp_str) if s)
             # Link target: theme page would be cleanest but opp and alloc have
             # different schemas; fall back to the briefs page with a budget anchor.
             deep_link = f'briefs/{latest_brief["date"]}.html#budget'
@@ -3761,14 +3807,23 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
             src_html = "".join(f'<span class="chip chip-muted small">{html.escape(s)}</span>' for s in srcs)
             sl = al.get("stop_loss_price")
             tp = al.get("take_profit_price")
+            ep = al.get("entry_price")
+            ez = al.get("entry_zone")
             shares = al.get("target_shares")
             cost = al.get("target_cost_twd")
             row_levels = []
             if shares: row_levels.append(f"<strong>{shares} 股</strong>")
             if cost: row_levels.append(f"約 {_fmt_twd(cost)}")
-            if al.get("entry_condition"): row_levels.append(f"進場：{html.escape(al['entry_condition'])}")
+            if ez:
+                row_levels.append(f'<span class="up">建議買入 {html.escape(str(ez))}</span>')
+            elif ep:
+                row_levels.append(f'<span class="up">建議買入 {ep}</span>')
             if sl: row_levels.append(f'<span class="dn">停損 {sl}</span>')
             if tp: row_levels.append(f'<span class="up">停利 {tp}</span>')
+            cond_html2 = (
+                f'<div class="alloc-cond small muted">進場條件：{html.escape(al["entry_condition"])}</div>'
+                if al.get("entry_condition") else ""
+            )
             rows.append(f'''
             <article class="alloc-full-card {cls}">
               <div class="alloc-full-head">
@@ -3779,6 +3834,7 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
                 <div class="alloc-conf-big mono">信心度 {al.get("confidence_pct", 0)}%</div>
               </div>
               <div class="alloc-levels-row mono small">{" · ".join(row_levels)}</div>
+              {cond_html2}
               <p><span class="label-inline">理由</span>{html.escape(al.get("rationale", ""))}</p>
               {"<div class='alloc-sources'><span class='label-inline'>依據</span>" + src_html + "</div>" if src_html else ""}
               <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>{html.escape(al.get("risk", ""))}</p>
@@ -9135,7 +9191,8 @@ footer a { color: var(--tx-3); }
   display: flex; flex-direction: column; gap: 8px;
   align-items: flex-end; flex-shrink: 0;
 }
-.alloc-levels-row { background: var(--bg-2); padding: 8px 12px; border-radius: var(--r-sm); font-size: 12px; margin: 8px 0 10px; line-height: 1.7; }
+.alloc-levels-row { background: var(--bg-2); padding: 8px 12px; border-radius: var(--r-sm); font-size: 12px; margin: 8px 0 6px; line-height: 1.7; }
+.alloc-cond { margin: 0 0 10px 12px; font-size: 11.5px; line-height: 1.5; }
 .alloc-sources { margin: 6px 0; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
 
 /* Basket builder — client-side budget-aware picker on hero + #budget section. */
