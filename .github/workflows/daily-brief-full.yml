@@ -57,6 +57,10 @@ jobs:
           FORCE_ANALYZE: "1"
         run: python analyze.py
 
+      - name: Validate analysis against ground truth (Python QA layer)
+        run: python validate_analysis.py
+        continue-on-error: true  # QA warnings shouldn't break the build
+
       - name: Build HTML dashboard
         run: python build_dashboard.py
 
@@ -64,7 +68,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add briefs/ docs/ prices.json portfolio.json portfolio.yaml analyses/ chips.json coverage_report.json
+          git add briefs/ docs/ prices.json portfolio.json portfolio.yaml analyses/ chips.json coverage_report.json validation_report.json
           if git diff --staged --quiet; then
             echo "no changes"
           else

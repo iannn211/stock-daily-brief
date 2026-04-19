@@ -1,0 +1,51 @@
+{
+  "validated_at": "2026-04-19T12:34:42.588242+08:00",
+  "analysis_file": "analyses/2026-04-18.json",
+  "analysis_date": "2026-04-18",
+  "analysis_model": "gemini-2.5-flash",
+  "issues": [
+    {
+      "severity": "error",
+      "category": "ticker-name-mismatch",
+      "location": "opportunities[0].lead_stocks[1]",
+      "message": "代號 3363 本站記錄為「上詮」，Gemini 標成「中揚光」— 可能 Gemini 記錯了",
+      "context": {
+        "symbol": "3363",
+        "claimed": "中揚光",
+        "actual": "上詮"
+      }
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[1].lead_stocks[2]",
+      "message": "題材「AI 伺服器散熱 / 液冷」的 lead stock 4566 (時碩工業) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "4566",
+        "theme": "AI 伺服器散熱 / 液冷",
+        "industry": "Specialty Industrial Machinery",
+        "sector": "Industrials",
+        "sc_roles": "robotics 關鍵零組件 機器人諧波減速機、隱形冠軍"
+      }
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[2].lead_stocks[1]",
+      "message": "題材「PCB / CCL 材料上游漲價」的 lead stock 5475 (德宏) 產業標為「Textile Manufacturing」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "5475",
+        "theme": "PCB / CCL 材料上游漲價",
+        "industry": "Textile Manufacturing",
+        "sector": "Consumer Cyclical",
+        "sc_roles": null
+      }
+    }
+  ],
+  "summary": {
+    "errors": 1,
+    "warnings": 2,
+    "infos": 0,
+    "total": 3
+  }
+}

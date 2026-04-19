@@ -300,6 +300,21 @@ def load_coverage_report() -> dict | None:
         return None
 
 
+def load_validation_report() -> dict | None:
+    """Load validation_report.json from validate_analysis.py. Returns None
+    if unavailable. The report shape is:
+      {validated_at, analysis_file, analysis_date, analysis_model,
+       issues: [{severity, category, location, message, context?}, ...],
+       summary: {errors, warnings, infos, total}}"""
+    path = ROOT / "validation_report.json"
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
 def load_supply_chains() -> dict:
     """Load supply_chains.yaml; returns chain metadata keyed by slug."""
     import yaml
@@ -2890,6 +2905,82 @@ def render_catalyst_timeline(analysis: dict | None) -> str:
   <div class="cat-list">{"".join(items)}</div>
 </div>
 '''
+
+
+def render_validation_banner(report: dict | None) -> str:
+    """Render the validation banner above the AI hero.
+
+    Shows only if validation_report.json has at least one error/warning.
+    Infos are silent (nothing actionable). Errors use red styling, warnings
+    use amber. Analysis date is surfaced so user knows which run is flagged.
+
+    This is the Python validator's UI surface — the mechanical QA layer that
+    catches Gemini hallucinations (wrong ticker↔name mappings, budget math
+    errors, theme-industry mismatches). Non-blocking: if file is missing or
+    empty, we just render nothing."""
+    if not report:
+        return ""
+    issues = report.get("issues") or []
+    summary = report.get("summary") or {}
+    errors = int(summary.get("errors") or 0)
+    warnings = int(summary.get("warnings") or 0)
+    if errors == 0 and warnings == 0:
+        return ""
+
+    ana_date = report.get("analysis_date") or ""
+    # Sort: errors first, then warnings, then infos
+    sev_order = {"error": 0, "warning": 1, "info": 2}
+    shown = sorted(
+        (i for i in issues if i.get("severity") in ("error", "warning")),
+        key=lambda i: sev_order.get(i.get("severity"), 9),
+    )
+
+    items_html = []
+    for i in shown:
+        sev = i.get("severity")
+        if sev == "error":
+            cls, tag, label = "alert-red", "ERR", "錯誤"
+        else:
+            cls, tag, label = "alert-amber", "WARN", "警告"
+        loc = i.get("location") or ""
+        msg = i.get("message") or ""
+        items_html.append(
+            f'<div class="alert-item {cls}">'
+            f'<span class="alert-tag mono">{html.escape(tag)}</span>'
+            f'<span>{html.escape(msg)}</span>'
+            f'<span class="muted small mono" style="margin-left:auto">{html.escape(loc)}</span>'
+            f'</div>'
+        )
+
+    # Summary headline
+    parts = []
+    if errors:
+        parts.append(f'{errors} 處可能錯誤')
+    if warnings:
+        parts.append(f'{warnings} 處待確認')
+    summary_txt = "、".join(parts)
+
+    date_str = f'（分析日期 {html.escape(ana_date)}）' if ana_date else ""
+
+    return f'''
+    <section class="validator-banner">
+      <div class="vb-head">
+        <span class="vb-icon">{_icon("warn", 18)}</span>
+        <strong>自動校對：</strong>
+        <span>Gemini 輸出 {summary_txt}</span>
+        <span class="muted small">{date_str}</span>
+        <button class="vb-toggle" type="button" aria-expanded="true"
+                onclick="const b=this.closest('.validator-banner'); b.classList.toggle('collapsed'); this.setAttribute('aria-expanded', String(!b.classList.contains('collapsed')))">展開／收起</button>
+      </div>
+      <div class="vb-body alert-list">
+        {"".join(items_html)}
+        <div class="muted small" style="padding:4px 2px">
+          這些是 Python 規則檢查抓到的機械式錯誤（代號對不上名稱、預算加總不對、題材與產業差太多等）。
+          只是提醒，不代表 Gemini 整份分析不可信 — 請點進 radar / opportunity 卡片看一下被標記的股票就好。
+        </div>
+      </div>
+    </section>
+    '''
 
 
 def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
@@ -5655,6 +5746,8 @@ def render_index(briefs: list[dict], pf: dict | None,
         weekday_zh = ""
 
     sidebar = render_desk_sidebar(pf)
+    validation_report = load_validation_report()
+    validation_banner = render_validation_banner(validation_report)
     hero = render_daily_hero(latest_brief, latest_analysis, pf)
     focus_panel = render_today_focus(pf, coverage_report, latest_analysis)
     mood_panel = render_market_mood(pf, latest_analysis)
@@ -5749,6 +5842,7 @@ def render_index(briefs: list[dict], pf: dict | None,
 
     <main class="main-panel">
       <div class="tab-panel active" data-panel="ai">
+        {validation_banner}
         {hero}
         {focus_panel}
         <div class="mood-cat-row">
@@ -6913,6 +7007,32 @@ a:hover { color: #b8d0ff; }
   background: rgba(255,255,255,0.08); border: 1px solid currentColor;
   color: inherit; margin-right: 2px;
 }
+
+/* Validator banner — sits above the AI hero when Python QA catches
+   issues in today's Gemini output */
+.validator-banner {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,181,71,0.35);
+  background: linear-gradient(180deg, var(--amber-bg) 0%, rgba(0,0,0,0) 100%);
+  border-radius: var(--r);
+}
+.validator-banner .vb-head {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 13px; color: var(--tx-1);
+}
+.validator-banner .vb-icon { color: var(--amber); display: inline-flex; }
+.validator-banner .vb-toggle {
+  margin-left: auto;
+  background: transparent; border: 1px solid var(--line);
+  color: var(--tx-2); padding: 3px 10px; border-radius: 4px;
+  font-size: 11px; cursor: pointer;
+}
+.validator-banner .vb-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.validator-banner .vb-body { margin-top: 10px; }
+.validator-banner.collapsed .vb-body { display: none; }
+.validator-banner .alert-item { font-size: 12.5px; }
+.validator-banner .alert-item .mono.small { font-size: 10.5px; opacity: 0.7; }
 
 /* Sparkline */
 .sparkline { display: block; }
