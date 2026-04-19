@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>光通訊 CPO / 矽光子 · THEME DEEP-DIVE</title>
+<!-- Premium typography: Inter (Latin) + Noto Sans TC (繁中) + JetBrains Mono (數字/代號) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
@@ -47,6 +51,33 @@
   </section>
 
   <div class="th-warn"><span class="th-warn-tag mono">WARN</span> 市場擁擠度較高，部分個股短期漲幅已大，追高風險需謹慎。</div>
+
+  
+  <section class="th-h2h">
+    <div class="th-h2h-head">
+      <div class="th-section-head mono">HEAD-TO-HEAD · 對比同族群的兩檔</div>
+      <span class="h2h-synth-badge mono small muted">系統根據 PE / EPS 自動挑選；AI 版本上線後取代</span>
+    </div>
+    <div class="h2h-verdict">同題材下兩檔估值都偏貴（<a href="holdings/4979.html" class="tx-link">4979</a> PE 122.0、<a href="holdings/3363.html" class="tx-link">3363</a> PE 4994.4），若一定要挑，我選 <a href="holdings/4979.html" class="tx-link">4979</a> <a href="holdings/4979.html" class="tx-link">華星光</a>——差距太大時，<a href="holdings/3363.html" class="tx-link">3363</a> 已把未來 N 年的成長都 price in。但切記整個族群都在「泡沫區」，進場只能用小倉位試水、嚴守停損。</div>
+    <div class="h2h-grid">
+      <div class="h2h-card h2h-pick">
+        <div class="h2h-card-tag mono">PICK · 選這檔</div>
+        <h3 class="h2h-card-sym"><strong>4979</strong> <span class="muted">華星光</span></h3>
+        <div class="h2h-stats"><span class="h2h-chip dn">PE 122.0</span><span class="h2h-chip up">EPS +5.28</span><span class="h2h-chip up">ROE 21%</span><span class="h2h-chip dn">52W位 100</span><span class="h2h-chip mono up">30D +68.2%</span><span class="h2h-chip up">外資5D +5,452,649</span></div>
+        <p class="h2h-card-why small">PE 122.0（極度泡沫）雖仍不便宜，但 EPS 5.28 至少是獲利狀態，題材若持續還有補漲空間——但切記「least-bad，不是 cheap」。 近 30 日 +68.2%。</p>
+        <a class="h2h-deeplink small mono" href="../holdings/4979.html">深度頁 →</a>
+      </div>
+      <div class="h2h-vs mono">VS</div>
+      <div class="h2h-card h2h-skip">
+        <div class="h2h-card-tag mono">SKIP · 不選這檔</div>
+        <h3 class="h2h-card-sym"><strong>3363</strong> <span class="muted">中揚光</span></h3>
+        <div class="h2h-stats"><span class="h2h-chip dn">PE 4994.4</span><span class="h2h-chip up">EPS +0.18</span><span class="h2h-chip muted">ROE 1%</span><span class="h2h-chip dn">52W位 98</span><span class="h2h-chip mono up">30D +42.0%</span><span class="h2h-chip dn">外資5D -225,658</span></div>
+        <p class="h2h-card-why small">PE 4994.4（極度泡沫）已超過合理估值 5 倍以上，除非 EPS 爆增 3-5 倍否則難撐；追高買進風險極高。 52週位階 98%，已接近頂部。</p>
+        <a class="h2h-deeplink small mono" href="../holdings/3363.html">深度頁 →</a>
+      </div>
+    </div>
+  </section>
+
 
   <div class="th-section"><div class="th-section-head mono">SIGNALS · 訊號</div><div class="sig-row"><span class="sig-chip">量增</span><span class="sig-chip">法人買超</span><span class="sig-chip">股價創高</span><span class="sig-chip">技術突破</span></div></div>
 
@@ -360,7 +391,124 @@
 </div>
 
 <footer class="wrap">
-  <p>生成於 2026-04-19 10:32 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-19 11:03 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
+<script>
+/* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
+ * so opening the page at 15:00 shows 「午安」, 21:00 shows 「晚安」. */
+(function () {
+  var g = document.querySelector('.bh-greeting');
+  if (!g) return;
+  var h = new Date().getHours();
+  var label;
+  if (h >= 5 && h < 11)       label = '早安';
+  else if (h >= 11 && h < 13) label = '中午好';
+  else if (h >= 13 && h < 18) label = '午安';
+  else if (h >= 18 && h < 23) label = '晚上好';
+  else                        label = '夜深了';
+  g.textContent = label;
+})();
+
+/* Basket builder — client-side budget-aware allocation picker.
+ * Each .basket-builder scope has its own budget input, preset buttons,
+ * allocation checkboxes, and summary line. Changing the budget re-runs the
+ * greedy auto-fill (take highest confidence_pct until budget exhausted);
+ * toggling a checkbox switches to manual mode and just updates totals. */
+(function () {
+  function fmt(n) {
+    return 'NT$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function setupBuilder(builder) {
+    var input     = builder.querySelector('.basket-budget-input');
+    var presets   = builder.querySelectorAll('.basket-preset-btn');
+    var cards     = builder.querySelectorAll('[data-cost]');
+    var totalEl   = builder.querySelector('.basket-total');
+    var remainEl  = builder.querySelector('.basket-remaining');
+    var countEl   = builder.querySelector('.basket-count');
+    if (!input || !totalEl) return;
+
+    function recalc() {
+      var total = 0, count = 0;
+      cards.forEach(function (card) {
+        var check = card.querySelector('.alloc-check');
+        if (!check) return;
+        var cost = parseFloat(card.getAttribute('data-cost')) || 0;
+        if (check.checked && cost > 0) {
+          total += cost;
+          count += 1;
+          card.classList.add('alloc-picked');
+        } else {
+          card.classList.remove('alloc-picked');
+        }
+      });
+      var budget = parseFloat(input.value) || 0;
+      var remaining = budget - total;
+      totalEl.textContent = fmt(total);
+      remainEl.textContent = fmt(remaining);
+      remainEl.classList.toggle('dn', remaining < 0);
+      remainEl.classList.toggle('up', remaining >= 0);
+      countEl.textContent = count + ' 檔';
+      // Mark preset button active if its amount matches current budget
+      presets.forEach(function (b) {
+        var amt = parseFloat(b.getAttribute('data-amt')) || 0;
+        b.classList.toggle('is-active', Math.abs(amt - budget) < 1);
+      });
+    }
+
+    function autoFill() {
+      var budget = parseFloat(input.value) || 0;
+      // Sort non-cash cards by confidence desc, then by cost asc (cheaper first on ties).
+      var buyable = Array.prototype.slice.call(cards).filter(function (c) {
+        return c.getAttribute('data-is-cash') !== '1' &&
+               (parseFloat(c.getAttribute('data-cost')) || 0) > 0;
+      });
+      buyable.sort(function (a, b) {
+        var ca = parseFloat(a.getAttribute('data-conf')) || 0;
+        var cb = parseFloat(b.getAttribute('data-conf')) || 0;
+        if (cb !== ca) return cb - ca;
+        var pa = parseFloat(a.getAttribute('data-cost')) || 0;
+        var pb = parseFloat(b.getAttribute('data-cost')) || 0;
+        return pa - pb;
+      });
+      // Uncheck everything, then greedy-pack.
+      cards.forEach(function (c) {
+        var ch = c.querySelector('.alloc-check');
+        if (ch) ch.checked = false;
+      });
+      var spent = 0;
+      buyable.forEach(function (c) {
+        var cost = parseFloat(c.getAttribute('data-cost')) || 0;
+        if (cost > 0 && spent + cost <= budget) {
+          var ch = c.querySelector('.alloc-check');
+          if (ch) { ch.checked = true; spent += cost; }
+        }
+      });
+      recalc();
+    }
+
+    input.addEventListener('input', autoFill);
+    input.addEventListener('change', autoFill);
+    presets.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var amt = btn.getAttribute('data-amt');
+        if (amt) { input.value = amt; autoFill(); }
+      });
+    });
+    cards.forEach(function (c) {
+      var ch = c.querySelector('.alloc-check');
+      if (ch) ch.addEventListener('change', recalc);
+      // Swallow clicks on the deep-link so they don't toggle the label/checkbox.
+      var dl = c.querySelector('.alloc-deeplink');
+      if (dl) dl.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    });
+
+    autoFill();
+  }
+
+  document.querySelectorAll('.basket-builder').forEach(setupBuilder);
+})();
+</script>
 </body>
 </html>

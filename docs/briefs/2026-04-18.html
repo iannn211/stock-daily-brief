@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>2026-04-18 · Stock AI Desk</title>
+<!-- Premium typography: Inter (Latin) + Noto Sans TC (繁中) + JetBrains Mono (數字/代號) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
@@ -65,23 +69,44 @@
   </div>
 </section>
 
-<section class="a-section" id="budget">
-  <div class="section-head"><h2>今日配置 NT$5,000 · <span class="sec-en">ALLOCATION</span> <span class="badge-count">SNOWBALL</span></h2></div>
+<section class="a-section basket-builder" id="budget">
+  <div class="section-head"><h2>籃子建議 · <span class="sec-en">BASKET BUILDER</span> <span class="badge-count">SNOWBALL · 1 候選</span></h2></div>
   <div class="budget-plan-big">今日建議將 NT$5,000 預算用於新倉試水聯亞 (3081) 零股，理由為光通訊 CPO 題材受 AI 需求帶動持續發酵，聯亞作為產業代表股具成長潛力。設定停損價為 2340 元，停利價為 3380 元，符合雪球法小倉位試水原則。</div>
+  <div class="basket-controls basket-controls-big">
+    <div class="basket-budget-row">
+      <label class="basket-budget-lbl">本次預算</label>
+      <div class="basket-preset-btns"><button type="button" class="basket-preset-btn" data-amt="5000">NT$5k</button><button type="button" class="basket-preset-btn" data-amt="10000">NT$10k</button><button type="button" class="basket-preset-btn" data-amt="20000">NT$20k</button><button type="button" class="basket-preset-btn" data-amt="50000">NT$50k</button></div>
+      <div class="basket-input-wrap">
+        <span class="basket-currency">NT$</span>
+        <input type="number" class="basket-budget-input mono" value="5000"
+               step="1000" min="1000" max="500000" aria-label="預算（新台幣）">
+      </div>
+    </div>
+    <p class="basket-hint muted small">▸ 改預算會自動挑信心最高的組合；也可手動勾選覆蓋。已保留不動作 / 觀望候選做參考。</p>
+  </div>
   
-            <article class="alloc-full-card alloc-buy">
+            <article class="alloc-full-card alloc-buy"
+                     data-cost="4760" data-conf="75" data-is-cash="0">
               <div class="alloc-full-head">
                 <div>
                   <div class="alloc-action-big">新倉試水</div>
                   <h3>3081 <span class="muted">聯亞</span></h3>
                 </div>
-                <div class="alloc-conf-big mono">信心度 75%</div>
+                <div class="alloc-full-right">
+                  <div class="alloc-conf-big mono">信心度 75%</div>
+                  <label for="full-alloc-0" class="alloc-pick-lbl small"><input type="checkbox" class="alloc-check" id="full-alloc-0" data-cost="4760" data-conf="75"> 加入籃子</label>
+                </div>
               </div>
               <div class="alloc-levels-row mono small"><strong>2 股</strong> · 約 NT$4,760 · 進場：盤前開盤價直接進場，以零股方式買入。 · <span class="dn">停損 2340</span> · <span class="up">停利 3380</span></div>
               <p><span class="label-inline">理由</span>光通訊 CPO 題材在 AI 時代下需求爆發，聯亞 (3081) 作為此領域的關鍵供應商，受惠於高速傳輸技術升級，具備長期成長潛力。雖然近期股價已有漲幅，但考量其在矽光子技術的布局，仍值得以小倉位試水。</p>
               <div class='alloc-sources'><span class='label-inline'>依據</span><span class="chip chip-muted small">Yahoo股市 TW 04-17 21:50 矽光子發威！「光通訊大廠」11天爆噴89%寫新高</span><span class="chip chip-muted small">經濟日報 04-18 00:28 聯電布局新技術 先進封裝、矽光子 扮新動能</span><span class="chip chip-muted small">CMoney投資網誌 04-17 09:07 別只盯著CPO華星光、聯亞..鎖定2026主升段</span></div>
               <p class="risk-line"><span class="label-inline dn">⚠ 風險</span>股價波動較大，短期漲幅已高，若 AI 需求不如預期或技術競爭加劇，可能面臨修正。</p>
             </article>
+  <div class="basket-summary basket-summary-big mono">
+    <span class="bs-cell"><span class="muted">籃子合計</span> <strong class="basket-total">NT$0</strong></span>
+    <span class="bs-cell"><span class="muted">剩</span> <strong class="basket-remaining">NT$5,000</strong></span>
+    <span class="bs-cell"><span class="muted">已選</span> <strong class="basket-count">0 檔</strong></span>
+  </div>
   <p class="muted small">保留現金 NT$240（等更好的機會）</p>
   <p class="muted small"><strong>為什麼不選別檔：</strong>今日其他機會如被動元件及 PCB 上游材料股，雖然題材熱度高，但短期漲幅已大，擁擠度較高，不適合新手追高試水。AI 伺服器相關個股如雙鴻 (3324)、奇鋐 (3017) 雖具潛力，但今日預算有限，且聯亞 (3081) 在光通訊領域的獨特性和成長空間更符合雪球法試水新題材的考量。</p>
 </section>
@@ -773,7 +798,124 @@ if (btn) {
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-19 10:32 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-19 11:03 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
+<script>
+/* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
+ * so opening the page at 15:00 shows 「午安」, 21:00 shows 「晚安」. */
+(function () {
+  var g = document.querySelector('.bh-greeting');
+  if (!g) return;
+  var h = new Date().getHours();
+  var label;
+  if (h >= 5 && h < 11)       label = '早安';
+  else if (h >= 11 && h < 13) label = '中午好';
+  else if (h >= 13 && h < 18) label = '午安';
+  else if (h >= 18 && h < 23) label = '晚上好';
+  else                        label = '夜深了';
+  g.textContent = label;
+})();
+
+/* Basket builder — client-side budget-aware allocation picker.
+ * Each .basket-builder scope has its own budget input, preset buttons,
+ * allocation checkboxes, and summary line. Changing the budget re-runs the
+ * greedy auto-fill (take highest confidence_pct until budget exhausted);
+ * toggling a checkbox switches to manual mode and just updates totals. */
+(function () {
+  function fmt(n) {
+    return 'NT$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function setupBuilder(builder) {
+    var input     = builder.querySelector('.basket-budget-input');
+    var presets   = builder.querySelectorAll('.basket-preset-btn');
+    var cards     = builder.querySelectorAll('[data-cost]');
+    var totalEl   = builder.querySelector('.basket-total');
+    var remainEl  = builder.querySelector('.basket-remaining');
+    var countEl   = builder.querySelector('.basket-count');
+    if (!input || !totalEl) return;
+
+    function recalc() {
+      var total = 0, count = 0;
+      cards.forEach(function (card) {
+        var check = card.querySelector('.alloc-check');
+        if (!check) return;
+        var cost = parseFloat(card.getAttribute('data-cost')) || 0;
+        if (check.checked && cost > 0) {
+          total += cost;
+          count += 1;
+          card.classList.add('alloc-picked');
+        } else {
+          card.classList.remove('alloc-picked');
+        }
+      });
+      var budget = parseFloat(input.value) || 0;
+      var remaining = budget - total;
+      totalEl.textContent = fmt(total);
+      remainEl.textContent = fmt(remaining);
+      remainEl.classList.toggle('dn', remaining < 0);
+      remainEl.classList.toggle('up', remaining >= 0);
+      countEl.textContent = count + ' 檔';
+      // Mark preset button active if its amount matches current budget
+      presets.forEach(function (b) {
+        var amt = parseFloat(b.getAttribute('data-amt')) || 0;
+        b.classList.toggle('is-active', Math.abs(amt - budget) < 1);
+      });
+    }
+
+    function autoFill() {
+      var budget = parseFloat(input.value) || 0;
+      // Sort non-cash cards by confidence desc, then by cost asc (cheaper first on ties).
+      var buyable = Array.prototype.slice.call(cards).filter(function (c) {
+        return c.getAttribute('data-is-cash') !== '1' &&
+               (parseFloat(c.getAttribute('data-cost')) || 0) > 0;
+      });
+      buyable.sort(function (a, b) {
+        var ca = parseFloat(a.getAttribute('data-conf')) || 0;
+        var cb = parseFloat(b.getAttribute('data-conf')) || 0;
+        if (cb !== ca) return cb - ca;
+        var pa = parseFloat(a.getAttribute('data-cost')) || 0;
+        var pb = parseFloat(b.getAttribute('data-cost')) || 0;
+        return pa - pb;
+      });
+      // Uncheck everything, then greedy-pack.
+      cards.forEach(function (c) {
+        var ch = c.querySelector('.alloc-check');
+        if (ch) ch.checked = false;
+      });
+      var spent = 0;
+      buyable.forEach(function (c) {
+        var cost = parseFloat(c.getAttribute('data-cost')) || 0;
+        if (cost > 0 && spent + cost <= budget) {
+          var ch = c.querySelector('.alloc-check');
+          if (ch) { ch.checked = true; spent += cost; }
+        }
+      });
+      recalc();
+    }
+
+    input.addEventListener('input', autoFill);
+    input.addEventListener('change', autoFill);
+    presets.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var amt = btn.getAttribute('data-amt');
+        if (amt) { input.value = amt; autoFill(); }
+      });
+    });
+    cards.forEach(function (c) {
+      var ch = c.querySelector('.alloc-check');
+      if (ch) ch.addEventListener('change', recalc);
+      // Swallow clicks on the deep-link so they don't toggle the label/checkbox.
+      var dl = c.querySelector('.alloc-deeplink');
+      if (dl) dl.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    });
+
+    autoFill();
+  }
+
+  document.querySelectorAll('.basket-builder').forEach(setupBuilder);
+})();
+</script>
 </body>
 </html>

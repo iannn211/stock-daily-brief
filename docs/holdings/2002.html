@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>2002 中鋼 · Stock AI Desk</title>
+<!-- Premium typography: Inter (Latin) + Noto Sans TC (繁中) + JetBrains Mono (數字/代號) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
@@ -372,7 +376,124 @@
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-19 10:32 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-19 11:03 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
+<script>
+/* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
+ * so opening the page at 15:00 shows 「午安」, 21:00 shows 「晚安」. */
+(function () {
+  var g = document.querySelector('.bh-greeting');
+  if (!g) return;
+  var h = new Date().getHours();
+  var label;
+  if (h >= 5 && h < 11)       label = '早安';
+  else if (h >= 11 && h < 13) label = '中午好';
+  else if (h >= 13 && h < 18) label = '午安';
+  else if (h >= 18 && h < 23) label = '晚上好';
+  else                        label = '夜深了';
+  g.textContent = label;
+})();
+
+/* Basket builder — client-side budget-aware allocation picker.
+ * Each .basket-builder scope has its own budget input, preset buttons,
+ * allocation checkboxes, and summary line. Changing the budget re-runs the
+ * greedy auto-fill (take highest confidence_pct until budget exhausted);
+ * toggling a checkbox switches to manual mode and just updates totals. */
+(function () {
+  function fmt(n) {
+    return 'NT$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function setupBuilder(builder) {
+    var input     = builder.querySelector('.basket-budget-input');
+    var presets   = builder.querySelectorAll('.basket-preset-btn');
+    var cards     = builder.querySelectorAll('[data-cost]');
+    var totalEl   = builder.querySelector('.basket-total');
+    var remainEl  = builder.querySelector('.basket-remaining');
+    var countEl   = builder.querySelector('.basket-count');
+    if (!input || !totalEl) return;
+
+    function recalc() {
+      var total = 0, count = 0;
+      cards.forEach(function (card) {
+        var check = card.querySelector('.alloc-check');
+        if (!check) return;
+        var cost = parseFloat(card.getAttribute('data-cost')) || 0;
+        if (check.checked && cost > 0) {
+          total += cost;
+          count += 1;
+          card.classList.add('alloc-picked');
+        } else {
+          card.classList.remove('alloc-picked');
+        }
+      });
+      var budget = parseFloat(input.value) || 0;
+      var remaining = budget - total;
+      totalEl.textContent = fmt(total);
+      remainEl.textContent = fmt(remaining);
+      remainEl.classList.toggle('dn', remaining < 0);
+      remainEl.classList.toggle('up', remaining >= 0);
+      countEl.textContent = count + ' 檔';
+      // Mark preset button active if its amount matches current budget
+      presets.forEach(function (b) {
+        var amt = parseFloat(b.getAttribute('data-amt')) || 0;
+        b.classList.toggle('is-active', Math.abs(amt - budget) < 1);
+      });
+    }
+
+    function autoFill() {
+      var budget = parseFloat(input.value) || 0;
+      // Sort non-cash cards by confidence desc, then by cost asc (cheaper first on ties).
+      var buyable = Array.prototype.slice.call(cards).filter(function (c) {
+        return c.getAttribute('data-is-cash') !== '1' &&
+               (parseFloat(c.getAttribute('data-cost')) || 0) > 0;
+      });
+      buyable.sort(function (a, b) {
+        var ca = parseFloat(a.getAttribute('data-conf')) || 0;
+        var cb = parseFloat(b.getAttribute('data-conf')) || 0;
+        if (cb !== ca) return cb - ca;
+        var pa = parseFloat(a.getAttribute('data-cost')) || 0;
+        var pb = parseFloat(b.getAttribute('data-cost')) || 0;
+        return pa - pb;
+      });
+      // Uncheck everything, then greedy-pack.
+      cards.forEach(function (c) {
+        var ch = c.querySelector('.alloc-check');
+        if (ch) ch.checked = false;
+      });
+      var spent = 0;
+      buyable.forEach(function (c) {
+        var cost = parseFloat(c.getAttribute('data-cost')) || 0;
+        if (cost > 0 && spent + cost <= budget) {
+          var ch = c.querySelector('.alloc-check');
+          if (ch) { ch.checked = true; spent += cost; }
+        }
+      });
+      recalc();
+    }
+
+    input.addEventListener('input', autoFill);
+    input.addEventListener('change', autoFill);
+    presets.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var amt = btn.getAttribute('data-amt');
+        if (amt) { input.value = amt; autoFill(); }
+      });
+    });
+    cards.forEach(function (c) {
+      var ch = c.querySelector('.alloc-check');
+      if (ch) ch.addEventListener('change', recalc);
+      // Swallow clicks on the deep-link so they don't toggle the label/checkbox.
+      var dl = c.querySelector('.alloc-deeplink');
+      if (dl) dl.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    });
+
+    autoFill();
+  }
+
+  document.querySelectorAll('.basket-builder').forEach(setupBuilder);
+})();
+</script>
 </body>
 </html>

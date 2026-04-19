@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>Stock AI Desk</title>
+<!-- Premium typography: Inter (Latin) + Noto Sans TC (繁中) + JetBrains Mono (數字/代號) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -83,7 +87,9 @@
     <div class="bh-spacer"></div>
     <a href="briefs/2026-04-18.html" class="btn-link small">→ 完整分析</a>
   </div>
-  <h2 class="bh-headline">早安！，台積電法說後震盪，中小型股接棒表現</h2>
+  <h2 class="bh-headline">
+    <span class="bh-greeting" data-fallback="早安">早安</span><span class="bh-sep"> · </span>台積電法說後震盪，中小型股接棒表現
+  </h2>
   <p class="bh-oneliner">台股昨日 (4/17) 受<a href="holdings/2330.html" class="tx-link">台積電</a>法說後利多出盡影響，大盤小幅回檔，但資金轉往中小型股，AI相關題材仍是市場焦點，對您的成長型組合影響中性偏多，需留意權值股後續走勢。</p>
   <div class="hl-grid">
             <div class="hl-card hl-up" style="animation-delay:0.0s">
@@ -102,22 +108,44 @@
               <div class="hl-detail muted small">被動元件與PCB上游材料因AI需求和原物料成本上漲，傳出漲價消息，相關個股表現強勁，值得關注。</div>
             </div></div>
   
-        <div class="hero-budget">
+        <div class="hero-budget basket-builder">
           <div class="hero-picks-head">
-            <span class="hero-action-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="icon"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.6"/><path d="M16 7 H10 a2.5 2.5 0 0 0 0 5 H14 a2.5 2.5 0 0 1 0 5 H8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> 下一筆 NT$5,000 建議 · NEXT DEPLOY</span>
+            <span class="hero-action-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="icon"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.6"/><path d="M16 7 H10 a2.5 2.5 0 0 0 0 5 H14 a2.5 2.5 0 0 1 0 5 H8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> 籃子建議 · BASKET BUILDER</span>
             <a href="briefs/2026-04-18.html#budget" class="btn-link small">看完整下單計畫 →</a>
           </div>
-          <p class="budget-plan">今日建議將 NT$5,000 預算用於新倉試水聯亞 (3081) 零股，理由為光通訊 CPO 題材受 AI 需求帶動持續發酵，聯亞作為產業代表股具成長潛力。設定停損價為 2340 元，停利價為 3380 元，符合雪球法小倉位試水原則。</p>
+          <div class="basket-controls">
+            <div class="basket-budget-row">
+              <label class="basket-budget-lbl small">本次預算</label>
+              <div class="basket-preset-btns"><button type="button" class="basket-preset-btn" data-amt="5000">NT$5k</button><button type="button" class="basket-preset-btn" data-amt="10000">NT$10k</button><button type="button" class="basket-preset-btn" data-amt="20000">NT$20k</button><button type="button" class="basket-preset-btn" data-amt="50000">NT$50k</button></div>
+              <div class="basket-input-wrap">
+                <span class="basket-currency">NT$</span>
+                <input type="number" class="basket-budget-input mono" value="5000"
+                       step="1000" min="1000" max="500000" aria-label="預算（新台幣）">
+              </div>
+            </div>
+            <p class="budget-plan">今日建議將 NT$5,000 預算用於新倉試水聯亞 (3081) 零股，理由為光通訊 CPO 題材受 AI 需求帶動持續發酵，聯亞作為產業代表股具成長潛力。設定停損價為 2340 元，停利價為 3380 元，符合雪球法小倉位試水原則。</p>
+          </div>
           <div class="alloc-grid">
-            <div class="alloc-card alloc-buy">
+            <label for="hero-alloc-0" class="alloc-card alloc-buy"
+                   data-cost="4760" data-conf="75" data-is-cash="0">
               <div class="alloc-head">
                 <span class="alloc-action">新倉試水</span>
-                <span class="alloc-conf mono">75%</span>
+                <span class="alloc-head-right">
+                  <span class="alloc-conf mono">75%</span>
+                  <input type="checkbox" class="alloc-check" id="hero-alloc-0" data-cost="4760" data-conf="75" aria-label="納入籃子">
+                </span>
               </div>
               <div class="alloc-sym"><strong>3081</strong> <span class="muted small">聯亞</span></div>
               <div class="alloc-levels mono small">2 股 · ≈NT$4,760 · 停損 2340 · 停利 3380</div>
               <div class="alloc-rat small">光通訊 CPO 題材在 AI 時代下需求爆發，聯亞 (3081) 作為此領域的關鍵供應商，受惠於高速傳輸技術升級，具備長期成長潛力。雖然近期股價已有漲幅，但考量其在矽光子技術的布局，仍值得以小倉位試水。</div>
-            </div></div>
+              <a class="alloc-deeplink small" href="briefs/2026-04-18.html#budget">看詳情 →</a>
+            </label></div>
+          <div class="basket-summary mono small">
+            <span class="bs-cell"><span class="muted">籃子合計</span> <strong class="basket-total">NT$0</strong></span>
+            <span class="bs-cell"><span class="muted">剩</span> <strong class="basket-remaining">NT$5,000</strong></span>
+            <span class="bs-cell"><span class="muted">已選</span> <strong class="basket-count">0 檔</strong></span>
+            <span class="bs-cell bs-hint muted">▸ 改預算會自動挑信心最高的組合；也可手動勾選。</span>
+          </div>
         </div>
   
         <div class="hero-action">
@@ -163,6 +191,146 @@
         </div>
 </div>
 
+        
+    <section class="today-focus">
+      <div class="tf-head">
+        <div>
+          <div class="tf-kicker mono small">TODAY'S FOCUS</div>
+          <h2 class="tf-title">今日該關注什麼？</h2>
+        </div>
+        <p class="tf-lead muted small">
+          直接看三欄：哪些<strong>便宜有題材</strong>可以試水、哪些<strong>動能正強</strong>可以跟、哪些<strong>位階過高</strong>要避免追。資料來自 prices.json + coverage_report.json（非 AI 推論）。
+        </p>
+      </div>
+      <div class="tf-grid">
+        
+        <div class="tf-col tf-col-cheap">
+          <div class="tf-col-head">
+            <div class="tf-col-title">💎 便宜將漲</div>
+            <div class="tf-col-sub muted small">PE ≤ 20 · 52週位階 ≤ 65% · 新聞有熱度</div>
+          </div>
+          <ul class="tf-list">
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/2881.html" class="tf-sym"><strong class="mono">2881</strong></a>
+                    <span class="tf-name">富邦金</span>
+                    <span class="tf-price mono tnum">88.00</span>
+                  </div>
+                  <div class="tf-reason muted small">PE 10.5 · 52週位階 55% · 新聞 ×2</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/3008.html" class="tf-sym"><strong class="mono">3008</strong></a>
+                    <span class="tf-name">大立光</span>
+                    <span class="tf-price mono tnum">2605.00</span>
+                  </div>
+                  <div class="tf-reason muted small">PE 16.6 · 52週位階 64% · 新聞 ×2</div>
+                </li></ul>
+        </div>
+        
+        <div class="tf-col tf-col-hot">
+          <div class="tf-col-head">
+            <div class="tf-col-title">🔥 正在上漲</div>
+            <div class="tf-col-sub muted small">近 7 日 ≥ +3% 或 30 日 ≥ +10%（有動能）</div>
+          </div>
+          <ul class="tf-list">
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/4979.html" class="tf-sym"><strong class="mono">4979</strong></a>
+                    <span class="tf-name">華星光</span>
+                    <span class="tf-price mono tnum">644.00</span>
+                  </div>
+                  <div class="tf-reason muted small">7日 +43.3% · 30日 +68.2% · 52週位階 100%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/4960.html" class="tf-sym"><strong class="mono">4960</strong></a>
+                    <span class="tf-name">誠美材</span>
+                    <span class="tf-price mono tnum">33.85</span>
+                  </div>
+                  <div class="tf-reason muted small">7日 +47.2% · 30日 +25.4% · 52週位階 100%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/3081.html" class="tf-sym"><strong class="mono">3081</strong></a>
+                    <span class="tf-name">聯亞</span>
+                    <span class="tf-price mono tnum">2600.00</span>
+                  </div>
+                  <div class="tf-reason muted small">7日 +12.3% · 30日 +80.6% · 52週位階 100%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/6515.html" class="tf-sym"><strong class="mono">6515</strong></a>
+                    <span class="tf-name">穎崴</span>
+                    <span class="tf-price mono tnum">10305.00</span>
+                  </div>
+                  <div class="tf-reason muted small">7日 +29.9% · 30日 +42.7% · 52週位階 96%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/3105.html" class="tf-sym"><strong class="mono">3105</strong></a>
+                    <span class="tf-name">穩懋</span>
+                    <span class="tf-price mono tnum">539.00</span>
+                  </div>
+                  <div class="tf-reason muted small">7日 +16.2% · 30日 +67.1% · 52週位階 100%</div>
+                </li></ul>
+        </div>
+        
+        <div class="tf-col tf-col-danger">
+          <div class="tf-col-head">
+            <div class="tf-col-title">⚠️ 警戒追高</div>
+            <div class="tf-col-sub muted small">52週位階 ≥ 90% 且（PE 高 或 30 日漲多）</div>
+          </div>
+          <ul class="tf-list">
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/3363.html" class="tf-sym"><strong class="mono">3363</strong></a>
+                    <span class="tf-name">上詮</span>
+                    <span class="tf-price mono tnum">899.00</span>
+                  </div>
+                  <div class="tf-reason muted small">位階 98% · PE 4994 · 30日 +42%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/3081.html" class="tf-sym"><strong class="mono">3081</strong></a>
+                    <span class="tf-name">聯亞</span>
+                    <span class="tf-price mono tnum">2600.00</span>
+                  </div>
+                  <div class="tf-reason muted small">位階 100% · PE 556 · 30日 +81%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/8046.html" class="tf-sym"><strong class="mono">8046</strong></a>
+                    <span class="tf-name">南電</span>
+                    <span class="tf-price mono tnum">724.00</span>
+                  </div>
+                  <div class="tf-reason muted small">位階 96% · PE 238 · 30日 +28%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/6515.html" class="tf-sym"><strong class="mono">6515</strong></a>
+                    <span class="tf-name">穎崴</span>
+                    <span class="tf-price mono tnum">10305.00</span>
+                  </div>
+                  <div class="tf-reason muted small">位階 96% · PE 222 · 30日 +43%</div>
+                </li>
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    <a href="holdings/3163.html" class="tf-sym"><strong class="mono">3163</strong></a>
+                    <span class="tf-name">波若威</span>
+                    <span class="tf-price mono tnum">1225.00</span>
+                  </div>
+                  <div class="tf-reason muted small">位階 96% · PE 196 · 30日 +38%</div>
+                </li></ul>
+        </div>
+      </div>
+      <div class="tf-foot muted small">
+        提示：💎 便宜將漲 是最適合 NT$5,000 試水的位置（下跌風險低、有題材時爆發快）。
+        🔥 正在上漲 通常要等回檔（不追高是雪球法鐵律）。
+        ⚠️ 警戒追高 裡若有你的持倉，考慮分批停利回 0050 存款。
+      </div>
+    </section>
+    
         <div class="mood-cat-row">
           
 <div class="mood-panel">
@@ -3405,7 +3573,124 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-19 10:32 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-19 11:03 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
+<script>
+/* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
+ * so opening the page at 15:00 shows 「午安」, 21:00 shows 「晚安」. */
+(function () {
+  var g = document.querySelector('.bh-greeting');
+  if (!g) return;
+  var h = new Date().getHours();
+  var label;
+  if (h >= 5 && h < 11)       label = '早安';
+  else if (h >= 11 && h < 13) label = '中午好';
+  else if (h >= 13 && h < 18) label = '午安';
+  else if (h >= 18 && h < 23) label = '晚上好';
+  else                        label = '夜深了';
+  g.textContent = label;
+})();
+
+/* Basket builder — client-side budget-aware allocation picker.
+ * Each .basket-builder scope has its own budget input, preset buttons,
+ * allocation checkboxes, and summary line. Changing the budget re-runs the
+ * greedy auto-fill (take highest confidence_pct until budget exhausted);
+ * toggling a checkbox switches to manual mode and just updates totals. */
+(function () {
+  function fmt(n) {
+    return 'NT$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function setupBuilder(builder) {
+    var input     = builder.querySelector('.basket-budget-input');
+    var presets   = builder.querySelectorAll('.basket-preset-btn');
+    var cards     = builder.querySelectorAll('[data-cost]');
+    var totalEl   = builder.querySelector('.basket-total');
+    var remainEl  = builder.querySelector('.basket-remaining');
+    var countEl   = builder.querySelector('.basket-count');
+    if (!input || !totalEl) return;
+
+    function recalc() {
+      var total = 0, count = 0;
+      cards.forEach(function (card) {
+        var check = card.querySelector('.alloc-check');
+        if (!check) return;
+        var cost = parseFloat(card.getAttribute('data-cost')) || 0;
+        if (check.checked && cost > 0) {
+          total += cost;
+          count += 1;
+          card.classList.add('alloc-picked');
+        } else {
+          card.classList.remove('alloc-picked');
+        }
+      });
+      var budget = parseFloat(input.value) || 0;
+      var remaining = budget - total;
+      totalEl.textContent = fmt(total);
+      remainEl.textContent = fmt(remaining);
+      remainEl.classList.toggle('dn', remaining < 0);
+      remainEl.classList.toggle('up', remaining >= 0);
+      countEl.textContent = count + ' 檔';
+      // Mark preset button active if its amount matches current budget
+      presets.forEach(function (b) {
+        var amt = parseFloat(b.getAttribute('data-amt')) || 0;
+        b.classList.toggle('is-active', Math.abs(amt - budget) < 1);
+      });
+    }
+
+    function autoFill() {
+      var budget = parseFloat(input.value) || 0;
+      // Sort non-cash cards by confidence desc, then by cost asc (cheaper first on ties).
+      var buyable = Array.prototype.slice.call(cards).filter(function (c) {
+        return c.getAttribute('data-is-cash') !== '1' &&
+               (parseFloat(c.getAttribute('data-cost')) || 0) > 0;
+      });
+      buyable.sort(function (a, b) {
+        var ca = parseFloat(a.getAttribute('data-conf')) || 0;
+        var cb = parseFloat(b.getAttribute('data-conf')) || 0;
+        if (cb !== ca) return cb - ca;
+        var pa = parseFloat(a.getAttribute('data-cost')) || 0;
+        var pb = parseFloat(b.getAttribute('data-cost')) || 0;
+        return pa - pb;
+      });
+      // Uncheck everything, then greedy-pack.
+      cards.forEach(function (c) {
+        var ch = c.querySelector('.alloc-check');
+        if (ch) ch.checked = false;
+      });
+      var spent = 0;
+      buyable.forEach(function (c) {
+        var cost = parseFloat(c.getAttribute('data-cost')) || 0;
+        if (cost > 0 && spent + cost <= budget) {
+          var ch = c.querySelector('.alloc-check');
+          if (ch) { ch.checked = true; spent += cost; }
+        }
+      });
+      recalc();
+    }
+
+    input.addEventListener('input', autoFill);
+    input.addEventListener('change', autoFill);
+    presets.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var amt = btn.getAttribute('data-amt');
+        if (amt) { input.value = amt; autoFill(); }
+      });
+    });
+    cards.forEach(function (c) {
+      var ch = c.querySelector('.alloc-check');
+      if (ch) ch.addEventListener('change', recalc);
+      // Swallow clicks on the deep-link so they don't toggle the label/checkbox.
+      var dl = c.querySelector('.alloc-deeplink');
+      if (dl) dl.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    });
+
+    autoFill();
+  }
+
+  document.querySelectorAll('.basket-builder').forEach(setupBuilder);
+})();
+</script>
 </body>
 </html>

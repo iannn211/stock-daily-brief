@@ -935,13 +935,16 @@ def render_analysis_section(analysis: dict) -> str:
         if opp_cards else ""
     )
 
-    # Budget allocation — also on brief page
+    # Budget allocation — full-detail basket builder on brief page.
+    # Same basket-builder JS hook as the hero card; this page shows the fuller
+    # rationale / entry / stop / risk per candidate.
     budget_alloc = analysis.get("budget_allocation", {})
     budget_section_html = ""
     if budget_alloc.get("allocations"):
         allocs = budget_alloc.get("allocations", [])
+        default_budget = int(budget_alloc.get("budget_twd", 5000)) or 5000
         rows = []
-        for al in allocs:
+        for idx, al in enumerate(allocs):
             action = al.get("action", "")
             is_cash = "現金" in action or "不動作" in action
             cls = "alloc-cash" if is_cash else "alloc-buy"
@@ -949,8 +952,9 @@ def render_analysis_section(analysis: dict) -> str:
             src_html = "".join(f'<span class="chip chip-muted small">{html.escape(s)}</span>' for s in srcs)
             sl = al.get("stop_loss_price")
             tp = al.get("take_profit_price")
-            shares = al.get("target_shares")
-            cost = al.get("target_cost_twd")
+            shares = al.get("target_shares") or 0
+            cost = al.get("target_cost_twd") or 0
+            conf = int(al.get("confidence_pct") or 0)
             row_levels = []
             if shares: row_levels.append(f"<strong>{shares} 股</strong>")
             if cost: row_levels.append(f"約 {_fmt_twd(cost)}")
@@ -958,14 +962,29 @@ def render_analysis_section(analysis: dict) -> str:
             if sl: row_levels.append(f'<span class="dn">停損 {sl}</span>')
             if tp: row_levels.append(f'<span class="up">停利 {tp}</span>')
             levels_html = " · ".join(row_levels) if row_levels else ""
+            check_id = f"full-alloc-{idx}"
+            if is_cash:
+                pick_input = (
+                    '<span class="alloc-badge alloc-hold-badge">保留現金</span>'
+                )
+            else:
+                pick_input = (
+                    f'<label for="{check_id}" class="alloc-pick-lbl small">'
+                    f'<input type="checkbox" class="alloc-check" id="{check_id}" '
+                    f'data-cost="{int(cost)}" data-conf="{conf}"> 加入籃子</label>'
+                )
             rows.append(f'''
-            <article class="alloc-full-card {cls}">
+            <article class="alloc-full-card {cls}"
+                     data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_cash else "0"}">
               <div class="alloc-full-head">
                 <div>
                   <div class="alloc-action-big">{html.escape(action)}</div>
                   <h3>{html.escape(al.get("symbol", ""))} <span class="muted">{html.escape(al.get("name", ""))}</span></h3>
                 </div>
-                <div class="alloc-conf-big mono">信心度 {al.get("confidence_pct", 0)}%</div>
+                <div class="alloc-full-right">
+                  <div class="alloc-conf-big mono">信心度 {conf}%</div>
+                  {pick_input}
+                </div>
               </div>
               {f'<div class="alloc-levels-row mono small">{levels_html}</div>' if levels_html else ''}
               <p><span class="label-inline">理由</span>{html.escape(al.get("rationale", ""))}</p>
@@ -977,11 +996,33 @@ def render_analysis_section(analysis: dict) -> str:
                         if unalloc and unalloc > 0 else "")
         why_not = budget_alloc.get("why_not_other_picks") or ""
         why_not_line = f'<p class="muted small"><strong>為什麼不選別檔：</strong>{html.escape(why_not)}</p>' if why_not else ""
+        preset_amounts = [5000, 10000, 20000, 50000]
+        preset_btns = "".join(
+            f'<button type="button" class="basket-preset-btn" data-amt="{amt}">'
+            f'NT${amt // 1000}k</button>' for amt in preset_amounts
+        )
         budget_section_html = f'''
-<section class="a-section" id="budget">
-  <div class="section-head"><h2>今日配置 NT${budget_alloc.get("budget_twd", 0):,.0f} · <span class="sec-en">ALLOCATION</span> <span class="badge-count">SNOWBALL</span></h2></div>
+<section class="a-section basket-builder" id="budget">
+  <div class="section-head"><h2>籃子建議 · <span class="sec-en">BASKET BUILDER</span> <span class="badge-count">SNOWBALL · {len(allocs)} 候選</span></h2></div>
   <div class="budget-plan-big">{html.escape(budget_alloc.get("plan_summary", ""))}</div>
+  <div class="basket-controls basket-controls-big">
+    <div class="basket-budget-row">
+      <label class="basket-budget-lbl">本次預算</label>
+      <div class="basket-preset-btns">{preset_btns}</div>
+      <div class="basket-input-wrap">
+        <span class="basket-currency">NT$</span>
+        <input type="number" class="basket-budget-input mono" value="{default_budget}"
+               step="1000" min="1000" max="500000" aria-label="預算（新台幣）">
+      </div>
+    </div>
+    <p class="basket-hint muted small">▸ 改預算會自動挑信心最高的組合；也可手動勾選覆蓋。已保留不動作 / 觀望候選做參考。</p>
+  </div>
   {"".join(rows)}
+  <div class="basket-summary basket-summary-big mono">
+    <span class="bs-cell"><span class="muted">籃子合計</span> <strong class="basket-total">NT$0</strong></span>
+    <span class="bs-cell"><span class="muted">剩</span> <strong class="basket-remaining">NT${default_budget:,}</strong></span>
+    <span class="bs-cell"><span class="muted">已選</span> <strong class="basket-count">0 檔</strong></span>
+  </div>
   {unalloc_line}
   {why_not_line}
 </section>
@@ -1025,6 +1066,10 @@ PAGE_HEAD = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>{title}</title>
+<!-- Premium typography: Inter (Latin) + Noto Sans TC (繁中) + JetBrains Mono (數字/代號) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="{css_href}">
 </head>
 <body>
@@ -1034,6 +1079,123 @@ PAGE_FOOT = """
 <footer class="wrap">
   <p>生成於 {now} · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
+<script>
+/* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
+ * so opening the page at 15:00 shows 「午安」, 21:00 shows 「晚安」. */
+(function () {{
+  var g = document.querySelector('.bh-greeting');
+  if (!g) return;
+  var h = new Date().getHours();
+  var label;
+  if (h >= 5 && h < 11)       label = '早安';
+  else if (h >= 11 && h < 13) label = '中午好';
+  else if (h >= 13 && h < 18) label = '午安';
+  else if (h >= 18 && h < 23) label = '晚上好';
+  else                        label = '夜深了';
+  g.textContent = label;
+}})();
+
+/* Basket builder — client-side budget-aware allocation picker.
+ * Each .basket-builder scope has its own budget input, preset buttons,
+ * allocation checkboxes, and summary line. Changing the budget re-runs the
+ * greedy auto-fill (take highest confidence_pct until budget exhausted);
+ * toggling a checkbox switches to manual mode and just updates totals. */
+(function () {{
+  function fmt(n) {{
+    return 'NT$' + Math.round(n).toLocaleString('en-US');
+  }}
+
+  function setupBuilder(builder) {{
+    var input     = builder.querySelector('.basket-budget-input');
+    var presets   = builder.querySelectorAll('.basket-preset-btn');
+    var cards     = builder.querySelectorAll('[data-cost]');
+    var totalEl   = builder.querySelector('.basket-total');
+    var remainEl  = builder.querySelector('.basket-remaining');
+    var countEl   = builder.querySelector('.basket-count');
+    if (!input || !totalEl) return;
+
+    function recalc() {{
+      var total = 0, count = 0;
+      cards.forEach(function (card) {{
+        var check = card.querySelector('.alloc-check');
+        if (!check) return;
+        var cost = parseFloat(card.getAttribute('data-cost')) || 0;
+        if (check.checked && cost > 0) {{
+          total += cost;
+          count += 1;
+          card.classList.add('alloc-picked');
+        }} else {{
+          card.classList.remove('alloc-picked');
+        }}
+      }});
+      var budget = parseFloat(input.value) || 0;
+      var remaining = budget - total;
+      totalEl.textContent = fmt(total);
+      remainEl.textContent = fmt(remaining);
+      remainEl.classList.toggle('dn', remaining < 0);
+      remainEl.classList.toggle('up', remaining >= 0);
+      countEl.textContent = count + ' 檔';
+      // Mark preset button active if its amount matches current budget
+      presets.forEach(function (b) {{
+        var amt = parseFloat(b.getAttribute('data-amt')) || 0;
+        b.classList.toggle('is-active', Math.abs(amt - budget) < 1);
+      }});
+    }}
+
+    function autoFill() {{
+      var budget = parseFloat(input.value) || 0;
+      // Sort non-cash cards by confidence desc, then by cost asc (cheaper first on ties).
+      var buyable = Array.prototype.slice.call(cards).filter(function (c) {{
+        return c.getAttribute('data-is-cash') !== '1' &&
+               (parseFloat(c.getAttribute('data-cost')) || 0) > 0;
+      }});
+      buyable.sort(function (a, b) {{
+        var ca = parseFloat(a.getAttribute('data-conf')) || 0;
+        var cb = parseFloat(b.getAttribute('data-conf')) || 0;
+        if (cb !== ca) return cb - ca;
+        var pa = parseFloat(a.getAttribute('data-cost')) || 0;
+        var pb = parseFloat(b.getAttribute('data-cost')) || 0;
+        return pa - pb;
+      }});
+      // Uncheck everything, then greedy-pack.
+      cards.forEach(function (c) {{
+        var ch = c.querySelector('.alloc-check');
+        if (ch) ch.checked = false;
+      }});
+      var spent = 0;
+      buyable.forEach(function (c) {{
+        var cost = parseFloat(c.getAttribute('data-cost')) || 0;
+        if (cost > 0 && spent + cost <= budget) {{
+          var ch = c.querySelector('.alloc-check');
+          if (ch) {{ ch.checked = true; spent += cost; }}
+        }}
+      }});
+      recalc();
+    }}
+
+    input.addEventListener('input', autoFill);
+    input.addEventListener('change', autoFill);
+    presets.forEach(function (btn) {{
+      btn.addEventListener('click', function (e) {{
+        e.preventDefault();
+        var amt = btn.getAttribute('data-amt');
+        if (amt) {{ input.value = amt; autoFill(); }}
+      }});
+    }});
+    cards.forEach(function (c) {{
+      var ch = c.querySelector('.alloc-check');
+      if (ch) ch.addEventListener('change', recalc);
+      // Swallow clicks on the deep-link so they don't toggle the label/checkbox.
+      var dl = c.querySelector('.alloc-deeplink');
+      if (dl) dl.addEventListener('click', function (ev) {{ ev.stopPropagation(); }});
+    }});
+
+    autoFill();
+  }}
+
+  document.querySelectorAll('.basket-builder').forEach(setupBuilder);
+}})();
+</script>
 </body>
 </html>
 """
@@ -2068,6 +2230,184 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
             f'{html.escape(warning)}</div>'
         )
 
+    # --- Head-to-head verdict card (Tetsu Chang style, 2026-04-19) ---
+    # When Gemini provides head_to_head, render as a standout card: pick vs skip
+    # with PE / EPS / ROE / 52週位階 / 法人 numbers pulled from prices+chips.
+    # Falls back to a heuristic synthesizer when Gemini hasn't supplied h2h:
+    # compare lowest-PE + positive EPS candidate vs highest-PE or EPS-loss candidate.
+    h2h_html = ""
+    h2h = opp.get("head_to_head") or {}
+    h2h_synth = False
+    if not (h2h and h2h.get("pick_symbol") and h2h.get("skip_symbol")) and len(leads) >= 2:
+        # Build candidate list with metrics
+        cand = []
+        for ls in leads:
+            sym = ls.get("symbol", "")
+            rec = lookup.get(sym) or {}
+            fund = rec.get("fundamentals") or {}
+            pe = fund.get("pe_ttm")
+            eps = fund.get("eps_ttm")
+            p52 = rec.get("pct_52w")
+            if pe is None and eps is None:
+                continue
+            cand.append({
+                "sym": sym, "name": ls.get("name", ""),
+                "pe": pe, "eps": eps, "p52": p52,
+                "r30": rec.get("ret_30d"),
+            })
+        if len(cand) >= 2:
+            # Pick: best combo of positive EPS + lowest PE (if any), else lowest PE
+            eligible_pick = [c for c in cand if (c["eps"] is not None and c["eps"] > 0)
+                             and (c["pe"] is None or (0 < c["pe"] <= 35))]
+            if eligible_pick:
+                pick = min(eligible_pick,
+                           key=lambda c: (c["pe"] if c["pe"] is not None else 999, -(c["eps"] or 0)))
+            else:
+                pick = min(cand, key=lambda c: (c["pe"] or 999))
+            # Skip: prefer negative EPS, else highest PE > pick's PE
+            eps_loss = [c for c in cand if c["eps"] is not None and c["eps"] < 0 and c["sym"] != pick["sym"]]
+            if eps_loss:
+                skip = min(eps_loss, key=lambda c: c["eps"] or 0)  # most negative EPS
+            else:
+                others = [c for c in cand if c["sym"] != pick["sym"] and c["pe"] is not None]
+                if others:
+                    skip = max(others, key=lambda c: c["pe"] or 0)
+                    # Only use if the PE gap is material (2x or more)
+                    if pick["pe"] and skip["pe"] and skip["pe"] < pick["pe"] * 1.8:
+                        skip = None
+                else:
+                    skip = None
+            if skip and pick["sym"] != skip["sym"]:
+                h2h_synth = True
+                def _fmt_n(v, digits=1, unit=""):
+                    return f"{v:.{digits}f}{unit}" if v is not None else "—"
+                def _pe_verdict(pe: float | None) -> str:
+                    """Short Chinese label for PE level."""
+                    if pe is None: return ""
+                    if pe <= 0: return "虧損"
+                    if pe <= 20: return "合理"
+                    if pe <= 30: return "偏高"
+                    if pe <= 50: return "昂貴"
+                    if pe <= 100: return "泡沫"
+                    return "極度泡沫"
+                pick_eps_s = _fmt_n(pick["eps"], 2)
+                skip_eps_s = _fmt_n(skip["eps"], 2)
+                pick_pe_s = _fmt_n(pick["pe"], 1)
+                skip_pe_s = _fmt_n(skip["pe"], 1)
+                pick_pe_lbl = _pe_verdict(pick["pe"])
+                skip_pe_lbl = _pe_verdict(skip["pe"])
+                pick_bubbly = (pick["pe"] is not None and pick["pe"] > 50)
+                # Verdict sentence — style depends on relative/absolute valuation health
+                if skip["eps"] is not None and skip["eps"] < 0:
+                    # Pick has positive EPS, skip is EPS-loss — clearest-cut case
+                    verdict = (f"同題材下，我挑 {pick['sym']} {pick['name']}（PE {pick_pe_s}、EPS {pick_eps_s} 獲利），"
+                               f"而非 {skip['sym']} {skip['name']}（EPS {skip_eps_s} 虧損）——EPS 為負代表本業還沒穩定，"
+                               f"就算題材熱，拿雪球試水先挑能賺錢的。")
+                    skip_reason = (f"EPS {skip_eps_s} 本業仍虧損；題材發酵時容易被拉上去，"
+                                   f"但沒有基本面支撐的漲勢回檔也快。")
+                    pick_reason = (f"PE {pick_pe_s}（{pick_pe_lbl}）、EPS {pick_eps_s} 本業賺錢，"
+                                   f"雪球試水的防守底在這裡。")
+                elif pick_bubbly:
+                    # Both are expensive — "least-bad" framing, NOT "this one is cheap"
+                    verdict = (f"同題材下兩檔估值都偏貴（{pick['sym']} PE {pick_pe_s}、{skip['sym']} PE {skip_pe_s}），"
+                               f"若一定要挑，我選 {pick['sym']} {pick['name']}——差距太大時，"
+                               f"{skip['sym']} 已把未來 N 年的成長都 price in。但切記整個族群都在「泡沫區」，"
+                               f"進場只能用小倉位試水、嚴守停損。")
+                    skip_reason = (f"PE {skip_pe_s}（{skip_pe_lbl}）已超過合理估值 5 倍以上，"
+                                   f"除非 EPS 爆增 3-5 倍否則難撐；追高買進風險極高。")
+                    pick_reason = (f"PE {pick_pe_s}（{pick_pe_lbl}）雖仍不便宜，但 EPS {pick_eps_s} "
+                                   f"至少是獲利狀態，題材若持續還有補漲空間——但切記「least-bad，不是 cheap」。")
+                else:
+                    # Pick is genuinely reasonable (<=50), skip is bubbly
+                    verdict = (f"同題材下，我挑 {pick['sym']} {pick['name']}（PE {pick_pe_s}，{pick_pe_lbl}）"
+                               f"勝 {skip['sym']} {skip['name']}（PE {skip_pe_s}，{skip_pe_lbl}）——"
+                               f"估值差距太大，{skip['sym']} 已把未來幾年的成長都 price in 了。")
+                    skip_reason = (f"PE {skip_pe_s}（{skip_pe_lbl}）估值嚴重透支；"
+                                   f"追高買進等於讓前面進的人下車。")
+                    pick_reason = (f"PE {pick_pe_s}（{pick_pe_lbl}）、EPS {pick_eps_s}，"
+                                   f"估值還算合理，若題材持續發酵還有補漲空間。")
+                if pick.get("r30") is not None:
+                    pick_reason += f" 近 30 日 {pick['r30']:+.1f}%。"
+                if skip.get("p52") and skip["p52"] >= 80:
+                    skip_reason += f" 52週位階 {skip['p52']:.0f}%，已接近頂部。"
+                h2h = {
+                    "pick_symbol": pick["sym"], "pick_name": pick["name"],
+                    "skip_symbol": skip["sym"], "skip_name": skip["name"],
+                    "verdict": verdict,
+                    "pick_rationale": pick_reason,
+                    "skip_rationale": skip_reason,
+                }
+    if h2h and h2h.get("pick_symbol") and h2h.get("skip_symbol"):
+        def _h2h_stats(sym: str) -> str:
+            rec = lookup.get(sym) or {}
+            fund = rec.get("fundamentals") or {}
+            chips = rec.get("chips") or {}
+            bits = []
+            pe = fund.get("pe_ttm")
+            if pe is not None:
+                pe_cls = "up" if 0 < pe <= 20 else ("amber" if pe <= 30 else "dn")
+                bits.append(f'<span class="h2h-chip {pe_cls}">PE {pe:.1f}</span>')
+            eps = fund.get("eps_ttm")
+            if eps is not None:
+                eps_cls = "up" if eps > 0 else "dn"
+                bits.append(f'<span class="h2h-chip {eps_cls}">EPS {eps:+.2f}</span>')
+            roe = fund.get("roe")
+            if roe is not None:
+                roe_pct = roe * 100
+                roe_cls = "up" if roe_pct >= 15 else ("amber" if roe_pct >= 8 else "muted")
+                bits.append(f'<span class="h2h-chip {roe_cls}">ROE {roe_pct:.0f}%</span>')
+            p52 = rec.get("pct_52w")
+            if p52 is not None:
+                p52_cls = "up" if p52 < 40 else ("amber" if p52 < 70 else "dn")
+                bits.append(f'<span class="h2h-chip {p52_cls}">52W位 {p52:.0f}</span>')
+            r30 = rec.get("ret_30d")
+            if r30 is not None:
+                bits.append(f'<span class="h2h-chip mono {_cls(r30)}">30D {r30:+.1f}%</span>')
+            f5 = chips.get("foreign_5d")
+            if f5 is not None:
+                f5_cls = "up" if f5 > 0 else "dn"
+                bits.append(f'<span class="h2h-chip {f5_cls}">外資5D {f5:+,.0f}</span>')
+            return '<div class="h2h-stats">' + "".join(bits) + '</div>' if bits else ""
+
+        pick_sym = html.escape(h2h.get("pick_symbol", ""))
+        pick_name = html.escape(h2h.get("pick_name", ""))
+        skip_sym = html.escape(h2h.get("skip_symbol", ""))
+        skip_name = html.escape(h2h.get("skip_name", ""))
+        verdict = html.escape(h2h.get("verdict", ""))
+        pick_why = html.escape(h2h.get("pick_rationale", ""))
+        skip_why = html.escape(h2h.get("skip_rationale", ""))
+        synth_badge = (
+            '<span class="h2h-synth-badge mono small muted">系統根據 PE / EPS 自動挑選；AI 版本上線後取代</span>'
+            if h2h_synth else
+            '<span class="h2h-ai-badge mono small">AI 判定</span>'
+        )
+        h2h_html = f'''
+  <section class="th-h2h">
+    <div class="th-h2h-head">
+      <div class="th-section-head mono">HEAD-TO-HEAD · 對比同族群的兩檔</div>
+      {synth_badge}
+    </div>
+    <div class="h2h-verdict">{_link_tickers(verdict)}</div>
+    <div class="h2h-grid">
+      <div class="h2h-card h2h-pick">
+        <div class="h2h-card-tag mono">PICK · 選這檔</div>
+        <h3 class="h2h-card-sym"><strong>{pick_sym}</strong> <span class="muted">{pick_name}</span></h3>
+        {_h2h_stats(h2h.get("pick_symbol", ""))}
+        <p class="h2h-card-why small">{pick_why}</p>
+        <a class="h2h-deeplink small mono" href="../holdings/{pick_sym}.html">深度頁 →</a>
+      </div>
+      <div class="h2h-vs mono">VS</div>
+      <div class="h2h-card h2h-skip">
+        <div class="h2h-card-tag mono">SKIP · 不選這檔</div>
+        <h3 class="h2h-card-sym"><strong>{skip_sym}</strong> <span class="muted">{skip_name}</span></h3>
+        {_h2h_stats(h2h.get("skip_symbol", ""))}
+        <p class="h2h-card-why small">{skip_why}</p>
+        <a class="h2h-deeplink small mono" href="../holdings/{skip_sym}.html">深度頁 →</a>
+      </div>
+    </div>
+  </section>
+'''
+
     # --- Assemble ---
     title = f"{theme} · THEME DEEP-DIVE"
     body = f'''
@@ -2109,6 +2449,8 @@ def render_theme_page(opp: dict, pf: dict, history: dict,
   </section>
 
   {warn_html}
+
+  {h2h_html}
 
   {sig_chips_html}
 
@@ -2518,49 +2860,96 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
           </div>
         </div>'''
 
-    # Budget allocation summary
+    # Budget allocation — basket builder (v2, 2026-04-19)
+    # User can adjust budget via input or preset buttons; JS auto-selects
+    # highest-confidence allocations until the budget is filled. Manual
+    # checkbox override is supported. This turns the static "here are 3
+    # picks" card into a real portfolio-construction tool.
     budget_alloc = analysis.get("budget_allocation", {})
     budget_html = ""
     if budget_alloc.get("allocations"):
         allocs = budget_alloc.get("allocations", [])
-        budget_amt = budget_alloc.get("budget_twd", 0)
+        budget_amt = int(budget_alloc.get("budget_twd", 5000)) or 5000
         plan = budget_alloc.get("plan_summary", "")
         alloc_cards = []
-        for al in allocs:
+        for idx, al in enumerate(allocs):
             action = al.get("action", "")
             is_cash = "現金" in action or "不動作" in action
             cls = "alloc-cash" if is_cash else "alloc-buy"
             sym = al.get("symbol", "")
             name = al.get("name", "")
-            shares = al.get("target_shares")
-            cost = al.get("target_cost_twd")
+            shares = al.get("target_shares") or 0
+            cost = al.get("target_cost_twd") or 0
             sl = al.get("stop_loss_price")
             tp = al.get("take_profit_price")
-            conf = al.get("confidence_pct", 0)
+            conf = int(al.get("confidence_pct") or 0)
             rat = al.get("rationale", "")
             shares_str = f"{shares} 股" if shares else ""
             cost_str = f"≈{_fmt_twd(cost)}" if cost else ""
             sl_str = f"停損 {sl}" if sl else ""
             tp_str = f"停利 {tp}" if tp else ""
             levels = " · ".join(s for s in (shares_str, cost_str, sl_str, tp_str) if s)
+            # Link target: theme page would be cleanest but opp and alloc have
+            # different schemas; fall back to the briefs page with a budget anchor.
+            deep_link = f'briefs/{latest_brief["date"]}.html#budget'
+            check_id = f"hero-alloc-{idx}"
+            # Cash/hold items don't count toward basket total — render without
+            # checkbox; otherwise every card is a budget-able candidate.
+            if is_cash:
+                pick_input = (
+                    f'<span class="alloc-badge alloc-hold-badge">保留</span>'
+                )
+            else:
+                pick_input = (
+                    f'<input type="checkbox" class="alloc-check" id="{check_id}" '
+                    f'data-cost="{int(cost)}" data-conf="{conf}" aria-label="納入籃子">'
+                )
             alloc_cards.append(f'''
-            <div class="alloc-card {cls}">
+            <label for="{check_id}" class="alloc-card {cls}"
+                   data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_cash else "0"}">
               <div class="alloc-head">
                 <span class="alloc-action">{html.escape(action)}</span>
-                <span class="alloc-conf mono">{conf}%</span>
+                <span class="alloc-head-right">
+                  <span class="alloc-conf mono">{conf}%</span>
+                  {pick_input}
+                </span>
               </div>
               <div class="alloc-sym"><strong>{html.escape(sym)}</strong> <span class="muted small">{html.escape(name)}</span></div>
               <div class="alloc-levels mono small">{html.escape(levels)}</div>
               <div class="alloc-rat small">{html.escape(rat)[:140]}{"…" if len(rat) > 140 else ""}</div>
-            </div>''')
+              <a class="alloc-deeplink small" href="{deep_link}">看詳情 →</a>
+            </label>''')
+        # Render basket-builder controls
+        preset_amounts = [5000, 10000, 20000, 50000]
+        preset_btns = "".join(
+            f'<button type="button" class="basket-preset-btn" data-amt="{amt}">'
+            f'NT${amt // 1000}k</button>' for amt in preset_amounts
+        )
         budget_html = f'''
-        <div class="hero-budget">
+        <div class="hero-budget basket-builder">
           <div class="hero-picks-head">
-            <span class="hero-action-lbl">{_icon("dollar", 14)} 下一筆 NT${budget_amt:,.0f} 建議 · NEXT DEPLOY</span>
+            <span class="hero-action-lbl">{_icon("dollar", 14)} 籃子建議 · BASKET BUILDER</span>
             <a href="briefs/{latest_brief["date"]}.html#budget" class="btn-link small">看完整下單計畫 →</a>
           </div>
-          <p class="budget-plan">{html.escape(plan)}</p>
+          <div class="basket-controls">
+            <div class="basket-budget-row">
+              <label class="basket-budget-lbl small">本次預算</label>
+              <div class="basket-preset-btns">{preset_btns}</div>
+              <div class="basket-input-wrap">
+                <span class="basket-currency">NT$</span>
+                <input type="number" class="basket-budget-input mono" value="{budget_amt}"
+                       step="1000" min="1000" max="500000" aria-label="預算（新台幣）">
+              </div>
+            </div>
+            <p class="budget-plan">{html.escape(plan)}</p>
+          </div>
           <div class="alloc-grid">{"".join(alloc_cards)}</div>
+          <div class="basket-summary mono small">
+            <span class="bs-cell"><span class="muted">籃子合計</span> <strong class="basket-total">NT$0</strong></span>
+            <span class="bs-cell"><span class="muted">剩</span> <strong class="basket-remaining">NT${budget_amt:,}</strong></span>
+            <span class="bs-cell"><span class="muted">已選</span> <strong class="basket-count">0 檔</strong></span>
+            <span class="bs-cell bs-hint muted">▸ 改預算會自動挑信心最高的組合；也可手動勾選。</span>
+          </div>
         </div>'''
 
     # Health badge
@@ -2635,7 +3024,13 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     weekday = latest_brief["weekday"]
 
     # GUSHI-style BriefHero: greeting + headline + one-liner + highlights + agenda
-    greeting = mb.get("greeting") or "早安"
+    # Greeting is rendered by JS on the client (時段自適應) so opening the page
+    # at 3pm shows 「午安」, at 9pm 「晚安」 — Gemini's output ("早安" baked in at
+    # 07:30 build time) is only the fallback when JS fails. Strip trailing
+    # punctuation so we never output "早安！，..." (user feedback 2026-04-19).
+    _raw_greeting = (mb.get("greeting") or "早安").strip()
+    _raw_greeting = _raw_greeting.rstrip("！!。.， ,")
+    greeting = _raw_greeting or "早安"
     headline = mb.get("headline") or mp.get("summary", "今日尚未生成摘要。")[:20]
     one_liner = mb.get("one_liner") or mp.get("summary", "")
     highlights = mb.get("highlights", [])
@@ -2675,7 +3070,9 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     <div class="bh-spacer"></div>
     <a href="briefs/{date_str}.html" class="btn-link small">→ 完整分析</a>
   </div>
-  <h2 class="bh-headline">{html.escape(greeting)}，{headline_html}</h2>
+  <h2 class="bh-headline">
+    <span class="bh-greeting" data-fallback="{html.escape(greeting)}">{html.escape(greeting)}</span><span class="bh-sep"> · </span>{headline_html}
+  </h2>
   <p class="bh-oneliner">{_link_tickers(one_liner)}</p>
   {highlights_html}
   {budget_html}
@@ -4975,6 +5372,198 @@ def render_chat_tab(pf: dict | None, analysis: dict | None) -> str:
 '''
 
 
+def render_today_focus(pf: dict, coverage_report: dict | None,
+                       analysis: dict | None) -> str:
+    """Top-of-page 3-column panel answering the user's 2026-04-19 critique:
+    「我整個看完也不知道我該關注哪些產業 哪些是目前價格低但預計會上漲」.
+
+    Splits today's watchable names into three easy buckets:
+      💎 便宜將漲  — PE ≤ 20 + 52週位階 ≤ 65% + 新聞熱度 ≥ 2 (合理估值 + 未高位 + 有題材)
+      🔥 正在上漲  — ret_7d ≥ +3% OR (ret_30d ≥ +10% AND 52週位階 ≥ 60%)
+      ⚠️ 警戒追高  — 52週位階 ≥ 90% AND (PE ≥ 35 OR ret_30d ≥ +20%)
+
+    All data already in prices.json / coverage_report.json — no extra Gemini
+    call. User can glance at this and know what to open next.
+    """
+    if not pf:
+        return ""
+
+    # Combined universe to rank — de-dupes by symbol
+    universe: list[dict] = []
+    seen: set[str] = set()
+    for coll in ("holdings", "watchlist", "simulator_universe"):
+        for it in pf.get(coll, []) or []:
+            sym = it.get("symbol")
+            if sym and sym not in seen:
+                seen.add(sym)
+                universe.append(it)
+
+    # News mention counts (last-7-day heat)
+    news_freq: dict[str, int] = {}
+    if coverage_report:
+        for sym, cnt in (coverage_report.get("news_frequency") or {}).items():
+            try:
+                news_freq[str(sym)] = int(cnt)
+            except (TypeError, ValueError):
+                continue
+
+    cheap: list[dict] = []   # 便宜將漲
+    hot: list[dict] = []     # 正在上漲
+    danger: list[dict] = []  # 警戒追高
+
+    for it in universe:
+        sym = it.get("symbol") or ""
+        if not sym or sym.startswith("^"):
+            continue
+        # Skip macro/FX tickers
+        yf_t = it.get("yf_ticker") or sym
+        if "=" in yf_t or yf_t.endswith("-USD"):
+            continue
+
+        price = it.get("price")
+        ret_7d = it.get("ret_7d")
+        ret_30d = it.get("ret_30d")
+        ret_ytd = it.get("ret_ytd")
+        pct_52w = it.get("pct_52w")
+        fund = it.get("fundamentals") or {}
+        pe = fund.get("pe_ttm")
+        eps = fund.get("eps_ttm")
+        earn_g = fund.get("earnings_growth")
+        rev_g = fund.get("rev_growth")
+        growth = earn_g if earn_g is not None else rev_g
+        mentions = news_freq.get(sym, 0)
+
+        # Build a one-liner reason so user understands why we flagged it
+        stub = {
+            "symbol": sym,
+            "name": it.get("name", ""),
+            "price": price,
+            "pct_52w": pct_52w,
+            "pe": pe,
+            "eps": eps,
+            "ret_7d": ret_7d,
+            "ret_30d": ret_30d,
+            "ret_ytd": ret_ytd,
+            "growth": growth,
+            "mentions": mentions,
+        }
+
+        # --- Bucket 1: 便宜將漲 ---
+        # PE 合理 + 未高位 + 新聞有題材 + (可選) 正成長
+        if (pe is not None and 0 < pe <= 20
+                and pct_52w is not None and pct_52w <= 65
+                and mentions >= 1):
+            # Score: lower PE + lower 52w position + more mentions = higher priority
+            # (bonus for positive growth)
+            score = (25 - pe) * 2 + (70 - pct_52w) + mentions * 3
+            if growth is not None and growth > 0:
+                score += growth * 20
+            stub["_score"] = score
+            stub["_reason"] = f"PE {pe:.1f} · 52週位階 {pct_52w:.0f}% · 新聞 ×{mentions}"
+            cheap.append(stub)
+
+        # --- Bucket 2: 正在上漲 ---
+        elif ((ret_7d is not None and ret_7d >= 3)
+              or (ret_30d is not None and ret_30d >= 10
+                  and pct_52w is not None and pct_52w >= 60)):
+            score = (ret_7d or 0) * 3 + (ret_30d or 0) + mentions * 2
+            stub["_score"] = score
+            r7 = f"{ret_7d:+.1f}%" if ret_7d is not None else "—"
+            r30 = f"{ret_30d:+.1f}%" if ret_30d is not None else "—"
+            stub["_reason"] = f"7日 {r7} · 30日 {r30} · 52週位階 {(pct_52w or 0):.0f}%"
+            hot.append(stub)
+
+        # --- Bucket 3: 警戒追高 ---
+        if (pct_52w is not None and pct_52w >= 90
+                and ((pe is not None and pe >= 35)
+                     or (ret_30d is not None and ret_30d >= 20)
+                     or (ret_ytd is not None and ret_ytd >= 60))):
+            danger_score = pct_52w + (pe or 0) + (ret_30d or 0)
+            stub_d = dict(stub)
+            stub_d["_score"] = danger_score
+            pe_str = f"PE {pe:.0f}" if pe is not None else "PE —"
+            r30 = f"{ret_30d:+.0f}%" if ret_30d is not None else "—"
+            stub_d["_reason"] = f"位階 {pct_52w:.0f}% · {pe_str} · 30日 {r30}"
+            danger.append(stub_d)
+
+    # Rank & cap
+    cheap.sort(key=lambda x: x["_score"], reverse=True)
+    hot.sort(key=lambda x: x["_score"], reverse=True)
+    danger.sort(key=lambda x: x["_score"], reverse=True)
+    cheap = cheap[:5]
+    hot = hot[:5]
+    danger = danger[:5]
+
+    # If every bucket is empty, skip the panel (don't render empty chrome)
+    if not (cheap or hot or danger):
+        return ""
+
+    def _card_col(title_emoji: str, title: str, subtitle: str,
+                  items: list[dict], tone_cls: str, empty_msg: str) -> str:
+        if not items:
+            rows_html = f'<div class="tf-empty muted small">{html.escape(empty_msg)}</div>'
+        else:
+            rows = []
+            for it in items:
+                sym = it["symbol"]
+                nm = it["name"] or ""
+                reason = it.get("_reason", "")
+                price = it.get("price")
+                p_str = f"{price:.2f}" if price is not None else "—"
+                has_page = sym in _TICKER_ALIAS
+                sym_html = (
+                    f'<a href="holdings/{sym}.html" class="tf-sym">'
+                    f'<strong class="mono">{html.escape(sym)}</strong></a>'
+                    if has_page else
+                    f'<strong class="mono">{html.escape(sym)}</strong>'
+                )
+                rows.append(f'''
+                <li class="tf-row">
+                  <div class="tf-row-top">
+                    {sym_html}
+                    <span class="tf-name">{html.escape(nm)}</span>
+                    <span class="tf-price mono tnum">{p_str}</span>
+                  </div>
+                  <div class="tf-reason muted small">{html.escape(reason)}</div>
+                </li>''')
+            rows_html = f'<ul class="tf-list">{"".join(rows)}</ul>'
+        return f'''
+        <div class="tf-col tf-col-{tone_cls}">
+          <div class="tf-col-head">
+            <div class="tf-col-title">{title_emoji} {html.escape(title)}</div>
+            <div class="tf-col-sub muted small">{html.escape(subtitle)}</div>
+          </div>
+          {rows_html}
+        </div>'''
+
+    return f'''
+    <section class="today-focus">
+      <div class="tf-head">
+        <div>
+          <div class="tf-kicker mono small">TODAY'S FOCUS</div>
+          <h2 class="tf-title">今日該關注什麼？</h2>
+        </div>
+        <p class="tf-lead muted small">
+          直接看三欄：哪些<strong>便宜有題材</strong>可以試水、哪些<strong>動能正強</strong>可以跟、哪些<strong>位階過高</strong>要避免追。資料來自 prices.json + coverage_report.json（非 AI 推論）。
+        </p>
+      </div>
+      <div class="tf-grid">
+        {_card_col("💎", "便宜將漲", "PE ≤ 20 · 52週位階 ≤ 65% · 新聞有熱度", cheap, "cheap",
+                   "今天沒有符合三條件的名單。低估值+未高位+有新聞的組合不多見，通常要等回檔才會出現。")}
+        {_card_col("🔥", "正在上漲", "近 7 日 ≥ +3% 或 30 日 ≥ +10%（有動能）", hot, "hot",
+                   "今天沒有明顯動能標的。")}
+        {_card_col("⚠️", "警戒追高", "52週位階 ≥ 90% 且（PE 高 或 30 日漲多）", danger, "danger",
+                   "今天沒有過熱警訊 👍")}
+      </div>
+      <div class="tf-foot muted small">
+        提示：💎 便宜將漲 是最適合 NT$5,000 試水的位置（下跌風險低、有題材時爆發快）。
+        🔥 正在上漲 通常要等回檔（不追高是雪球法鐵律）。
+        ⚠️ 警戒追高 裡若有你的持倉，考慮分批停利回 0050 存款。
+      </div>
+    </section>
+    '''
+
+
 def render_index(briefs: list[dict], pf: dict | None,
                  history: dict | None = None) -> str:
     history = history or {}
@@ -5004,6 +5593,7 @@ def render_index(briefs: list[dict], pf: dict | None,
 
     sidebar = render_desk_sidebar(pf)
     hero = render_daily_hero(latest_brief, latest_analysis, pf)
+    focus_panel = render_today_focus(pf, coverage_report, latest_analysis)
     mood_panel = render_market_mood(pf, latest_analysis)
     catalyst_panel = render_catalyst_timeline(latest_analysis)
     chart = render_big_chart(pf)
@@ -5097,6 +5687,7 @@ def render_index(briefs: list[dict], pf: dict | None,
     <main class="main-panel">
       <div class="tab-panel active" data-panel="ai">
         {hero}
+        {focus_panel}
         <div class="mood-cat-row">
           {mood_panel}
           {catalyst_panel}
@@ -6004,37 +6595,53 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
 
 STYLES_CSS = """
 /* ── Design tokens ────────────────────────────────────────── */
+/* 2026-04-19 Phase I: warmer charcoal palette, Inter + Noto Sans TC,
+   bumped base size 15.5px, tighter hierarchy. User feedback: old palette
+   felt 廉價, font size hard to read, font not 好看. */
 :root {
-  --bg-0: #07090d;
-  --bg-1: #0d1118;
-  --bg-2: #141923;
-  --bg-3: #1c2230;
-  --bg-4: #262d3d;
-  --line: rgba(255,255,255,0.06);
-  --line-2: rgba(255,255,255,0.10);
-  --tx-1: #f5f7fa;
-  --tx-2: #b6bdc9;
-  --tx-3: #717786;
-  --tx-4: #4a4f5b;
-  --up:    #ff3b3b;
-  --up-bg: rgba(255,59,59,0.12);
-  --up-soft: #ff7a7a;
-  --dn:    #1bd97c;
-  --dn-bg: rgba(27,217,124,0.12);
-  --dn-soft:#5fe5a3;
-  --amber:  #ffb547;
-  --amber-bg: rgba(255,181,71,0.12);
-  --purple: #b584ff;
-  --purple-bg: rgba(181,132,255,0.12);
-  --accent: #5b8dff;
-  --accent-2: #82a8ff;
-  --accent-glow: rgba(91,141,255,0.35);
-  --accent-soft: rgba(91,141,255,0.14);
-  --pillar-growth: #5b8dff;
-  --pillar-defense: #ffb547;
-  --pillar-flex: #b584ff;
-  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Background: warmer near-black charcoal (was pure navy-black) */
+  --bg-0: #0a0d12;
+  --bg-1: #11151c;
+  --bg-2: #161b24;
+  --bg-3: #1e2431;
+  --bg-4: #2a3142;
+  --line: rgba(255,255,255,0.07);
+  --line-2: rgba(255,255,255,0.12);
+  /* Text: slightly warmer off-white (less clinical) */
+  --tx-1: #eef1f6;
+  --tx-2: #aab3c0;
+  --tx-3: #6e7685;
+  --tx-4: #464c5a;
+  /* TW color convention: 紅=漲 / 綠=跌. Desaturated a touch for less-kitsch feel */
+  --up:    #ef4444;
+  --up-bg: rgba(239,68,68,0.12);
+  --up-soft: #f87171;
+  --dn:    #10b981;
+  --dn-bg: rgba(16,185,129,0.12);
+  --dn-soft: #34d399;
+  --amber:  #f59e0b;
+  --amber-bg: rgba(245,158,11,0.12);
+  --purple: #a78bfa;
+  --purple-bg: rgba(167,139,250,0.12);
+  /* Accent: warmer steel-blue with slightly less saturation (was a bit SaaS-generic) */
+  --accent: #6690ff;
+  --accent-2: #8bafff;
+  --accent-glow: rgba(102,144,255,0.32);
+  --accent-soft: rgba(102,144,255,0.12);
+  --pillar-growth: #6690ff;
+  --pillar-defense: #f59e0b;
+  --pillar-flex: #a78bfa;
+  /* Font stack: Inter (Latin letterforms are tight + premium) → Noto Sans TC
+     (chosen over PingFang for web consistency across OS) → fallbacks */
+  --font-sans: "Inter", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  /* Base size bumped 14 → 15.5px per user feedback "字的大小讓人沒辦法看清楚" */
+  --fs-base: 15.5px;
+  --fs-small: 13px;
+  --fs-tiny:  11.5px;
+  --fs-h1: 28px;
+  --fs-h2: 22px;
+  --fs-h3: 17px;
   --pad: 16px; --pad-sm: 12px; --gap: 12px; --r: 14px; --r-sm: 10px;
 }
 
@@ -6042,7 +6649,9 @@ STYLES_CSS = """
 html, body {
   margin: 0; background: var(--bg-0); color: var(--tx-1);
   font-family: var(--font-sans); -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility; line-height: 1.6;
+  text-rendering: optimizeLegibility; line-height: 1.65;
+  font-size: var(--fs-base);
+  font-feature-settings: "cv11", "ss01", "tnum";  /* Inter refinements + tabular nums */
 }
 body { overflow-x: hidden; }
 a { color: var(--accent-2); text-decoration: none; }
@@ -6072,10 +6681,12 @@ a:hover { color: #b8d0ff; }
 
 /* ── Layout ── */
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-.mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
+.mono { font-family: var(--font-mono); font-feature-settings: "tnum"; font-weight: 500; }
 .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 .muted { color: var(--tx-3); }
-.small { font-size: 12px; }
+/* Bumped .small 12 → 13px so labels aren't eye-strain (user 2026-04-19). */
+.small { font-size: var(--fs-small); }
+.tiny  { font-size: var(--fs-tiny); }
 .val-md { font-size: 18px; font-weight: 600; }
 .val-xl { font-size: 36px; font-weight: 700; letter-spacing: -0.5px; }
 
@@ -7828,8 +8439,126 @@ footer a { color: var(--tx-3); }
 }
 .alloc-full-card h3 { margin: 0; font-size: 17px; }
 .alloc-conf-big { font-size: 12px; color: var(--tx-3); }
+.alloc-full-right {
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: flex-end; flex-shrink: 0;
+}
 .alloc-levels-row { background: var(--bg-2); padding: 8px 12px; border-radius: var(--r-sm); font-size: 12px; margin: 8px 0 10px; line-height: 1.7; }
 .alloc-sources { margin: 6px 0; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+
+/* Basket builder — client-side budget-aware picker on hero + #budget section. */
+.basket-builder .basket-controls {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 10px;
+}
+.basket-controls-big {
+  background: var(--bg-2); padding: 12px 14px;
+  border-radius: var(--r-sm); border: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.basket-budget-row {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 8px 10px;
+}
+.basket-budget-lbl {
+  color: var(--tx-3); letter-spacing: 0.5px;
+  text-transform: uppercase; font-weight: 700;
+  font-family: var(--font-mono); font-size: 11px;
+}
+.basket-preset-btns { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.basket-preset-btn {
+  background: var(--bg-1); border: 1px solid var(--line);
+  color: var(--tx-2); padding: 5px 10px;
+  border-radius: 999px; font-size: 12px; font-family: var(--font-mono);
+  cursor: pointer; transition: all .15s ease;
+}
+.basket-preset-btn:hover { border-color: var(--accent); color: var(--tx-1); }
+.basket-preset-btn.is-active {
+  background: var(--accent-bg, rgba(102,144,255,.18));
+  border-color: var(--accent); color: var(--accent);
+}
+.basket-input-wrap {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--bg-1); border: 1px solid var(--line);
+  border-radius: var(--r-sm); padding: 4px 10px;
+  margin-left: auto;
+}
+.basket-currency { color: var(--tx-3); font-size: 12px; font-family: var(--font-mono); }
+.basket-budget-input {
+  background: transparent; border: 0; color: var(--tx-1);
+  font-size: 14px; font-weight: 600; width: 90px; text-align: right;
+  font-family: var(--font-mono);
+}
+.basket-budget-input:focus { outline: none; color: var(--accent); }
+.basket-budget-input::-webkit-outer-spin-button,
+.basket-budget-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.basket-hint { margin: 0; line-height: 1.55; }
+
+/* Allocation card checkbox + picked state */
+.alloc-card { cursor: pointer; user-select: none; transition: all .15s ease; }
+.alloc-card:hover { border-color: var(--accent); }
+.alloc-card.alloc-picked {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 6px 14px rgba(102,144,255,0.12);
+  background: linear-gradient(135deg, rgba(102,144,255,0.08) 0%, var(--bg-1) 70%);
+}
+.alloc-head-right { display: inline-flex; align-items: center; gap: 8px; }
+.alloc-check {
+  width: 16px; height: 16px; cursor: pointer;
+  accent-color: var(--accent);
+}
+.alloc-badge {
+  font-size: 10px; letter-spacing: 0.4px; padding: 2px 7px;
+  border-radius: 4px; font-family: var(--font-mono); font-weight: 600;
+}
+.alloc-hold-badge { background: var(--bg-2); color: var(--tx-3); border: 1px solid var(--line); }
+.alloc-deeplink {
+  display: inline-block; margin-top: 6px;
+  color: var(--accent); text-decoration: none;
+  font-family: var(--font-mono);
+}
+.alloc-deeplink:hover { color: var(--tx-1); text-decoration: underline; }
+
+.alloc-pick-lbl {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--tx-2); cursor: pointer; user-select: none;
+  padding: 3px 8px; background: var(--bg-2);
+  border-radius: 999px; border: 1px solid var(--line);
+  transition: all .15s ease;
+}
+.alloc-pick-lbl:hover { border-color: var(--accent); color: var(--tx-1); }
+.alloc-full-card.alloc-picked {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 6px 14px rgba(102,144,255,0.08);
+}
+
+/* Summary bar */
+.basket-summary {
+  display: flex; flex-wrap: wrap; gap: 10px 18px;
+  padding: 10px 12px; margin-top: 10px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  align-items: center;
+}
+.basket-summary-big {
+  padding: 14px 18px; font-size: 14px;
+  position: sticky; bottom: 12px; z-index: 2;
+  background: var(--bg-1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.basket-summary .bs-cell { display: inline-flex; gap: 5px; align-items: baseline; }
+.basket-summary .bs-hint { flex: 1; text-align: right; font-family: inherit; }
+.basket-summary strong { font-size: 14px; }
+.basket-summary-big strong { font-size: 16px; }
+.basket-summary .up { color: var(--up); }
+.basket-summary .dn { color: var(--dn); }
+
+@media (max-width: 640px) {
+  .basket-budget-row { gap: 6px; }
+  .basket-input-wrap { margin-left: 0; width: 100%; }
+  .basket-budget-input { flex: 1; }
+  .basket-summary .bs-hint { display: none; }
+}
 
 /* AI tab blocks */
 .ai-block { padding: 0 6px; margin-top: 4px; }
@@ -8847,6 +9576,83 @@ footer a { color: var(--tx-3); }
   background: rgba(255,181,71,0.1);
 }
 
+/* Head-to-head Tetsu-style card */
+.th-h2h {
+  margin: 22px 0;
+  background: linear-gradient(135deg, rgba(102,144,255,0.06), var(--bg-1));
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px 20px;
+}
+.th-h2h-head {
+  display: flex; flex-wrap: wrap; justify-content: space-between;
+  align-items: baseline; gap: 8px 14px; margin-bottom: 10px;
+}
+.h2h-ai-badge {
+  color: var(--accent); background: rgba(102,144,255,0.12);
+  padding: 2px 8px; border-radius: 4px;
+  border: 1px solid rgba(102,144,255,0.3);
+  letter-spacing: 0.3px;
+}
+.h2h-synth-badge {
+  color: var(--tx-3);
+  letter-spacing: 0.3px;
+}
+.th-h2h .th-section-head { margin: 0; }
+.h2h-verdict {
+  font-size: 15px; line-height: 1.7; color: var(--tx-1);
+  padding: 12px 14px; margin-bottom: 14px;
+  background: var(--bg-2); border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm); font-weight: 500;
+}
+.h2h-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  gap: 14px; align-items: stretch;
+}
+.h2h-card {
+  background: var(--bg-1); border: 1px solid var(--line);
+  border-radius: var(--r-sm); padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.h2h-card.h2h-pick { border-color: var(--up); border-left: 3px solid var(--up); }
+.h2h-card.h2h-skip { border-color: var(--dn); border-left: 3px solid var(--dn); opacity: 0.85; }
+.h2h-card-tag {
+  font-size: 10px; letter-spacing: 0.8px;
+  font-weight: 700; padding: 3px 9px;
+  border-radius: 4px; align-self: flex-start;
+}
+.h2h-pick .h2h-card-tag { background: rgba(255,59,59,0.12); color: var(--up); }
+.h2h-skip .h2h-card-tag { background: rgba(16,185,129,0.12); color: var(--dn); }
+.h2h-card-sym { margin: 0; font-size: 18px; }
+.h2h-card-sym strong { font-family: var(--font-mono); letter-spacing: 0.5px; }
+.h2h-stats {
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.h2h-chip {
+  font-size: 11px; font-family: var(--font-mono);
+  padding: 3px 8px; border-radius: 999px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  color: var(--tx-2);
+}
+.h2h-chip.up    { color: var(--up);    border-color: rgba(255,59,59,0.4); background: rgba(255,59,59,0.08); }
+.h2h-chip.dn    { color: var(--dn);    border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.08); }
+.h2h-chip.amber { color: var(--amber); border-color: rgba(255,181,71,0.4); background: rgba(255,181,71,0.08); }
+.h2h-card-why { line-height: 1.6; color: var(--tx-2); margin: 2px 0 0; }
+.h2h-deeplink {
+  color: var(--accent); text-decoration: none;
+  margin-top: auto;
+}
+.h2h-deeplink:hover { text-decoration: underline; }
+.h2h-vs {
+  align-self: center;
+  font-size: 22px; font-weight: 800; letter-spacing: 1px;
+  color: var(--tx-3); padding: 0 4px;
+}
+@media (max-width: 720px) {
+  .h2h-grid { grid-template-columns: 1fr; }
+  .h2h-vs { transform: rotate(90deg); padding: 4px 0; justify-self: center; }
+}
+
 .th-stocks { margin-top: 24px; }
 .th-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-sm); }
 .th-table {
@@ -9461,6 +10267,102 @@ footer a { color: var(--tx-3); }
   font-weight: 700;
 }
 .sc-map-stock.is-filtered-out { display: none; }
+
+/* ---- Today's Focus panel (Phase I · 2026-04-19) ---- */
+.today-focus {
+  margin: 20px 0 28px;
+  padding: 22px 24px;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+}
+.tf-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 24px; margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.tf-kicker {
+  color: var(--accent-2);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.tf-title {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.tf-lead {
+  flex: 1 1 260px;
+  max-width: 520px;
+  margin: 0;
+  line-height: 1.55;
+}
+.tf-lead strong { color: var(--tx-1); font-weight: 600; }
+.tf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.tf-col {
+  padding: 14px 16px;
+  background: var(--bg-2);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--line-2);
+  transition: border-color 120ms;
+}
+.tf-col-cheap  { border-top-color: var(--dn); }    /* 綠：便宜 */
+.tf-col-hot    { border-top-color: var(--up); }    /* 紅：熱門 */
+.tf-col-danger { border-top-color: var(--amber); } /* 黃：警戒 */
+.tf-col:hover { border-color: var(--line-2); }
+.tf-col-head { margin-bottom: 10px; }
+.tf-col-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+.tf-col-sub { line-height: 1.45; }
+.tf-list {
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.tf-row {
+  padding: 8px 10px;
+  background: var(--bg-1);
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: border-color 120ms, background 120ms;
+}
+.tf-row:hover {
+  border-color: var(--line-2);
+  background: var(--bg-3);
+}
+.tf-row-top {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-bottom: 3px;
+}
+.tf-sym {
+  color: var(--tx-1);
+  border-bottom: 1px dotted var(--line-2);
+}
+.tf-sym:hover { border-bottom-color: var(--accent); color: var(--accent-2); }
+.tf-sym strong { font-size: 14.5px; font-weight: 600; }
+.tf-name { color: var(--tx-2); font-size: 13.5px; }
+.tf-price { margin-left: auto; color: var(--tx-1); font-size: 13px; }
+.tf-reason { line-height: 1.45; }
+.tf-empty { padding: 20px 4px; text-align: center; line-height: 1.5; }
+.tf-foot {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+  line-height: 1.6;
+}
+@media (max-width: 960px) {
+  .tf-grid { grid-template-columns: 1fr; }
+  .today-focus { padding: 16px 18px; }
+}
 
 /* ---- fundamentals row on each supply-chain card (Phase H) ---- */
 .sc-map-fund {
