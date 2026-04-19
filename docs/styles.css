@@ -253,6 +253,47 @@ a:hover { color: #b8d0ff; }
   color: inherit; margin-right: 2px;
 }
 
+/* Market chips strip — headline 籌碼 numbers at top of AI tab.
+   Data mom quotes in the Threads post: 外資期貨淨 OI、融資餘額、融券張數.
+   Each cell is 數字 + 日變化 + 「代表什麼」 short interpretation.
+   Appears even before Gemini regenerates, so the numbers are always fresh. */
+.market-chips-strip {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.market-chips-strip .mcs-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.market-chips-strip .mcs-title {
+  font-size: 13px; font-weight: 700; color: var(--tx-1);
+}
+.market-chips-strip .mcs-date { margin-left: 4px; }
+.market-chips-strip .mcs-sub { margin-left: auto; font-size: 11px; }
+.market-chips-strip .mcs-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+.mcs-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.mcs-item.mcs-warn { border-left: 3px solid var(--amber); }
+.mcs-item.mcs-good { border-left: 3px solid var(--dn-soft); }
+.mcs-item.mcs-neutral { border-left: 3px solid var(--tx-3); }
+.mcs-k { font-size: 11.5px; color: var(--tx-3); font-weight: 600; letter-spacing: 0.3px; }
+.mcs-v { font-size: 18px; font-weight: 700; color: var(--tx-1); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.mcs-v .mcs-unit { font-size: 12px; font-weight: 500; color: var(--tx-2); }
+.mcs-i { font-size: 12px; color: var(--tx-2); line-height: 1.4; margin-top: 2px; }
+.mcs-item.mcs-warn .mcs-i { color: var(--amber); }
+.mcs-item.mcs-good .mcs-i { color: var(--dn-soft); }
+
 /* Validator banner — sits above the AI hero when Python QA catches
    issues in today's Gemini output. Narrative layout: 結論 → 每一筆 影響 + 下一步.
    Goal: insight + next step, not raw flags. */

@@ -451,6 +451,133 @@ def load_validation_report() -> dict | None:
         return None
 
 
+def load_market_chips() -> dict | None:
+    """Load the market-wide 籌碼 block from chips.json (外資期貨未平倉、融資餘額).
+    Needed for the "媽媽模式" data strip — surfaces headline numbers even when
+    Gemini hasn't regenerated yet. Returns None if file or block missing.
+    """
+    path = ROOT / "chips.json"
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    mc = data.get("market_chips") or {}
+    if not mc.get("foreign_futures") and not mc.get("margin_total"):
+        return None
+    return mc
+
+
+def render_market_chips_strip(mc: dict | None) -> str:
+    """Compact one-line strip showing the 3 numbers the Threads post taught us
+    to watch: 外資期貨淨 OI、融資餘額、融券張數. Each number is annotated with
+    trend direction + 代表什麼. Renders above the daily AI hero.
+
+    The philosophy: even if today's Gemini analysis hasn't narrated these
+    numbers, the user can see them directly and the interpretation is pre-baked
+    so they don't have to Google what "外資期貨空單 4.1 萬口" means.
+    """
+    if not mc:
+        return ""
+
+    items: list[str] = []
+
+    # ---- Foreign futures net OI ----
+    fx = mc.get("foreign_futures") or {}
+    latest_fx = fx.get("latest") or {}
+    net = latest_fx.get("net_oi")
+    if net is not None:
+        ch = fx.get("change_1d")
+        lots_k = abs(net) / 1000.0  # in 千口 for display
+        direction = "空單" if net < 0 else "多單"
+        ch_bit = ""
+        if ch is not None:
+            arrow = "↑" if ch < 0 else "↓"  # space invert: more short = up arrow
+            if net > 0:  # if net long, positive change = up in longs
+                arrow = "↑" if ch > 0 else "↓"
+            ch_abs = abs(ch)
+            ch_bit = f" {arrow} {ch_abs:,}口"
+        # Interpretation
+        interp = ""
+        if net < -35000:
+            interp = "外資避險加重（一邊買現貨、一邊放空=怕跌）"
+            tone = "warn"
+        elif net < -15000:
+            interp = "外資中性偏保守"
+            tone = "neutral"
+        elif net > 15000:
+            interp = "外資偏多（期貨淨多單罕見）"
+            tone = "good"
+        else:
+            interp = "外資倉位平衡"
+            tone = "neutral"
+        items.append(f'''
+        <div class="mcs-item mcs-{tone}">
+          <div class="mcs-k">外資期貨{direction}淨額</div>
+          <div class="mcs-v">{lots_k:.1f} <span class="mcs-unit">千口</span>{ch_bit}</div>
+          <div class="mcs-i">{html.escape(interp)}</div>
+        </div>''')
+
+    # ---- Margin balance ----
+    mg = mc.get("margin_total") or {}
+    latest_mg = mg.get("latest") or {}
+    bal = latest_mg.get("balance_yi")
+    if bal is not None:
+        ch = mg.get("change_1d_yi")
+        ch_bit = ""
+        tone = "neutral"
+        interp = ""
+        if ch is not None:
+            arrow = "↑" if ch > 0 else "↓"
+            ch_bit = f" {arrow} {abs(ch):.1f}億"
+            if ch > 20:
+                interp = "散戶加碼融資（行情偏熱訊號）"
+                tone = "warn"
+            elif ch < -20:
+                interp = "融資退潮（散戶觀望中）"
+                tone = "good"
+            else:
+                interp = "融資變動不大"
+                tone = "neutral"
+        items.append(f'''
+        <div class="mcs-item mcs-{tone}">
+          <div class="mcs-k">融資餘額</div>
+          <div class="mcs-v">{bal:,.0f} <span class="mcs-unit">億</span>{ch_bit}</div>
+          <div class="mcs-i">{html.escape(interp)}</div>
+        </div>''')
+
+    # ---- Short lots ----
+    short_lots = latest_mg.get("short_lots")
+    if short_lots is not None:
+        # NT: small changes don't matter; just display the level
+        items.append(f'''
+        <div class="mcs-item mcs-neutral">
+          <div class="mcs-k">融券餘額</div>
+          <div class="mcs-v">{short_lots/10000:.1f} <span class="mcs-unit">萬張</span></div>
+          <div class="mcs-i">空方倉位水位</div>
+        </div>''')
+
+    if not items:
+        return ""
+
+    date_str = latest_fx.get("date") or latest_mg.get("date") or ""
+    date_bit = f'<span class="mcs-date muted small mono">{html.escape(date_str)}</span>' if date_str else ""
+
+    return f'''
+    <section class="market-chips-strip">
+      <div class="mcs-head">
+        <span class="mcs-title">📊 市場籌碼一眼</span>
+        {date_bit}
+        <span class="mcs-sub muted small">外資期貨+融資餘額決定「現在是過熱還是冷卻」</span>
+      </div>
+      <div class="mcs-grid">
+        {"".join(items)}
+      </div>
+    </section>
+    '''
+
+
 def load_supply_chains() -> dict:
     """Load supply_chains.yaml; returns chain metadata keyed by slug."""
     import yaml
@@ -5921,6 +6048,8 @@ def render_index(briefs: list[dict], pf: dict | None,
     sidebar = render_desk_sidebar(pf)
     validation_report = load_validation_report()
     validation_banner = render_validation_banner(validation_report)
+    market_chips_data = load_market_chips()
+    market_chips_strip = render_market_chips_strip(market_chips_data)
     hero = render_daily_hero(latest_brief, latest_analysis, pf)
     focus_panel = render_today_focus(pf, coverage_report, latest_analysis)
     mood_panel = render_market_mood(pf, latest_analysis)
@@ -6015,6 +6144,7 @@ def render_index(briefs: list[dict], pf: dict | None,
 
     <main class="main-panel">
       <div class="tab-panel active" data-panel="ai">
+        {market_chips_strip}
         {validation_banner}
         {hero}
         {focus_panel}
@@ -7180,6 +7310,47 @@ a:hover { color: #b8d0ff; }
   background: rgba(255,255,255,0.08); border: 1px solid currentColor;
   color: inherit; margin-right: 2px;
 }
+
+/* Market chips strip — headline 籌碼 numbers at top of AI tab.
+   Data mom quotes in the Threads post: 外資期貨淨 OI、融資餘額、融券張數.
+   Each cell is 數字 + 日變化 + 「代表什麼」 short interpretation.
+   Appears even before Gemini regenerates, so the numbers are always fresh. */
+.market-chips-strip {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.market-chips-strip .mcs-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.market-chips-strip .mcs-title {
+  font-size: 13px; font-weight: 700; color: var(--tx-1);
+}
+.market-chips-strip .mcs-date { margin-left: 4px; }
+.market-chips-strip .mcs-sub { margin-left: auto; font-size: 11px; }
+.market-chips-strip .mcs-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+.mcs-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.mcs-item.mcs-warn { border-left: 3px solid var(--amber); }
+.mcs-item.mcs-good { border-left: 3px solid var(--dn-soft); }
+.mcs-item.mcs-neutral { border-left: 3px solid var(--tx-3); }
+.mcs-k { font-size: 11.5px; color: var(--tx-3); font-weight: 600; letter-spacing: 0.3px; }
+.mcs-v { font-size: 18px; font-weight: 700; color: var(--tx-1); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.mcs-v .mcs-unit { font-size: 12px; font-weight: 500; color: var(--tx-2); }
+.mcs-i { font-size: 12px; color: var(--tx-2); line-height: 1.4; margin-top: 2px; }
+.mcs-item.mcs-warn .mcs-i { color: var(--amber); }
+.mcs-item.mcs-good .mcs-i { color: var(--dn-soft); }
 
 /* Validator banner — sits above the AI hero when Python QA catches
    issues in today's Gemini output. Narrative layout: 結論 → 每一筆 影響 + 下一步.

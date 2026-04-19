@@ -1,5 +1,7 @@
 """
-Fetch last 20 trading days of 三大法人買賣超 from TWSE (上市) + TPEx (上櫃).
+Fetch last 20 trading days of 三大法人買賣超 from TWSE (上市) + TPEx (上櫃),
+plus market-wide 籌碼 signals (外資期貨未平倉、融資餘額) needed for the
+"媽媽模式" narrative analyses — every data point has a 代表什麼 + 下一步.
 
 Writes chips.json:
   {
@@ -22,10 +24,24 @@ Writes chips.json:
         ]
       },
       ...
+    },
+    "market_chips": {
+      "foreign_futures": {        # 外資台指期未平倉多空淨額口數
+        "latest": {"date": "2026-04-17", "net_oi": -41151},
+        "prev":   {"date": "2026-04-16", "net_oi": -39683},
+        "change_1d": -1468,        # 今日 - 昨日 (變空越多 = 避險加重)
+        "trend_5d": [{"d": "2026-04-17", "v": -41151}, ...]
+      },
+      "margin_total": {           # 融資餘額 (市場總額, NT$億)
+        "latest":  {"date": "2026-04-17", "balance_yi": 1620.18, "short_lots": 26081},
+        "prev":    {"date": "2026-04-16", "balance_yi": 1609.71, "short_lots": 24864},
+        "change_1d_yi": 10.47      # 當日變化 (+ = 散戶進場加碼融資)
+      }
     }
   }
 
 股 (shares), not 張 (lots of 1000). Convert downstream if needed.
+口 = futures contract, not share. 億 = 100M, balance_yi is already in 億.
 """
 from __future__ import annotations
 
@@ -49,6 +65,14 @@ CALENDAR_LOOKBACK = 40  # walk back this many calendar days to guarantee 20 trad
 TWSE_URL = "https://www.twse.com.tw/rwd/zh/fund/T86?date={date}&selectType=ALL&response=json"
 TPEX_URL = ("https://www.tpex.org.tw/web/stock/3insti/daily_trade/"
             "3itrade_hedge_result.php?l=zh-tw&se=EW&t=D&d={date_roc}&_=")
+# Market-wide 融資融券: TWSE MI_MARGN (aggregate row) - date format YYYYMMDD.
+# selectType=MS returns the overall market balance (not per-stock).
+TWSE_MARGIN_URL = ("https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?"
+                   "date={date}&selectType=MS&response=json")
+# TAIFEX 三大法人 open interest by contract type. date format YYYY/MM/DD.
+# We filter rows to commodity=TX (台指期) and 身份別=外資 for the narrative number.
+TAIFEX_FOREIGN_URL = ("https://www.taifex.com.tw/cht/3/futContractsDateDown"
+                      "?queryStartDate={date}&queryEndDate={date}&commodityId=TXF")
 
 UA = {"User-Agent": "Mozilla/5.0 (stock-daily-brief; ianmong520@gmail.com)"}
 
@@ -143,6 +167,191 @@ def _fetch_day(date_iso: str) -> dict[str, dict]:
     tpex = _fetch_tpex_day(date_iso)
     merged = {**twse, **tpex}  # TPEx shouldn't collide with TWSE but upsert anyway
     return merged
+
+
+# --------------------------------------------------------------------------- #
+#                         Market-wide chips (futures + margin)                #
+# --------------------------------------------------------------------------- #
+# These are the single-number headlines mom quotes: "外資期貨空單 4.1 萬口",
+# "融資餘額 1620 億". Not per-stock — market state. Feeds the narrative prompt.
+
+def _fetch_foreign_futures_net_oi(date_iso: str) -> int | None:
+    """Fetch 外資 台指期 多空淨額口數 (net open-interest futures position).
+
+    Returns positive = net long, negative = net short, None = fetch failed.
+    TAIFEX serves a CSV with one row per (契約, 身份別) × (交易+未平倉). We
+    want the 外資 row on 臺股期貨 contract, "未平倉" part — the net OI column.
+    """
+    ymd_slash = date_iso.replace("-", "/")
+    url = TAIFEX_FOREIGN_URL.format(date=ymd_slash)
+    try:
+        req = urllib.request.Request(url, headers=UA)
+        raw = urllib.request.urlopen(req, timeout=20).read()
+    except Exception as e:
+        print(f"  TAIFEX futures {date_iso}: {e}", file=sys.stderr)
+        return None
+
+    # TAIFEX returns CSV in big5 (sometimes utf-8) — try both.
+    text = None
+    for enc in ("utf-8", "big5", "ms950"):
+        try:
+            text = raw.decode(enc)
+            break
+        except UnicodeDecodeError:
+            continue
+    if text is None:
+        print(f"  TAIFEX futures {date_iso}: could not decode CSV", file=sys.stderr)
+        return None
+
+    # CSV rows look like (columns vary slightly across contract types):
+    #   日期,商品名稱,身份別,多方交易口數,...,空方交易口數,...,多空交易淨額口數,...,
+    #         多方未平倉口數,...,空方未平倉口數,...,多空未平倉淨額口數,...
+    # We grep for lines containing 外資 AND 臺股期貨, and look at the LAST
+    # numeric column that represents the 多空未平倉淨額口數.
+    import csv
+    from io import StringIO
+    try:
+        rows = list(csv.reader(StringIO(text)))
+    except Exception as e:
+        print(f"  TAIFEX futures {date_iso}: csv parse err {e}", file=sys.stderr)
+        return None
+
+    header = None
+    target_idx = None
+    for row in rows:
+        if not row:
+            continue
+        # Header row — identify the 多空未平倉淨額口數 column index.
+        if header is None and "身份別" in row and any("多空" in c and "未平倉" in c for c in row):
+            header = row
+            # Pick the column that has BOTH 多空淨額 and 未平倉 and 口數 in its name
+            for i, col in enumerate(row):
+                col_clean = col.replace(" ", "").replace("\r", "").replace("\n", "")
+                if "多空" in col_clean and "未平倉" in col_clean and "口數" in col_clean:
+                    target_idx = i
+                    break
+            continue
+        if header is None or target_idx is None:
+            continue
+        # Data row: look for 外資 on 臺股期貨 (standard TX contract).
+        joined = " ".join(row)
+        if ("外資" in joined) and ("臺股期貨" in joined or "台指期" in joined or "TX" in joined):
+            # The 多空未平倉淨額 could be at the exact target_idx; try a few adjacent
+            # columns to tolerate format drift.
+            for probe in (target_idx, target_idx - 1, target_idx + 1):
+                try:
+                    val = _to_int(row[probe])
+                    # Sanity: net OI typically ranges ±100k contracts
+                    if -200000 < val < 200000 and val != 0:
+                        return val
+                except (IndexError, ValueError):
+                    continue
+    return None
+
+
+def _fetch_margin_total(date_iso: str) -> dict | None:
+    """Fetch market-wide 融資餘額 + 融券張數 from TWSE MI_MARGN.
+
+    Returns {"balance_yi": 1620.18, "short_lots": 26081} — balance in 億元,
+    short_lots in 張 (1000 shares per lot).
+    """
+    ymd = date_iso.replace("-", "")
+    url = TWSE_MARGIN_URL.format(date=ymd)
+    try:
+        req = urllib.request.Request(url, headers=UA)
+        data = json.loads(urllib.request.urlopen(req, timeout=20).read())
+    except Exception as e:
+        print(f"  TWSE margin {date_iso}: {e}", file=sys.stderr)
+        return None
+
+    if data.get("stat") != "OK":
+        return None
+
+    # MI_MARGN (selectType=MS) returns:
+    #   tables[0].fields = ['項目', '買進', '賣出', '現金(券)償還', '前日餘額', '今日餘額']
+    #   tables[0].data rows include:
+    #     ['融資(交易單位)', ...]          — shares (張) for margin buy
+    #     ['融券(交易單位)', ...]          — shares (張) for short sell, col 5 = today's balance in 張
+    #     ['融資金額(仟元)', ...]          — NT$ 千元, col 5 = today's 融資餘額 in 千元
+    # We pull 融資金額 (money) + 融券(交易單位) (lots), convert to 億 and 張.
+    tables = data.get("tables") or []
+    all_rows: list = []
+    if tables:
+        for tbl in tables:
+            all_rows.extend(tbl.get("data") or [])
+    else:
+        all_rows = data.get("data") or []
+
+    margin_yi = None
+    short_lots = None
+    for row in all_rows:
+        if not row:
+            continue
+        label = str(row[0] or "").strip()
+        try:
+            if ("融資金額" in label) and margin_yi is None:
+                bal_qian = _to_int(row[5]) if len(row) > 5 else 0  # 千元
+                margin_yi = round(bal_qian / 100_000, 2)           # 千元 → 億
+            elif ("融券" in label) and ("交易單位" in label) and short_lots is None:
+                short_lots = _to_int(row[5]) if len(row) > 5 else 0  # 張
+        except Exception:
+            continue
+
+    if margin_yi is None and short_lots is None:
+        return None
+    return {"balance_yi": margin_yi, "short_lots": short_lots}
+
+
+def _build_market_chips(trading_days: list[str]) -> dict:
+    """Collect futures + margin for the most recent 5 trading days so the
+    prompt can narrate "今日 vs 昨日 vs 本週" comparisons. Best-effort:
+    anything that 404s or returns null just gets omitted."""
+    futures_trend: list[dict] = []
+    margin_trend: list[dict] = []
+    for d in trading_days[:5]:  # newest first
+        time.sleep(0.8)  # be polite — 3 endpoints per day
+        fx = _fetch_foreign_futures_net_oi(d)
+        if fx is not None:
+            futures_trend.append({"d": d, "v": fx})
+        mg = _fetch_margin_total(d)
+        if mg is not None:
+            margin_trend.append({"d": d, **mg})
+
+    market: dict = {}
+
+    if futures_trend:
+        latest = futures_trend[0]
+        prev = futures_trend[1] if len(futures_trend) > 1 else None
+        block = {
+            "latest": {"date": latest["d"], "net_oi": latest["v"]},
+            "trend_5d": futures_trend,
+        }
+        if prev:
+            block["prev"] = {"date": prev["d"], "net_oi": prev["v"]}
+            block["change_1d"] = latest["v"] - prev["v"]
+        market["foreign_futures"] = block
+
+    if margin_trend:
+        latest = margin_trend[0]
+        prev = margin_trend[1] if len(margin_trend) > 1 else None
+        block = {
+            "latest": {
+                "date": latest["d"],
+                "balance_yi": latest.get("balance_yi"),
+                "short_lots": latest.get("short_lots"),
+            }
+        }
+        if prev:
+            block["prev"] = {
+                "date": prev["d"],
+                "balance_yi": prev.get("balance_yi"),
+                "short_lots": prev.get("short_lots"),
+            }
+            if latest.get("balance_yi") is not None and prev.get("balance_yi") is not None:
+                block["change_1d_yi"] = round(latest["balance_yi"] - prev["balance_yi"], 2)
+        market["margin_total"] = block
+
+    return market
 
 
 def _walk_trading_days(max_days: int = MAX_TRADING_DAYS) -> tuple[list[str], dict[str, dict[str, dict]]]:
@@ -276,14 +485,36 @@ def main() -> int:
             "daily": daily,
         }
 
+    # Market-wide headline 籌碼 numbers (外資期貨、融資餘額). Best-effort —
+    # if TAIFEX/TWSE aggregate endpoints are down the whole file still saves.
+    print("  fetching market-wide futures + margin (外資期貨未平倉、融資餘額)…",
+          file=sys.stderr)
+    try:
+        market_chips = _build_market_chips(order)
+    except Exception as e:
+        print(f"  market_chips build failed: {e}", file=sys.stderr)
+        market_chips = {}
+
     out = {
         "fetched_at": datetime.now(TAIPEI).isoformat(),
         "trading_days": order,
         "by_symbol": by_symbol,
+        "market_chips": market_chips,
     }
     CHIPS_PATH.write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8")
+
+    # Summary line
+    mc_bits = []
+    fx = (market_chips.get("foreign_futures") or {}).get("latest") or {}
+    mg = (market_chips.get("margin_total") or {}).get("latest") or {}
+    if fx.get("net_oi") is not None:
+        mc_bits.append(f"外資期貨淨 OI={fx['net_oi']:+,}口")
+    if mg.get("balance_yi") is not None:
+        mc_bits.append(f"融資餘額={mg['balance_yi']:.1f}億")
+    mc_str = f" · {' / '.join(mc_bits)}" if mc_bits else ""
+
     print(f"→ chips.json: {len(by_symbol)} symbols, {len(order)} days "
-          f"({CHIPS_PATH.stat().st_size // 1024} KB)", file=sys.stderr)
+          f"({CHIPS_PATH.stat().st_size // 1024} KB){mc_str}", file=sys.stderr)
     return 0
 
 
