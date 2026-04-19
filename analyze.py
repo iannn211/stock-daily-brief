@@ -210,6 +210,8 @@ RESPONSE_SCHEMA = {
                 "plan_summary": {"type": "string"},
                 "allocations": {
                     "type": "array",
+                    "minItems": 5,
+                    "maxItems": 10,
                     "items": {
                         "type": "object",
                         "properties": {
@@ -364,8 +366,10 @@ def build_portfolio_context() -> str:
     budget = cfg.get("trade_budget_twd")
     if budget:
         lines.append("")
-        lines.append(f"## 今日待部署資金：NT${budget:,.0f}")
-        lines.append("請依此金額產生 budget_allocation（1-2 檔具體下單建議或不動作保留現金）。")
+        lines.append(f"## 今日待部署資金：NT${budget:,.0f}（只是基準值，實際預算使用者會在前端調整）")
+        lines.append("請產出 **5-8 檔候選清單**（不是 1-2 檔！）。"
+                     "前端會依使用者當下輸入的預算，從高信心到低信心自動組合。"
+                     "詳細規則見下方【budget_allocation】區塊。")
     lines.append("")
     lines.append("### 現有持股")
     for h in cfg.get("holdings", []):

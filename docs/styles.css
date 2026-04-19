@@ -1835,6 +1835,16 @@ footer a { color: var(--tx-3); }
 }
 .alloc-card.alloc-buy { border-left: 3px solid var(--dn); }
 .alloc-card.alloc-cash { border-left: 3px solid var(--tx-4); }
+/* Synthetic candidates — padded from opportunities when Gemini is stingy.
+   Slightly dimmer border + dashed accent to signal "secondary pick". */
+.alloc-card.alloc-synth { border-left: 3px dashed var(--tx-3); opacity: 0.92; }
+.alloc-full-card.alloc-synth { border-left: 3px dashed var(--tx-3); opacity: 0.96; }
+.alloc-synth-tag {
+  display: inline-block; margin-left: 6px; padding: 1px 6px;
+  border-radius: 3px; font-size: 9px; font-weight: 600;
+  background: var(--bg-2); color: var(--tx-3);
+  border: 1px dashed var(--tx-4); letter-spacing: 0.4px;
+}
 .alloc-head { display: flex; justify-content: space-between; align-items: center; }
 .alloc-action {
   font-size: 10px; font-weight: 700;

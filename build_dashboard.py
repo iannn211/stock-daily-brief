@@ -300,6 +300,142 @@ def load_coverage_report() -> dict | None:
         return None
 
 
+def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | None) -> list[dict]:
+    """Ensure the basket builder has real alternatives even when Gemini is
+    stingy with budget_allocation.allocations.
+
+    Historically Gemini sometimes returns only 1-2 candidates, which defeats
+    the point of a budget-aware picker (no matter what budget the user
+    selects, it shows the same single stock). This helper tops up to ~6
+    candidates by pulling from opportunities[].lead_stocks — stocks Gemini
+    already flagged in the same analysis — using conservative defaults:
+    -10% stop loss, +30% take profit (snowball method), NT$5,000 sizing.
+
+    Synthetic entries are marked with synthetic=True and use the "觀望等進場"
+    action so they visually differ from Gemini's primary picks. The user can
+    still check them into the basket; they just come with lower confidence."""
+    if not analysis:
+        return allocs or []
+
+    allocs = list(allocs or [])
+
+    def _is_cash(a: dict) -> bool:
+        act = a.get("action") or ""
+        return ("現金" in act) or ("不動作" in act)
+
+    non_cash = [a for a in allocs if not _is_cash(a)]
+    target = 6
+    if len(non_cash) >= target:
+        return allocs
+
+    # Load current prices so synthetic entries have accurate target_shares/cost
+    prices_map: dict[str, float] = {}
+    try:
+        pj = json.loads((ROOT / "prices.json").read_text(encoding="utf-8"))
+        for yft, rec in (pj.get("prices") or {}).items():
+            sym = str(rec.get("symbol") or yft.split(".")[0]).strip()
+            price = rec.get("close")
+            if sym and price:
+                prices_map[sym] = float(price)
+    except Exception:
+        pass
+
+    # Ground-truth name lookup (portfolio.yaml + supply_chains.yaml) — prefer
+    # this over Gemini's claimed name to avoid propagating hallucinated labels
+    # (e.g. validator caught Gemini calling 3363 "中揚光" but our record is "上詮")
+    name_map: dict[str, str] = {}
+    try:
+        pf_raw = yaml.safe_load((ROOT / "portfolio.yaml").read_text(encoding="utf-8")) or {}
+        for coll in ("holdings", "watchlist", "simulator_universe"):
+            for it in pf_raw.get(coll) or []:
+                sym = str(it.get("symbol") or "").strip()
+                nm = it.get("name") or ""
+                if sym and nm and sym not in name_map:
+                    name_map[sym] = nm
+    except Exception:
+        pass
+    try:
+        sc_raw = yaml.safe_load((ROOT / "supply_chains.yaml").read_text(encoding="utf-8")) or {}
+        for chain in (sc_raw.get("chains") or {}).values():
+            for layer in chain.get("layers") or []:
+                for s in layer.get("stocks") or []:
+                    sym = str(s.get("symbol") or "").strip()
+                    nm = s.get("name") or ""
+                    if sym and nm and sym not in name_map:
+                        name_map[sym] = nm
+    except Exception:
+        pass
+
+    seen = {str(a.get("symbol") or "").strip() for a in allocs if a.get("symbol")}
+
+    # Build per-opportunity queues so we can round-robin — this diversifies
+    # themes in the padded list (otherwise all 3 lead_stocks of the first
+    # opportunity get picked before we move to the next theme).
+    opp_queues = []
+    for o in analysis.get("opportunities") or []:
+        opp_queues.append({
+            "meta": {
+                "confidence_pct": int(o.get("confidence_pct") or 50),
+                "theme": o.get("theme") or "",
+                "headline": o.get("headline") or o.get("why") or "",
+                "risk": o.get("ai_warning") or o.get("risk") or "",
+                "signals": o.get("signals") or [],
+            },
+            "leads": list(o.get("lead_stocks") or []),
+        })
+
+    # Round-robin: one lead_stock per opportunity per pass until we hit target
+    # or exhaust the pool.
+    while any(q["leads"] for q in opp_queues):
+        if len([a for a in allocs if not _is_cash(a)]) >= target:
+            break
+        for q in opp_queues:
+            if not q["leads"]:
+                continue
+            if len([a for a in allocs if not _is_cash(a)]) >= target:
+                break
+            ls = q["leads"].pop(0)
+            sym = str(ls.get("symbol") or "").strip()
+            if not sym or sym in seen:
+                continue
+            # Name: prefer ground-truth > Gemini's claim
+            name = name_map.get(sym) or ls.get("name") or ""
+            price = prices_map.get(sym)
+            if not price or price <= 0:
+                continue
+
+            meta = q["meta"]
+            budget_basis = 5000
+            shares = max(1, int(budget_basis // price))
+            cost = int(round(shares * price))
+
+            rationale = f"題材「{meta['theme']}」的同業候選。"
+            if meta["headline"]:
+                clip = meta["headline"][:90] + ("…" if len(meta["headline"]) > 90 else "")
+                rationale += clip
+            if meta["signals"]:
+                rationale += "（訊號：" + "、".join(meta["signals"][:3]) + "）"
+
+            allocs.append({
+                "symbol": sym,
+                "name": name,
+                "action": "觀望等進場",
+                "target_shares": shares,
+                "target_cost_twd": cost,
+                "entry_condition": "盤中觀察量能，等回檔或突破再分批進",
+                "stop_loss_price": round(price * 0.90, 1),
+                "take_profit_price": round(price * 1.30, 1),
+                "rationale": rationale,
+                "data_sources": [f"從今日 opportunities「{meta['theme']}」帶入"],
+                "confidence_pct": max(40, int(meta["confidence_pct"] * 0.8)),
+                "risk": meta["risk"] or "同題材次選候選，進場前請確認基本面與籌碼。",
+                "synthetic": True,
+            })
+            seen.add(sym)
+
+    return allocs
+
+
 def load_validation_report() -> dict | None:
     """Load validation_report.json from validate_analysis.py. Returns None
     if unavailable. The report shape is:
@@ -953,16 +1089,20 @@ def render_analysis_section(analysis: dict) -> str:
     # Budget allocation — full-detail basket builder on brief page.
     # Same basket-builder JS hook as the hero card; this page shows the fuller
     # rationale / entry / stop / risk per candidate.
+    # We pad the list with synthetic entries from opportunities when Gemini
+    # was stingy, so the budget slider has real alternatives to pick from.
     budget_alloc = analysis.get("budget_allocation", {})
     budget_section_html = ""
-    if budget_alloc.get("allocations"):
-        allocs = budget_alloc.get("allocations", [])
+    raw_allocs = budget_alloc.get("allocations") or []
+    allocs = _pad_allocations_from_opportunities(raw_allocs, analysis)
+    if allocs:
         default_budget = int(budget_alloc.get("budget_twd", 5000)) or 5000
         rows = []
         for idx, al in enumerate(allocs):
             action = al.get("action", "")
             is_cash = "現金" in action or "不動作" in action
-            cls = "alloc-cash" if is_cash else "alloc-buy"
+            is_synth = bool(al.get("synthetic"))
+            cls = "alloc-cash" if is_cash else ("alloc-buy alloc-synth" if is_synth else "alloc-buy")
             srcs = al.get("data_sources") or []
             src_html = "".join(f'<span class="chip chip-muted small">{html.escape(s)}</span>' for s in srcs)
             sl = al.get("stop_loss_price")
@@ -988,12 +1128,16 @@ def render_analysis_section(analysis: dict) -> str:
                     f'<input type="checkbox" class="alloc-check" id="{check_id}" '
                     f'data-cost="{int(cost)}" data-conf="{conf}"> 加入籃子</label>'
                 )
+            synth_badge = (
+                '<span class="alloc-synth-tag small" title="AI 未直接列入主推，由同題材候選自動補齊">次選 · 候選觀察</span>'
+                if is_synth else ""
+            )
             rows.append(f'''
             <article class="alloc-full-card {cls}"
                      data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_cash else "0"}">
               <div class="alloc-full-head">
                 <div>
-                  <div class="alloc-action-big">{html.escape(action)}</div>
+                  <div class="alloc-action-big">{html.escape(action)} {synth_badge}</div>
                   <h3>{html.escape(al.get("symbol", ""))} <span class="muted">{html.escape(al.get("name", ""))}</span></h3>
                 </div>
                 <div class="alloc-full-right">
@@ -3019,17 +3163,21 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     # highest-confidence allocations until the budget is filled. Manual
     # checkbox override is supported. This turns the static "here are 3
     # picks" card into a real portfolio-construction tool.
+    # Pad allocations with opportunities.lead_stocks when Gemini is stingy
+    # so the slider has real alternatives to shuffle through.
     budget_alloc = analysis.get("budget_allocation", {})
     budget_html = ""
-    if budget_alloc.get("allocations"):
-        allocs = budget_alloc.get("allocations", [])
+    raw_allocs = budget_alloc.get("allocations") or []
+    allocs = _pad_allocations_from_opportunities(raw_allocs, analysis)
+    if allocs:
         budget_amt = int(budget_alloc.get("budget_twd", 5000)) or 5000
         plan = budget_alloc.get("plan_summary", "")
         alloc_cards = []
         for idx, al in enumerate(allocs):
             action = al.get("action", "")
             is_cash = "現金" in action or "不動作" in action
-            cls = "alloc-cash" if is_cash else "alloc-buy"
+            is_synth = bool(al.get("synthetic"))
+            cls = "alloc-cash" if is_cash else ("alloc-buy alloc-synth" if is_synth else "alloc-buy")
             sym = al.get("symbol", "")
             name = al.get("name", "")
             shares = al.get("target_shares") or 0
@@ -3058,11 +3206,13 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
                     f'<input type="checkbox" class="alloc-check" id="{check_id}" '
                     f'data-cost="{int(cost)}" data-conf="{conf}" aria-label="納入籃子">'
                 )
+            synth_tag = ('<span class="alloc-synth-tag small" title="AI 未直接列入主推，由同題材候選自動補齊">次選</span>'
+                         if is_synth else '')
             alloc_cards.append(f'''
             <label for="{check_id}" class="alloc-card {cls}"
                    data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_cash else "0"}">
               <div class="alloc-head">
-                <span class="alloc-action">{html.escape(action)}</span>
+                <span class="alloc-action">{html.escape(action)} {synth_tag}</span>
                 <span class="alloc-head-right">
                   <span class="alloc-conf mono">{conf}%</span>
                   {pick_input}
@@ -3371,11 +3521,12 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
         if holding_cards else ""
     )
 
-    # Budget allocation — full detail
+    # Budget allocation — full detail (ai_tab rendering)
     budget_alloc = analysis.get("budget_allocation", {})
     budget_full_html = ""
-    if budget_alloc.get("allocations"):
-        allocs = budget_alloc.get("allocations", [])
+    raw_allocs = budget_alloc.get("allocations") or []
+    allocs = _pad_allocations_from_opportunities(raw_allocs, analysis)
+    if allocs:
         rows = []
         for al in allocs:
             action = al.get("action", "")
@@ -8590,6 +8741,16 @@ footer a { color: var(--tx-3); }
 }
 .alloc-card.alloc-buy { border-left: 3px solid var(--dn); }
 .alloc-card.alloc-cash { border-left: 3px solid var(--tx-4); }
+/* Synthetic candidates — padded from opportunities when Gemini is stingy.
+   Slightly dimmer border + dashed accent to signal "secondary pick". */
+.alloc-card.alloc-synth { border-left: 3px dashed var(--tx-3); opacity: 0.92; }
+.alloc-full-card.alloc-synth { border-left: 3px dashed var(--tx-3); opacity: 0.96; }
+.alloc-synth-tag {
+  display: inline-block; margin-left: 6px; padding: 1px 6px;
+  border-radius: 3px; font-size: 9px; font-weight: 600;
+  background: var(--bg-2); color: var(--tx-3);
+  border: 1px dashed var(--tx-4); letter-spacing: 0.4px;
+}
 .alloc-head { display: flex; justify-content: space-between; align-items: center; }
 .alloc-action {
   font-size: 10px; font-weight: 700;
