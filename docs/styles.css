@@ -1952,6 +1952,16 @@ footer a { color: var(--tx-3); }
 }
 .alloc-card.alloc-buy { border-left: 3px solid var(--dn); }
 .alloc-card.alloc-cash { border-left: 3px solid var(--tx-4); }
+/* Concentration nudge — sits at top of basket when user is already
+   tech-concentrated and the whole basket falls on one supply chain. */
+.alloc-card.alloc-nudge {
+  border-left: 3px solid var(--amber);
+  background: linear-gradient(135deg, rgba(255,183,77,0.08) 0%, var(--bg-1) 60%);
+}
+.alloc-full-card.alloc-nudge {
+  border-left: 3px solid var(--amber);
+  background: linear-gradient(135deg, rgba(255,183,77,0.06) 0%, var(--bg-1) 60%);
+}
 /* Synthetic candidates — padded from opportunities when Gemini is stingy.
    Slightly dimmer border + dashed accent to signal "secondary pick". */
 .alloc-card.alloc-synth { border-left: 3px dashed var(--tx-3); opacity: 0.92; }
@@ -2071,6 +2081,38 @@ footer a { color: var(--tx-3); }
   border-radius: 4px; font-family: var(--font-mono); font-weight: 600;
 }
 .alloc-hold-badge { background: var(--bg-2); color: var(--tx-3); border: 1px solid var(--line); }
+.alloc-nudge-badge { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber); }
+
+/* Position badge (2026-04-19): shows 52w position tier at a glance so the
+   user sees which candidates are at low base vs already rallied. Answers
+   the user's complaint "你現在給的都已經很高了" — instead of making them
+   trust the filter silently, show the number on every card. */
+.pos-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-family: var(--font-mono);
+  vertical-align: middle;
+}
+.pos-badge.pos-low {
+  background: rgba(76, 175, 80, 0.14);
+  color: #66bb6a;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+}
+.pos-badge.pos-mid {
+  background: var(--bg-2);
+  color: var(--tx-3);
+  border: 1px solid var(--line);
+}
+.pos-badge.pos-high {
+  background: rgba(244, 67, 54, 0.14);
+  color: #ef5350;
+  border: 1px solid rgba(244, 67, 54, 0.35);
+}
 .alloc-deeplink {
   display: inline-block; margin-top: 6px;
   color: var(--accent); text-decoration: none;

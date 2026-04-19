@@ -394,10 +394,17 @@ def _compute_surge_stats(sym: str, price_hist: dict) -> dict:
       price_hist: history dict from price_history.json → {"0050.TW": [{date,close},...]}
 
     Returns: {
-      pct_30d:   % change over last ~30 trading days (None if insufficient data)
+      pct_30d:   % change over last ~22 trading days (None if insufficient data)
+      pct_90d:   % change over last ~66 trading days (one quarter)
+      pct_180d:  % change over last ~130 trading days (half year)
       pct_52w:   % change over last ~243 trading days (full year)
       pos_52w:   52-week position percentile (0-100), 100 = at 52-week high
     }
+
+    2026-04-19: extended with 90d + 180d windows because the prior snowball
+    filter only looked at 30d + 52w-pos. That missed stocks like 2395 研華
+    (90d +27.7%, 52w-pos 91%) that snuck into the basket despite being
+    clearly late-stage — 30d flat but quarter-level gain was huge.
     """
     # Try multiple key variants — history uses "3081.TW", "0050.TW", "VOO" etc.
     bars = None
@@ -405,19 +412,26 @@ def _compute_surge_stats(sym: str, price_hist: dict) -> dict:
         if key in price_hist:
             bars = price_hist[key]
             break
+    empty = {"pct_30d": None, "pct_90d": None, "pct_180d": None,
+             "pct_52w": None, "pos_52w": None}
     if not bars or len(bars) < 2:
-        return {"pct_30d": None, "pct_52w": None, "pos_52w": None}
+        return empty
     try:
         closes = [float(b.get("close")) for b in bars if b.get("close")]
     except Exception:
-        return {"pct_30d": None, "pct_52w": None, "pos_52w": None}
+        return empty
     if len(closes) < 2:
-        return {"pct_30d": None, "pct_52w": None, "pos_52w": None}
+        return empty
     current = closes[-1]
-    # 30-day: look back ~22 trading days (monthly); fall back to whatever we have
-    lookback_30 = min(22, len(closes) - 1)
-    past_30 = closes[-1 - lookback_30]
-    pct_30d = (current - past_30) / past_30 * 100.0 if past_30 else None
+
+    def _pct_from(days: int) -> float | None:
+        lookback = min(days, len(closes) - 1)
+        past = closes[-1 - lookback]
+        return (current - past) / past * 100.0 if past else None
+
+    pct_30d = _pct_from(22)    # ~monthly
+    pct_90d = _pct_from(66)    # ~quarterly
+    pct_180d = _pct_from(130)  # ~half-year
     # 52w: use the full window we have (up to 243 bars)
     past_52w = closes[0]
     pct_52w = (current - past_52w) / past_52w * 100.0 if past_52w else None
@@ -429,6 +443,8 @@ def _compute_surge_stats(sym: str, price_hist: dict) -> dict:
     )
     return {
         "pct_30d": round(pct_30d, 1) if pct_30d is not None else None,
+        "pct_90d": round(pct_90d, 1) if pct_90d is not None else None,
+        "pct_180d": round(pct_180d, 1) if pct_180d is not None else None,
         "pct_52w": round(pct_52w, 1) if pct_52w is not None else None,
         "pos_52w": round(pos_52w, 1),
     }
@@ -470,6 +486,59 @@ def _is_tech_theme(theme: str) -> bool:
         return False
     t = str(theme)
     return any(kw in t for kw in _TECH_THEME_KEYWORDS)
+
+
+def _position_badge(stats: dict | None) -> tuple[str, str, str]:
+    """Return (emoji+label, css-tone, full-tooltip) for a basket-card position
+    badge, based on surge_stats. The badge tells the user at a glance whether
+    this candidate is at a low base / mid-cycle / already rallied.
+
+    Rules (matching the tightened snowball veto):
+      - 52w pos <40% OR 180d<0%  → 📉 低基期 (up/green)
+      - 52w pos <70% AND 90d<20% → 📊 中段 (neutral/muted)
+      - else                     → 🔥 已漲 (dn/red; should rarely trigger
+                                          once filter is on, but kept as
+                                          safety net for edge cases)
+    """
+    if not stats or stats.get("pos_52w") is None:
+        return ("", "", "")
+    pos = float(stats.get("pos_52w") or 50)
+    r90 = float(stats.get("pct_90d") or 0)
+    r180 = float(stats.get("pct_180d") or 0)
+    r30 = float(stats.get("pct_30d") or 0)
+    tip = (
+        f"52w 位階 {pos:.0f}% · "
+        f"30d {r30:+.1f}% · 90d {r90:+.1f}% · 180d {r180:+.1f}%"
+    )
+    if pos < 40 or r180 < 0:
+        return ("📉 低基期", "pos-low", tip)
+    if pos < 70 and r90 < 20:
+        return ("📊 中段", "pos-mid", tip)
+    return ("🔥 已漲", "pos-high", tip)
+
+
+def _sort_allocs_by_position(allocs: list[dict]) -> list[dict]:
+    """Stable sort: info cards (CASH / DIVERSIFY) first, then by 52w position
+    ascending (low-base candidates surface before already-rallied ones).
+
+    Motivation 2026-04-19: user complained that the basket's top non-cash
+    picks were all at 52w pos 80-90%+. Sorting low-position first ensures
+    the 「還沒起漲」candidates get air time at the top of the basket, not
+    buried at the bottom."""
+    def key(a: dict):
+        # Info cards: always first (category 0)
+        if "現金" in (a.get("action") or "") or "不動作" in (a.get("action") or ""):
+            return (0, 0, 0)
+        if a.get("diversify_nudge"):
+            return (0, 1, 0)
+        # Real picks: category 1, sort by pos_52w asc, then by -confidence
+        stats = a.get("surge_stats") or {}
+        pos = stats.get("pos_52w")
+        if pos is None:
+            pos = 50  # unknown → treat as mid
+        conf = int(a.get("confidence_pct") or 50)
+        return (1, pos, -conf)
+    return sorted(allocs, key=key)
 
 
 def _compute_portfolio_concentration() -> dict:
@@ -703,21 +772,37 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
             if str(a.get("symbol") or "").strip() not in theme_blocked_symbols
         ]
 
-    # Hard veto #3 (snowball rule, 2026-04-19): "不追高" is literally the
-    # user's top investing rule. Enforce it with the same thresholds a human
-    # would use — 30-day gain >+30% OR 52-week position >95%. Such tickers
-    # get booted from basket entirely; they can still appear in watchlist /
-    # topics / opportunities (informational) but NOT as basket candidates.
-    # (Issue #1: 3081 was primary pick at 75% confidence despite +946% in a
-    # year and sitting at 52w high.)
+    # Hard veto #3 (snowball rule, tightened 2026-04-19 after user feedback):
+    # "不追高" is the user's top investing rule. Earlier thresholds (30d>30%
+    # OR 52w-pos>95%) were too lenient — stocks like 2395 研華 (30d +7.6%
+    # but 90d +27.7%, 52w-pos 91%) slipped through despite clearly being late
+    # stage. Tightened thresholds now catch any ONE of:
+    #   - 30d gain > 25% (was 30)     ← faster reflex on fresh rallies
+    #   - 90d gain > 40%              ← NEW: catches quarterly momentum
+    #   - 180d gain > 80%             ← NEW: catches multi-month run-ups
+    #   - 52-week position > 85% (was 95%) ← much stricter high-zone
+    # Rationale: user's snowball style is to buy at/near lows, not chase
+    # highs. If ANY of these say "stock has run", veto it regardless of
+    # Gemini's confidence score. Such tickers stay in watchlist/opps
+    # (informational) but are BLOCKED from basket candidates.
     price_hist = _load_price_history_map()
     surge_blocked: list[tuple[str, dict]] = []  # for logging/tagging
+
     def _is_surge_veto(sym: str) -> dict | None:
         stats = _compute_surge_stats(sym, price_hist)
         if stats.get("pct_30d") is None:
             return None
-        if stats["pct_30d"] > 30 or (stats.get("pos_52w") or 0) > 95:
-            return stats
+        hits = []
+        if stats["pct_30d"] > 25:
+            hits.append(f"30d +{stats['pct_30d']:.1f}%")
+        if (stats.get("pct_90d") or 0) > 40:
+            hits.append(f"90d +{stats['pct_90d']:.1f}%")
+        if (stats.get("pct_180d") or 0) > 80:
+            hits.append(f"180d +{stats['pct_180d']:.1f}%")
+        if (stats.get("pos_52w") or 0) > 85:
+            hits.append(f"52w 位階 {stats['pos_52w']:.0f}%")
+        if hits:
+            return {**stats, "surge_reason": " · ".join(hits)}
         return None
     filtered_allocs = []
     for a in allocs:
@@ -749,6 +834,14 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
         sym = str(a.get("symbol") or "").strip()
         stop = a.get("stop_loss_price")
         current = prices_all.get(sym)
+        # Attach surge stats so renderers can show "位階 X%、90d +Y%" badges.
+        # User feedback 2026-04-19: "你現在給的都已經很高了" — they want to
+        # SEE which candidates are at low base vs already rallied, not just
+        # trust that the filter did its job.
+        if sym:
+            stats = _compute_surge_stats(sym, price_hist)
+            if stats.get("pos_52w") is not None:
+                a["surge_stats"] = stats
         # Backfill entry_price for any allocation that lacks one (older Gemini
         # runs didn't produce this field). Uses current market price as a safe
         # default — if the action is 觀望等進場, synthetic code already set a
@@ -944,6 +1037,8 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
             if meta["signals"]:
                 rationale += "（訊號：" + "、".join(meta["signals"][:3]) + "）"
 
+            # Attach surge stats for position badge rendering
+            pad_stats = _compute_surge_stats(sym, price_hist)
             allocs.append({
                 "symbol": sym,
                 "name": name,
@@ -963,6 +1058,7 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
                 "confidence_pct": max(40, int(meta["confidence_pct"] * 0.8)),
                 "risk": meta["risk"] or "同題材次選候選，進場前請確認基本面與籌碼。",
                 "synthetic": True,
+                "surge_stats": pad_stats if pad_stats.get("pos_52w") is not None else None,
             })
             seen.add(sym)
 
@@ -1013,6 +1109,9 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
                     "diversify_nudge": True,
                 })
 
+    # Final ordering: low-position picks surface before already-rallied ones
+    # so the user sees 「還沒漲的」first instead of 「已經漲很多的」.
+    allocs = _sort_allocs_by_position(allocs)
     return allocs
 
 
@@ -1867,12 +1966,20 @@ def render_analysis_section(analysis: dict) -> str:
                 '<span class="alloc-synth-tag small" title="AI 未直接列入主推，由同題材候選自動補齊">次選 · 候選觀察</span>'
                 if is_synth and not is_info else ""
             )
+            # Position badge: tells user at a glance if this stock is at a
+            # low base (safe to accumulate) or already rallied (risky追高).
+            # Not rendered for info cards (CASH / DIVERSIFY).
+            pos_label, pos_tone, pos_tip = ("", "", "") if is_info else _position_badge(al.get("surge_stats"))
+            pos_badge_html = (
+                f'<span class="pos-badge {pos_tone}" title="{html.escape(pos_tip)}">{pos_label}</span>'
+                if pos_label else ""
+            )
             rows.append(f'''
             <article class="alloc-full-card {cls}"
                      data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_info else "0"}">
               <div class="alloc-full-head">
                 <div>
-                  <div class="alloc-action-big">{html.escape(action)} {synth_badge}</div>
+                  <div class="alloc-action-big">{html.escape(action)} {synth_badge} {pos_badge_html}</div>
                   <h3>{html.escape(al.get("symbol", ""))} <span class="muted">{html.escape(al.get("name", ""))}</span></h3>
                 </div>
                 <div class="alloc-full-right">
@@ -3989,11 +4096,16 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
                 )
             synth_tag = ('<span class="alloc-synth-tag small" title="AI 未直接列入主推，由同題材候選自動補齊">次選</span>'
                          if is_synth and not is_info else '')
+            pos_label, pos_tone, pos_tip = ("", "", "") if is_info else _position_badge(al.get("surge_stats"))
+            pos_badge_html = (
+                f'<span class="pos-badge {pos_tone}" title="{html.escape(pos_tip)}">{pos_label}</span>'
+                if pos_label else ""
+            )
             alloc_cards.append(f'''
             <label for="{check_id}" class="alloc-card {cls}"
                    data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_info else "0"}">
               <div class="alloc-head">
-                <span class="alloc-action">{html.escape(action)} {synth_tag}</span>
+                <span class="alloc-action">{html.escape(action)} {synth_tag} {pos_badge_html}</span>
                 <span class="alloc-head-right">
                   <span class="alloc-conf mono">{conf}%</span>
                   {pick_input}
@@ -4354,11 +4466,17 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
                 f'<div class="alloc-cond small muted">進場條件：{html.escape(al["entry_condition"])}</div>'
                 if al.get("entry_condition") else ""
             )
+            is_info2 = is_cash or is_nudge
+            pos_label2, pos_tone2, pos_tip2 = ("", "", "") if is_info2 else _position_badge(al.get("surge_stats"))
+            pos_badge_html2 = (
+                f'<span class="pos-badge {pos_tone2}" title="{html.escape(pos_tip2)}">{pos_label2}</span>'
+                if pos_label2 else ""
+            )
             rows.append(f'''
             <article class="alloc-full-card {cls}">
               <div class="alloc-full-head">
                 <div>
-                  <div class="alloc-action-big">{html.escape(action)}</div>
+                  <div class="alloc-action-big">{html.escape(action)} {pos_badge_html2}</div>
                   <h3>{html.escape(al.get("symbol", ""))} <span class="muted">{html.escape(al.get("name", ""))}</span></h3>
                 </div>
                 <div class="alloc-conf-big mono">信心度 {al.get("confidence_pct", 0)}%</div>
@@ -9684,6 +9802,16 @@ footer a { color: var(--tx-3); }
 }
 .alloc-card.alloc-buy { border-left: 3px solid var(--dn); }
 .alloc-card.alloc-cash { border-left: 3px solid var(--tx-4); }
+/* Concentration nudge — sits at top of basket when user is already
+   tech-concentrated and the whole basket falls on one supply chain. */
+.alloc-card.alloc-nudge {
+  border-left: 3px solid var(--amber);
+  background: linear-gradient(135deg, rgba(255,183,77,0.08) 0%, var(--bg-1) 60%);
+}
+.alloc-full-card.alloc-nudge {
+  border-left: 3px solid var(--amber);
+  background: linear-gradient(135deg, rgba(255,183,77,0.06) 0%, var(--bg-1) 60%);
+}
 /* Synthetic candidates — padded from opportunities when Gemini is stingy.
    Slightly dimmer border + dashed accent to signal "secondary pick". */
 .alloc-card.alloc-synth { border-left: 3px dashed var(--tx-3); opacity: 0.92; }
@@ -9803,6 +9931,38 @@ footer a { color: var(--tx-3); }
   border-radius: 4px; font-family: var(--font-mono); font-weight: 600;
 }
 .alloc-hold-badge { background: var(--bg-2); color: var(--tx-3); border: 1px solid var(--line); }
+.alloc-nudge-badge { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber); }
+
+/* Position badge (2026-04-19): shows 52w position tier at a glance so the
+   user sees which candidates are at low base vs already rallied. Answers
+   the user's complaint "你現在給的都已經很高了" — instead of making them
+   trust the filter silently, show the number on every card. */
+.pos-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-family: var(--font-mono);
+  vertical-align: middle;
+}
+.pos-badge.pos-low {
+  background: rgba(76, 175, 80, 0.14);
+  color: #66bb6a;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+}
+.pos-badge.pos-mid {
+  background: var(--bg-2);
+  color: var(--tx-3);
+  border: 1px solid var(--line);
+}
+.pos-badge.pos-high {
+  background: rgba(244, 67, 54, 0.14);
+  color: #ef5350;
+  border: 1px solid rgba(244, 67, 54, 0.35);
+}
 .alloc-deeplink {
   display: inline-block; margin-top: 6px;
   color: var(--accent); text-decoration: none;
