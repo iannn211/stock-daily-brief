@@ -283,9 +283,26 @@ def load_analysis(date: str) -> dict | None:
     if not path.exists():
         return None
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        analysis = json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
+    # Apply validator-caught fixes BEFORE any renderer sees the data. This
+    # closes the loop between validate_analysis.py (which surfaces Gemini
+    # errors as audit banners) and the rendering layer (which previously kept
+    # showing the wrong names/theme placements). See apply_validation_fixes
+    # docstring for the rewrite rules.
+    vr_path = ROOT / "validation_report.json"
+    if vr_path.exists():
+        try:
+            validation = json.loads(vr_path.read_text(encoding="utf-8"))
+            # Only apply the validation report if it points at THIS analysis
+            # (avoid cross-contamination if validator ran against a different
+            # date than what we're rendering).
+            if validation.get("analysis_date") == date:
+                analysis = apply_validation_fixes(analysis, validation)
+        except Exception:
+            pass
+    return analysis
 
 
 def load_coverage_report() -> dict | None:
@@ -300,20 +317,46 @@ def load_coverage_report() -> dict | None:
         return None
 
 
-def _extract_red_list_symbols(analysis: dict | None) -> set[str]:
-    """Pull every ticker Gemini flagged as 🔴 不要做 inside action_checklist.red.
+# Theme keywords Gemini typically uses in red-list narration. When a red
+# action says "不追高被動元件 及 PCB 上游材料股 等", the "等" implicitly covers
+# every ticker under those themes — not just the ones explicitly named. So we
+# match these keywords against each opportunity's `theme` field and veto
+# matching lead_stocks from the basket.
+_RED_THEME_KEYWORDS = [
+    "被動元件", "PCB 上游", "PCB上游", "CCL", "銅箔基板", "玻纖布",
+    "光通訊", "CPO", "矽光子", "光學",
+    "AI 伺服器", "AI伺服器", "散熱", "液冷",
+    "小型核電", "SMR", "重電", "AI 電力",
+    "機器人", "減速機",
+    "工業電腦", "IPC",
+    "載板", "HBM", "高頻",
+    "被動", "電容", "電阻",
+]
 
-    The red section is where Gemini says 'don't chase this', 'don't add to
-    that' — so it's a hard veto signal. Any ticker mentioned there (by 4-6
-    digit code) must NOT appear in the basket builder, even if Gemini
-    contradicts itself elsewhere (e.g. also listing the same ticker as an
-    opportunity lead_stock — a real bug we caught 2026-04-19 with 6173
-    信昌電 appearing on both red and opportunities)."""
+
+def _extract_red_list_constraints(analysis: dict | None) -> dict:
+    """Extract hard veto constraints from action_checklist.red.
+
+    Returns:
+      {
+        "symbols": set of 4-6 digit tickers Gemini said "don't chase",
+        "themes":  set of theme keywords (like 被動元件, PCB 上游) — any lead
+                   stock whose opportunity.theme matches one of these is
+                   treated as red-listed even without an explicit ticker.
+      }
+
+    The theme pass catches the case where Gemini writes "不追高...被動元件
+    及 PCB 上游材料股，例如信昌電 (6173) 等" — the "等" means 1815, 8358,
+    5475 etc are also implicitly red-listed because they belong to the
+    same themes, even though only 6173 is named. (User flagged this
+    2026-04-19 as issue #3: 1815 富喬 showed up in basket while being
+    implicitly covered by the HOLD sentence.)"""
     if not analysis:
-        return set()
+        return {"symbols": set(), "themes": set()}
     red_items = (analysis.get("action_checklist") or {}).get("red") or []
     symbols: set[str] = set()
-    pat = re.compile(r"\b(\d{4,6})\b")
+    themes: set[str] = set()
+    sym_pat = re.compile(r"\b(\d{4,6})\b")
     for item in red_items:
         if not isinstance(item, dict):
             continue
@@ -321,9 +364,287 @@ def _extract_red_list_symbols(analysis: dict | None) -> set[str]:
             str(item.get("action") or ""),
             str(item.get("reason") or ""),
         ])
-        for m in pat.finditer(blob):
+        for m in sym_pat.finditer(blob):
             symbols.add(m.group(1))
-    return symbols
+        for kw in _RED_THEME_KEYWORDS:
+            if kw in blob:
+                themes.add(kw)
+    return {"symbols": symbols, "themes": themes}
+
+
+def _extract_red_list_symbols(analysis: dict | None) -> set[str]:
+    """Backward-compat wrapper — returns only the symbol veto set."""
+    return _extract_red_list_constraints(analysis).get("symbols", set())
+
+
+def _is_opp_theme_red(opp_theme: str, red_themes: set[str]) -> bool:
+    """Return True if the opportunity's theme contains any red keyword.
+    Case-insensitive substring match; handles both English and Chinese."""
+    if not opp_theme or not red_themes:
+        return False
+    t = str(opp_theme).lower()
+    return any(kw.lower() in t for kw in red_themes)
+
+
+def _compute_surge_stats(sym: str, price_hist: dict) -> dict:
+    """Compute surge / 52w-position statistics for a ticker.
+
+    Args:
+      sym:        raw symbol (e.g. '3081' or 'AAPL')
+      price_hist: history dict from price_history.json → {"0050.TW": [{date,close},...]}
+
+    Returns: {
+      pct_30d:   % change over last ~30 trading days (None if insufficient data)
+      pct_52w:   % change over last ~243 trading days (full year)
+      pos_52w:   52-week position percentile (0-100), 100 = at 52-week high
+    }
+    """
+    # Try multiple key variants — history uses "3081.TW", "0050.TW", "VOO" etc.
+    bars = None
+    for key in (sym, f"{sym}.TW", f"{sym}.TWO"):
+        if key in price_hist:
+            bars = price_hist[key]
+            break
+    if not bars or len(bars) < 2:
+        return {"pct_30d": None, "pct_52w": None, "pos_52w": None}
+    try:
+        closes = [float(b.get("close")) for b in bars if b.get("close")]
+    except Exception:
+        return {"pct_30d": None, "pct_52w": None, "pos_52w": None}
+    if len(closes) < 2:
+        return {"pct_30d": None, "pct_52w": None, "pos_52w": None}
+    current = closes[-1]
+    # 30-day: look back ~22 trading days (monthly); fall back to whatever we have
+    lookback_30 = min(22, len(closes) - 1)
+    past_30 = closes[-1 - lookback_30]
+    pct_30d = (current - past_30) / past_30 * 100.0 if past_30 else None
+    # 52w: use the full window we have (up to 243 bars)
+    past_52w = closes[0]
+    pct_52w = (current - past_52w) / past_52w * 100.0 if past_52w else None
+    high_52w = max(closes)
+    low_52w = min(closes)
+    pos_52w = (
+        (current - low_52w) / (high_52w - low_52w) * 100.0
+        if high_52w > low_52w else 50.0
+    )
+    return {
+        "pct_30d": round(pct_30d, 1) if pct_30d is not None else None,
+        "pct_52w": round(pct_52w, 1) if pct_52w is not None else None,
+        "pos_52w": round(pos_52w, 1),
+    }
+
+
+def _load_price_history_map() -> dict:
+    """Load price_history.json → history map. Empty dict on failure."""
+    try:
+        ph = json.loads((ROOT / "price_history.json").read_text(encoding="utf-8"))
+        return ph.get("history", {}) or {}
+    except Exception:
+        return {}
+
+
+# 2026-04-19 (issue #9): single-theme / single-supply-chain concentration risk.
+# User's core holding is 0050 (71.3% weight, broad-market ETF ≈55-60% semis by
+# TAIEX composition) + 2330 台積電 (28.7%, 100% semi). In practice that's
+# ~90%+ semiconductor exposure already. The AI basket kept suggesting 5 more
+# semi/AI picks (光通訊, 散熱, PCB, 被動元件, IPC) without flagging that it's
+# all one supply chain — 一榮俱榮、一損俱損. The nudge below fires when the
+# padded basket is 100% tech-themed AND the portfolio is already concentrated.
+_TECH_THEME_KEYWORDS = [
+    "AI", "半導體", "IC", "晶片", "晶圓", "封測", "CoWoS",
+    "CPO", "矽光子", "光通訊", "光學",
+    "HBM", "DRAM", "NAND", "記憶體",
+    "PCB", "CCL", "銅箔基板", "載板",
+    "散熱", "液冷",
+    "伺服器", "IPC", "工業電腦",
+    "被動元件", "電容", "電阻", "MLCC",
+    "機器人", "減速機",
+    "SMR", "重電",  # arguably industrial, but the AI-power narrative keeps them in the tech orbit
+]
+
+
+def _is_tech_theme(theme: str) -> bool:
+    """Rough theme classifier — True if theme smells like semi/AI supply chain.
+    Used to detect "all-tech basket" concentration risk."""
+    if not theme:
+        return False
+    t = str(theme)
+    return any(kw in t for kw in _TECH_THEME_KEYWORDS)
+
+
+def _compute_portfolio_concentration() -> dict:
+    """Read portfolio.json to derive concentration stats.
+
+    Returns:
+      {
+        "max_weight": largest single-position weight %,
+        "tech_weight": estimated tech/semi exposure % (incl. 0050's
+                       semi-heavy composition, assumed 60%),
+        "holdings_count": number of equity holdings,
+      }
+
+    Returns zeros on read failure — caller should check before acting.
+    """
+    try:
+        pj = json.loads((ROOT / "portfolio.json").read_text(encoding="utf-8"))
+    except Exception:
+        return {"max_weight": 0.0, "tech_weight": 0.0, "holdings_count": 0}
+    holdings = pj.get("holdings") or []
+    total = (pj.get("summary") or {}).get("total_value_twd") or 0
+    if not total or not holdings:
+        return {"max_weight": 0.0, "tech_weight": 0.0, "holdings_count": 0}
+    max_w = 0.0
+    tech_v = 0.0
+    for h in holdings:
+        v = h.get("value") or 0
+        if not v:
+            continue
+        w = (v / total) * 100.0
+        if w > max_w:
+            max_w = w
+        sect = ((h.get("fundamentals") or {}).get("sector") or "").lower()
+        sym = str(h.get("symbol") or "").strip()
+        # Direct tech holding → 100% tech exposure
+        if "tech" in sect or sym == "2330":
+            tech_v += v
+        # 0050 is the TAIEX-50 ETF; historically ~55-65% semis by weight.
+        # Use 0.60 factor as a conservative mid-estimate (not exposing the
+        # user to spurious precision — this is a nudge, not a hard rule).
+        elif sym == "0050":
+            tech_v += v * 0.60
+        # 006208 = 富邦台50, same composition as 0050
+        elif sym == "006208":
+            tech_v += v * 0.60
+        # Other ETFs / non-tech → counted as 0 tech
+    tech_w = (tech_v / total) * 100.0
+    return {
+        "max_weight": round(max_w, 1),
+        "tech_weight": round(tech_w, 1),
+        "holdings_count": len(holdings),
+    }
+
+
+def apply_validation_fixes(analysis: dict | None, validation: dict | None) -> dict | None:
+    """Rewrite the analysis JSON in-place based on validator-flagged issues.
+
+    Motivation (2026-04-19 user feedback, issues #4 + #5): the validator
+    catches Gemini mistakes ("3363 is 上詮 not 中揚光" / "4566 doesn't belong
+    to 散熱 theme") but historically only SURFACES them in the audit banner.
+    The wrong data kept rendering in topic narratives, opportunity chips,
+    research picks — creating visible contradictions within the same brief.
+
+    This function closes the loop: validator-caught errors get auto-applied
+    to the analysis JSON before any rendering happens. After this runs:
+      - name mismatches (error severity): ground-truth name replaces the
+        wrong name everywhere in text fields (headline, narrative, detail...)
+      - theme mismatches (warning severity): the mis-placed ticker is
+        dropped from the specific opportunity's lead_stocks.
+
+    Suppressed issues are skipped (validator marked them as 'not actionable'
+    / 'data gap'). Issues without a symbol context are also skipped."""
+    if not analysis or not validation:
+        return analysis
+    issues = validation.get("issues") or []
+    if not issues:
+        return analysis
+
+    # Build a ground-truth name lookup for the rewrite pass.
+    # Sources: portfolio.yaml + supply_chains.yaml (same as padder uses).
+    name_map: dict[str, str] = {}
+    try:
+        import yaml  # type: ignore
+        pf_raw = yaml.safe_load((ROOT / "portfolio.yaml").read_text(encoding="utf-8")) or {}
+        for coll in ("holdings", "watchlist", "simulator_universe"):
+            for it in pf_raw.get(coll) or []:
+                sym = str(it.get("symbol") or "").strip()
+                nm = it.get("name") or ""
+                if sym and nm and sym not in name_map:
+                    name_map[sym] = nm
+        sc_raw = yaml.safe_load((ROOT / "supply_chains.yaml").read_text(encoding="utf-8")) or {}
+        for chain in (sc_raw.get("chains") or {}).values():
+            for layer in chain.get("layers") or []:
+                for s in layer.get("stocks") or []:
+                    sym = str(s.get("symbol") or "").strip()
+                    nm = s.get("name") or ""
+                    if sym and nm and sym not in name_map:
+                        name_map[sym] = nm
+    except Exception:
+        pass
+
+    # Pass 1: name mismatches (error severity). Replace wrong name -> ground
+    # truth name in every text field. Do the replacement on top-level text
+    # properties of the analysis tree via a recursive walk.
+    name_rewrites: list[tuple[str, str]] = []
+    for issue in issues:
+        if issue.get("suppress"):
+            continue
+        if issue.get("severity") != "error":
+            continue
+        if issue.get("category") != "ticker-name-mismatch":
+            continue
+        ctx = issue.get("context") or {}
+        sym = str(ctx.get("symbol") or "").strip()
+        claimed = str(ctx.get("claimed") or "").strip()
+        actual = str(ctx.get("actual") or "").strip()
+        # Prefer ground-truth name_map over validator's 'actual' field in case
+        # the validator itself was wrong (defensive).
+        gt = name_map.get(sym) or actual
+        if not sym or not claimed or not gt or claimed == gt:
+            continue
+        name_rewrites.append((claimed, gt))
+        # Also surgically fix lead_stocks.name and allocation.name fields
+        for opp in analysis.get("opportunities") or []:
+            for ls in opp.get("lead_stocks") or []:
+                if str(ls.get("symbol") or "").strip() == sym:
+                    ls["name"] = gt
+        for a in (analysis.get("budget_allocation") or {}).get("allocations") or []:
+            if str(a.get("symbol") or "").strip() == sym:
+                a["name"] = gt
+
+    if name_rewrites:
+        def _rewrite_strings(node):
+            if isinstance(node, dict):
+                for k, v in node.items():
+                    if isinstance(v, str):
+                        new = v
+                        for wrong, right in name_rewrites:
+                            new = new.replace(wrong, right)
+                        node[k] = new
+                    else:
+                        _rewrite_strings(v)
+            elif isinstance(node, list):
+                for i, v in enumerate(node):
+                    if isinstance(v, str):
+                        new = v
+                        for wrong, right in name_rewrites:
+                            new = new.replace(wrong, right)
+                        node[i] = new
+                    else:
+                        _rewrite_strings(v)
+        _rewrite_strings(analysis)
+
+    # Pass 2: theme-industry mismatches. Remove the mis-placed ticker from
+    # the specific opportunity's lead_stocks. We match on theme + symbol via
+    # the issue's context block.
+    for issue in issues:
+        if issue.get("suppress"):
+            continue
+        if issue.get("category") != "theme-industry-mismatch":
+            continue
+        ctx = issue.get("context") or {}
+        sym = str(ctx.get("symbol") or "").strip()
+        theme = str(ctx.get("theme") or "").strip()
+        if not sym or not theme:
+            continue
+        for opp in analysis.get("opportunities") or []:
+            if str(opp.get("theme") or "").strip() == theme:
+                leads = opp.get("lead_stocks") or []
+                opp["lead_stocks"] = [
+                    ls for ls in leads
+                    if str(ls.get("symbol") or "").strip() != sym
+                ]
+
+    return analysis
 
 
 def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | None) -> list[dict]:
@@ -350,14 +671,64 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
 
     allocs = list(allocs or [])
 
-    # Hard veto: drop any allocation whose symbol is on the red list. Protects
-    # against Gemini contradicting itself (opportunities vs action_checklist.red).
-    red_symbols = _extract_red_list_symbols(analysis)
+    # Hard veto #1 (symbol-level): drop any allocation whose symbol is on
+    # the red list. Protects against Gemini contradicting itself (listing a
+    # ticker in opportunities AND action_checklist.red simultaneously).
+    red_constraints = _extract_red_list_constraints(analysis)
+    red_symbols = red_constraints.get("symbols", set())
+    red_themes = red_constraints.get("themes", set())
     if red_symbols:
         allocs = [
             a for a in allocs
             if str(a.get("symbol") or "").strip() not in red_symbols
         ]
+
+    # Hard veto #2 (theme-level, 2026-04-19): if a red action says
+    # "不追高 PCB 上游材料股...例如 6173 等", the "等" implicitly covers every
+    # lead_stock under the same theme. Build a theme→symbol map from
+    # opportunities and veto any symbol whose opportunity theme matches a
+    # red keyword. (Issue #3: 1815 富喬 was on PCB/CCL theme and implicitly
+    # covered by the HOLD sentence but still appeared in the basket.)
+    theme_blocked_symbols: set[str] = set()
+    if red_themes and analysis:
+        for opp in analysis.get("opportunities") or []:
+            if _is_opp_theme_red(opp.get("theme", ""), red_themes):
+                for ls in opp.get("lead_stocks") or []:
+                    sym = str(ls.get("symbol") or "").strip()
+                    if sym:
+                        theme_blocked_symbols.add(sym)
+    if theme_blocked_symbols:
+        allocs = [
+            a for a in allocs
+            if str(a.get("symbol") or "").strip() not in theme_blocked_symbols
+        ]
+
+    # Hard veto #3 (snowball rule, 2026-04-19): "不追高" is literally the
+    # user's top investing rule. Enforce it with the same thresholds a human
+    # would use — 30-day gain >+30% OR 52-week position >95%. Such tickers
+    # get booted from basket entirely; they can still appear in watchlist /
+    # topics / opportunities (informational) but NOT as basket candidates.
+    # (Issue #1: 3081 was primary pick at 75% confidence despite +946% in a
+    # year and sitting at 52w high.)
+    price_hist = _load_price_history_map()
+    surge_blocked: list[tuple[str, dict]] = []  # for logging/tagging
+    def _is_surge_veto(sym: str) -> dict | None:
+        stats = _compute_surge_stats(sym, price_hist)
+        if stats.get("pct_30d") is None:
+            return None
+        if stats["pct_30d"] > 30 or (stats.get("pos_52w") or 0) > 95:
+            return stats
+        return None
+    filtered_allocs = []
+    for a in allocs:
+        sym = str(a.get("symbol") or "").strip()
+        if sym:
+            veto = _is_surge_veto(sym)
+            if veto:
+                surge_blocked.append((sym, veto))
+                continue
+        filtered_allocs.append(a)
+    allocs = filtered_allocs
 
     # Stop-loss proximity guard: if Gemini set a stop that's within 5% of the
     # current price, it's essentially telling the user "enter right at the
@@ -400,11 +771,70 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
         act = a.get("action") or ""
         return ("現金" in act) or ("不動作" in act)
 
+    # Macro gate (2026-04-19): detect overheated market state and constrain
+    # the basket accordingly. Three signals must all fire to treat the market
+    # as overheated:
+    #   (1) Fear & Greed score >= 65 ("貪婪")
+    #   (2) Foreign futures net OI dropping (= 空單增加)
+    #   (3) Margin balance increasing (= 散戶加槓桿)
+    # When all three fire, it's classic late-cycle: institutions hedging
+    # while retail adds leverage. Issue #6: before this gate, the basket
+    # happily recommended 5 new entries with zero defensive posture despite
+    # F&G 68 + futures short ↑ + margin ↑ all firing. Now we:
+    #   - Cap candidate target 10 → 5 (force fewer adds)
+    #   - Insert a "保留現金 等冷靜" synthetic pick at top (conf 72)
+    #   - Reduce all non-cash confidence by 8 pts (so high-conviction picks
+    #     stay ranked but the overall conviction shows the risk)
+    overheat = False
+    try:
+        chips_raw = json.loads((ROOT / "chips.json").read_text(encoding="utf-8"))
+        mc = chips_raw.get("market_chips") or {}
+        fg = int((analysis.get("market_pulse") or {}).get("fear_greed_score") or 0)
+        ff_change = (mc.get("foreign_futures") or {}).get("change_1d")
+        margin_change = (mc.get("margin_total") or {}).get("change_1d_yi")
+        if (
+            fg >= 65
+            and isinstance(ff_change, (int, float)) and ff_change < 0
+            and isinstance(margin_change, (int, float)) and margin_change > 0
+        ):
+            overheat = True
+    except Exception:
+        pass
+
     non_cash = [a for a in allocs if not _is_cash(a)]
     # 2026-04-19: target bumped 6→10 after user flagged basket felt thin —
     # once red-list veto kicked in the basket collapsed to 6 candidates with
     # no breathing room. 10 gives the user real choice across themes.
-    target = 10
+    # Overheated market: force smaller basket (don't encourage piling in).
+    target = 5 if overheat else 10
+
+    if overheat:
+        # Downweight every non-cash candidate to reflect market overheat.
+        for a in allocs:
+            if not _is_cash(a):
+                orig = int(a.get("confidence_pct") or 50)
+                a["confidence_pct"] = max(30, orig - 8)
+                a["macro_downweighted"] = True
+        # Prepend a "hold cash" pick if none exists. Show at top with high
+        # confidence so budget presets will default to picking it.
+        has_cash = any(_is_cash(a) for a in allocs)
+        if not has_cash:
+            allocs.insert(0, {
+                "symbol": "CASH",
+                "name": "保留現金",
+                "action": "不動作 / 保留現金",
+                "target_shares": 0,
+                "target_cost_twd": 0,
+                "rationale": (
+                    "市場過熱訊號：F&G 貪婪、外資期貨空單加碼、散戶融資增加 "
+                    "— 三個訊號同時亮。降槓桿、等冷靜（建議把 50% 預算留做現金）。"
+                ),
+                "confidence_pct": 72,
+                "risk": "機會成本：若你判斷錯誤 market 繼續漲，會踏空。",
+                "synthetic": True,
+                "macro_gate": True,
+            })
+
     if len(non_cash) >= target:
         return allocs
 
@@ -478,10 +908,15 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
             sym = str(ls.get("symbol") or "").strip()
             if not sym or sym in seen:
                 continue
-            # Red-list veto: if this ticker is on today's 🔴 不要做 list,
-            # never pad it into the basket — even if it's listed as an
-            # opportunity lead_stock (Gemini contradicting itself).
+            # Red-list veto (symbol): never pad a 🔴 HOLD ticker.
             if sym in red_symbols:
+                continue
+            # Red-list veto (theme): if this lead belongs to an opportunity
+            # whose theme is on the red list, skip too.
+            if sym in theme_blocked_symbols:
+                continue
+            # Snowball rule veto: skip anything that's already surged.
+            if _is_surge_veto(sym):
                 continue
             # Name: prefer ground-truth > Gemini's claim
             name = name_map.get(sym) or ls.get("name") or ""
@@ -530,6 +965,53 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
                 "synthetic": True,
             })
             seen.add(sym)
+
+    # Hard veto #4 (portfolio concentration, 2026-04-19 issue #9): if the
+    # user's portfolio is already tech-concentrated AND every non-cash pick
+    # in today's basket is on a tech theme, inject a diversification nudge.
+    # Rationale: user has 0050 (71.3%, ~60% semi by composition) + 2330
+    # (28.7%, 100% semi) ≈ 90%+ semi exposure. Adding 5 more semi/AI picks
+    # means one supply-chain downturn wipes the whole portfolio. This nudge
+    # is soft (doesn't block picks), but surfaces the risk at the top of
+    # the basket so the user sees it before deploying capital.
+    conc = _compute_portfolio_concentration()
+    tech_concentrated = conc["max_weight"] > 65 or conc["tech_weight"] > 70
+    if tech_concentrated and analysis:
+        # Build sym→theme map from opportunities so we can classify picks
+        sym_to_theme: dict[str, str] = {}
+        for opp in analysis.get("opportunities") or []:
+            theme = opp.get("theme") or ""
+            for ls in opp.get("lead_stocks") or []:
+                s = str(ls.get("symbol") or "").strip()
+                if s and s not in sym_to_theme:
+                    sym_to_theme[s] = theme
+        non_cash_picks = [a for a in allocs if not _is_cash(a)]
+        if non_cash_picks:
+            tech_picks = [
+                a for a in non_cash_picks
+                if _is_tech_theme(sym_to_theme.get(str(a.get("symbol") or "").strip(), ""))
+            ]
+            all_tech = len(tech_picks) == len(non_cash_picks)
+            if all_tech and not any(a.get("diversify_nudge") for a in allocs):
+                insert_at = 1 if allocs and _is_cash(allocs[0]) else 0
+                allocs.insert(insert_at, {
+                    "symbol": "DIVERSIFY",
+                    "name": "留意單一產業集中",
+                    "action": "多元化提醒",
+                    "target_shares": 0,
+                    "target_cost_twd": 0,
+                    "rationale": (
+                        f"目前投組 0050 占 {conc['max_weight']:.0f}%、"
+                        f"估算科技/半導體曝險 ≈ {conc['tech_weight']:.0f}%。"
+                        "今日候選全部是半導體/AI 同一條 supply chain（CPO、散熱、PCB、被動、IPC）— "
+                        "如果全部進場，等於把雞蛋再疊到同一個籃子。"
+                        "建議這波先挑 1–2 檔最高信心做小倉，其他預算等非科技題材（金融、生技、原物料、營建）再進。"
+                    ),
+                    "confidence_pct": 65,
+                    "risk": "機會成本：半導體若繼續漲你會踏空；但若週期反轉，整個投組同時受傷。",
+                    "synthetic": True,
+                    "diversify_nudge": True,
+                })
 
     return allocs
 
@@ -1326,8 +1808,19 @@ def render_analysis_section(analysis: dict) -> str:
         for idx, al in enumerate(allocs):
             action = al.get("action", "")
             is_cash = "現金" in action or "不動作" in action
+            is_nudge = bool(al.get("diversify_nudge"))
+            # "Info" rows don't consume budget and aren't selectable — covers
+            # both 保留現金 picks (macro gate) and 多元化提醒 picks (concentration).
+            is_info = is_cash or is_nudge
             is_synth = bool(al.get("synthetic"))
-            cls = "alloc-cash" if is_cash else ("alloc-buy alloc-synth" if is_synth else "alloc-buy")
+            if is_nudge:
+                cls = "alloc-nudge"
+            elif is_cash:
+                cls = "alloc-cash"
+            elif is_synth:
+                cls = "alloc-buy alloc-synth"
+            else:
+                cls = "alloc-buy"
             srcs = al.get("data_sources") or []
             src_html = "".join(f'<span class="chip chip-muted small">{html.escape(s)}</span>' for s in srcs)
             sl = al.get("stop_loss_price")
@@ -1356,7 +1849,11 @@ def render_analysis_section(analysis: dict) -> str:
                 if al.get("entry_condition") else ""
             )
             check_id = f"full-alloc-{idx}"
-            if is_cash:
+            if is_nudge:
+                pick_input = (
+                    '<span class="alloc-badge alloc-nudge-badge">⚠ 集中度提醒</span>'
+                )
+            elif is_cash:
                 pick_input = (
                     '<span class="alloc-badge alloc-hold-badge">保留現金</span>'
                 )
@@ -1368,11 +1865,11 @@ def render_analysis_section(analysis: dict) -> str:
                 )
             synth_badge = (
                 '<span class="alloc-synth-tag small" title="AI 未直接列入主推，由同題材候選自動補齊">次選 · 候選觀察</span>'
-                if is_synth else ""
+                if is_synth and not is_info else ""
             )
             rows.append(f'''
             <article class="alloc-full-card {cls}"
-                     data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_cash else "0"}">
+                     data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_info else "0"}">
               <div class="alloc-full-head">
                 <div>
                   <div class="alloc-action-big">{html.escape(action)} {synth_badge}</div>
@@ -3437,8 +3934,17 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
         for idx, al in enumerate(allocs):
             action = al.get("action", "")
             is_cash = "現金" in action or "不動作" in action
+            is_nudge = bool(al.get("diversify_nudge"))
+            is_info = is_cash or is_nudge
             is_synth = bool(al.get("synthetic"))
-            cls = "alloc-cash" if is_cash else ("alloc-buy alloc-synth" if is_synth else "alloc-buy")
+            if is_nudge:
+                cls = "alloc-nudge"
+            elif is_cash:
+                cls = "alloc-cash"
+            elif is_synth:
+                cls = "alloc-buy alloc-synth"
+            else:
+                cls = "alloc-buy"
             sym = al.get("symbol", "")
             name = al.get("name", "")
             shares = al.get("target_shares") or 0
@@ -3466,9 +3972,13 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
             # different schemas; fall back to the briefs page with a budget anchor.
             deep_link = f'briefs/{latest_brief["date"]}.html#budget'
             check_id = f"hero-alloc-{idx}"
-            # Cash/hold items don't count toward basket total — render without
-            # checkbox; otherwise every card is a budget-able candidate.
-            if is_cash:
+            # Cash/hold/nudge items don't count toward basket total — render
+            # without checkbox; otherwise every card is a budget-able candidate.
+            if is_nudge:
+                pick_input = (
+                    f'<span class="alloc-badge alloc-nudge-badge">⚠ 集中度</span>'
+                )
+            elif is_cash:
                 pick_input = (
                     f'<span class="alloc-badge alloc-hold-badge">保留</span>'
                 )
@@ -3478,10 +3988,10 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
                     f'data-cost="{int(cost)}" data-conf="{conf}" aria-label="納入籃子">'
                 )
             synth_tag = ('<span class="alloc-synth-tag small" title="AI 未直接列入主推，由同題材候選自動補齊">次選</span>'
-                         if is_synth else '')
+                         if is_synth and not is_info else '')
             alloc_cards.append(f'''
             <label for="{check_id}" class="alloc-card {cls}"
-                   data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_cash else "0"}">
+                   data-cost="{int(cost)}" data-conf="{conf}" data-is-cash="{"1" if is_info else "0"}">
               <div class="alloc-head">
                 <span class="alloc-action">{html.escape(action)} {synth_tag}</span>
                 <span class="alloc-head-right">
@@ -3537,6 +4047,16 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
 
     # Picks strip — theme + lead stock + headline + warning (v7 schema)
     picks_html = ""
+    # Confidence reconciliation (2026-04-19, issue #8): build a
+    # symbol→allocation_confidence map so we can override opportunity
+    # confidence when the same ticker is in the basket. Prevents the "3081
+    # shows CONF 80 in research picks but 75% in basket builder" split.
+    # Allocation confidence wins because it's the decision-point number.
+    alloc_conf_map: dict[str, int] = {}
+    for a in allocs:  # allocs already exists in scope above
+        sym_a = str(a.get("symbol") or "").strip()
+        if sym_a and a.get("confidence_pct") is not None:
+            alloc_conf_map[sym_a] = int(a["confidence_pct"])
     if opps:
         picks = []
         for idx, o in enumerate(opps[:3]):
@@ -3552,7 +4072,11 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
             # signals like "量增" are bullish, not risks)
             signals = o.get("signals") or []
             risk_text = o.get("ai_warning") or o.get("risk") or ""
+            # If this lead is in the basket, use allocation's confidence as
+            # source of truth (the basket is what the user actually acts on).
             conf = int(o.get("confidence_pct") or 0)
+            if lead_sym and lead_sym in alloc_conf_map:
+                conf = alloc_conf_map[lead_sym]
             stage = o.get("stage", "")
 
             # Link directly to theme deep-dive page (where user sees all related stocks)
@@ -3802,7 +4326,13 @@ def render_ai_tab(latest_brief: dict | None, analysis: dict | None) -> str:
         for al in allocs:
             action = al.get("action", "")
             is_cash = "現金" in action or "不動作" in action
-            cls = "alloc-cash" if is_cash else "alloc-buy"
+            is_nudge = bool(al.get("diversify_nudge"))
+            if is_nudge:
+                cls = "alloc-nudge"
+            elif is_cash:
+                cls = "alloc-cash"
+            else:
+                cls = "alloc-buy"
             srcs = al.get("data_sources") or []
             src_html = "".join(f'<span class="chip chip-muted small">{html.escape(s)}</span>' for s in srcs)
             sl = al.get("stop_loss_price")
@@ -4634,6 +5164,14 @@ def render_coverage_section(pf: dict, analysis: dict | None,
         </div>'''
 
     # -- 3. GAP RADAR --
+    # Cross-reference against today's HOLD list: if a GAP RADAR ticker is
+    # on the 🔴 不要做 clip, flag it explicitly so the user doesn't think
+    # "未納入" means "candidate to add" when it actually means "today said
+    # don't chase" (Issue #2: 6173 showed up here without any red tag
+    # alongside its HOLD mention and basket 56% confidence, amplifying the
+    # three-way contradiction).
+    red_constraints_cov = _extract_red_list_constraints(analysis) if analysis else {"symbols": set()}
+    red_syms_cov = red_constraints_cov.get("symbols", set())
     gap_rows: list[str] = []
     for g in gaps[:12]:
         sym = g.get("symbol", "")
@@ -4641,12 +5179,16 @@ def render_coverage_section(pf: dict, analysis: dict | None,
         mentions = g.get("mentions", 0)
         in_pf = g.get("in_portfolio", False)
         badge = '<span class="cov-gap-badge-in mono small">已在追蹤池</span>' if in_pf else '<span class="cov-gap-badge-out mono small">未納入</span>'
+        red_badge = (
+            ' <span class="cov-gap-badge-red mono small" title="今日 HOLD 清單點名">🔴 今日 HOLD</span>'
+            if sym in red_syms_cov else ""
+        )
         gap_rows.append(f'''
         <tr>
           <td><strong class="mono">{html.escape(sym)}</strong>
               <span class="muted">{html.escape(name)}</span></td>
           <td class="mono tnum right">{mentions}</td>
-          <td class="right">{badge}</td>
+          <td class="right">{badge}{red_badge}</td>
         </tr>''')
     gap_block = ""
     if gap_rows:
@@ -10807,6 +11349,11 @@ footer a { color: var(--tx-3); }
   padding: 1px 8px; border-radius: 10px;
   background: rgba(255,181,71,0.1); color: var(--amber);
   border: 1px solid rgba(255,181,71,0.3);
+}
+.cov-gap-badge-red {
+  padding: 1px 8px; border-radius: 10px;
+  background: rgba(246,92,91,0.12); color: var(--dn);
+  border: 1px solid rgba(246,92,91,0.35);
 }
 
 /* Just added */

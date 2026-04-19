@@ -3618,6 +3618,11 @@ footer a { color: var(--tx-3); }
   background: rgba(255,181,71,0.1); color: var(--amber);
   border: 1px solid rgba(255,181,71,0.3);
 }
+.cov-gap-badge-red {
+  padding: 1px 8px; border-radius: 10px;
+  background: rgba(246,92,91,0.12); color: var(--dn);
+  border: 1px solid rgba(246,92,91,0.35);
+}
 
 /* Just added */
 .cov-added-intro {
