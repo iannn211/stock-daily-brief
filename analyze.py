@@ -672,6 +672,24 @@ rebalance_advice 要具體、符合雪球法語境。例如：
 ❌ 壞："關注聯電法說會"
 ✅ 好："下週三 (4/29, 11 天後) 聯電法說會，當天盤前查 guidance，若上修 Q2 營收 >10% 則為題材延續，未達則警戒"
 
+【🚨 紅燈 / 機會清單 · 自洽性硬性規則（2026-04-19 新增）】
+**如果某檔個股（用 4 位數代號判斷）出現在 `action_checklist.red` 的任一項裡，那它絕對不能同時：**
+- 出現在 `opportunities[].lead_stocks` 的任何一檔
+- 出現在 `budget_allocation.allocations` 的任何一檔
+
+一個票只能是「🔴 不要做」或「🟢 機會」，二選一——不能同一份報告裡一邊叫使用者不要追、一邊又推給他當候選。
+
+**邏輯順序**：先決定該檔是不是紅燈（「已大漲」「擁擠度高」「追高風險」），如果是→放進 action_checklist.red，同時把它從 opportunities.lead_stocks 剔除；反之不是紅燈才可以當 lead_stock。
+
+**錯誤案例（2026-04-18 實際發生）**：
+- ❌ 6173 信昌電：action_checklist.red 寫「不追高被動元件，例如 6173」，同份報告 opportunities 又把 6173 列為「被動元件漲價潮」的 lead_stock confidence 70% → 前端籃子就把它補進候選清單，使用者會看到矛盾訊號
+- ✅ 正確做法：6173 只放 action_checklist.red，被動元件題材的 lead_stocks 改推「剛起漲」的 2492 華新科、或同題材但還沒噴的其他冷門股
+
+**停損距離檢查（budget_allocation.allocations）**：
+- 每個候選的 `stop_loss_price` 跟現價的距離 `(current - stop) / current` 必須 ≥ 8%
+- 如果某檔股價已經逼近你打算設的停損（距離 < 5%），代表你推薦的是「漲到停損線才叫使用者進」——不合理，直接把 action 改成「觀望等進場」或乾脆不列為候選
+- confidence_pct 跟停損距離要匹配：距離 > 10% 給高信心，距離 5-10% 中信心（50-65%），距離 < 5% 禁止列為新倉試水
+
 【budget_allocation · 極重要 · 每日必產出】
 使用者的 trade_budget 是**浮動的**（他可能今天有 NT$5k 試水預算，收到薪水後想投 NT$30k，週末想一次 NT$50k）。你的工作是**產出一份「候選清單」**，前端會依他當下輸入的預算動態組合。
 

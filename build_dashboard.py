@@ -300,6 +300,32 @@ def load_coverage_report() -> dict | None:
         return None
 
 
+def _extract_red_list_symbols(analysis: dict | None) -> set[str]:
+    """Pull every ticker Gemini flagged as 🔴 不要做 inside action_checklist.red.
+
+    The red section is where Gemini says 'don't chase this', 'don't add to
+    that' — so it's a hard veto signal. Any ticker mentioned there (by 4-6
+    digit code) must NOT appear in the basket builder, even if Gemini
+    contradicts itself elsewhere (e.g. also listing the same ticker as an
+    opportunity lead_stock — a real bug we caught 2026-04-19 with 6173
+    信昌電 appearing on both red and opportunities)."""
+    if not analysis:
+        return set()
+    red_items = (analysis.get("action_checklist") or {}).get("red") or []
+    symbols: set[str] = set()
+    pat = re.compile(r"\b(\d{4,6})\b")
+    for item in red_items:
+        if not isinstance(item, dict):
+            continue
+        blob = " ".join([
+            str(item.get("action") or ""),
+            str(item.get("reason") or ""),
+        ])
+        for m in pat.finditer(blob):
+            symbols.add(m.group(1))
+    return symbols
+
+
 def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | None) -> list[dict]:
     """Ensure the basket builder has real alternatives even when Gemini is
     stingy with budget_allocation.allocations.
@@ -313,11 +339,56 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
 
     Synthetic entries are marked with synthetic=True and use the "觀望等進場"
     action so they visually differ from Gemini's primary picks. The user can
-    still check them into the basket; they just come with lower confidence."""
+    still check them into the basket; they just come with lower confidence.
+
+    2026-04-19 guard: tickers that appear in action_checklist.red are hard-
+    vetoed — they get filtered both from Gemini's own allocations AND from
+    the pad pool, so 信昌電 (6173)-style contradictions can't leak to the
+    user-facing basket."""
     if not analysis:
         return allocs or []
 
     allocs = list(allocs or [])
+
+    # Hard veto: drop any allocation whose symbol is on the red list. Protects
+    # against Gemini contradicting itself (opportunities vs action_checklist.red).
+    red_symbols = _extract_red_list_symbols(analysis)
+    if red_symbols:
+        allocs = [
+            a for a in allocs
+            if str(a.get("symbol") or "").strip() not in red_symbols
+        ]
+
+    # Stop-loss proximity guard: if Gemini set a stop that's within 5% of the
+    # current price, it's essentially telling the user "enter right at the
+    # stop" — terrible risk/reward. Downweight confidence to <=40 and flag the
+    # allocation so the UI can badge it, rather than silently dropping it
+    # (Gemini may have intentional reasons that justify the tight stop).
+    try:
+        pj_all = json.loads((ROOT / "prices.json").read_text(encoding="utf-8"))
+        prices_all = {}
+        for yft, rec in (pj_all.get("prices") or {}).items():
+            sym = str(rec.get("symbol") or yft.split(".")[0]).strip()
+            price = rec.get("close")
+            if sym and price:
+                prices_all[sym] = float(price)
+    except Exception:
+        prices_all = {}
+    for a in allocs:
+        sym = str(a.get("symbol") or "").strip()
+        stop = a.get("stop_loss_price")
+        current = prices_all.get(sym)
+        if not sym or not stop or not current or current <= 0:
+            continue
+        try:
+            dist_pct = (float(current) - float(stop)) / float(current) * 100.0
+        except Exception:
+            continue
+        if 0 < dist_pct < 5:
+            orig_conf = int(a.get("confidence_pct") or 50)
+            a["confidence_pct"] = min(orig_conf, 40)
+            a["stop_too_close"] = True
+            a["stop_distance_pct"] = round(dist_pct, 1)
 
     def _is_cash(a: dict) -> bool:
         act = a.get("action") or ""
@@ -397,6 +468,11 @@ def _pad_allocations_from_opportunities(allocs: list[dict], analysis: dict | Non
             ls = q["leads"].pop(0)
             sym = str(ls.get("symbol") or "").strip()
             if not sym or sym in seen:
+                continue
+            # Red-list veto: if this ticker is on today's 🔴 不要做 list,
+            # never pad it into the basket — even if it's listed as an
+            # opportunity lead_stock (Gemini contradicting itself).
+            if sym in red_symbols:
                 continue
             # Name: prefer ground-truth > Gemini's claim
             name = name_map.get(sym) or ls.get("name") or ""
