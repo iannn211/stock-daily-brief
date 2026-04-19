@@ -214,6 +214,43 @@ def main() -> int:
         except Exception as e:
             print(f"  ! supply_chains fetch expansion failed: {e}", file=sys.stderr)
 
+    # analyses/*.json lead_stocks — Gemini frequently picks symbols that aren't
+    # in portfolio.yaml or supply_chains.yaml (e.g. 1815 富喬, 5475 德宏 on
+    # 2026-04-18). Without this pass, those stocks render as "基本面資料待補"
+    # on the theme + supply chain pages. Pull from the latest analysis JSON.
+    analyses_dir = ROOT / "analyses"
+    if analyses_dir.exists():
+        try:
+            latest_analyses = sorted(analyses_dir.glob("*.json"))[-3:]  # last 3 days
+            lead_added = 0
+            for path in latest_analyses:
+                try:
+                    a = json.loads(path.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                for opp in (a.get("opportunities") or []):
+                    for ls in (opp.get("lead_stocks") or []):
+                        sym = str(ls.get("symbol") or "").strip()
+                        if not sym or not sym.isdigit():
+                            continue  # TW-only (4-digit codes); skip US/ETF for now
+                        yf_t = to_yf_ticker(sym, "TW")
+                        if yf_t not in tickers:
+                            tickers[yf_t] = sym
+                            lead_added += 1
+                # Also pull from budget_allocation.allocations + coverage_suggestions
+                for al in (a.get("budget_allocation", {}).get("allocations") or []):
+                    sym = str(al.get("symbol") or "").strip()
+                    if sym and sym.isdigit():
+                        yf_t = to_yf_ticker(sym, "TW")
+                        if yf_t not in tickers:
+                            tickers[yf_t] = sym
+                            lead_added += 1
+            if lead_added:
+                print(f"  + analyses/*.json lead_stocks added {lead_added} extra tickers",
+                      file=sys.stderr)
+        except Exception as e:
+            print(f"  ! analyses fetch expansion failed: {e}", file=sys.stderr)
+
     print(f"[{datetime.now(TAIPEI):%Y-%m-%d %H:%M}] fetching {len(tickers)} tickers + 1y history…",
           file=sys.stderr)
 

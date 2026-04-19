@@ -1546,15 +1546,78 @@ def _theme_slug(opp: dict, idx: int) -> str:
     return f"{idx:02d}-{ascii_part[:40].strip('-')}"
 
 
-def _pf_lookup(pf: dict | None) -> dict[str, dict]:
-    """Index every known ticker (holdings + watchlist + universe) by symbol."""
-    if not pf:
-        return {}
+_PRICES_CACHE: dict[str, dict] | None = None
+
+
+def _load_prices_bysym() -> dict[str, dict]:
+    """Load prices.json and index by display symbol. Cached.
+
+    Needed because Gemini often picks lead_stocks (e.g. 1815 富喬, 5475 德宏,
+    8358 金居) that aren't in portfolio.yaml's universe but ARE fetched by
+    fetch_prices.py via the supply_chains + analyses auto-expansion.
+    Without merging this into _pf_lookup, the theme + supply-chain pages
+    render "—" / "基本面資料待補" for every such stock.
+    """
+    global _PRICES_CACHE
+    if _PRICES_CACHE is not None:
+        return _PRICES_CACHE
+    path = ROOT / "prices.json"
+    if not path.exists():
+        _PRICES_CACHE = {}
+        return _PRICES_CACHE
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8")).get("prices", {})
+    except Exception:
+        _PRICES_CACHE = {}
+        return _PRICES_CACHE
     idx: dict[str, dict] = {}
-    for coll in ("holdings", "watchlist", "simulator_universe"):
-        for it in pf.get(coll, []) or []:
-            if it.get("symbol"):
-                idx[it["symbol"]] = it
+    for yf_t, rec in raw.items():
+        sym = str(rec.get("symbol") or "").strip()
+        if not sym:
+            continue
+        # Normalize shape to match portfolio.json entries (price + fundamentals + returns)
+        entry = {
+            "symbol": sym,
+            "name": rec.get("name") or sym,  # no name in prices.json; caller supplies it
+            "price": rec.get("close"),
+            "day_change": rec.get("day_change"),
+            "day_change_pct": rec.get("day_change_pct"),
+            "pct_52w": rec.get("pct_52w"),
+            "high_52w": rec.get("high_52w"),
+            "low_52w": rec.get("low_52w"),
+            "ret_7d": rec.get("ret_7d"),
+            "ret_30d": rec.get("ret_30d"),
+            "ret_90d": rec.get("ret_90d"),
+            "ret_ytd": rec.get("ret_ytd"),
+            "currency": rec.get("currency", "TWD"),
+            "fundamentals": rec.get("fundamentals") or {},
+            "yf_ticker": rec.get("yf_ticker", yf_t),
+        }
+        idx[sym] = entry
+    _PRICES_CACHE = idx
+    return idx
+
+
+def _pf_lookup(pf: dict | None) -> dict[str, dict]:
+    """Index every known ticker (holdings + watchlist + universe) by symbol.
+
+    Falls back to prices.json for any ticker not in portfolio.json — this
+    catches supply_chains.yaml + AI lead_stocks that fetch_prices.py has
+    downloaded but that aren't part of the user's portfolio. Portfolio.json
+    entries win (they have richer PnL/cost-basis fields), prices.json only
+    fills gaps.
+    """
+    idx: dict[str, dict] = {}
+    if pf:
+        for coll in ("holdings", "watchlist", "simulator_universe"):
+            for it in pf.get(coll, []) or []:
+                if it.get("symbol"):
+                    idx[it["symbol"]] = it
+    # Layer prices.json underneath — only add symbols NOT already in pf
+    price_idx = _load_prices_bysym()
+    for sym, rec in price_idx.items():
+        if sym not in idx:
+            idx[sym] = rec
     return idx
 
 
