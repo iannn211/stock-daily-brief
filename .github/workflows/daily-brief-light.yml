@@ -1,0 +1,62 @@
+name: Daily Brief — Light (pre-open 08:00)
+
+# Lightweight rerun before Taiwan market opens (09:00). Refreshes prices
+# (catches overnight US moves) and pulls T-1 法人籌碼 (TWSE publishes chips
+# 15:00–17:00 the same day, so by 08:00 next morning they're definitely live),
+# then rebuilds the dashboard with yesterday's Gemini analysis intact.
+#
+# Does NOT re-run Gemini — that stays at 14:40 post-close. This keeps the
+# morning refresh fast (~1 min) and free of API cost.
+
+on:
+  schedule:
+    # 08:00 Taipei (UTC+8) = 00:00 UTC same day.
+    # Taipei Mon–Fri mornings = UTC Mon–Fri 00:00.
+    - cron: "0 0 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Set date env
+        run: |
+          echo "DATE=$(TZ=Asia/Taipei date +%Y-%m-%d)" >> "$GITHUB_ENV"
+
+      - name: Fetch prices (refresh — overnight US moves + latest TW close)
+        run: python fetch_prices.py
+
+      - name: Fetch 三大法人 chips (T-1 data now available)
+        run: python fetch_chips.py
+        continue-on-error: true  # Chips are optional
+
+      - name: Calculate portfolio P&L (uses updated prices)
+        run: python calculate_pnl.py
+
+      - name: Rebuild HTML dashboard (reuses last night's Gemini analysis)
+        run: python build_dashboard.py
+
+      - name: Commit refreshed dashboard
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/ prices.json portfolio.json chips.json
+          if git diff --staged --quiet; then
+            echo "no changes — overnight moves didn't shift anything"
+          else
+            git commit -m "Morning refresh ${DATE} (pre-open 08:00)"
+            git push
+          fi

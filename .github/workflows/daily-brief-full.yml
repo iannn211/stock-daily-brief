@@ -1,10 +1,15 @@
-name: Daily Brief
+name: Daily Brief — Full (post-close 14:40)
+
+# Full pipeline: runs after Taiwan market closes (13:30).
+# Flow: fetch_prices → calculate_pnl → audit_coverage → Gemini analyze → build → issue.
+# Companion workflow daily-brief-light.yml reruns at 08:00 next morning to
+# refresh prices + pick up T-1 法人籌碼 without re-spinning Gemini.
 
 on:
   schedule:
-    # 07:30 Taipei (UTC+8) = 23:30 UTC the previous day.
-    # Taipei Mon–Fri mornings = UTC Sun–Thu 23:30.
-    - cron: "30 23 * * 0-4"
+    # 14:40 Taipei (UTC+8) = 06:40 UTC same day.
+    # Taipei Mon–Fri post-market = UTC Mon–Fri 06:40.
+    - cron: "40 6 * * 1-5"
   workflow_dispatch: {}
 
 permissions:
