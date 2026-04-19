@@ -3054,74 +3054,96 @@ def render_catalyst_timeline(analysis: dict | None) -> str:
 def render_validation_banner(report: dict | None) -> str:
     """Render the validation banner above the AI hero.
 
-    Shows only if validation_report.json has at least one error/warning.
-    Infos are silent (nothing actionable). Errors use red styling, warnings
-    use amber. Analysis date is surfaced so user knows which run is flagged.
+    Narrative format: 結論 → 每一筆的「影響 + 下一步」。User feedback was that
+    the old banner just threw flags and told them to "人工確認" — which defeats
+    the point of automated QA. Now each issue has been resolved by
+    validate_analysis.resolve_issue() into headline + impact + next_step, and
+    any issue that couldn't be resolved into action has suppress=True and is
+    filtered out here.
 
-    This is the Python validator's UI surface — the mechanical QA layer that
-    catches Gemini hallucinations (wrong ticker↔name mappings, budget math
-    errors, theme-industry mismatches). Non-blocking: if file is missing or
-    empty, we just render nothing."""
+    Shows only if the resolved report has at least one actionable issue.
+    """
     if not report:
         return ""
     issues = report.get("issues") or []
-    summary = report.get("summary") or {}
-    errors = int(summary.get("errors") or 0)
-    warnings = int(summary.get("warnings") or 0)
-    if errors == 0 and warnings == 0:
-        return ""
-
-    ana_date = report.get("analysis_date") or ""
-    # Sort: errors first, then warnings, then infos
+    # Filter: only issues with at least a headline AND not suppressed.
+    # The resolver in validate_analysis.py fills these fields.
     sev_order = {"error": 0, "warning": 1, "info": 2}
-    shown = sorted(
-        (i for i in issues if i.get("severity") in ("error", "warning")),
+    visible = sorted(
+        (i for i in issues
+         if not i.get("suppress")
+         and i.get("severity") in ("error", "warning")
+         and i.get("headline")),
         key=lambda i: sev_order.get(i.get("severity"), 9),
     )
+    if not visible:
+        return ""
 
+    errors = sum(1 for i in visible if i.get("severity") == "error")
+    warnings = sum(1 for i in visible if i.get("severity") == "warning")
+    ana_date = report.get("analysis_date") or ""
+
+    # Per-issue narrative cards
     items_html = []
-    for i in shown:
+    for i in visible:
         sev = i.get("severity")
-        if sev == "error":
-            cls, tag, label = "alert-red", "ERR", "錯誤"
-        else:
-            cls, tag, label = "alert-amber", "WARN", "警告"
-        loc = i.get("location") or ""
-        msg = i.get("message") or ""
-        items_html.append(
-            f'<div class="alert-item {cls}">'
-            f'<span class="alert-tag mono">{html.escape(tag)}</span>'
-            f'<span>{html.escape(msg)}</span>'
-            f'<span class="muted small mono" style="margin-left:auto">{html.escape(loc)}</span>'
-            f'</div>'
-        )
+        sev_cls = "vb-sev-error" if sev == "error" else "vb-sev-warn"
+        sev_label = "需要注意" if sev == "error" else "建議確認"
+        headline = i.get("headline") or ""
+        impact = i.get("impact") or ""
+        next_step = i.get("next_step") or ""
+        # next_step may contain \n for multiple action lines — split into <li>
+        next_lines = [ln.strip() for ln in next_step.split("\n") if ln.strip()]
+        next_html = ""
+        if len(next_lines) > 1:
+            lis = "".join(f"<li>{html.escape(ln)}</li>" for ln in next_lines)
+            next_html = f"<ul class='vb-next-list'>{lis}</ul>"
+        elif next_lines:
+            next_html = f"<p class='vb-next-text'>{html.escape(next_lines[0])}</p>"
 
-    # Summary headline
-    parts = []
-    if errors:
-        parts.append(f'{errors} 處可能錯誤')
-    if warnings:
-        parts.append(f'{warnings} 處待確認')
-    summary_txt = "、".join(parts)
+        items_html.append(f'''
+        <article class="vb-issue">
+          <header class="vb-issue-head">
+            <span class="vb-sev-chip {sev_cls}">{sev_label}</span>
+            <h4 class="vb-issue-title">{html.escape(headline)}</h4>
+          </header>
+          <div class="vb-issue-body">
+            <div class="vb-row">
+              <span class="vb-row-lbl">影響</span>
+              <p class="vb-row-text">{html.escape(impact)}</p>
+            </div>
+            <div class="vb-row">
+              <span class="vb-row-lbl vb-row-lbl-action">下一步</span>
+              <div class="vb-row-text vb-row-next">{next_html}</div>
+            </div>
+          </div>
+        </article>
+        ''')
 
-    date_str = f'（分析日期 {html.escape(ana_date)}）' if ana_date else ""
+    # Conclusion-first headline (in user's voice — "我幫你對過了")
+    if errors and warnings:
+        conclusion = f"AI 分析幫你核對過了，找到 {errors} 處需要注意 + {warnings} 處建議確認的地方。"
+    elif errors:
+        conclusion = f"AI 分析幫你核對過了，找到 {errors} 處需要注意。"
+    else:
+        conclusion = f"AI 分析幫你核對過了，{warnings} 處建議確認。"
+
+    subcopy = "下面列出每一筆的影響跟你該怎麼處理 — 沒列出來的，就是沒問題不用管。"
+    date_str = f"（分析日期 {html.escape(ana_date)}）" if ana_date else ""
 
     return f'''
     <section class="validator-banner">
       <div class="vb-head">
         <span class="vb-icon">{_icon("warn", 18)}</span>
-        <strong>自動校對：</strong>
-        <span>Gemini 輸出 {summary_txt}</span>
-        <span class="muted small">{date_str}</span>
-        <button class="vb-toggle" type="button" aria-expanded="true"
-                onclick="const b=this.closest('.validator-banner'); b.classList.toggle('collapsed'); this.setAttribute('aria-expanded', String(!b.classList.contains('collapsed')))">展開／收起</button>
-      </div>
-      <div class="vb-body alert-list">
-        {"".join(items_html)}
-        <div class="muted small" style="padding:4px 2px">
-          這些是 Python 規則檢查抓到的機械式錯誤（代號對不上名稱、預算加總不對、題材與產業差太多等）。
-          只是提醒，不代表 Gemini 整份分析不可信 — 請點進 radar / opportunity 卡片看一下被標記的股票就好。
+        <div class="vb-head-text">
+          <strong class="vb-conclusion">{html.escape(conclusion)}</strong>
+          <span class="muted small vb-subcopy">{html.escape(subcopy)} {date_str}</span>
         </div>
+        <button class="vb-toggle" type="button" aria-expanded="true"
+                onclick="const b=this.closest('.validator-banner'); b.classList.toggle('collapsed'); this.setAttribute('aria-expanded', String(!b.classList.contains('collapsed')))">收合</button>
+      </div>
+      <div class="vb-body">
+        {"".join(items_html)}
       </div>
     </section>
     '''
@@ -7160,30 +7182,106 @@ a:hover { color: #b8d0ff; }
 }
 
 /* Validator banner — sits above the AI hero when Python QA catches
-   issues in today's Gemini output */
+   issues in today's Gemini output. Narrative layout: 結論 → 每一筆 影響 + 下一步.
+   Goal: insight + next step, not raw flags. */
 .validator-banner {
-  margin: 0 0 14px;
-  padding: 12px 14px;
+  margin: 0 0 16px;
+  padding: 14px 16px;
   border: 1px solid rgba(255,181,71,0.35);
   background: linear-gradient(180deg, var(--amber-bg) 0%, rgba(0,0,0,0) 100%);
   border-radius: var(--r);
 }
 .validator-banner .vb-head {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  font-size: 13px; color: var(--tx-1);
+  display: flex; align-items: flex-start; gap: 10px;
+  color: var(--tx-1);
 }
-.validator-banner .vb-icon { color: var(--amber); display: inline-flex; }
+.validator-banner .vb-icon {
+  color: var(--amber); display: inline-flex; flex-shrink: 0; margin-top: 2px;
+}
+.validator-banner .vb-head-text {
+  display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;
+}
+.validator-banner .vb-conclusion {
+  font-size: 14px; font-weight: 700; color: var(--tx-1); line-height: 1.4;
+}
+.validator-banner .vb-subcopy {
+  font-size: 12px; line-height: 1.5;
+}
 .validator-banner .vb-toggle {
-  margin-left: auto;
+  flex-shrink: 0;
   background: transparent; border: 1px solid var(--line);
   color: var(--tx-2); padding: 3px 10px; border-radius: 4px;
   font-size: 11px; cursor: pointer;
 }
 .validator-banner .vb-toggle:hover { border-color: var(--accent); color: var(--accent); }
-.validator-banner .vb-body { margin-top: 10px; }
+.validator-banner .vb-body {
+  margin-top: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
 .validator-banner.collapsed .vb-body { display: none; }
-.validator-banner .alert-item { font-size: 12.5px; }
-.validator-banner .alert-item .mono.small { font-size: 10.5px; opacity: 0.7; }
+
+/* Per-issue narrative card */
+.vb-issue {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.vb-issue-head {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.vb-sev-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.vb-sev-chip.vb-sev-error {
+  background: var(--up-bg); color: var(--up-soft);
+  border: 1px solid rgba(255,59,59,0.3);
+}
+.vb-sev-chip.vb-sev-warn {
+  background: var(--amber-bg); color: var(--amber);
+  border: 1px solid rgba(255,181,71,0.3);
+}
+.vb-issue-title {
+  margin: 0; font-size: 14px; font-weight: 700; color: var(--tx-1);
+  line-height: 1.4;
+}
+.vb-issue-body {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.vb-row {
+  display: grid; grid-template-columns: 52px 1fr; gap: 10px; align-items: start;
+}
+.vb-row-lbl {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  color: var(--tx-3); text-align: right; padding-top: 2px;
+}
+.vb-row-lbl-action { color: var(--accent); }
+.vb-row-text {
+  margin: 0;
+  font-size: 13px; line-height: 1.55; color: var(--tx-1);
+}
+.vb-next-text {
+  margin: 0;
+  font-size: 13px; line-height: 1.55; color: var(--tx-1);
+}
+.vb-next-list {
+  margin: 0; padding-left: 18px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.vb-next-list li {
+  font-size: 13px; line-height: 1.55; color: var(--tx-1);
+}
+
+@media (max-width: 600px) {
+  .vb-row { grid-template-columns: 1fr; gap: 2px; }
+  .vb-row-lbl { text-align: left; }
+}
 
 /* Sparkline */
 .sparkline { display: block; }

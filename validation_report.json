@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-04-19T12:44:13.748266+08:00",
+  "validated_at": "2026-04-19T12:51:30.287166+08:00",
   "analysis_file": "analyses/2026-04-18.json",
   "analysis_date": "2026-04-18",
   "analysis_model": "gemini-2.5-flash",
@@ -13,7 +13,10 @@
         "symbol": "3363",
         "claimed": "中揚光",
         "actual": "上詮"
-      }
+      },
+      "headline": "3363 股名標錯（不影響決策）",
+      "impact": "代號 3363 本站記錄是「上詮」，Gemini 寫成「中揚光」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 3363 這檔走的。",
+      "next_step": "不用處理。就把 Gemini 寫的「中揚光」當成「上詮」看就好。"
     },
     {
       "severity": "warning",
@@ -26,7 +29,10 @@
         "industry": "Specialty Industrial Machinery",
         "sector": "Industrials",
         "sc_roles": "robotics 關鍵零組件 機器人諧波減速機、隱形冠軍"
-      }
+      },
+      "headline": "4566 時碩工業 被放錯題材",
+      "impact": "Gemini 把 4566 列為「AI 伺服器散熱 / 液冷」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器散熱 / 液冷」這個題材想買 4566，這個理由不成立。",
+      "next_step": "想布局「AI 伺服器散熱 / 液冷」→ 同題材的 3324 雙鴻、3017 奇鋐 才是真的相關股。\n想買 4566 時碩工業 → 要從它真正的業務角度（robotics 關鍵零組件 機器人諧波減速機、隱形冠軍）去找對的題材，不是用「AI 伺服器散熱 / 液冷」當理由。"
     },
     {
       "severity": "warning",
@@ -39,13 +45,18 @@
         "industry": "Textile Manufacturing",
         "sector": "Consumer Cyclical",
         "sc_roles": null
-      }
+      },
+      "headline": "5475 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
     }
   ],
   "summary": {
     "errors": 1,
-    "warnings": 2,
+    "warnings": 1,
     "infos": 0,
-    "total": 3
+    "total": 2,
+    "suppressed": 1
   }
 }
