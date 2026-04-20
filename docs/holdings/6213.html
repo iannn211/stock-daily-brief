@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="dark" data-density="comfortable" data-accent="blue">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>6213 聯茂 · Stock AI Desk</title>
+<!-- Premium typography: Inter (Latin) + Noto Sans TC (繁中) + JetBrains Mono (數字/代號) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="brief-header wrap">
+  <a href="../index.html" class="back">← 回首頁</a>
+  <div class="dd-hero-row">
+    <div>
+      <h1 class="mono">6213 <span class="muted"> · 聯茂</span></h1>
+      <p class="meta muted small">
+        <span class="pillar-dot p-growth"></span> 成長核心
+        · TW
+        · 可查詢
+      </p>
+    </div>
+    <div class="dd-price">
+      <div class="mono tnum val-xl">270.50</div>
+      <div class="mono tnum small up">+7.34% today</div>
+    </div>
+  </div>
+</header>
+
+
+    <section class="dd-verdict-card wrap">
+      <div class="verdict-left">
+        <div class="verdict-dial-wrap tone-dn">
+    <svg class="verdict-dial" viewBox="0 0 140 140" width="140" height="140">
+      <circle cx="70" cy="70" r="56" fill="none" stroke="var(--bg-3)" stroke-width="10"/>
+      <circle cx="70" cy="70" r="56" fill="none"
+              stroke="var(--dn)" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="114.5 351.9"
+              transform="rotate(-90 70 70)"/>
+      <text x="70" y="76" text-anchor="middle"
+            fill="var(--tx-1)" font-size="32" font-weight="700"
+            font-family="var(--font-mono)">1.6</text>
+      <text x="70" y="96" text-anchor="middle"
+            fill="var(--tx-3)" font-size="10" font-weight="600"
+            letter-spacing="1" font-family="var(--font-mono)">OUT OF 5</text>
+    </svg>
+    </div>
+      </div>
+      <div class="verdict-mid">
+        <div class="verdict-lbl mono">AI VERDICT · 綜合評等</div>
+        <div class="verdict-action dn">SELL</div>
+        <div class="verdict-narrative">52週位階 97%（歷史高檔），絕不追高</div>
+        <div class="verdict-meta muted small mono">
+          規則 · Gemini 2.5 · 52週 97% · 中性
+        </div>
+      </div>
+      <div class="verdict-right">
+        <div class="sentiment-bar-box">
+          <div class="sentiment-bar-head mono small">
+            <span>市場情緒 · SENTIMENT</span>
+            <span class="muted">0%</span>
+          </div>
+          <div class="sentiment-bar">
+            <div class="sentiment-seg sb-bull" style="width:0%"><span>多 0</span></div>
+            <div class="sentiment-seg sb-neu"  style="width:0%"><span>平 0</span></div>
+            <div class="sentiment-seg sb-bear" style="width:0%"><span>空 0</span></div>
+          </div>
+          <div class="sentiment-counts mono small muted">
+            看多 0% · 觀望 0% · 看空 0%
+          </div>
+        </div>
+      </div>
+    </section>
+    
+
+    <nav class="dd-tabs wrap">
+      <button class="dd-tab active" data-dd-tab="overview">概覽 · OVERVIEW</button>
+      <button class="dd-tab" data-dd-tab="ai">AI 觀點 · AI</button>
+      <button class="dd-tab" data-dd-tab="fin">財報 · FINANCIALS</button>
+      <button class="dd-tab" data-dd-tab="hold">股東 · HOLDERS</button>
+      <button class="dd-tab" data-dd-tab="news">新聞 · NEWS</button>
+    </nav>
+    
+
+<div class="dd-panel active" data-dd-panel="overview">
+  <section class="wrap">
+    <svg class="sparkline" viewBox="0 0 600 100" width="600" height="100" preserveAspectRatio="none"><polygon points="2.0 98 2.0 94.8 8.7 94.0 15.4 94.8 22.1 96.0 28.8 95.7 35.5 96.6 42.2 95.4 48.9 93.1 55.6 92.2 62.3 91.7 69.0 91.9 75.7 92.5 82.4 92.2 89.1 95.1 95.8 95.7 102.4 96.6 109.1 95.7 115.8 92.8 122.5 93.4 129.2 92.5 135.9 91.4 142.6 92.2 149.3 93.4 156.0 92.5 162.7 90.8 169.4 89.4 176.1 89.9 182.8 92.5 189.5 92.8 196.2 91.9 202.9 90.5 209.6 91.7 216.3 90.5 223.0 91.4 229.7 91.4 236.4 92.2 243.1 91.4 249.8 91.7 256.5 87.6 263.2 89.1 269.9 90.2 276.6 88.2 283.3 89.9 290.0 94.3 296.7 96.6 303.3 98.0 310.0 96.0 316.7 89.9 323.4 90.8 330.1 91.7 336.8 89.9 343.5 89.6 350.2 88.2 356.9 87.9 363.6 81.0 370.3 73.5 377.0 76.4 383.7 81.9 390.4 80.7 397.1 87.9 403.8 84.2 410.5 84.5 417.2 91.7 423.9 85.0 430.6 81.0 437.3 81.6 444.0 78.7 450.7 77.2 457.4 69.2 464.1 71.2 470.8 70.6 477.5 75.2 484.2 79.5 490.9 81.6 497.6 74.1 504.2 74.9 510.9 66.9 517.6 70.9 524.3 72.3 531.0 64.0 537.7 59.9 544.4 50.1 551.1 44.4 557.8 33.1 564.5 34.6 571.2 40.3 577.9 28.8 584.6 25.6 591.3 12.7 598.0 2.0 598.0 98" fill="var(--up)" opacity="0.12"/><path d="M 2.0 94.8 L 8.7 94.0 L 15.4 94.8 L 22.1 96.0 L 28.8 95.7 L 35.5 96.6 L 42.2 95.4 L 48.9 93.1 L 55.6 92.2 L 62.3 91.7 L 69.0 91.9 L 75.7 92.5 L 82.4 92.2 L 89.1 95.1 L 95.8 95.7 L 102.4 96.6 L 109.1 95.7 L 115.8 92.8 L 122.5 93.4 L 129.2 92.5 L 135.9 91.4 L 142.6 92.2 L 149.3 93.4 L 156.0 92.5 L 162.7 90.8 L 169.4 89.4 L 176.1 89.9 L 182.8 92.5 L 189.5 92.8 L 196.2 91.9 L 202.9 90.5 L 209.6 91.7 L 216.3 90.5 L 223.0 91.4 L 229.7 91.4 L 236.4 92.2 L 243.1 91.4 L 249.8 91.7 L 256.5 87.6 L 263.2 89.1 L 269.9 90.2 L 276.6 88.2 L 283.3 89.9 L 290.0 94.3 L 296.7 96.6 L 303.3 98.0 L 310.0 96.0 L 316.7 89.9 L 323.4 90.8 L 330.1 91.7 L 336.8 89.9 L 343.5 89.6 L 350.2 88.2 L 356.9 87.9 L 363.6 81.0 L 370.3 73.5 L 377.0 76.4 L 383.7 81.9 L 390.4 80.7 L 397.1 87.9 L 403.8 84.2 L 410.5 84.5 L 417.2 91.7 L 423.9 85.0 L 430.6 81.0 L 437.3 81.6 L 444.0 78.7 L 450.7 77.2 L 457.4 69.2 L 464.1 71.2 L 470.8 70.6 L 477.5 75.2 L 484.2 79.5 L 490.9 81.6 L 497.6 74.1 L 504.2 74.9 L 510.9 66.9 L 517.6 70.9 L 524.3 72.3 L 531.0 64.0 L 537.7 59.9 L 544.4 50.1 L 551.1 44.4 L 557.8 33.1 L 564.5 34.6 L 571.2 40.3 L 577.9 28.8 L 584.6 25.6 L 591.3 12.7 L 598.0 2.0" stroke="var(--up)" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  </section>
+
+  <section class="wrap dd-metrics">
+    <div class="dd-grid">
+      
+    </div>
+    <div class="dd-rets">
+        <div class="dd-ret-cell">
+          <div class="muted small">今日</div>
+          <div class="mono tnum up">+7.34%</div>
+        </div>
+        <div class="dd-ret-cell">
+          <div class="muted small">7日</div>
+          <div class="mono tnum up">+26.40%</div>
+        </div>
+        <div class="dd-ret-cell">
+          <div class="muted small">30日</div>
+          <div class="mono tnum up">+79.73%</div>
+        </div>
+        <div class="dd-ret-cell">
+          <div class="muted small">90日</div>
+          <div class="mono tnum up">+136.24%</div>
+        </div>
+        <div class="dd-ret-cell">
+          <div class="muted small">YTD</div>
+          <div class="mono tnum up">+132.2%</div>
+        </div></div>
+    <div class="dd-52w">
+      <div class="dd-52w-labels muted small mono">
+        <span>52w 低 55.90</span>
+        <span class="mono">目前 97% 位階</span>
+        <span>52w 高 276.50</span>
+      </div>
+      <div class="dd-52w-bar"><div class="dd-52w-pos" style="left:97.28%"></div></div>
+    </div>
+    
+  </section>
+
+  
+<section class="wrap dd-rec-section">
+  <div class="dd-rec-card tone-dn">
+    <div class="dd-rec-head">
+      <div class="muted small mono">建議動作（規則式）</div>
+      <div class="dd-rec-action dn">避開追高</div>
+    </div>
+    <div class="dd-rec-body">
+      <div class="dd-rec-price-row">
+        <div class="dd-rec-price-cell">
+          <div class="muted small">建議價格</div>
+          <div class="mono tnum val-md">238.04</div>
+        </div>
+        <div class="dd-rec-price-cell">
+          <div class="muted small">預期停利 (+30%)</div>
+          <div class="mono tnum up">309.45</div>
+        </div>
+        <div class="dd-rec-price-cell">
+          <div class="muted small">預期停損 (−10%)</div>
+          <div class="mono tnum dn">214.24</div>
+        </div>
+      </div>
+      <p class="dd-rec-reason">52週位階 97%（歷史高檔），絕不追高</p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="dd-panel" data-dd-panel="ai">
+  <section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股今日暫無 AI 個別觀點</div><div class="muted small">AI 會挑選當日優先分析的持股／機會清單中的票。</div></div></section>
+</div>
+
+
+        <section class="wrap" data-dd-panel="fin">
+          
+        <div class="dd-fin-score">
+          <div class="dd-fin-score-head">
+            <span class="mono small muted">基本面體檢 · FUNDAMENTAL CHECK</span>
+            <span class="mono tnum dd-fin-score-val">1 / 5 亮綠燈</span>
+          </div>
+          <div class="dd-lights-grid"><div class="dd-light dd-light-red"><div class="dd-light-head"><span class="dd-light-lbl mono small">估值 P/E</span><span class="dd-light-dot dd-light-dot-red"></span></div><div class="dd-light-val mono tnum">65.3</div><div class="dd-light-hint muted small">&lt;25 合理 / 25-45 偏高 / &gt;45 昂貴（粗略標準）</div></div><div class="dd-light dd-light-green"><div class="dd-light-head"><span class="dd-light-lbl mono small">EPS 成長 YoY</span><span class="dd-light-dot dd-light-dot-green"></span></div><div class="dd-light-val mono tnum">+97.6%</div><div class="dd-light-hint muted small">&gt;15% 佳 / 0-15% 平緩 / &lt;0 衰退</div></div><div class="dd-light dd-light-red"><div class="dd-light-head"><span class="dd-light-lbl mono small">ROE</span><span class="dd-light-dot dd-light-dot-red"></span></div><div class="dd-light-val mono tnum">7.2%</div><div class="dd-light-hint muted small">&gt;15% 優 / 8-15% 可接受 / &lt;8% 偏低</div></div><div class="dd-light dd-light-red"><div class="dd-light-head"><span class="dd-light-lbl mono small">淨利率</span><span class="dd-light-dot dd-light-dot-red"></span></div><div class="dd-light-val mono tnum">4.6%</div><div class="dd-light-hint muted small">&gt;20% 高 / 8-20% 一般 / &lt;8% 薄</div></div><div class="dd-light dd-light-red"><div class="dd-light-head"><span class="dd-light-lbl mono small">52週位階</span><span class="dd-light-dot dd-light-dot-red"></span></div><div class="dd-light-val mono tnum">97%</div><div class="dd-light-hint muted small">&lt;40% 低檔 / 40-75% 中段 / &gt;75% 高檔追高</div></div></div>
+          <div class="dd-fin-disclaimer muted small">
+            這個燈號是粗略啟發式，不是買賣訊號。投資需搭配產業分析 + 籌碼面 + 個人風險承受度。
+          </div>
+        </div>
+          <div class="dd-fin-sector muted small">產業：Technology / Electronic Components</div>
+          <div class="dd-fin-grid"><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">本益比 (TTM)</div><div class="dd-fin-en mono small muted">P/E TTM</div></div><div class="dd-fin-val mono tnum">65.3</div><div class="dd-fin-hint muted small">以過去 4 季 EPS 計算</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">預估本益比</div><div class="dd-fin-en mono small muted">P/E Forward</div></div><div class="dd-fin-val mono tnum">28.1</div><div class="dd-fin-hint muted small">以分析師預估 EPS 計算</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">每股盈餘 (TTM)</div><div class="dd-fin-en mono small muted">EPS TTM</div></div><div class="dd-fin-val mono tnum">4.14</div><div class="dd-fin-hint muted small">過去 4 季加總</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">預估 EPS</div><div class="dd-fin-en mono small muted">EPS Forward</div></div><div class="dd-fin-val mono tnum">9.61</div><div class="dd-fin-hint muted small">下個會計年度預估</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">股東權益報酬率</div><div class="dd-fin-en mono small muted">ROE</div></div><div class="dd-fin-val mono tnum">+7.2%</div><div class="dd-fin-hint muted small">公司運用股東資金的效率</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">淨利率</div><div class="dd-fin-en mono small muted">Profit Margin</div></div><div class="dd-fin-val mono tnum">+4.6%</div><div class="dd-fin-hint muted small">每元營收能賺到多少</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">營收成長 YoY</div><div class="dd-fin-en mono small muted">Revenue Growth</div></div><div class="dd-fin-val mono tnum">+16.3%</div><div class="dd-fin-hint muted small">近 4 季營收 vs 去年同期</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">EPS 成長 YoY</div><div class="dd-fin-en mono small muted">Earnings Growth</div></div><div class="dd-fin-val mono tnum">+97.6%</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">股價淨值比</div><div class="dd-fin-en mono small muted">P/B</div></div><div class="dd-fin-val mono tnum">4.62</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">股息殖利率</div><div class="dd-fin-en mono small muted">Dividend Yield</div></div><div class="dd-fin-val mono tnum">+67.00%</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">Beta</div><div class="dd-fin-en mono small muted">Beta</div></div><div class="dd-fin-val mono tnum">1.08</div><div class="dd-fin-hint muted small">>1 波動高於大盤</div></div><div class="dd-fin-row"><div class="dd-fin-lbl"><div class="dd-fin-cn">市值</div><div class="dd-fin-en mono small muted">Market Cap</div></div><div class="dd-fin-val mono tnum">983.0 億</div></div></div>
+          <div class="dd-fin-foot muted small">
+            資料來源：yfinance (Yahoo Finance)。TW 個股可能有延遲或缺漏；以公開資訊觀測站為準。
+          </div>
+        </section>
+        
+
+        <section class="wrap dd-chip-panel" data-dd-panel="hold">
+          <div class="dd-chip-head">
+            <div>
+              <div class="dd-chip-title mono">三大法人買賣超 · HOLDERS</div>
+              <div class="muted small mono">過去 20 個交易日 · 單位：張 · 正值（<span class="up">紅</span>）買超、負值（<span class="dn">綠</span>）賣超</div>
+            </div>
+            <div class="dd-chip-summary mono small">外資連3日賣超</div>
+          </div>
+
+          <div class="dd-chip-grid">
+            
+            <div class="dd-chip-card">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">外資</span>
+                <span class="chip-streak chip-streak-sell mono small">連賣3日</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md dn">-1.6萬<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md dn">-1.8萬<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-sell" x="0.0" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="24.4" y="11.3" width="22.4" height="3.7" rx="0.5"/><rect class="chip-spark-sell" x="48.8" y="15.0" width="22.4" height="3.1" rx="0.5"/><rect class="chip-spark-sell" x="73.2" y="15.0" width="22.4" height="1.4" rx="0.5"/><rect class="chip-spark-sell" x="97.6" y="15.0" width="22.4" height="14.0" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日每日買賣超</div>
+              </div>
+            </div>
+            
+            <div class="dd-chip-card">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">投信</span>
+                <span class="chip-streak chip-streak-sell mono small">連賣2日</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md up">+537<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md up">+3,291<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-sell" x="0.0" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="24.4" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="48.8" y="1.0" width="22.4" height="14.0" rx="0.5"/><rect class="chip-spark-sell" x="73.2" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-sell" x="97.6" y="15.0" width="22.4" height="4.6" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日每日買賣超</div>
+              </div>
+            </div>
+            
+            <div class="dd-chip-card">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">自營商</span>
+                <span class="muted small">—</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md dn">-786<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md up">+1,690<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-buy" x="0.0" y="14.7" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="24.4" y="4.9" width="22.4" height="10.1" rx="0.5"/><rect class="chip-spark-sell" x="48.8" y="15.0" width="22.4" height="14.0" rx="0.5"/><rect class="chip-spark-sell" x="73.2" y="15.0" width="22.4" height="3.0" rx="0.5"/><rect class="chip-spark-sell" x="97.6" y="15.0" width="22.4" height="12.1" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日每日買賣超</div>
+              </div>
+            </div>
+            <div class="dd-chip-card dd-chip-card-total">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">三大法人合計</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md dn">-1.6萬<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md dn">-1.3萬<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-sell" x="0.0" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="24.4" y="11.2" width="22.4" height="3.8" rx="0.5"/><rect class="chip-spark-sell" x="48.8" y="15.0" width="22.4" height="2.6" rx="0.5"/><rect class="chip-spark-sell" x="73.2" y="15.0" width="22.4" height="1.5" rx="0.5"/><rect class="chip-spark-sell" x="97.6" y="15.0" width="22.4" height="14.0" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日三大法人合計</div>
+              </div>
+            </div>
+          </div>
+
+          
+            <div class="dd-chip-section">
+              <div class="dd-chip-section-head mono small muted">每日買賣超明細 · 最近 5 日</div>
+              <div class="dd-chip-daily-wrap">
+                <table class="dd-chip-daily">
+                  <thead>
+                    <tr>
+                      <th class="mono small">日期</th>
+                      <th class="mono small">外資</th>
+                      <th class="mono small">投信</th>
+                      <th class="mono small">自營商</th>
+                      <th class="mono small">三大法人</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+            <tr>
+              <td class="mono small">2026-04-17</td>
+              <td><span class="mono tnum dn">-1.4萬</span></td>
+              <td><span class="mono tnum dn">-310</span></td>
+              <td><span class="mono tnum dn">-511</span></td>
+              <td><span class="mono tnum dn">-1.5萬</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-04-16</td>
+              <td><span class="mono tnum dn">-1,458</span></td>
+              <td><span class="mono tnum dn">-60</span></td>
+              <td><span class="mono tnum dn">-125</span></td>
+              <td><span class="mono tnum dn">-1,644</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-04-15</td>
+              <td><span class="mono tnum dn">-3,185</span></td>
+              <td><span class="mono tnum up">+941</span></td>
+              <td><span class="mono tnum dn">-592</span></td>
+              <td><span class="mono tnum dn">-2,836</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-04-14</td>
+              <td><span class="mono tnum up">+3,759</span></td>
+              <td><span class="muted mono tnum small">—</span></td>
+              <td><span class="mono tnum up">+429</span></td>
+              <td><span class="mono tnum up">+4,188</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-04-13</td>
+              <td><span class="mono tnum dn">-403</span></td>
+              <td><span class="mono tnum dn">-34</span></td>
+              <td><span class="mono tnum up">+14</span></td>
+              <td><span class="mono tnum dn">-423</span></td>
+            </tr></tbody>
+                </table>
+              </div>
+            </div>
+
+          <div class="dd-chip-disclaimer muted small">
+            <strong>怎麼看：</strong>外資＋投信同步買超（且連續多日），通常代表機構認同，但短線可能已漲多；
+            反之外資連續賣超可能是風險訊號，但也可能只是匯率避險或 ETF 調整。籌碼面只是拼圖的一片，
+            搭配基本面（AI 評分／FINANCIALS 分頁）與位階（52 週區間）一起看。
+            資料來自 TWSE + TPEx 三大法人統計，滯後 1 個交易日。
+          </div>
+        </section>
+        
+
+<div class="dd-panel" data-dd-panel="news">
+  <section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股近期無相關新聞</div><div class="muted small">Brief 中未偵測到此 ticker 的提及。</div></div></section>
+</div>
+
+<script>
+(function() {
+  const tabs = document.querySelectorAll('.dd-tab');
+  const panels = document.querySelectorAll('.dd-panel, .dd-stub[data-dd-panel]');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    const key = t.dataset.ddTab;
+    tabs.forEach(x => x.classList.toggle('active', x === t));
+    panels.forEach(p => {
+      const match = p.dataset.ddPanel === key;
+      if (p.classList.contains('dd-stub')) {
+        p.style.display = match ? '' : 'none';
+      } else {
+        p.classList.toggle('active', match);
+      }
+    });
+  }));
+  // Hide stubs initially (only overview active)
+  document.querySelectorAll('.dd-stub[data-dd-panel]').forEach(s => s.style.display = 'none');
+})();
+</script>
+
+<footer class="wrap">
+  <p>生成於 2026-04-20 11:11 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+</footer>
+<script>
+/* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
+ * so opening the page at 15:00 shows 「午安」, 21:00 shows 「晚安」. */
+(function () {
+  var g = document.querySelector('.bh-greeting');
+  if (!g) return;
+  var h = new Date().getHours();
+  var label;
+  if (h >= 5 && h < 11)       label = '早安';
+  else if (h >= 11 && h < 13) label = '中午好';
+  else if (h >= 13 && h < 18) label = '午安';
+  else if (h >= 18 && h < 23) label = '晚上好';
+  else                        label = '夜深了';
+  g.textContent = label;
+})();
+
+/* Basket builder — client-side budget-aware allocation picker.
+ * Each .basket-builder scope has its own budget input, preset buttons,
+ * allocation checkboxes, and summary line. Changing the budget re-runs the
+ * greedy auto-fill (take highest confidence_pct until budget exhausted);
+ * toggling a checkbox switches to manual mode and just updates totals. */
+(function () {
+  function fmt(n) {
+    return 'NT$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function setupBuilder(builder) {
+    var input     = builder.querySelector('.basket-budget-input');
+    var presets   = builder.querySelectorAll('.basket-preset-btn');
+    var cards     = builder.querySelectorAll('[data-cost]');
+    var totalEl   = builder.querySelector('.basket-total');
+    var remainEl  = builder.querySelector('.basket-remaining');
+    var countEl   = builder.querySelector('.basket-count');
+    if (!input || !totalEl) return;
+
+    function recalc() {
+      var total = 0, count = 0;
+      cards.forEach(function (card) {
+        var check = card.querySelector('.alloc-check');
+        if (!check) return;
+        var cost = parseFloat(card.getAttribute('data-cost')) || 0;
+        if (check.checked && cost > 0) {
+          total += cost;
+          count += 1;
+          card.classList.add('alloc-picked');
+        } else {
+          card.classList.remove('alloc-picked');
+        }
+      });
+      var budget = parseFloat(input.value) || 0;
+      var remaining = budget - total;
+      totalEl.textContent = fmt(total);
+      remainEl.textContent = fmt(remaining);
+      remainEl.classList.toggle('dn', remaining < 0);
+      remainEl.classList.toggle('up', remaining >= 0);
+      countEl.textContent = count + ' 檔';
+      // Mark preset button active if its amount matches current budget
+      presets.forEach(function (b) {
+        var amt = parseFloat(b.getAttribute('data-amt')) || 0;
+        b.classList.toggle('is-active', Math.abs(amt - budget) < 1);
+      });
+    }
+
+    function autoFill() {
+      var budget = parseFloat(input.value) || 0;
+      // Sort non-cash cards by confidence desc, then by cost asc (cheaper first on ties).
+      var buyable = Array.prototype.slice.call(cards).filter(function (c) {
+        return c.getAttribute('data-is-cash') !== '1' &&
+               (parseFloat(c.getAttribute('data-cost')) || 0) > 0;
+      });
+      buyable.sort(function (a, b) {
+        var ca = parseFloat(a.getAttribute('data-conf')) || 0;
+        var cb = parseFloat(b.getAttribute('data-conf')) || 0;
+        if (cb !== ca) return cb - ca;
+        var pa = parseFloat(a.getAttribute('data-cost')) || 0;
+        var pb = parseFloat(b.getAttribute('data-cost')) || 0;
+        return pa - pb;
+      });
+      // Uncheck everything, then greedy-pack.
+      cards.forEach(function (c) {
+        var ch = c.querySelector('.alloc-check');
+        if (ch) ch.checked = false;
+      });
+      var spent = 0;
+      buyable.forEach(function (c) {
+        var cost = parseFloat(c.getAttribute('data-cost')) || 0;
+        if (cost > 0 && spent + cost <= budget) {
+          var ch = c.querySelector('.alloc-check');
+          if (ch) { ch.checked = true; spent += cost; }
+        }
+      });
+      recalc();
+    }
+
+    input.addEventListener('input', autoFill);
+    input.addEventListener('change', autoFill);
+    presets.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var amt = btn.getAttribute('data-amt');
+        if (amt) { input.value = amt; autoFill(); }
+      });
+    });
+    cards.forEach(function (c) {
+      var ch = c.querySelector('.alloc-check');
+      if (ch) ch.addEventListener('change', recalc);
+      // Swallow clicks on the deep-link so they don't toggle the label/checkbox.
+      var dl = c.querySelector('.alloc-deeplink');
+      if (dl) dl.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    });
+
+    autoFill();
+  }
+
+  document.querySelectorAll('.basket-builder').forEach(setupBuilder);
+})();
+</script>
+</body>
+</html>
