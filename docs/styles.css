@@ -340,6 +340,29 @@ a:hover { color: #b8d0ff; }
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.4);
 }
+/* AI-analysis staleness chip — shown next to "AI MORNING BRIEF · DATE" when
+   load_analysis fell back to a prior-date file (Gemini hasn't re-run). */
+.ai-stale-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: help;
+}
+.ai-stale-chip.stale-amber {
+  background: rgba(234, 179, 8, 0.14);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.38);
+}
+.ai-stale-chip.stale-red {
+  background: rgba(239, 68, 68, 0.16);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.42);
+}
 /* "Provenance 這是什麼" hint — appears on hover over the dot-cluster. */
 .prov-legend {
   display: inline-flex;

@@ -296,14 +296,47 @@ def split_prompt(content: str) -> tuple[str, str]:
     return content[:split_at], content[split_at:]
 
 
-def load_analysis(date: str) -> dict | None:
-    path = ANALYSES_DIR / f"{date}.json"
-    if not path.exists():
+def _most_recent_analysis_path(on_or_before: str) -> Path | None:
+    """Return the newest `analyses/YYYY-MM-DD.json` with date <= `on_or_before`,
+    or None if the directory has nothing applicable. Used as fallback when the
+    exact-date Gemini analysis is missing (e.g. Light workflow ran at 08:00
+    but Full — which actually re-runs Gemini — hasn't fired yet at 14:40;
+    or a gap day like weekend / holiday / Gemini outage)."""
+    if not ANALYSES_DIR.exists():
         return None
+    candidates = sorted(
+        (p for p in ANALYSES_DIR.glob("*.json") if p.stem <= on_or_before),
+        reverse=True,
+    )
+    return candidates[0] if candidates else None
+
+
+def load_analysis(date: str) -> dict | None:
+    """Load Gemini analysis for `date`. Falls back to the most recent prior
+    analysis file if today's doesn't exist — the dashboard should NEVER lose
+    its AI section just because Gemini hasn't re-run yet. Staleness is
+    tagged on the returned dict via `_analysis_fallback` (set when a fallback
+    was used) so the renderer can badge the section as stale."""
+    path = ANALYSES_DIR / f"{date}.json"
+    is_fallback = False
+    actual_date = date
+    if not path.exists():
+        fb = _most_recent_analysis_path(date)
+        if fb is None:
+            return None
+        path = fb
+        actual_date = path.stem
+        is_fallback = True
     try:
         analysis = json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
+    # Annotate fallback usage so the UI can render a staleness chip. Read
+    # sites that don't care just ignore these keys.
+    if is_fallback:
+        analysis["_analysis_fallback"] = True
+        analysis["_analysis_date_actual"] = actual_date
+        analysis["_analysis_date_requested"] = date
     # Apply validator-caught fixes BEFORE any renderer sees the data. This
     # closes the loop between validate_analysis.py (which surfaces Gemini
     # errors as audit banners) and the rendering layer (which previously kept
@@ -316,7 +349,7 @@ def load_analysis(date: str) -> dict | None:
             # Only apply the validation report if it points at THIS analysis
             # (avoid cross-contamination if validator ran against a different
             # date than what we're rendering).
-            if validation.get("analysis_date") == date:
+            if validation.get("analysis_date") == actual_date:
                 analysis = apply_validation_fixes(analysis, validation)
         except Exception:
             pass
@@ -4339,6 +4372,31 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     date_str = latest_brief["date"]
     weekday = latest_brief["weekday"]
 
+    # Staleness chip — when load_analysis() fell back to a prior-date analysis
+    # (e.g. Light workflow ran pre-open but Full hasn't re-run Gemini yet, or
+    # weekend/holiday gap), surface the actual analysis date explicitly so the
+    # header "AI MORNING BRIEF · {today}" doesn't silently misrepresent what
+    # the user is reading.
+    stale_chip_html = ""
+    if analysis.get("_analysis_fallback"):
+        actual = analysis.get("_analysis_date_actual", "")
+        try:
+            from datetime import date as _date
+            d0 = _date.fromisoformat(actual)
+            d1 = _date.fromisoformat(date_str)
+            age = (d1 - d0).days
+            age_tone = "stale-red" if age >= 3 else "stale-amber"
+            stale_chip_html = (
+                f'<span class="ai-stale-chip {age_tone} mono small" '
+                f'title="Gemini 分析尚未重跑，顯示最近一份 {actual}；Full workflow 14:40 後才會重跑。">'
+                f'⚠ 分析來自 {actual}（{age} 天前）</span>'
+            )
+        except Exception:
+            stale_chip_html = (
+                f'<span class="ai-stale-chip stale-amber mono small">'
+                f'⚠ 分析來自 {html.escape(actual)}</span>'
+            )
+
     # GUSHI-style BriefHero: greeting + headline + one-liner + highlights + agenda
     # Greeting is rendered by JS on the client (時段自適應) so opening the page
     # at 3pm shows 「午安」, at 9pm 「晚安」 — Gemini's output ("早安" baked in at
@@ -4383,6 +4441,7 @@ def render_daily_hero(latest_brief: dict | None, analysis: dict | None,
     <span class="bh-badge mono">AI MORNING BRIEF · {date_str} 週{weekday}</span>
     {_sentiment_badge(mp.get("tw_sentiment", "中性"))}
     {diag_pill}
+    {stale_chip_html}
     <div class="bh-spacer"></div>
     <a href="briefs/{date_str}.html" class="btn-link small">→ 完整分析</a>
   </div>
@@ -8294,6 +8353,29 @@ a:hover { color: #b8d0ff; }
   background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.4);
+}
+/* AI-analysis staleness chip — shown next to "AI MORNING BRIEF · DATE" when
+   load_analysis fell back to a prior-date file (Gemini hasn't re-run). */
+.ai-stale-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: help;
+}
+.ai-stale-chip.stale-amber {
+  background: rgba(234, 179, 8, 0.14);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.38);
+}
+.ai-stale-chip.stale-red {
+  background: rgba(239, 68, 68, 0.16);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.42);
 }
 /* "Provenance 這是什麼" hint — appears on hover over the dot-cluster. */
 .prov-legend {
