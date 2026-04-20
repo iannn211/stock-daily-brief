@@ -1,129 +1,303 @@
 {
-  "fetched_at": "2026-04-18T23:07:35.972731+08:00",
+  "fetched_at": "2026-04-20T11:30:11.582207+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
       "title": "AI 基建 · PCB / 載板 / 封測 / 探針",
-      "ticker_count": 19,
-      "unique_count": 19,
+      "ticker_count": 23,
+      "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 8
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
-      "ticker_count": 6,
-      "unique_count": 6,
+      "ticker_count": 8,
+      "unique_count": 8,
       "layer_count": 2,
       "mentioned_in_window": 3
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
-      "ticker_count": 5,
-      "unique_count": 5,
+      "ticker_count": 6,
+      "unique_count": 6,
       "layer_count": 2,
       "mentioned_in_window": 2
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
-      "ticker_count": 8,
-      "unique_count": 8,
+      "ticker_count": 9,
+      "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 3
     },
     "connectors": {
-      "title": "AI 連接器 · 高速互連",
-      "ticker_count": 3,
-      "unique_count": 3,
+      "title": "AI 連接器 · 高速互連 + 線束",
+      "ticker_count": 4,
+      "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
-      "ticker_count": 3,
-      "unique_count": 3,
+      "ticker_count": 6,
+      "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 4
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
-      "ticker_count": 5,
-      "unique_count": 5,
+      "ticker_count": 6,
+      "unique_count": 6,
       "layer_count": 2,
       "mentioned_in_window": 0
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
-      "ticker_count": 5,
-      "unique_count": 5,
+      "ticker_count": 7,
+      "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 6
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
-      "ticker_count": 4,
-      "unique_count": 4,
+      "ticker_count": 6,
+      "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 1
+    },
+    "ic_distribution": {
+      "title": "IC 通路 / 零組件整合 · AI 料件集散",
+      "ticker_count": 3,
+      "unique_count": 3,
+      "layer_count": 1,
+      "mentioned_in_window": 1
     }
   },
-  "added_from_chains": [],
+  "added_from_chains": [
+    {
+      "symbol": "3715",
+      "name": "定穎投控",
+      "chain": "ai_pcb",
+      "layer": "中游 · PCB 製造",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "8155",
+      "name": "博智",
+      "chain": "ai_pcb",
+      "layer": "中游 · PCB 製造",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "2355",
+      "name": "敬鵬",
+      "chain": "ai_pcb",
+      "layer": "中游 · PCB 製造",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3289",
+      "name": "宜特",
+      "chain": "ai_pcb",
+      "layer": "下游 · 封測 OSAT",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "4908",
+      "name": "前鼎",
+      "chain": "optics_cpo",
+      "layer": "模組 / 核心",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3152",
+      "name": "璟德",
+      "chain": "optics_cpo",
+      "layer": "周邊 / 檢測",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3338",
+      "name": "泰碩",
+      "chain": "thermal",
+      "layer": "散熱模組 / 熱管",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3702",
+      "name": "大聯大",
+      "chain": "ai_server",
+      "layer": "電源 / 機殼 / IC 通路",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3665",
+      "name": "貿聯-KY",
+      "chain": "connectors",
+      "layer": "連接器 / 纜線",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3092",
+      "name": "鴻碩",
+      "chain": "connectors",
+      "layer": "連接器 / 纜線",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3026",
+      "name": "禾伸堂",
+      "chain": "passives",
+      "layer": "MLCC / 電容",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "6173",
+      "name": "信昌電",
+      "chain": "passives",
+      "layer": "MLCC / 電容",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3042",
+      "name": "晶技",
+      "chain": "passives",
+      "layer": "電感 / 電阻",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "4566",
+      "name": "時碩工業",
+      "chain": "robotics",
+      "layer": "關鍵零組件",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "6125",
+      "name": "廣運",
+      "chain": "robotics",
+      "layer": "工業電腦 / 控制器",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3131",
+      "name": "弘塑",
+      "chain": "semiconductor_eq",
+      "layer": "先進封裝周邊",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "6146",
+      "name": "耕興",
+      "chain": "semiconductor_eq",
+      "layer": "晶圓廠工程",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3036",
+      "name": "文曄",
+      "chain": "ic_distribution",
+      "layer": "IC 通路",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    },
+    {
+      "symbol": "3529",
+      "name": "力旺",
+      "chain": "ic_distribution",
+      "layer": "IC 通路",
+      "pillar": "growth",
+      "added_at": "2026-04-20"
+    }
+  ],
   "news_frequency": {
-    "0050": 25,
-    "2330": 21,
-    "5607": 18,
-    "3081": 13,
-    "2303": 10,
-    "6173": 8,
-    "2492": 8,
-    "2383": 6,
-    "2368": 6,
+    "5607": 40,
+    "0050": 26,
+    "2330": 26,
+    "2303": 17,
+    "3081": 12,
+    "3037": 9,
+    "3017": 8,
+    "6173": 7,
+    "3702": 6,
+    "2492": 6,
     "3324": 6,
-    "3017": 6,
-    "3037": 5,
-    "3702": 4,
+    "2383": 5,
+    "2368": 5,
+    "2308": 4,
+    "6223": 4,
+    "2254": 4,
+    "8431": 4,
+    "8046": 4,
+    "6432": 4,
+    "3653": 4,
     "3363": 4,
     "4566": 4,
     "2029": 3,
     "2327": 3,
-    "2002": 2,
-    "2881": 2,
-    "2882": 2,
-    "2883": 2,
-    "2890": 2,
-    "2891": 2,
-    "3008": 2,
-    "3406": 2,
-    "2049": 2,
-    "1590": 2,
-    "2345": 2,
-    "3715": 2,
-    "3665": 2
+    "6584": 2,
+    "3706": 2,
+    "2353": 2,
+    "4979": 2,
+    "2360": 2,
+    "8358": 2
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 18,
+      "mentions": 40,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6173",
-      "name": "信昌電",
-      "mentions": 8,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3702",
-      "name": "大聯大",
+      "symbol": "6223",
+      "name": "旺矽",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "4566",
-      "name": "時碩工業",
+      "symbol": "2254",
+      "name": "巨鎧精密-創",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8431",
+      "name": "匯鑽科",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6432",
+      "name": "今展科",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3653",
+      "name": "健策",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -136,36 +310,15 @@
       "in_chains": false
     },
     {
-      "symbol": "2883",
-      "name": "凱基金",
+      "symbol": "6584",
+      "name": "南俊國際",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2890",
-      "name": "永豐金",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3715",
-      "name": "定穎投控",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3665",
-      "name": "貿聯-KY",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3289",
-      "name": "宜特",
+      "symbol": "3706",
+      "name": "神達",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
@@ -221,6 +374,15 @@
     "3044": [
       "ai_pcb"
     ],
+    "3715": [
+      "ai_pcb"
+    ],
+    "8155": [
+      "ai_pcb"
+    ],
+    "2355": [
+      "ai_pcb"
+    ],
     "3037": [
       "ai_pcb"
     ],
@@ -244,6 +406,9 @@
     "8150": [
       "ai_pcb",
       "hbm_memory"
+    ],
+    "3289": [
+      "ai_pcb"
     ],
     "6515": [
       "ai_pcb",
@@ -277,9 +442,14 @@
     "3363": [
       "optics_cpo"
     ],
+    "4908": [
+      "optics_cpo"
+    ],
     "3202": [
-      "optics_cpo",
-      "connectors"
+      "optics_cpo"
+    ],
+    "3152": [
+      "optics_cpo"
     ],
     "3017": [
       "thermal"
@@ -292,6 +462,9 @@
       "thermal"
     ],
     "3296": [
+      "thermal"
+    ],
+    "3338": [
       "thermal"
     ],
     "6196": [
@@ -324,10 +497,20 @@
       "passives",
       "robotics"
     ],
+    "3702": [
+      "ai_server",
+      "ic_distribution"
+    ],
     "3533": [
       "connectors"
     ],
     "6269": [
+      "connectors"
+    ],
+    "3665": [
+      "connectors"
+    ],
+    "3092": [
       "connectors"
     ],
     "2327": [
@@ -336,10 +519,22 @@
     "2492": [
       "passives"
     ],
+    "3026": [
+      "passives"
+    ],
+    "6173": [
+      "passives"
+    ],
+    "3042": [
+      "passives"
+    ],
     "3006": [
       "hbm_memory"
     ],
     "5269": [
+      "hbm_memory"
+    ],
+    "2408": [
       "hbm_memory"
     ],
     "2049": [
@@ -348,11 +543,29 @@
     "1590": [
       "robotics"
     ],
+    "4566": [
+      "robotics"
+    ],
     "2395": [
       "robotics"
     ],
     "6414": [
       "robotics"
+    ],
+    "6125": [
+      "robotics"
+    ],
+    "3131": [
+      "semiconductor_eq"
+    ],
+    "6146": [
+      "semiconductor_eq"
+    ],
+    "3036": [
+      "ic_distribution"
+    ],
+    "3529": [
+      "ic_distribution"
     ]
   }
 }

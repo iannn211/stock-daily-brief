@@ -249,3 +249,34 @@ simulator_universe:
   # hbm_memory → HBM 記憶體
   - { symbol: "3006", name: "晶豪科", market: "TW", category: "HBM 記憶體" }
   - { symbol: "5269", name: "祥碩", market: "TW", category: "HBM 記憶體" }
+
+  # ── Auto-added by audit_coverage.py on 2026-04-20 ──
+  # Source: supply_chains.yaml. Edit there, not here.
+  # ai_pcb → PCB供應鏈
+  - { symbol: "3715", name: "定穎投控", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "8155", name: "博智", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "2355", name: "敬鵬", market: "TW", category: "PCB供應鏈" }
+  - { symbol: "3289", name: "宜特", market: "TW", category: "PCB供應鏈" }
+  # optics_cpo → 光通訊
+  - { symbol: "4908", name: "前鼎", market: "TW", category: "光通訊" }
+  - { symbol: "3152", name: "璟德", market: "TW", category: "光通訊" }
+  # thermal → 散熱
+  - { symbol: "3338", name: "泰碩", market: "TW", category: "散熱" }
+  # ai_server → AI 伺服器
+  - { symbol: "3702", name: "大聯大", market: "TW", category: "AI 伺服器" }
+  # connectors → 連接器
+  - { symbol: "3665", name: "貿聯-KY", market: "TW", category: "連接器" }
+  - { symbol: "3092", name: "鴻碩", market: "TW", category: "連接器" }
+  # passives → 被動元件
+  - { symbol: "3026", name: "禾伸堂", market: "TW", category: "被動元件" }
+  - { symbol: "6173", name: "信昌電", market: "TW", category: "被動元件" }
+  - { symbol: "3042", name: "晶技", market: "TW", category: "被動元件" }
+  # robotics → 機器人
+  - { symbol: "4566", name: "時碩工業", market: "TW", category: "機器人" }
+  - { symbol: "6125", name: "廣運", market: "TW", category: "機器人" }
+  # semiconductor_eq → 半導體設備
+  - { symbol: "3131", name: "弘塑", market: "TW", category: "半導體設備" }
+  - { symbol: "6146", name: "耕興", market: "TW", category: "半導體設備" }
+  # ic_distribution → ic_distribution
+  - { symbol: "3036", name: "文曄", market: "TW", category: "ic_distribution" }
+  - { symbol: "3529", name: "力旺", market: "TW", category: "ic_distribution" }
