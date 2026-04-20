@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-20T11:30:11.582207+08:00",
+  "fetched_at": "2026-04-20T19:50:47.821006+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 8
+      "mentioned_in_window": 9
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -35,14 +35,14 @@
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 3
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
@@ -56,7 +56,7 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 5
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -73,224 +73,64 @@
       "mentioned_in_window": 1
     }
   },
-  "added_from_chains": [
-    {
-      "symbol": "3715",
-      "name": "定穎投控",
-      "chain": "ai_pcb",
-      "layer": "中游 · PCB 製造",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "8155",
-      "name": "博智",
-      "chain": "ai_pcb",
-      "layer": "中游 · PCB 製造",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "2355",
-      "name": "敬鵬",
-      "chain": "ai_pcb",
-      "layer": "中游 · PCB 製造",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3289",
-      "name": "宜特",
-      "chain": "ai_pcb",
-      "layer": "下游 · 封測 OSAT",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "4908",
-      "name": "前鼎",
-      "chain": "optics_cpo",
-      "layer": "模組 / 核心",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3152",
-      "name": "璟德",
-      "chain": "optics_cpo",
-      "layer": "周邊 / 檢測",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3338",
-      "name": "泰碩",
-      "chain": "thermal",
-      "layer": "散熱模組 / 熱管",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3702",
-      "name": "大聯大",
-      "chain": "ai_server",
-      "layer": "電源 / 機殼 / IC 通路",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3665",
-      "name": "貿聯-KY",
-      "chain": "connectors",
-      "layer": "連接器 / 纜線",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3092",
-      "name": "鴻碩",
-      "chain": "connectors",
-      "layer": "連接器 / 纜線",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3026",
-      "name": "禾伸堂",
-      "chain": "passives",
-      "layer": "MLCC / 電容",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "6173",
-      "name": "信昌電",
-      "chain": "passives",
-      "layer": "MLCC / 電容",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3042",
-      "name": "晶技",
-      "chain": "passives",
-      "layer": "電感 / 電阻",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "4566",
-      "name": "時碩工業",
-      "chain": "robotics",
-      "layer": "關鍵零組件",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "6125",
-      "name": "廣運",
-      "chain": "robotics",
-      "layer": "工業電腦 / 控制器",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3131",
-      "name": "弘塑",
-      "chain": "semiconductor_eq",
-      "layer": "先進封裝周邊",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "6146",
-      "name": "耕興",
-      "chain": "semiconductor_eq",
-      "layer": "晶圓廠工程",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3036",
-      "name": "文曄",
-      "chain": "ic_distribution",
-      "layer": "IC 通路",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    },
-    {
-      "symbol": "3529",
-      "name": "力旺",
-      "chain": "ic_distribution",
-      "layer": "IC 通路",
-      "pillar": "growth",
-      "added_at": "2026-04-20"
-    }
-  ],
+  "added_from_chains": [],
   "news_frequency": {
-    "5607": 40,
-    "0050": 26,
-    "2330": 26,
-    "2303": 17,
-    "3081": 12,
-    "3037": 9,
-    "3017": 8,
+    "5607": 34,
+    "0050": 30,
+    "2330": 28,
+    "3081": 16,
+    "2303": 11,
+    "2383": 7,
+    "2368": 7,
     "6173": 7,
     "3702": 6,
     "2492": 6,
     "3324": 6,
-    "2383": 5,
-    "2368": 5,
-    "2308": 4,
-    "6223": 4,
-    "2254": 4,
-    "8431": 4,
-    "8046": 4,
+    "3017": 6,
+    "3037": 5,
+    "8358": 4,
+    "4958": 4,
     "6432": 4,
+    "8182": 4,
+    "3221": 4,
     "3653": 4,
     "3363": 4,
     "4566": 4,
+    "3008": 3,
     "2029": 3,
     "2327": 3,
-    "6584": 2,
-    "3706": 2,
-    "2353": 2,
-    "4979": 2,
-    "2360": 2,
-    "8358": 2
+    "00981A": 2,
+    "3105": 2,
+    "6669": 2,
+    "3533": 2,
+    "6274": 2,
+    "3714": 2
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 40,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6223",
-      "name": "旺矽",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2254",
-      "name": "巨鎧精密-創",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "8431",
-      "name": "匯鑽科",
-      "mentions": 4,
+      "mentions": 34,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6432",
       "name": "今展科",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8182",
+      "name": "加高",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3221",
+      "name": "台嘉碩",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -310,15 +150,36 @@
       "in_chains": false
     },
     {
-      "symbol": "6584",
-      "name": "南俊國際",
+      "symbol": "00981A",
+      "name": "主動統一台股增長",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3706",
-      "name": "神達",
+      "symbol": "3714",
+      "name": "富采",
+      "mentions": 2,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2466",
+      "name": "冠西電",
+      "mentions": 2,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3467",
+      "name": "台灣精材",
+      "mentions": 2,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6531",
+      "name": "愛普*",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
