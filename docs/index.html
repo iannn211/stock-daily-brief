@@ -72,7 +72,7 @@
           <span class="ss-val mono tnum up">+0.33%</span>
         </div>
         
-        <button id="live-refresh-btn" class="refresh-btn" title="Fetch live Yahoo quotes" style="display:none">
+        <button id="live-refresh-btn" class="refresh-btn" title="Fetch live Yahoo quotes" style="">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           <span class="refresh-label">REFRESH</span>
           <span class="refresh-time mono small" id="live-refresh-time"></span>
@@ -4144,7 +4144,7 @@
 <script>
 // ── Live refresh: hit CF Worker → update prices/P&L in place ──────────────
 (function() {
-  const WORKER_URL = "";
+  const WORKER_URL = "https://stock-daily-brief-proxy.ianmong520.workers.dev";
   const btn = document.getElementById('live-refresh-btn');
   const timeEl = document.getElementById('live-refresh-time');
   if (!btn || !WORKER_URL) return;
@@ -4380,7 +4380,7 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-23 13:01 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-23 13:32 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 <script>
 /* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time

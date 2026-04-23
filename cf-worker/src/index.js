@@ -50,6 +50,53 @@ function json(body, status = 200, extraHeaders = {}) {
   });
 }
 
+// Yahoo Finance changed /v7/quote to require crumb+cookie auth in 2024.
+// We use /v8/chart instead — same data (meta block has all regularMarket* fields),
+// no auth needed, but 1 request per symbol (CF free tier: 50 subrequests/invocation).
+const YAHOO_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
+
+async function fetchOneQuote(symbol) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=2d`;
+  try {
+    const resp = await fetch(url, {
+      headers: {
+        'User-Agent': YAHOO_UA,
+        'Accept': 'application/json',
+      },
+      cf: { cacheTtl: QUOTE_TTL, cacheEverything: true },
+    });
+    if (!resp.ok) return { symbol, error: `yahoo ${resp.status}` };
+    const data = await resp.json();
+    const result = data?.chart?.result?.[0];
+    if (!result) {
+      const errMsg = data?.chart?.error?.description || 'no data';
+      return { symbol, error: errMsg };
+    }
+    const meta = result.meta || {};
+    const price = meta.regularMarketPrice;
+    const prevClose = meta.chartPreviousClose ?? meta.previousClose;
+    const change = (price != null && prevClose != null) ? price - prevClose : null;
+    const changePct = (change != null && prevClose) ? (change / prevClose) * 100 : null;
+    return {
+      symbol: meta.symbol || symbol,
+      price,
+      prev_close: prevClose,
+      day_change: change,
+      day_change_pct: changePct,
+      currency: meta.currency,
+      market_state: meta.marketState,
+      high: meta.regularMarketDayHigh,
+      low: meta.regularMarketDayLow,
+      high_52w: meta.fiftyTwoWeekHigh,
+      low_52w: meta.fiftyTwoWeekLow,
+      as_of: meta.regularMarketTime,
+      exchange: meta.exchangeName,
+    };
+  } catch (e) {
+    return { symbol, error: `fetch error: ${e.message}` };
+  }
+}
+
 async function handleQuote(url) {
   const symbols = url.searchParams.get('symbols');
   if (!symbols) {
@@ -61,62 +108,29 @@ async function handleQuote(url) {
     return json({ error: 'invalid symbols format' }, 400);
   }
 
-  // Chunk to max 50 per call (Yahoo limit ~100, keep margin)
   const list = symbols.split(',').filter(Boolean);
-  if (list.length > 200) {
-    return json({ error: 'too many symbols (max 200)' }, 400);
+  // CF free tier: 50 subrequests per invocation. Leave headroom for health/news fan-out.
+  if (list.length > 45) {
+    return json({ error: 'too many symbols (max 45 per call due to CF subrequest limit)' }, 400);
   }
 
-  const chunks = [];
-  for (let i = 0; i < list.length; i += 50) {
-    chunks.push(list.slice(i, i + 50));
-  }
-
-  const allQuotes = [];
+  // Fan out in parallel — all requests fire at once, await all.
+  const results = await Promise.allSettled(list.map(fetchOneQuote));
+  const quotes = [];
   const errors = [];
-  for (const chunk of chunks) {
-    const yahoo = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(chunk.join(','))}`;
-    try {
-      const resp = await fetch(yahoo, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36',
-          'Accept': 'application/json',
-        },
-        cf: { cacheTtl: QUOTE_TTL, cacheEverything: true },
-      });
-      if (!resp.ok) {
-        errors.push(`yahoo ${resp.status} for ${chunk[0]}…`);
-        continue;
-      }
-      const data = await resp.json();
-      for (const q of data.quoteResponse?.result || []) {
-        allQuotes.push({
-          symbol: q.symbol,
-          price: q.regularMarketPrice,
-          prev_close: q.regularMarketPreviousClose,
-          day_change: q.regularMarketChange,
-          day_change_pct: q.regularMarketChangePercent,
-          currency: q.currency,
-          market_state: q.marketState,
-          high: q.regularMarketDayHigh,
-          low: q.regularMarketDayLow,
-          open: q.regularMarketOpen,
-          volume: q.regularMarketVolume,
-          high_52w: q.fiftyTwoWeekHigh,
-          low_52w: q.fiftyTwoWeekLow,
-          as_of: q.regularMarketTime,
-          name: q.longName || q.shortName || null,
-        });
-      }
-    } catch (e) {
-      errors.push(`fetch error: ${e.message}`);
+  for (const r of results) {
+    if (r.status === 'fulfilled') {
+      if (r.value.error) errors.push(`${r.value.symbol}: ${r.value.error}`);
+      else quotes.push(r.value);
+    } else {
+      errors.push(`rejected: ${r.reason?.message || 'unknown'}`);
     }
   }
 
   return json({
     fetched_at: Math.floor(Date.now() / 1000),
-    count: allQuotes.length,
-    quotes: allQuotes,
+    count: quotes.length,
+    quotes,
     errors: errors.length ? errors : undefined,
   }, 200, {
     'Cache-Control': `public, max-age=${QUOTE_TTL}`,
