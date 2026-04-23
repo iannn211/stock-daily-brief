@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-23T13:53:50.949985+08:00",
+  "fetched_at": "2026-04-23T14:00:43.495191+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 12
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -75,7 +75,7 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "5607": 90,
+    "5607": 88,
     "2330": 62,
     "0050": 44,
     "3081": 23,
@@ -83,11 +83,11 @@
     "3017": 15,
     "2317": 13,
     "2454": 13,
-    "4958": 10,
     "2383": 10,
     "3653": 8,
-    "2368": 8,
+    "4958": 8,
     "6173": 7,
+    "2368": 6,
     "2492": 6,
     "3324": 6,
     "3702": 5,
@@ -110,7 +110,7 @@
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 90,
+      "mentions": 88,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -152,13 +152,6 @@
     {
       "symbol": "6789",
       "name": "采鈺",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3019",
-      "name": "亞光",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false

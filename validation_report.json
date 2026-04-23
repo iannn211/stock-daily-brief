@@ -1,62 +1,75 @@
 {
-  "validated_at": "2026-04-23T13:56:49.058643+08:00",
-  "analysis_file": "analyses/2026-04-18.json",
-  "analysis_date": "2026-04-18",
-  "analysis_model": "gemini-2.5-flash",
+  "validated_at": "2026-04-23T14:06:47.730948+08:00",
+  "analysis_file": "analyses/2026-04-23.json",
+  "analysis_date": "2026-04-23",
+  "analysis_model": "gemini-2.5-flash-lite",
   "issues": [
     {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[1] «AI 伺服器 / 散熱» → lead_stocks[0]",
+      "message": "代號 3653 (健策) 本站無資料，無法驗證數字是否正確",
+      "headline": "3653 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 3653 → 去 inspect.html?sym=3653 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
       "severity": "error",
-      "category": "ticker-name-mismatch",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[1]",
+      "message": "配置建議的代號 3653 (健策) 本站無資料，價格與基本面無法核對",
+      "headline": "3653 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 3653 → 去 inspect.html?sym=3653 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "budget-overflow",
+      "location": "budget_allocation",
+      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
+      "context": {
+        "budget": 5000,
+        "total_cost": 35000.0
+      },
+      "headline": "配置金額超過你的預算",
+      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
+      "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
+    },
+    {
+      "severity": "warning",
+      "category": "budget-unalloc-mismatch",
+      "location": "budget_allocation.unallocated_twd",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
+      "context": {
+        "claimed": 0,
+        "expected": -30000.0
+      },
+      "headline": "unallocated_twd 對不上",
+      "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
+      "next_step": "忽略即可，實際下單用籃子合計。"
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
       "location": "opportunities[0].lead_stocks[1]",
-      "message": "代號 3363 本站記錄為「上詮」，Gemini 標成「中揚光」— 可能 Gemini 記錯了",
+      "message": "題材「AI 伺服器 / 光通訊」的 lead stock 3665 (貿聯-KY) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
       "context": {
-        "symbol": "3363",
-        "claimed": "中揚光",
-        "actual": "上詮"
-      },
-      "headline": "3363 股名標錯（不影響決策）",
-      "impact": "代號 3363 本站記錄是「上詮」，Gemini 寫成「中揚光」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 3363 這檔走的。",
-      "next_step": "不用處理。就把 Gemini 寫的「中揚光」當成「上詮」看就好。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[1].lead_stocks[2]",
-      "message": "題材「AI 伺服器散熱 / 液冷」的 lead stock 4566 (時碩工業) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "4566",
-        "theme": "AI 伺服器散熱 / 液冷",
-        "industry": "Specialty Industrial Machinery",
+        "symbol": "3665",
+        "theme": "AI 伺服器 / 光通訊",
+        "industry": "Electrical Equipment & Parts",
         "sector": "Industrials",
-        "sc_roles": "robotics 關鍵零組件 機器人諧波減速機、隱形冠軍"
+        "sc_roles": "connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍"
       },
-      "headline": "4566 時碩工業 被放錯題材",
-      "impact": "Gemini 把 4566 列為「AI 伺服器散熱 / 液冷」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器散熱 / 液冷」這個題材想買 4566，這個理由不成立。",
-      "next_step": "想布局「AI 伺服器散熱 / 液冷」→ 同題材的 3324 雙鴻、3017 奇鋐 才是真的相關股。\n想買 4566 時碩工業 → 要從它真正的業務角度（robotics 關鍵零組件 機器人諧波減速機、隱形冠軍）去找對的題材，不是用「AI 伺服器散熱 / 液冷」當理由。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[2].lead_stocks[1]",
-      "message": "題材「PCB / CCL 材料上游漲價」的 lead stock 5475 (德宏) 產業標為「Textile Manufacturing」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "5475",
-        "theme": "PCB / CCL 材料上游漲價",
-        "industry": "Textile Manufacturing",
-        "sector": "Consumer Cyclical",
-        "sc_roles": null
-      },
-      "headline": "5475 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
+      "headline": "3665 貿聯-KY 被放錯題材",
+      "impact": "Gemini 把 3665 列為「AI 伺服器 / 光通訊」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器 / 光通訊」這個題材想買 3665，這個理由不成立。",
+      "next_step": "想布局「AI 伺服器 / 光通訊」→ 同題材的 3081 聯亞、3363 上詮 才是真的相關股。\n想買 3665 貿聯-KY → 要從它真正的業務角度（connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍）去找對的題材，不是用「AI 伺服器 / 光通訊」當理由。"
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 1,
+    "errors": 2,
+    "warnings": 3,
     "infos": 0,
-    "total": 2,
-    "suppressed": 1
+    "total": 5,
+    "suppressed": 0
   }
 }
