@@ -187,20 +187,13 @@ RESPONSE_SCHEMA = {
                             "pick_name": {"type": "string"},
                             "skip_symbol": {"type": "string"},
                             "skip_name": {"type": "string"},
-                            "verdict": {"type": "string"},           # 1-2 句結論
-                            "pick_rationale": {"type": "string"},    # 為何挑這檔（PE、EPS、成長、估值）
-                            "skip_rationale": {"type": "string"},    # 為何不挑那檔（PE 太高、追高、EPS 虧損）
+                            "verdict": {"type": "string"},
+                            "pick_rationale": {"type": "string"},
+                            "skip_rationale": {"type": "string"},
                         },
                     },
-                    # LEGACY fields — kept for backward compat with older renderers
-                    "symbol": {"type": "string"},
-                    "name": {"type": "string"},
-                    "thesis": {"type": "string"},
-                    "research_angle": {"type": "string"},
-                    "risk": {"type": "string"},
                 },
-                "required": ["theme", "stage", "confidence_pct", "crowding_pct",
-                             "headline", "why", "timeframe", "lead_stocks"],
+                "required": ["theme", "stage", "headline", "why", "timeframe", "lead_stocks"],
             },
         },
         "budget_allocation": {
@@ -210,18 +203,16 @@ RESPONSE_SCHEMA = {
                 "plan_summary": {"type": "string"},
                 "allocations": {
                     "type": "array",
-                    "minItems": 5,
-                    "maxItems": 10,
                     "items": {
                         "type": "object",
                         "properties": {
                             "symbol": {"type": "string"},
                             "name": {"type": "string"},
-                            "action": {"type": "string", "enum": [
-                                "新倉試水", "加碼", "觀望等進場", "不動作 / 保留現金"
-                            ]},
+                            "action": {"type": "string"},
                             "target_shares": {"type": "integer"},
                             "target_cost_twd": {"type": "integer"},
+                            "entry_price": {"type": "number"},
+                            "entry_zone": {"type": "string"},
                             "entry_condition": {"type": "string"},
                             "stop_loss_price": {"type": "number"},
                             "take_profit_price": {"type": "number"},
@@ -230,7 +221,7 @@ RESPONSE_SCHEMA = {
                             "confidence_pct": {"type": "integer"},
                             "risk": {"type": "string"},
                         },
-                        "required": ["symbol", "name", "action", "rationale", "confidence_pct", "risk"],
+                        "required": ["symbol", "name", "action", "rationale", "risk"],
                     },
                 },
                 "unallocated_twd": {"type": "integer"},
@@ -287,29 +278,27 @@ RESPONSE_SCHEMA = {
         },
         "faq": {
             "type": "array",
-            "description": "5–8 common questions a retail TW investor would ask today, with specific answers grounded in the news + portfolio snapshot. No generic textbook answers.",
             "items": {
                 "type": "object",
                 "properties": {
-                    "q": {"type": "string", "description": "Specific 10–20 word question in Traditional Chinese."},
-                    "a": {"type": "string", "description": "150–250 word answer referencing specific tickers / numbers / today's news."},
-                    "tag": {"type": "string", "description": "One of: 市場 / 個股 / 題材 / 風險 / 策略 / 新手"},
+                    "q": {"type": "string"},
+                    "a": {"type": "string"},
+                    "tag": {"type": "string"},
                 },
                 "required": ["q", "a", "tag"],
             },
         },
         "coverage_suggestions": {
             "type": "array",
-            "description": "3–5 TW tickers the user should ADD to simulator_universe or supply_chains.yaml based on today's news. Proactive curation — don't wait for the user to ask.",
             "items": {
                 "type": "object",
                 "properties": {
-                    "symbol":    {"type": "string", "description": "TW ticker, numbers only (e.g. '6515'). Must be a real TWSE/TPEx listed stock."},
-                    "name":      {"type": "string", "description": "Chinese company name."},
-                    "chain_slug": {"type": "string", "description": "Which supply_chains.yaml chain it belongs to (ai_pcb / optics_cpo / thermal / ai_server / connectors / passives / hbm_memory / robotics / semiconductor_eq / OR 'new' if it needs a new chain)."},
-                    "layer_name": {"type": "string", "description": "Which layer within that chain (e.g. '下游 · 封測 OSAT' or '新題材/需要新分類')."},
-                    "why_now":   {"type": "string", "description": "2–3 sentences tying this ticker to TODAY's news + why it's a gap in current coverage. Must cite concrete catalyst."},
-                    "priority":  {"type": "string", "description": "One of: high / medium / low"},
+                    "symbol":    {"type": "string"},
+                    "name":      {"type": "string"},
+                    "chain_slug": {"type": "string"},
+                    "layer_name": {"type": "string"},
+                    "why_now":   {"type": "string"},
+                    "priority":  {"type": "string"},
                 },
                 "required": ["symbol", "name", "chain_slug", "layer_name", "why_now", "priority"],
             },
