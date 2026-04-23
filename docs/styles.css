@@ -957,6 +957,16 @@ footer a { color: var(--tx-3); }
   font-size: 10px;
   font-weight: 500;
 }
+.refresh-btn.rebuild-btn {
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+}
+.refresh-btn.rebuild-btn:hover {
+  background: rgba(245, 158, 11, 0.08);
+  color: #fbbf24;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
+}
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

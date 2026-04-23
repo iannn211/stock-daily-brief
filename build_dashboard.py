@@ -7110,10 +7110,15 @@ def render_index(briefs: list[dict], pf: dict | None,
           <span class="ss-val mono tnum {_cls(alpha)}">{_fmt_pct(alpha)}</span>
         </div>
         {f'<div class="ss-cell ss-alert"><span class="ss-lbl">ALRT</span><span class="ss-val mono tnum amber">{alert_count}</span></div>' if alert_count > 0 else ''}
-        <button id="live-refresh-btn" class="refresh-btn" title="Fetch live Yahoo quotes" style="{'' if cf_worker_url else 'display:none'}">
+        <button id="live-refresh-btn" class="refresh-btn" title="立刻撈 Yahoo 最新股價 + 重算組合市值（~2 秒）" style="{'' if cf_worker_url else 'display:none'}">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           <span class="refresh-label">REFRESH</span>
           <span class="refresh-time mono small" id="live-refresh-time"></span>
+        </button>
+        <button id="full-rebuild-btn" class="refresh-btn rebuild-btn" title="觸發 GitHub Actions 跑完整 pipeline：新聞 + AI 分析 + 籌碼（~4 分鐘）" style="{'' if cf_worker_url else 'display:none'}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span class="refresh-label">FULL REBUILD</span>
+          <span class="refresh-time mono small" id="full-rebuild-status"></span>
         </button>
       </div>
     </header>
@@ -7300,6 +7305,53 @@ def render_index(briefs: list[dict], pf: dict | None,
   btn.addEventListener('click', refresh);
   // Auto-refresh on load if market is open (TW 09:00-13:30, US 22:30-05:00 TPE)
   // For now, no auto — user-initiated only.
+}})();
+
+// ── FULL REBUILD: trigger GH Actions workflow_dispatch via CF Worker ──────
+(function() {{
+  const WORKER_URL = {json.dumps(cf_worker_url)};
+  const btn = document.getElementById('full-rebuild-btn');
+  const statusEl = document.getElementById('full-rebuild-status');
+  if (!btn || !WORKER_URL) return;
+
+  async function fullRebuild() {{
+    // Confirm — this is a 4-min operation + Gemini API cost ~NT$3
+    if (!confirm('觸發完整 pipeline？\\n\\n會跑：\\n  • 抓今日收盤價\\n  • 抓三大法人 / 融資融券\\n  • Gemini AI 產生新的 brief + 分析\\n  • 重建整個 dashboard\\n\\n約 4 分鐘，完成後頁面會自動更新。')) {{
+      return;
+    }}
+    btn.classList.add('spinning');
+    btn.disabled = true;
+    if (statusEl) statusEl.textContent = '觸發中…';
+    try {{
+      const resp = await fetch(`${{WORKER_URL}}/rebuild`, {{
+        method: 'POST',
+        headers: {{ 'Content-Type': 'application/json' }},
+        body: JSON.stringify({{ workflow: 'daily-brief-full.yml' }}),
+      }});
+      const data = await resp.json();
+      if (resp.ok && data.ok) {{
+        btn.classList.remove('err');
+        btn.classList.add('ok');
+        if (statusEl) statusEl.textContent = '✓ 已觸發，約 4 分鐘後完成';
+        // Poll for completion every 30s by checking if index.html changed
+        setTimeout(() => {{
+          if (statusEl) statusEl.textContent = '完成後重整此頁';
+        }}, 4000);
+      }} else {{
+        throw new Error(data.error || `worker ${{resp.status}}`);
+      }}
+    }} catch (err) {{
+      console.error('full rebuild failed:', err);
+      btn.classList.add('err');
+      if (statusEl) statusEl.textContent = 'ERR — 看 console';
+      alert('觸發失敗：' + err.message + '\\n\\n可能是 worker 沒設 GH_PAT secret，看 cf-worker/README.md。');
+    }} finally {{
+      btn.classList.remove('spinning');
+      btn.disabled = false;
+    }}
+  }}
+
+  btn.addEventListener('click', fullRebuild);
 }})();
 
 // Live clock + view name in status bar
@@ -9191,6 +9243,16 @@ footer a { color: var(--tx-3); }
   color: var(--tx-3);
   font-size: 10px;
   font-weight: 500;
+}
+.refresh-btn.rebuild-btn {
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+}
+.refresh-btn.rebuild-btn:hover {
+  background: rgba(245, 158, 11, 0.08);
+  color: #fbbf24;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
 }
 @keyframes spin {
   from { transform: rotate(0deg); }
