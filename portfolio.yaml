@@ -17,6 +17,12 @@
 benchmark_tw: "0050"
 benchmark_us: "VOO"
 
+# Cloudflare Worker proxy (see cf-worker/README.md for setup).
+# After you run `wrangler deploy`, paste the worker URL here so the REFRESH
+# button + live-quote JS can reach Yahoo Finance. Leave empty to hide the button.
+# Example: "https://stock-daily-brief-proxy.yourname.workers.dev"
+cf_worker_url: ""
+
 # Cash sitting in broker account, NT dollars. Included in total value + cash ratio.
 cash_twd: 0
 

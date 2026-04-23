@@ -5175,18 +5175,18 @@ def render_portfolio_tab(pf: dict, analysis: dict | None = None,
     <div class="pfv2-kpi-grid">
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">TOTAL VALUE</div>
-        <div class="pfv2-kpi-val mono tnum">{_fmt_twd(total_value)}</div>
+        <div class="pfv2-kpi-val mono tnum" data-live="portfolio-value">{_fmt_twd(total_value)}</div>
         <div class="pfv2-kpi-sub muted mono small">含現金 · TWD</div>
       </div>
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">TOTAL P&amp;L</div>
-        <div class="pfv2-kpi-val mono tnum {_cls(total_pnl)}">{_fmt_twd(total_pnl, sign=True)}</div>
-        <div class="pfv2-kpi-sub mono small {_cls(total_pct)}">{_fmt_pct(total_pct)} since inception</div>
+        <div class="pfv2-kpi-val mono tnum {_cls(total_pnl)}" data-live="portfolio-pnl">{_fmt_twd(total_pnl, sign=True)}</div>
+        <div class="pfv2-kpi-sub mono small {_cls(total_pct)}" data-live="portfolio-pnl-pct">{_fmt_pct(total_pct)} since inception</div>
       </div>
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">TODAY P&amp;L</div>
-        <div class="pfv2-kpi-val mono tnum {_cls(day_pnl)}">{_fmt_twd(day_pnl, sign=True)}</div>
-        <div class="pfv2-kpi-sub mono small {_cls(day_pct)}">{_fmt_pct(day_pct)} day</div>
+        <div class="pfv2-kpi-val mono tnum {_cls(day_pnl)}" data-live="portfolio-day-pnl">{_fmt_twd(day_pnl, sign=True)}</div>
+        <div class="pfv2-kpi-sub mono small {_cls(day_pct)}" data-live="portfolio-day-pct-sub">{_fmt_pct(day_pct)} day</div>
       </div>
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">ALPHA vs {html.escape(bench_sym)}</div>
@@ -5204,17 +5204,23 @@ def render_portfolio_tab(pf: dict, analysis: dict | None = None,
         day_cls = _cls(h.get("day_change_pct"))
         pnl_cls = _cls(h.get("pnl"))
         pillar_cls = PILLAR_CLS.get(h.get("pillar", "growth"), "")
+        yf_sym = h.get("yf_ticker") or (
+            f'{h["symbol"]}.TW' if h.get("market") == "TW" else h["symbol"]
+        )
         rows.append(f'''
-        <tr onclick="location.href='holdings/{h["symbol"]}.html'">
+        <tr onclick="location.href='holdings/{h["symbol"]}.html'"
+            data-live-row data-live-symbol="{html.escape(yf_sym)}"
+            data-shares="{h.get("shares", 0)}" data-cost="{h.get("cost_basis", 0)}"
+            data-fx="{pf.get("fx_usdtwd", 32.0) if h.get("market") == "US" else 1}">
           <td class="tk-cell"><span class="pillar-dot {pillar_cls}"></span><strong class="mono">{h["symbol"]}</strong>
             <span class="muted">{html.escape(h.get("name", ""))}</span></td>
           <td class="mono tnum right">{h.get("shares", 0):,}</td>
           <td class="mono tnum right">{h.get("cost_basis", 0):.2f}</td>
-          <td class="mono tnum right">{h.get("price", 0):.2f}</td>
-          <td class="mono tnum right {day_cls}">{_fmt_pct(h.get("day_change_pct"))}</td>
-          <td class="mono tnum right">{_fmt_twd(h.get("value", 0))}</td>
-          <td class="mono tnum right {pnl_cls}">{_fmt_twd(h.get("pnl", 0), sign=True)}</td>
-          <td class="mono tnum right {pnl_cls}">{_fmt_pct(h.get("pnl_pct"))}</td>
+          <td class="mono tnum right" data-live-field="price">{h.get("price", 0):.2f}</td>
+          <td class="mono tnum right {day_cls}" data-live-field="day_pct">{_fmt_pct(h.get("day_change_pct"))}</td>
+          <td class="mono tnum right" data-live-field="value">{_fmt_twd(h.get("value", 0))}</td>
+          <td class="mono tnum right {pnl_cls}" data-live-field="pnl">{_fmt_twd(h.get("pnl", 0), sign=True)}</td>
+          <td class="mono tnum right {pnl_cls}" data-live-field="pnl_pct">{_fmt_pct(h.get("pnl_pct"))}</td>
           <td class="mono tnum right"><div class="weight-bar-wrap"><div class="weight-bar-fill" style="width:{min(weight, 100):.1f}%"></div><span class="weight-bar-val">{weight:.1f}%</span></div></td>
         </tr>''')
     positions_html = f'''
@@ -6991,6 +6997,15 @@ def render_index(briefs: list[dict], pf: dict | None,
     # Build ticker alias map for linkification across all rendered text
     init_ticker_alias(pf)
 
+    # Cloudflare Worker URL for live refresh (reads from portfolio.yaml —
+    # empty string means refresh button stays hidden).
+    cf_worker_url = ""
+    try:
+        _cfg = yaml.safe_load((ROOT / "portfolio.yaml").read_text(encoding="utf-8"))
+        cf_worker_url = (_cfg.get("cf_worker_url") or "").rstrip("/")
+    except Exception:
+        pass
+
     try:
         as_of = datetime.fromisoformat(pf.get("as_of", ""))
         as_of_str = as_of.strftime("%Y-%m-%d %H:%M")
@@ -7084,17 +7099,22 @@ def render_index(briefs: list[dict], pf: dict | None,
       <div class="summary-strip">
         <div class="ss-cell ss-main">
           <span class="ss-lbl">組合</span>
-          <span class="ss-val mono tnum">{_fmt_twd(total_value)}</span>
+          <span class="ss-val mono tnum" data-live="portfolio-value">{_fmt_twd(total_value)}</span>
         </div>
         <div class="ss-cell">
           <span class="ss-lbl">今日</span>
-          <span class="ss-val mono tnum {_cls(day_pnl)}">{_fmt_pct(day_pct)}</span>
+          <span class="ss-val mono tnum {_cls(day_pnl)}" data-live="portfolio-day-pct">{_fmt_pct(day_pct)}</span>
         </div>
         <div class="ss-cell">
           <span class="ss-lbl">α</span>
           <span class="ss-val mono tnum {_cls(alpha)}">{_fmt_pct(alpha)}</span>
         </div>
         {f'<div class="ss-cell ss-alert"><span class="ss-lbl">ALRT</span><span class="ss-val mono tnum amber">{alert_count}</span></div>' if alert_count > 0 else ''}
+        <button id="live-refresh-btn" class="refresh-btn" title="Fetch live Yahoo quotes" style="{'' if cf_worker_url else 'display:none'}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span class="refresh-label">REFRESH</span>
+          <span class="refresh-time mono small" id="live-refresh-time"></span>
+        </button>
       </div>
     </header>
 
@@ -7155,6 +7175,133 @@ def render_index(briefs: list[dict], pf: dict | None,
       </div>
     </footer>
 <script>
+// ── Live refresh: hit CF Worker → update prices/P&L in place ──────────────
+(function() {{
+  const WORKER_URL = {json.dumps(cf_worker_url)};
+  const btn = document.getElementById('live-refresh-btn');
+  const timeEl = document.getElementById('live-refresh-time');
+  if (!btn || !WORKER_URL) return;
+
+  function twd(n, sign=false) {{
+    if (n == null || Number.isNaN(n)) return '—';
+    const s = sign && n > 0 ? '+' : (n < 0 ? '-' : '');
+    return `${{s}}NT$${{Math.abs(n).toLocaleString('en-US', {{maximumFractionDigits:0}})}}`;
+  }}
+  function pct(n, digits=2) {{
+    if (n == null || Number.isNaN(n)) return '—';
+    const s = n > 0 ? '+' : '';
+    return `${{s}}${{n.toFixed(digits)}}%`;
+  }}
+  function cls(n) {{
+    // TW convention: up = red, down = green
+    if (n == null || Number.isNaN(n)) return 'flat';
+    if (n > 0) return 'up';
+    if (n < 0) return 'dn';
+    return 'flat';
+  }}
+  function setTone(el, n) {{
+    el.classList.remove('up', 'dn', 'flat');
+    el.classList.add(cls(n));
+  }}
+
+  async function refresh() {{
+    btn.classList.add('spinning');
+    btn.disabled = true;
+    try {{
+      // Collect every symbol we need to refresh
+      const syms = new Set();
+      document.querySelectorAll('[data-live-symbol]').forEach(el => syms.add(el.dataset.liveSymbol));
+      if (syms.size === 0) {{ return; }}
+      const url = `${{WORKER_URL}}/quote?symbols=${{encodeURIComponent([...syms].join(','))}}`;
+      const resp = await fetch(url, {{ cache: 'no-store' }});
+      if (!resp.ok) throw new Error(`worker ${{resp.status}}`);
+      const data = await resp.json();
+      const quoteMap = new Map();
+      for (const q of data.quotes || []) quoteMap.set(q.symbol, q);
+
+      // Update per-holding rows and recompute portfolio totals
+      let totalValueTwd = 0;
+      let totalDayPnlTwd = 0;
+      let totalCostTwd = 0;
+      document.querySelectorAll('[data-live-row]').forEach(row => {{
+        const sym = row.dataset.liveSymbol;
+        const q = quoteMap.get(sym);
+        if (!q || q.price == null) return;
+        const shares = parseFloat(row.dataset.shares) || 0;
+        const cost = parseFloat(row.dataset.cost) || 0;
+        const fx = parseFloat(row.dataset.fx) || 1;
+        const price = q.price;
+        const dayPct = q.day_change_pct;
+        const value = price * shares * fx;
+        const pnl = (price - cost) * shares * fx;
+        const pnlPct = cost ? ((price - cost) / cost * 100) : 0;
+        const dayPnl = q.day_change != null ? q.day_change * shares * fx : 0;
+
+        const setField = (field, text, tone) => {{
+          const el = row.querySelector(`[data-live-field="${{field}}"]`);
+          if (!el) return;
+          el.textContent = text;
+          if (tone !== undefined) setTone(el, tone);
+        }};
+        setField('price', price.toFixed(2));
+        setField('day_pct', pct(dayPct), dayPct);
+        setField('value', twd(value));
+        setField('pnl', twd(pnl, true), pnl);
+        setField('pnl_pct', pct(pnlPct), pnl);
+
+        totalValueTwd += value;
+        totalDayPnlTwd += dayPnl;
+        totalCostTwd += cost * shares * fx;
+      }});
+
+      // Update top-bar + PORT-tab KPIs
+      const totalPnlTwd = totalValueTwd - totalCostTwd;
+      const totalPnlPct = totalCostTwd ? (totalPnlTwd / totalCostTwd * 100) : 0;
+      const prevValue = totalValueTwd - totalDayPnlTwd;
+      const dayPct = prevValue ? (totalDayPnlTwd / prevValue * 100) : 0;
+
+      document.querySelectorAll('[data-live="portfolio-value"]').forEach(el => {{
+        el.textContent = twd(totalValueTwd);
+      }});
+      document.querySelectorAll('[data-live="portfolio-pnl"]').forEach(el => {{
+        el.textContent = twd(totalPnlTwd, true); setTone(el, totalPnlTwd);
+      }});
+      document.querySelectorAll('[data-live="portfolio-pnl-pct"]').forEach(el => {{
+        el.textContent = `${{pct(totalPnlPct)}} since inception`; setTone(el, totalPnlPct);
+      }});
+      document.querySelectorAll('[data-live="portfolio-day-pnl"]').forEach(el => {{
+        el.textContent = twd(totalDayPnlTwd, true); setTone(el, totalDayPnlTwd);
+      }});
+      document.querySelectorAll('[data-live="portfolio-day-pct"]').forEach(el => {{
+        el.textContent = pct(dayPct); setTone(el, totalDayPnlTwd);
+      }});
+      document.querySelectorAll('[data-live="portfolio-day-pct-sub"]').forEach(el => {{
+        el.textContent = `${{pct(dayPct)}} day`; setTone(el, totalDayPnlTwd);
+      }});
+
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      if (timeEl) timeEl.textContent = `${{hh}}:${{mm}}:${{ss}}`;
+      btn.classList.remove('err');
+      btn.classList.add('ok');
+      setTimeout(() => btn.classList.remove('ok'), 1500);
+    }} catch (err) {{
+      console.error('live refresh failed:', err);
+      btn.classList.add('err');
+      if (timeEl) timeEl.textContent = 'ERR';
+    }} finally {{
+      btn.classList.remove('spinning');
+      btn.disabled = false;
+    }}
+  }}
+
+  btn.addEventListener('click', refresh);
+  // Auto-refresh on load if market is open (TW 09:00-13:30, US 22:30-05:00 TPE)
+  // For now, no auto — user-initiated only.
+}})();
+
 // Live clock + view name in status bar
 (function() {{
   const clock = document.getElementById('sb-clock');
@@ -7367,6 +7514,25 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
     yf_t = holding.get("yf_ticker", "")
     pillar = holding.get("pillar", "growth")
     pillar_cls = PILLAR_CLS.get(pillar, "")
+
+    # TradingView symbol mapping — EXCHANGE:SYMBOL format.
+    #   TW listed (.TW)  → TPE:xxxx
+    #   TW OTC   (.TWO)  → TPEX:xxxx
+    #   US               → NASDAQ:<sym> by default, with exchange overrides for ETFs/NYSE names.
+    if market == "TW":
+        _tv_base = (yf_t or f"{sym}.TW").replace(".TWO", "").replace(".TW", "") or sym
+        tv_symbol = f"TPEX:{_tv_base}" if (yf_t or "").endswith(".TWO") else f"TPE:{_tv_base}"
+    else:
+        _us = (yf_t or sym).upper()
+        _us_overrides = {
+            "VOO": "AMEX:VOO", "SPY": "AMEX:SPY", "VTI": "AMEX:VTI",
+            "IWM": "AMEX:IWM", "DIA": "AMEX:DIA", "VEA": "AMEX:VEA",
+            "VWO": "AMEX:VWO", "AGG": "AMEX:AGG",
+            "JPM": "NYSE:JPM", "V": "NYSE:V", "MA": "NYSE:MA",
+            "JNJ": "NYSE:JNJ", "BRK.B": "NYSE:BRK.B", "BRK-B": "NYSE:BRK.B",
+        }
+        tv_symbol = _us_overrides.get(_us, f"NASDAQ:{_us}")
+    tv_container_id = "tv_chart_" + re.sub(r'[^A-Za-z0-9_]', '_', sym)
 
     # Big sparkline from history. History is keyed on the ORIGINAL requested
     # ticker (e.g. "3081.TW") even when fetch_prices.py fell back to ".TWO".
@@ -7627,12 +7793,65 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
     tabs_nav = '''
     <nav class="dd-tabs wrap">
       <button class="dd-tab active" data-dd-tab="overview">概覽 · OVERVIEW</button>
+      <button class="dd-tab" data-dd-tab="chart">圖表 · CHART</button>
       <button class="dd-tab" data-dd-tab="ai">AI 觀點 · AI</button>
       <button class="dd-tab" data-dd-tab="fin">財報 · FINANCIALS</button>
       <button class="dd-tab" data-dd-tab="hold">股東 · HOLDERS</button>
       <button class="dd-tab" data-dd-tab="news">新聞 · NEWS</button>
     </nav>
     '''
+
+    # TradingView embedded chart panel (lazy-init on first show to save load time).
+    # Widget docs: https://www.tradingview.com/widget-docs/widgets/charts/advanced-chart/
+    tv_html = f'''
+<div class="dd-panel" data-dd-panel="chart">
+  <section class="wrap">
+    <div class="tv-chart-head">
+      <div class="mono small muted">TRADINGVIEW · {html.escape(tv_symbol)}</div>
+      <div class="muted small">K 線 / MA / BB / RSI / MACD · 可切 1D/4H/1H · 滑鼠滾輪縮放</div>
+    </div>
+    <div id="{tv_container_id}" class="tv-chart-box"></div>
+  </section>
+</div>
+<script src="https://s3.tradingview.com/tv.js" async></script>
+<script>
+(function() {{
+  let mounted = false;
+  function mount() {{
+    if (mounted) return;
+    if (typeof TradingView === 'undefined') {{ setTimeout(mount, 200); return; }}
+    mounted = true;
+    new TradingView.widget({{
+      autosize: true,
+      symbol: {json.dumps(tv_symbol)},
+      interval: 'D',
+      timezone: 'Asia/Taipei',
+      theme: 'dark',
+      style: '1',
+      locale: 'zh_TW',
+      toolbar_bg: '#11151c',
+      enable_publishing: false,
+      allow_symbol_change: true,
+      container_id: {json.dumps(tv_container_id)},
+      studies: [
+        'MASimple@tv-basicstudies',
+        'BB@tv-basicstudies',
+        'RSI@tv-basicstudies',
+        'MACD@tv-basicstudies'
+      ],
+      hide_side_toolbar: false,
+      withdateranges: true,
+      details: true
+    }});
+  }}
+  // Lazy-mount: only when user first clicks the CHART tab
+  document.addEventListener('click', function(e) {{
+    const t = e.target.closest && e.target.closest('.dd-tab[data-dd-tab="chart"]');
+    if (t) mount();
+  }});
+}})();
+</script>
+'''
 
     # Financials panel — now populated from yfinance fundamentals
     fund = data.get("fundamentals") or {}
@@ -7966,6 +8185,8 @@ def render_holding_page(holding: dict, pf: dict, history: dict,
 
   {rec_html}
 </div>
+
+{tv_html}
 
 <div class="dd-panel" data-dd-panel="ai">
   {ai_html or '<section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股今日暫無 AI 個別觀點</div><div class="muted small">AI 會挑選當日優先分析的持股／機會清單中的票。</div></div></section>'}
@@ -8927,6 +9148,54 @@ footer a { color: var(--tx-3); }
 }
 .ss-val { font-size: 15px; font-weight: 700; }
 .ss-cell.ss-main .ss-val { font-size: 22px; font-weight: 800; }
+
+/* ── Live REFRESH button (top-bar) ───────────────────────────────────── */
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  margin: 6px 8px;
+  background: var(--bg-1);
+  color: var(--tx-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  height: 34px;
+  align-self: center;
+}
+.refresh-btn:hover {
+  background: var(--bg-2);
+  color: var(--accent-2);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-glow);
+}
+.refresh-btn:disabled { opacity: 0.6; cursor: wait; }
+.refresh-btn.spinning svg { animation: spin 0.8s linear infinite; }
+.refresh-btn.ok {
+  border-color: var(--up, #dc2626);
+  color: var(--up, #dc2626);
+  background: rgba(220, 38, 38, 0.08);
+}
+.refresh-btn.err {
+  border-color: var(--amber, #f59e0b);
+  color: var(--amber, #f59e0b);
+  background: rgba(245, 158, 11, 0.08);
+}
+.refresh-btn .refresh-time {
+  color: var(--tx-3);
+  font-size: 10px;
+  font-weight: 500;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
 .main-tabs {
   display: flex;
@@ -11184,6 +11453,30 @@ footer a { color: var(--tx-3); }
 .dd-panel { display: none; padding: 14px 0 32px; }
 .dd-panel.active { display: block; }
 .dd-panel > section:first-child { margin-top: 16px; }
+
+/* ── TradingView chart embed (CHART tab) ─────────────────────────── */
+.tv-chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  letter-spacing: 0.4px;
+}
+.tv-chart-box {
+  width: 100%;
+  height: 560px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+@media (max-width: 720px) {
+  .tv-chart-box { height: 420px; }
+  .tv-chart-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+}
 
 .dd-stub { padding: 14px 0 32px; }
 .dd-stub-box {

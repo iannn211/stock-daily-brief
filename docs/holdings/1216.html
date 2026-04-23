@@ -79,6 +79,7 @@
 
     <nav class="dd-tabs wrap">
       <button class="dd-tab active" data-dd-tab="overview">概覽 · OVERVIEW</button>
+      <button class="dd-tab" data-dd-tab="chart">圖表 · CHART</button>
       <button class="dd-tab" data-dd-tab="ai">AI 觀點 · AI</button>
       <button class="dd-tab" data-dd-tab="fin">財報 · FINANCIALS</button>
       <button class="dd-tab" data-dd-tab="hold">股東 · HOLDERS</button>
@@ -155,6 +156,56 @@
 </section>
 
 </div>
+
+
+<div class="dd-panel" data-dd-panel="chart">
+  <section class="wrap">
+    <div class="tv-chart-head">
+      <div class="mono small muted">TRADINGVIEW · TPE:1216</div>
+      <div class="muted small">K 線 / MA / BB / RSI / MACD · 可切 1D/4H/1H · 滑鼠滾輪縮放</div>
+    </div>
+    <div id="tv_chart_1216" class="tv-chart-box"></div>
+  </section>
+</div>
+<script src="https://s3.tradingview.com/tv.js" async></script>
+<script>
+(function() {
+  let mounted = false;
+  function mount() {
+    if (mounted) return;
+    if (typeof TradingView === 'undefined') { setTimeout(mount, 200); return; }
+    mounted = true;
+    new TradingView.widget({
+      autosize: true,
+      symbol: "TPE:1216",
+      interval: 'D',
+      timezone: 'Asia/Taipei',
+      theme: 'dark',
+      style: '1',
+      locale: 'zh_TW',
+      toolbar_bg: '#11151c',
+      enable_publishing: false,
+      allow_symbol_change: true,
+      container_id: "tv_chart_1216",
+      studies: [
+        'MASimple@tv-basicstudies',
+        'BB@tv-basicstudies',
+        'RSI@tv-basicstudies',
+        'MACD@tv-basicstudies'
+      ],
+      hide_side_toolbar: false,
+      withdateranges: true,
+      details: true
+    });
+  }
+  // Lazy-mount: only when user first clicks the CHART tab
+  document.addEventListener('click', function(e) {
+    const t = e.target.closest && e.target.closest('.dd-tab[data-dd-tab="chart"]');
+    if (t) mount();
+  });
+})();
+</script>
+
 
 <div class="dd-panel" data-dd-panel="ai">
   <section class="wrap dd-stub"><div class="dd-stub-box"><div class="dd-stub-title">此個股今日暫無 AI 個別觀點</div><div class="muted small">AI 會挑選當日優先分析的持股／機會清單中的票。</div></div></section>
@@ -364,7 +415,7 @@
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-23 12:26 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-23 13:01 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 <script>
 /* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time

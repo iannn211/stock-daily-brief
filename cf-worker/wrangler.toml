@@ -1,0 +1,18 @@
+name = "stock-daily-brief-proxy"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Observability lets you see logs at dash.cloudflare.com → Workers → your-worker → Logs
+[observability]
+enabled = true
+
+# Free-tier limits:
+#   100,000 requests/day
+#   10ms CPU time/req
+#   Subrequest limit: 50/req
+# You'll use ~100 req/day for personal dashboard use. Plenty of headroom.
+
+# Secrets (set via: wrangler secret put GH_PAT)
+#   GH_PAT   — GitHub personal access token with `repo` + `workflow` scope
+#              Only needed if you want the /rebuild endpoint to trigger GH Actions
+#   GH_REPO  — your repo name, e.g. "iannn211/stock-daily-brief"

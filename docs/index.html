@@ -61,17 +61,22 @@
       <div class="summary-strip">
         <div class="ss-cell ss-main">
           <span class="ss-lbl">組合</span>
-          <span class="ss-val mono tnum">NT$144,420</span>
+          <span class="ss-val mono tnum" data-live="portfolio-value">NT$144,420</span>
         </div>
         <div class="ss-cell">
           <span class="ss-lbl">今日</span>
-          <span class="ss-val mono tnum up">+0.15%</span>
+          <span class="ss-val mono tnum up" data-live="portfolio-day-pct">+0.15%</span>
         </div>
         <div class="ss-cell">
           <span class="ss-lbl">α</span>
           <span class="ss-val mono tnum up">+0.33%</span>
         </div>
         
+        <button id="live-refresh-btn" class="refresh-btn" title="Fetch live Yahoo quotes" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span class="refresh-label">REFRESH</span>
+          <span class="refresh-time mono small" id="live-refresh-time"></span>
+        </button>
       </div>
     </header>
 
@@ -1830,18 +1835,18 @@
     <div class="pfv2-kpi-grid">
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">TOTAL VALUE</div>
-        <div class="pfv2-kpi-val mono tnum">NT$144,420</div>
+        <div class="pfv2-kpi-val mono tnum" data-live="portfolio-value">NT$144,420</div>
         <div class="pfv2-kpi-sub muted mono small">含現金 · TWD</div>
       </div>
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">TOTAL P&amp;L</div>
-        <div class="pfv2-kpi-val mono tnum up">+NT$19,658</div>
-        <div class="pfv2-kpi-sub mono small up">+15.76% since inception</div>
+        <div class="pfv2-kpi-val mono tnum up" data-live="portfolio-pnl">+NT$19,658</div>
+        <div class="pfv2-kpi-sub mono small up" data-live="portfolio-pnl-pct">+15.76% since inception</div>
       </div>
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">TODAY P&amp;L</div>
-        <div class="pfv2-kpi-val mono tnum up">+NT$220</div>
-        <div class="pfv2-kpi-sub mono small up">+0.15% day</div>
+        <div class="pfv2-kpi-val mono tnum up" data-live="portfolio-day-pnl">+NT$220</div>
+        <div class="pfv2-kpi-sub mono small up" data-live="portfolio-day-pct-sub">+0.15% day</div>
       </div>
       <div class="pfv2-kpi">
         <div class="pfv2-kpi-lbl mono">ALPHA vs 0050</div>
@@ -1900,28 +1905,34 @@
             </tr>
           </thead>
           <tbody>
-        <tr onclick="location.href='holdings/0050.html'">
+        <tr onclick="location.href='holdings/0050.html'"
+            data-live-row data-live-symbol="0050.TW"
+            data-shares="1200" data-cost="71.76"
+            data-fx="1">
           <td class="tk-cell"><span class="pillar-dot p-growth"></span><strong class="mono">0050</strong>
             <span class="muted">元大台灣50</span></td>
           <td class="mono tnum right">1,200</td>
           <td class="mono tnum right">71.76</td>
-          <td class="mono tnum right">85.85</td>
-          <td class="mono tnum right dn">-0.17%</td>
-          <td class="mono tnum right">NT$103,020</td>
-          <td class="mono tnum right up">+NT$16,908</td>
-          <td class="mono tnum right up">+19.63%</td>
+          <td class="mono tnum right" data-live-field="price">85.85</td>
+          <td class="mono tnum right dn" data-live-field="day_pct">-0.17%</td>
+          <td class="mono tnum right" data-live-field="value">NT$103,020</td>
+          <td class="mono tnum right up" data-live-field="pnl">+NT$16,908</td>
+          <td class="mono tnum right up" data-live-field="pnl_pct">+19.63%</td>
           <td class="mono tnum right"><div class="weight-bar-wrap"><div class="weight-bar-fill" style="width:71.3%"></div><span class="weight-bar-val">71.3%</span></div></td>
         </tr>
-        <tr onclick="location.href='holdings/2330.html'">
+        <tr onclick="location.href='holdings/2330.html'"
+            data-live-row data-live-symbol="2330.TW"
+            data-shares="20" data-cost="1932.5"
+            data-fx="1">
           <td class="tk-cell"><span class="pillar-dot p-growth"></span><strong class="mono">2330</strong>
             <span class="muted">台積電</span></td>
           <td class="mono tnum right">20</td>
           <td class="mono tnum right">1932.50</td>
-          <td class="mono tnum right">2070.00</td>
-          <td class="mono tnum right up">+0.98%</td>
-          <td class="mono tnum right">NT$41,400</td>
-          <td class="mono tnum right up">+NT$2,750</td>
-          <td class="mono tnum right up">+7.12%</td>
+          <td class="mono tnum right" data-live-field="price">2070.00</td>
+          <td class="mono tnum right up" data-live-field="day_pct">+0.98%</td>
+          <td class="mono tnum right" data-live-field="value">NT$41,400</td>
+          <td class="mono tnum right up" data-live-field="pnl">+NT$2,750</td>
+          <td class="mono tnum right up" data-live-field="pnl_pct">+7.12%</td>
           <td class="mono tnum right"><div class="weight-bar-wrap"><div class="weight-bar-fill" style="width:28.7%"></div><span class="weight-bar-val">28.7%</span></div></td>
         </tr></tbody>
         </table>
@@ -4131,6 +4142,133 @@
       </div>
     </footer>
 <script>
+// ── Live refresh: hit CF Worker → update prices/P&L in place ──────────────
+(function() {
+  const WORKER_URL = "";
+  const btn = document.getElementById('live-refresh-btn');
+  const timeEl = document.getElementById('live-refresh-time');
+  if (!btn || !WORKER_URL) return;
+
+  function twd(n, sign=false) {
+    if (n == null || Number.isNaN(n)) return '—';
+    const s = sign && n > 0 ? '+' : (n < 0 ? '-' : '');
+    return `${s}NT$${Math.abs(n).toLocaleString('en-US', {maximumFractionDigits:0})}`;
+  }
+  function pct(n, digits=2) {
+    if (n == null || Number.isNaN(n)) return '—';
+    const s = n > 0 ? '+' : '';
+    return `${s}${n.toFixed(digits)}%`;
+  }
+  function cls(n) {
+    // TW convention: up = red, down = green
+    if (n == null || Number.isNaN(n)) return 'flat';
+    if (n > 0) return 'up';
+    if (n < 0) return 'dn';
+    return 'flat';
+  }
+  function setTone(el, n) {
+    el.classList.remove('up', 'dn', 'flat');
+    el.classList.add(cls(n));
+  }
+
+  async function refresh() {
+    btn.classList.add('spinning');
+    btn.disabled = true;
+    try {
+      // Collect every symbol we need to refresh
+      const syms = new Set();
+      document.querySelectorAll('[data-live-symbol]').forEach(el => syms.add(el.dataset.liveSymbol));
+      if (syms.size === 0) { return; }
+      const url = `${WORKER_URL}/quote?symbols=${encodeURIComponent([...syms].join(','))}`;
+      const resp = await fetch(url, { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`worker ${resp.status}`);
+      const data = await resp.json();
+      const quoteMap = new Map();
+      for (const q of data.quotes || []) quoteMap.set(q.symbol, q);
+
+      // Update per-holding rows and recompute portfolio totals
+      let totalValueTwd = 0;
+      let totalDayPnlTwd = 0;
+      let totalCostTwd = 0;
+      document.querySelectorAll('[data-live-row]').forEach(row => {
+        const sym = row.dataset.liveSymbol;
+        const q = quoteMap.get(sym);
+        if (!q || q.price == null) return;
+        const shares = parseFloat(row.dataset.shares) || 0;
+        const cost = parseFloat(row.dataset.cost) || 0;
+        const fx = parseFloat(row.dataset.fx) || 1;
+        const price = q.price;
+        const dayPct = q.day_change_pct;
+        const value = price * shares * fx;
+        const pnl = (price - cost) * shares * fx;
+        const pnlPct = cost ? ((price - cost) / cost * 100) : 0;
+        const dayPnl = q.day_change != null ? q.day_change * shares * fx : 0;
+
+        const setField = (field, text, tone) => {
+          const el = row.querySelector(`[data-live-field="${field}"]`);
+          if (!el) return;
+          el.textContent = text;
+          if (tone !== undefined) setTone(el, tone);
+        };
+        setField('price', price.toFixed(2));
+        setField('day_pct', pct(dayPct), dayPct);
+        setField('value', twd(value));
+        setField('pnl', twd(pnl, true), pnl);
+        setField('pnl_pct', pct(pnlPct), pnl);
+
+        totalValueTwd += value;
+        totalDayPnlTwd += dayPnl;
+        totalCostTwd += cost * shares * fx;
+      });
+
+      // Update top-bar + PORT-tab KPIs
+      const totalPnlTwd = totalValueTwd - totalCostTwd;
+      const totalPnlPct = totalCostTwd ? (totalPnlTwd / totalCostTwd * 100) : 0;
+      const prevValue = totalValueTwd - totalDayPnlTwd;
+      const dayPct = prevValue ? (totalDayPnlTwd / prevValue * 100) : 0;
+
+      document.querySelectorAll('[data-live="portfolio-value"]').forEach(el => {
+        el.textContent = twd(totalValueTwd);
+      });
+      document.querySelectorAll('[data-live="portfolio-pnl"]').forEach(el => {
+        el.textContent = twd(totalPnlTwd, true); setTone(el, totalPnlTwd);
+      });
+      document.querySelectorAll('[data-live="portfolio-pnl-pct"]').forEach(el => {
+        el.textContent = `${pct(totalPnlPct)} since inception`; setTone(el, totalPnlPct);
+      });
+      document.querySelectorAll('[data-live="portfolio-day-pnl"]').forEach(el => {
+        el.textContent = twd(totalDayPnlTwd, true); setTone(el, totalDayPnlTwd);
+      });
+      document.querySelectorAll('[data-live="portfolio-day-pct"]').forEach(el => {
+        el.textContent = pct(dayPct); setTone(el, totalDayPnlTwd);
+      });
+      document.querySelectorAll('[data-live="portfolio-day-pct-sub"]').forEach(el => {
+        el.textContent = `${pct(dayPct)} day`; setTone(el, totalDayPnlTwd);
+      });
+
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      if (timeEl) timeEl.textContent = `${hh}:${mm}:${ss}`;
+      btn.classList.remove('err');
+      btn.classList.add('ok');
+      setTimeout(() => btn.classList.remove('ok'), 1500);
+    } catch (err) {
+      console.error('live refresh failed:', err);
+      btn.classList.add('err');
+      if (timeEl) timeEl.textContent = 'ERR';
+    } finally {
+      btn.classList.remove('spinning');
+      btn.disabled = false;
+    }
+  }
+
+  btn.addEventListener('click', refresh);
+  // Auto-refresh on load if market is open (TW 09:00-13:30, US 22:30-05:00 TPE)
+  // For now, no auto — user-initiated only.
+})();
+
 // Live clock + view name in status bar
 (function() {
   const clock = document.getElementById('sb-clock');
@@ -4242,7 +4380,7 @@ if (initTab && document.querySelector(`.sn-btn[data-tab="${initTab}"]`)) setTab(
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-04-23 12:26 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-04-23 13:01 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 <script>
 /* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
