@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-04-23T16:09:18.478425+08:00",
-  "fx_usdtwd": 31.573,
+  "as_of": "2026-04-23T19:02:06.553764+08:00",
+  "fx_usdtwd": 31.56,
   "risk_profile": {
     "style": "snowball-growth",
     "target_allocation": {
@@ -89,32 +89,32 @@
       "pct_52w": 96.55
     },
     "hsi": {
-      "close": 25904.5996,
-      "day_change_pct": -0.9886,
-      "ret_30d": 6.24,
-      "ret_ytd": -1.65,
-      "pct_52w": 66.09
+      "close": 25915.1992,
+      "day_change_pct": -0.9481,
+      "ret_30d": 6.29,
+      "ret_ytd": -1.61,
+      "pct_52w": 66.25
     },
     "vix": {
-      "close": 19.34,
-      "day_change_pct": 2.2199,
-      "ret_30d": -23.65,
-      "ret_ytd": 33.29,
-      "pct_52w": 27.19
+      "close": 19.68,
+      "day_change_pct": 4.0169,
+      "ret_30d": -22.31,
+      "ret_ytd": 35.63,
+      "pct_52w": 28.74
     },
     "usdtwd": {
-      "close": 31.573,
-      "day_change_pct": 0.2891,
-      "ret_30d": -1.14,
-      "ret_ytd": 0.86,
-      "pct_52w": 75.48
+      "close": 31.56,
+      "day_change_pct": 0.2478,
+      "ret_30d": -1.18,
+      "ret_ytd": 0.82,
+      "pct_52w": 75.22
     },
     "dxy": {
-      "close": 98.668,
-      "day_change_pct": 0.0791,
-      "ret_30d": -0.94,
-      "ret_ytd": 0.25,
-      "pct_52w": 48.49
+      "close": 98.797,
+      "day_change_pct": 0.21,
+      "ret_30d": -0.81,
+      "ret_ytd": 0.38,
+      "pct_52w": 50.5
     },
     "us10y": {
       "close": 4.294,
@@ -124,25 +124,25 @@
       "pct_52w": 50.88
     },
     "gold": {
-      "close": 4733.2998,
-      "day_change_pct": 0.0169,
-      "ret_30d": 4.03,
-      "ret_ytd": 9.71,
-      "pct_52w": 65.35
+      "close": 4706.3999,
+      "day_change_pct": -0.5515,
+      "ret_30d": 3.44,
+      "ret_ytd": 9.09,
+      "pct_52w": 64.25
     },
     "oil": {
-      "close": 93.77,
-      "day_change_pct": 1.7801,
-      "ret_30d": 1.54,
-      "ret_ytd": 63.59,
-      "pct_52w": 60.14
+      "close": 94.45,
+      "day_change_pct": 1.6028,
+      "ret_30d": 4.57,
+      "ret_ytd": 64.78,
+      "pct_52w": 61.19
     },
     "btc": {
-      "close": 78025.2422,
-      "day_change_pct": -0.2274,
-      "ret_30d": 16.58,
-      "ret_ytd": -12.07,
-      "pct_52w": 27.15
+      "close": 77445.0625,
+      "day_change_pct": -0.9693,
+      "ret_30d": 15.71,
+      "ret_ytd": -12.72,
+      "pct_52w": 26.27
     }
   },
   "holdings": [
@@ -315,24 +315,24 @@
         "industry": null
       },
       "chips": {
-        "foreign_5d": -5041109,
-        "foreign_20d": 11420443,
-        "trust_5d": 580000,
-        "trust_20d": 4826000,
-        "dealer_5d": -25112474,
-        "dealer_20d": 6779894,
-        "total_5d": -29573583,
-        "total_20d": 23026337,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 2805852,
+        "foreign_20d": 79261388,
+        "trust_5d": 170000,
+        "trust_20d": 4516000,
+        "dealer_5d": -41918648,
+        "dealer_20d": -11189942,
+        "total_5d": -38942796,
+        "total_20d": 72587446,
+        "foreign_streak": 3,
+        "trust_streak": -2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 7846961,
+            "trust": -410000,
+            "dealer": -16806174,
+            "total": -9369213
           },
           {
             "d": "2026-04-22",
@@ -541,24 +541,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -12337636,
-        "foreign_20d": -14016117,
-        "trust_5d": -1570910,
-        "trust_20d": -1404528,
-        "dealer_5d": -743328,
-        "dealer_20d": 9418498,
-        "total_5d": -14651874,
-        "total_20d": -6002147,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -5144308,
+        "foreign_20d": 3329001,
+        "trust_5d": -816545,
+        "trust_20d": -1985741,
+        "dealer_5d": -2122356,
+        "dealer_20d": 6736766,
+        "total_5d": -8083209,
+        "total_20d": 8080026,
+        "foreign_streak": 1,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 7193328,
+            "trust": 754365,
+            "dealer": -1379028,
+            "total": 6568665
           },
           {
             "d": "2026-04-22",
@@ -770,24 +770,24 @@
           "industry": "Semiconductors"
         },
         "chips": {
-          "foreign_5d": -12337636,
-          "foreign_20d": -14016117,
-          "trust_5d": -1570910,
-          "trust_20d": -1404528,
-          "dealer_5d": -743328,
-          "dealer_20d": 9418498,
-          "total_5d": -14651874,
-          "total_20d": -6002147,
-          "foreign_streak": 0,
-          "trust_streak": 0,
+          "foreign_5d": -5144308,
+          "foreign_20d": 3329001,
+          "trust_5d": -816545,
+          "trust_20d": -1985741,
+          "dealer_5d": -2122356,
+          "dealer_20d": 6736766,
+          "total_5d": -8083209,
+          "total_20d": 8080026,
+          "foreign_streak": 1,
+          "trust_streak": 1,
           "days_included": 20,
           "daily": [
             {
               "d": "2026-04-23",
-              "foreign": 0,
-              "trust": 0,
-              "dealer": 0,
-              "total": 0
+              "foreign": 7193328,
+              "trust": 754365,
+              "dealer": -1379028,
+              "total": 6568665
             },
             {
               "d": "2026-04-22",
@@ -1191,24 +1191,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 138625593,
-        "foreign_20d": 172611077,
-        "trust_5d": 51159002,
-        "trust_20d": 89743603,
-        "dealer_5d": 15531808,
-        "dealer_20d": 36612582,
-        "total_5d": 205316403,
-        "total_20d": 298967262,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 152967040,
+        "foreign_20d": 228709321,
+        "trust_5d": 64275870,
+        "trust_20d": 99033922,
+        "dealer_5d": 9779686,
+        "dealer_20d": 29584949,
+        "total_5d": 227022596,
+        "total_20d": 357328192,
+        "foreign_streak": 2,
+        "trust_streak": 3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 14341447,
+            "trust": 13116868,
+            "dealer": -5752122,
+            "total": 21706193
           },
           {
             "d": "2026-04-22",
@@ -1389,9 +1389,9 @@
       "yf_ticker": "3081.TWO",
       "fundamentals": {
         "pe_ttm": 669.62305,
-        "pe_forward": 102.360596,
+        "pe_forward": 94.678894,
         "eps_ttm": 4.51,
-        "eps_forward": 29.50354,
+        "eps_forward": 31.89729,
         "pb": 66.67403,
         "roe": 0.17554002,
         "profit_margin": 0.26525998,
@@ -1830,24 +1830,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -1721653,
-        "foreign_20d": -1724044,
-        "trust_5d": 793911,
-        "trust_20d": 2618608,
-        "dealer_5d": 11813,
-        "dealer_20d": 188292,
-        "total_5d": -915929,
-        "total_20d": 1082856,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -2646369,
+        "foreign_20d": -2882856,
+        "trust_5d": 1557813,
+        "trust_20d": 2938029,
+        "dealer_5d": -34696,
+        "dealer_20d": -186472,
+        "total_5d": -1123252,
+        "total_20d": -131299,
+        "foreign_streak": -3,
+        "trust_streak": 9,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -924716,
+            "trust": 763902,
+            "dealer": -46509,
+            "total": -207323
           },
           {
             "d": "2026-04-22",
@@ -1924,24 +1924,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -12337636,
-        "foreign_20d": -14016117,
-        "trust_5d": -1570910,
-        "trust_20d": -1404528,
-        "dealer_5d": -743328,
-        "dealer_20d": 9418498,
-        "total_5d": -14651874,
-        "total_20d": -6002147,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -5144308,
+        "foreign_20d": 3329001,
+        "trust_5d": -816545,
+        "trust_20d": -1985741,
+        "dealer_5d": -2122356,
+        "dealer_20d": 6736766,
+        "total_5d": -8083209,
+        "total_20d": 8080026,
+        "foreign_streak": 1,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 7193328,
+            "trust": 754365,
+            "dealer": -1379028,
+            "total": 6568665
           },
           {
             "d": "2026-04-22",
@@ -2016,24 +2016,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 138625593,
-        "foreign_20d": 172611077,
-        "trust_5d": 51159002,
-        "trust_20d": 89743603,
-        "dealer_5d": 15531808,
-        "dealer_20d": 36612582,
-        "total_5d": 205316403,
-        "total_20d": 298967262,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 152967040,
+        "foreign_20d": 228709321,
+        "trust_5d": 64275870,
+        "trust_20d": 99033922,
+        "dealer_5d": 9779686,
+        "dealer_20d": 29584949,
+        "total_5d": 227022596,
+        "total_20d": 357328192,
+        "foreign_streak": 2,
+        "trust_streak": 3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 14341447,
+            "trust": 13116868,
+            "dealer": -5752122,
+            "total": 21706193
           },
           {
             "d": "2026-04-22",
@@ -2108,24 +2108,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 9048186,
-        "foreign_20d": 4429051,
-        "trust_5d": 5033758,
-        "trust_20d": 2964409,
-        "dealer_5d": 615209,
-        "dealer_20d": 2851961,
-        "total_5d": 14697153,
-        "total_20d": 10245421,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 9794843,
+        "foreign_20d": 9051246,
+        "trust_5d": 5623832,
+        "trust_20d": 3365410,
+        "dealer_5d": 847565,
+        "dealer_20d": 3010842,
+        "total_5d": 16266240,
+        "total_20d": 15427498,
+        "foreign_streak": 1,
+        "trust_streak": 8,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 746657,
+            "trust": 590074,
+            "dealer": 232356,
+            "total": 1569087
           },
           {
             "d": "2026-04-22",
@@ -2200,24 +2200,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 8693271,
-        "foreign_20d": 18844346,
-        "trust_5d": -2800320,
-        "trust_20d": -2895818,
-        "dealer_5d": 146959,
-        "dealer_20d": 788037,
-        "total_5d": 6039910,
-        "total_20d": 16736565,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 9376385,
+        "foreign_20d": 19400640,
+        "trust_5d": -3631805,
+        "trust_20d": -3901209,
+        "dealer_5d": 103212,
+        "dealer_20d": 639057,
+        "total_5d": 5847792,
+        "total_20d": 16138488,
+        "foreign_streak": 11,
+        "trust_streak": -8,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 683114,
+            "trust": -831485,
+            "dealer": -43747,
+            "total": -192118
           },
           {
             "d": "2026-04-22",
@@ -2292,24 +2292,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 97903,
-        "foreign_20d": 8859234,
-        "trust_5d": -358306,
-        "trust_20d": -830383,
-        "dealer_5d": 180625,
-        "dealer_20d": 1120835,
-        "total_5d": -79778,
-        "total_20d": 9149686,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -2535583,
+        "foreign_20d": 6104665,
+        "trust_5d": 274001,
+        "trust_20d": -350738,
+        "dealer_5d": -358791,
+        "dealer_20d": 511038,
+        "total_5d": -2620373,
+        "total_20d": 6264965,
+        "foreign_streak": -1,
+        "trust_streak": 3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -2633486,
+            "trust": 632307,
+            "dealer": -539416,
+            "total": -2540595
           },
           {
             "d": "2026-04-22",
@@ -2384,24 +2384,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -771662,
-        "foreign_20d": 70782,
-        "trust_5d": 203301,
-        "trust_20d": 796858,
-        "dealer_5d": 206448,
-        "dealer_20d": 629145,
-        "total_5d": -361913,
-        "total_20d": 1496785,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -716624,
+        "foreign_20d": 372834,
+        "trust_5d": 207586,
+        "trust_20d": 927418,
+        "dealer_5d": 141098,
+        "dealer_20d": 766898,
+        "total_5d": -367940,
+        "total_20d": 2067150,
+        "foreign_streak": 1,
+        "trust_streak": 11,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 55038,
+            "trust": 4285,
+            "dealer": -65350,
+            "total": -6027
           },
           {
             "d": "2026-04-22",
@@ -2568,24 +2568,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 62678005,
-        "foreign_20d": 45517752,
-        "trust_5d": 4082643,
-        "trust_20d": -3250722,
-        "dealer_5d": 3338303,
-        "dealer_20d": 18951739,
-        "total_5d": 70098951,
-        "total_20d": 61218769,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 90474193,
+        "foreign_20d": 38299337,
+        "trust_5d": 4292977,
+        "trust_20d": -3379597,
+        "dealer_5d": 3217459,
+        "dealer_20d": 21066317,
+        "total_5d": 97984629,
+        "total_20d": 55986057,
+        "foreign_streak": 4,
+        "trust_streak": 2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 27796188,
+            "trust": 210334,
+            "dealer": -120844,
+            "total": 27885678
           },
           {
             "d": "2026-04-22",
@@ -2660,24 +2660,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 21419999,
-        "foreign_20d": 80960139,
-        "trust_5d": -2451227,
-        "trust_20d": -346527,
-        "dealer_5d": 1133850,
-        "dealer_20d": 6631596,
-        "total_5d": 20102622,
-        "total_20d": 87245208,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 18790539,
+        "foreign_20d": 83753154,
+        "trust_5d": -2890959,
+        "trust_20d": -2091870,
+        "dealer_5d": 551265,
+        "dealer_20d": 5150224,
+        "total_5d": 16450845,
+        "total_20d": 86811508,
+        "foreign_streak": -2,
+        "trust_streak": -8,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -2629460,
+            "trust": -439732,
+            "dealer": -582585,
+            "total": -3651777
           },
           {
             "d": "2026-04-22",
@@ -2752,24 +2752,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 72657980,
-        "foreign_20d": 109400954,
-        "trust_5d": 1630487,
-        "trust_20d": 106814,
-        "dealer_5d": 4023409,
-        "dealer_20d": 8316348,
-        "total_5d": 78311876,
-        "total_20d": 117824116,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 71710681,
+        "foreign_20d": 100639574,
+        "trust_5d": 3043659,
+        "trust_20d": -806308,
+        "dealer_5d": 3893891,
+        "dealer_20d": 2953678,
+        "total_5d": 78648231,
+        "total_20d": 102786944,
+        "foreign_streak": -1,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -947299,
+            "trust": 1413172,
+            "dealer": -129518,
+            "total": 336355
           },
           {
             "d": "2026-04-22",
@@ -2844,24 +2844,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 46461,
-        "foreign_20d": -1532950,
-        "trust_5d": 1644600,
-        "trust_20d": 1685077,
-        "dealer_5d": 193382,
-        "dealer_20d": 366451,
-        "total_5d": 1884443,
-        "total_20d": 518578,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 428166,
+        "foreign_20d": -2019791,
+        "trust_5d": 1888729,
+        "trust_20d": 1664717,
+        "dealer_5d": 232644,
+        "dealer_20d": 393581,
+        "total_5d": 2549539,
+        "total_20d": 38507,
+        "foreign_streak": 1,
+        "trust_streak": 5,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 381705,
+            "trust": 244129,
+            "dealer": 39262,
+            "total": 665096
           },
           {
             "d": "2026-04-22",
@@ -2936,24 +2936,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 8831943,
-        "foreign_20d": 33158106,
-        "trust_5d": -2470420,
-        "trust_20d": -454600,
-        "dealer_5d": -34155,
-        "dealer_20d": 1809400,
-        "total_5d": 6327368,
-        "total_20d": 34512906,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 11418342,
+        "foreign_20d": 37069065,
+        "trust_5d": -2811521,
+        "trust_20d": -828083,
+        "dealer_5d": -405809,
+        "dealer_20d": 1315733,
+        "total_5d": 8201012,
+        "total_20d": 37556715,
+        "foreign_streak": 12,
+        "trust_streak": -3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 2586399,
+            "trust": -341101,
+            "dealer": -371654,
+            "total": 1873644
           },
           {
             "d": "2026-04-22",
@@ -3028,24 +3028,24 @@
         "industry": "Communication Equipment"
       },
       "chips": {
-        "foreign_5d": -434883,
-        "foreign_20d": -2434164,
-        "trust_5d": 684376,
-        "trust_20d": 4446379,
-        "dealer_5d": 95020,
-        "dealer_20d": 536388,
-        "total_5d": 344513,
-        "total_20d": 2548603,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -752632,
+        "foreign_20d": -1902742,
+        "trust_5d": 668272,
+        "trust_20d": 3353136,
+        "dealer_5d": 578,
+        "dealer_20d": 700400,
+        "total_5d": -83782,
+        "total_20d": 2150794,
+        "foreign_streak": -2,
+        "trust_streak": -1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -317749,
+            "trust": -16104,
+            "dealer": -94442,
+            "total": -428295
           },
           {
             "d": "2026-04-22",
@@ -3120,24 +3120,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -1721653,
-        "foreign_20d": -1724044,
-        "trust_5d": 793911,
-        "trust_20d": 2618608,
-        "dealer_5d": 11813,
-        "dealer_20d": 188292,
-        "total_5d": -915929,
-        "total_20d": 1082856,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -2646369,
+        "foreign_20d": -2882856,
+        "trust_5d": 1557813,
+        "trust_20d": 2938029,
+        "dealer_5d": -34696,
+        "dealer_20d": -186472,
+        "total_5d": -1123252,
+        "total_20d": -131299,
+        "foreign_streak": -3,
+        "trust_streak": 9,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -924716,
+            "trust": 763902,
+            "dealer": -46509,
+            "total": -207323
           },
           {
             "d": "2026-04-22",
@@ -3304,24 +3304,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 105144,
-        "foreign_20d": 163159,
+        "foreign_5d": 111144,
+        "foreign_20d": 166159,
         "trust_5d": 0,
-        "trust_20d": -890,
-        "dealer_5d": -1220,
-        "dealer_20d": 2724,
-        "total_5d": 103924,
-        "total_20d": 164993,
-        "foreign_streak": 0,
+        "trust_20d": -506,
+        "dealer_5d": -3326,
+        "dealer_20d": 30515,
+        "total_5d": 107818,
+        "total_20d": 196168,
+        "foreign_streak": 3,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": 6000,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -2106,
+            "total": 3894
           },
           {
             "d": "2026-04-22",
@@ -3381,9 +3381,9 @@
       "yf_ticker": "3081.TWO",
       "fundamentals": {
         "pe_ttm": 669.62305,
-        "pe_forward": 102.360596,
+        "pe_forward": 94.678894,
         "eps_ttm": 4.51,
-        "eps_forward": 29.50354,
+        "eps_forward": 31.89729,
         "pb": 66.67403,
         "roe": 0.17554002,
         "profit_margin": 0.26525998,
@@ -3841,9 +3841,9 @@
       "yf_ticker": "4958.TW",
       "fundamentals": {
         "pe_ttm": 48.00591,
-        "pe_forward": 19.802631,
+        "pe_forward": 19.960594,
         "eps_ttm": 6.77,
-        "eps_forward": 16.41196,
+        "eps_forward": 16.28208,
         "pb": 2.8052306,
         "roe": 0.06572,
         "profit_margin": 0.0372,
@@ -3856,24 +3856,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -11795807,
-        "foreign_20d": -19893850,
-        "trust_5d": 4154056,
-        "trust_20d": 6425762,
-        "dealer_5d": -692341,
-        "dealer_20d": 3171753,
-        "total_5d": -8334092,
-        "total_20d": -10296335,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -16010185,
+        "foreign_20d": -13061238,
+        "trust_5d": 4237234,
+        "trust_20d": 5493623,
+        "dealer_5d": -1131931,
+        "dealer_20d": 1689323,
+        "total_5d": -12904882,
+        "total_20d": -5878292,
+        "foreign_streak": -4,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -4214378,
+            "trust": 83178,
+            "dealer": -439590,
+            "total": -4570790
           },
           {
             "d": "2026-04-22",
@@ -3948,24 +3948,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 118633,
-        "foreign_20d": 1891911,
-        "trust_5d": 298123,
-        "trust_20d": 2364599,
-        "dealer_5d": -17939,
-        "dealer_20d": 308089,
-        "total_5d": 398817,
-        "total_20d": 4564599,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -430913,
+        "foreign_20d": 2779733,
+        "trust_5d": 1022819,
+        "trust_20d": 1566474,
+        "dealer_5d": -228128,
+        "dealer_20d": 7064,
+        "total_5d": 363778,
+        "total_20d": 4353271,
+        "foreign_streak": -1,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -549546,
+            "trust": 724696,
+            "dealer": -210189,
+            "total": -35039
           },
           {
             "d": "2026-04-22",
@@ -4025,9 +4025,9 @@
       "yf_ticker": "3037.TW",
       "fundamentals": {
         "pe_ttm": 166.5904,
-        "pe_forward": 32.90425,
+        "pe_forward": 32.762466,
         "eps_ttm": 4.37,
-        "eps_forward": 22.1248,
+        "eps_forward": 22.22055,
         "pb": 11.065175,
         "roe": 0.07309,
         "profit_margin": 0.05085,
@@ -4040,24 +4040,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 3979770,
-        "foreign_20d": -14224851,
-        "trust_5d": -1213237,
-        "trust_20d": 30402213,
-        "dealer_5d": 1287888,
-        "dealer_20d": 1603640,
-        "total_5d": 4054421,
-        "total_20d": 17781002,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 5806396,
+        "foreign_20d": -4240971,
+        "trust_5d": -1107517,
+        "trust_20d": 32412609,
+        "dealer_5d": 1177678,
+        "dealer_20d": 937740,
+        "total_5d": 5876557,
+        "total_20d": 29109378,
+        "foreign_streak": 8,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 1826626,
+            "trust": 105720,
+            "dealer": -110210,
+            "total": 1822136
           },
           {
             "d": "2026-04-22",
@@ -4132,24 +4132,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -5776391,
-        "foreign_20d": 5363658,
-        "trust_5d": 1950001,
-        "trust_20d": 13788632,
-        "dealer_5d": -182183,
-        "dealer_20d": 1180328,
-        "total_5d": -4008573,
-        "total_20d": 20332618,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -6780193,
+        "foreign_20d": -765314,
+        "trust_5d": 2365001,
+        "trust_20d": 13540969,
+        "dealer_5d": -50778,
+        "dealer_20d": 1267476,
+        "total_5d": -4465970,
+        "total_20d": 14043131,
+        "foreign_streak": -1,
+        "trust_streak": 7,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -1003802,
+            "trust": 415000,
+            "dealer": 131405,
+            "total": -457397
           },
           {
             "d": "2026-04-22",
@@ -4224,24 +4224,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -475029,
-        "foreign_20d": 393388,
-        "trust_5d": 278816,
-        "trust_20d": 934751,
-        "dealer_5d": 94161,
-        "dealer_20d": 347043,
-        "total_5d": -102052,
-        "total_20d": 1675182,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -1285241,
+        "foreign_20d": -420281,
+        "trust_5d": 717659,
+        "trust_20d": 1085507,
+        "dealer_5d": 64911,
+        "dealer_20d": 398030,
+        "total_5d": -502671,
+        "total_20d": 1063256,
+        "foreign_streak": -2,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -810212,
+            "trust": 438843,
+            "dealer": -29250,
+            "total": -400619
           },
           {
             "d": "2026-04-22",
@@ -4316,24 +4316,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 2384260,
-        "foreign_20d": 98431186,
-        "trust_5d": -3448288,
-        "trust_20d": 4590368,
-        "dealer_5d": -1428988,
-        "dealer_20d": 5161982,
-        "total_5d": -2493016,
-        "total_20d": 108183536,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 1203497,
+        "foreign_20d": 92807664,
+        "trust_5d": -4264493,
+        "trust_20d": 2819306,
+        "dealer_5d": -3116758,
+        "dealer_20d": 3555684,
+        "total_5d": -6177754,
+        "total_20d": 99182654,
+        "foreign_streak": -2,
+        "trust_streak": -4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -1180763,
+            "trust": -816205,
+            "dealer": -1687770,
+            "total": -3684738
           },
           {
             "d": "2026-04-22",
@@ -4408,24 +4408,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 4463993,
-        "foreign_20d": 14151238,
-        "trust_5d": -17000,
-        "trust_20d": 162190,
-        "dealer_5d": -342437,
-        "dealer_20d": 1875273,
-        "total_5d": 4104556,
-        "total_20d": 16188701,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 1088133,
+        "foreign_20d": 16198683,
+        "trust_5d": -13000,
+        "trust_20d": 133613,
+        "dealer_5d": -789333,
+        "dealer_20d": 1733762,
+        "total_5d": 285800,
+        "total_20d": 18066058,
+        "foreign_streak": -1,
+        "trust_streak": 2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -3375860,
+            "trust": 4000,
+            "dealer": -446896,
+            "total": -3818756
           },
           {
             "d": "2026-04-22",
@@ -4500,24 +4500,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -37206,
-        "foreign_20d": 371160,
-        "trust_5d": 266505,
-        "trust_20d": 90157,
-        "dealer_5d": -23940,
-        "dealer_20d": -69253,
-        "total_5d": 205359,
-        "total_20d": 392064,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -16400,
+        "foreign_20d": 318624,
+        "trust_5d": 299505,
+        "trust_20d": 209350,
+        "dealer_5d": -31326,
+        "dealer_20d": -65152,
+        "total_5d": 251779,
+        "total_20d": 462822,
+        "foreign_streak": 2,
+        "trust_streak": 9,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 20806,
+            "trust": 33000,
+            "dealer": -7386,
+            "total": 46420
           },
           {
             "d": "2026-04-22",
@@ -4592,24 +4592,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -895911,
-        "foreign_20d": -131794,
-        "trust_5d": 548000,
-        "trust_20d": 2543195,
-        "dealer_5d": -14288,
-        "dealer_20d": 175568,
-        "total_5d": -362199,
-        "total_20d": 2586969,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -474191,
+        "foreign_20d": 479217,
+        "trust_5d": 472000,
+        "trust_20d": 2337331,
+        "dealer_5d": -13235,
+        "dealer_20d": 69922,
+        "total_5d": -15426,
+        "total_20d": 2886470,
+        "foreign_streak": 2,
+        "trust_streak": -1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 421720,
+            "trust": -76000,
+            "dealer": 1053,
+            "total": 346773
           },
           {
             "d": "2026-04-22",
@@ -4684,24 +4684,24 @@
         "industry": null
       },
       "chips": {
-        "foreign_5d": -5041109,
-        "foreign_20d": 11420443,
-        "trust_5d": 580000,
-        "trust_20d": 4826000,
-        "dealer_5d": -25112474,
-        "dealer_20d": 6779894,
-        "total_5d": -29573583,
-        "total_20d": 23026337,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 2805852,
+        "foreign_20d": 79261388,
+        "trust_5d": 170000,
+        "trust_20d": 4516000,
+        "dealer_5d": -41918648,
+        "dealer_20d": -11189942,
+        "total_5d": -38942796,
+        "total_20d": 72587446,
+        "foreign_streak": 3,
+        "trust_streak": -2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 7846961,
+            "trust": -410000,
+            "dealer": -16806174,
+            "total": -9369213
           },
           {
             "d": "2026-04-22",
@@ -4776,24 +4776,24 @@
         "industry": null
       },
       "chips": {
-        "foreign_5d": 360831,
-        "foreign_20d": 5895571,
+        "foreign_5d": 1339629,
+        "foreign_20d": 7322007,
         "trust_5d": 0,
         "trust_20d": -86000,
-        "dealer_5d": 4533906,
-        "dealer_20d": 8010874,
-        "total_5d": 4894737,
-        "total_20d": 13820445,
-        "foreign_streak": 0,
+        "dealer_5d": 5142837,
+        "dealer_20d": 9836739,
+        "total_5d": 6482466,
+        "total_20d": 17072746,
+        "foreign_streak": 3,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": 978798,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": 608931,
+            "total": 1587729
           },
           {
             "d": "2026-04-22",
@@ -4868,24 +4868,24 @@
         "industry": null
       },
       "chips": {
-        "foreign_5d": 14107827,
-        "foreign_20d": 96890003,
+        "foreign_5d": 23783755,
+        "foreign_20d": 107377825,
         "trust_5d": 0,
         "trust_20d": 0,
-        "dealer_5d": 6519197,
-        "dealer_20d": 26045553,
-        "total_5d": 20627024,
-        "total_20d": 122935556,
-        "foreign_streak": 0,
+        "dealer_5d": 6752155,
+        "dealer_20d": 29157181,
+        "total_5d": 30535910,
+        "total_20d": 136535006,
+        "foreign_streak": 14,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": 9675928,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": 232958,
+            "total": 9908886
           },
           {
             "d": "2026-04-22",
@@ -5445,24 +5445,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -163311209,
-        "foreign_20d": 151323622,
-        "trust_5d": -268007,
-        "trust_20d": -296140,
-        "dealer_5d": -10972061,
-        "dealer_20d": 19222439,
-        "total_5d": -174551277,
-        "total_20d": 170249921,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -192745098,
+        "foreign_20d": 57788017,
+        "trust_5d": -277335,
+        "trust_20d": -266293,
+        "dealer_5d": -14106804,
+        "dealer_20d": 27263095,
+        "total_5d": -207129237,
+        "total_20d": 84784819,
+        "foreign_streak": -1,
+        "trust_streak": -2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -29433889,
+            "trust": -9328,
+            "dealer": -3134743,
+            "total": -32577960
           },
           {
             "d": "2026-04-22",
@@ -5537,24 +5537,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -114579501,
-        "foreign_20d": -73776101,
-        "trust_5d": -18908567,
-        "trust_20d": -19261903,
-        "dealer_5d": -5810246,
-        "dealer_20d": 1419448,
-        "total_5d": -139298314,
-        "total_20d": -91618556,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -148025291,
+        "foreign_20d": -104304178,
+        "trust_5d": -24234818,
+        "trust_20d": -25273724,
+        "dealer_5d": -16005565,
+        "dealer_20d": -15603665,
+        "total_5d": -188265674,
+        "total_20d": -145181567,
+        "foreign_streak": -3,
+        "trust_streak": -7,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -33445790,
+            "trust": -5326251,
+            "dealer": -10195319,
+            "total": -48967360
           },
           {
             "d": "2026-04-22",
@@ -5629,24 +5629,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 19395537,
-        "foreign_20d": 13217551,
+        "foreign_5d": 19906723,
+        "foreign_20d": 14810817,
         "trust_5d": 0,
         "trust_20d": 0,
-        "dealer_5d": 169560,
-        "dealer_20d": 631042,
-        "total_5d": 19565097,
-        "total_20d": 13848593,
-        "foreign_streak": 0,
+        "dealer_5d": 39560,
+        "dealer_20d": 479198,
+        "total_5d": 19946283,
+        "total_20d": 15290015,
+        "foreign_streak": 3,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": 511186,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -130000,
+            "total": 381186
           },
           {
             "d": "2026-04-22",
@@ -5721,24 +5721,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 1226828,
-        "foreign_20d": 3856566,
-        "trust_5d": -398943,
-        "trust_20d": -1211519,
-        "dealer_5d": -28424,
-        "dealer_20d": 458368,
-        "total_5d": 799461,
-        "total_20d": 3103415,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 1105476,
+        "foreign_20d": 3540964,
+        "trust_5d": -529963,
+        "trust_20d": -1061239,
+        "dealer_5d": -59089,
+        "dealer_20d": 473260,
+        "total_5d": 516424,
+        "total_20d": 2952985,
+        "foreign_streak": -1,
+        "trust_streak": -12,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -121352,
+            "trust": -131020,
+            "dealer": -30665,
+            "total": -283037
           },
           {
             "d": "2026-04-22",
@@ -5798,9 +5798,9 @@
       "yf_ticker": "3406.TW",
       "fundamentals": {
         "pe_ttm": 15.563015,
-        "pe_forward": 13.217891,
+        "pe_forward": 13.475284,
         "eps_ttm": 32.77,
-        "eps_forward": 38.58407,
+        "eps_forward": 37.84707,
         "pb": 2.1689208,
         "roe": 0.14471,
         "profit_margin": 0.14815,
@@ -5813,24 +5813,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 2924378,
-        "foreign_20d": 4933149,
-        "trust_5d": -1829000,
-        "trust_20d": -596672,
-        "dealer_5d": 60134,
-        "dealer_20d": 209149,
-        "total_5d": 1155512,
-        "total_20d": 4545626,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 3602775,
+        "foreign_20d": 5458030,
+        "trust_5d": -2175000,
+        "trust_20d": -719546,
+        "dealer_5d": -19211,
+        "dealer_20d": 141335,
+        "total_5d": 1408564,
+        "total_20d": 4879819,
+        "foreign_streak": 2,
+        "trust_streak": -6,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 678397,
+            "trust": -346000,
+            "dealer": -79345,
+            "total": 253052
           },
           {
             "d": "2026-04-22",
@@ -5997,24 +5997,24 @@
         "industry": "Marine Shipping"
       },
       "chips": {
-        "foreign_5d": -3957520,
-        "foreign_20d": -15124069,
-        "trust_5d": 1387962,
-        "trust_20d": -880850,
-        "dealer_5d": -436047,
-        "dealer_20d": 2583157,
-        "total_5d": -3005605,
-        "total_20d": -13421762,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -6473659,
+        "foreign_20d": -15981644,
+        "trust_5d": 2324871,
+        "trust_20d": -899052,
+        "dealer_5d": -449726,
+        "dealer_20d": 2141208,
+        "total_5d": -4598514,
+        "total_20d": -14739488,
+        "foreign_streak": -2,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -2516139,
+            "trust": 936909,
+            "dealer": -13679,
+            "total": -1592909
           },
           {
             "d": "2026-04-22",
@@ -6089,24 +6089,24 @@
         "industry": "Marine Shipping"
       },
       "chips": {
-        "foreign_5d": -9257761,
-        "foreign_20d": -57211434,
-        "trust_5d": -936751,
-        "trust_20d": -1906150,
-        "dealer_5d": -620954,
-        "dealer_20d": 530327,
-        "total_5d": -10815466,
-        "total_20d": -58587257,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -15647650,
+        "foreign_20d": -63607115,
+        "trust_5d": -952381,
+        "trust_20d": -2081723,
+        "dealer_5d": -1127864,
+        "dealer_20d": 1204613,
+        "total_5d": -17727895,
+        "total_20d": -64484225,
+        "foreign_streak": -1,
+        "trust_streak": -13,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -6389889,
+            "trust": -15630,
+            "dealer": -506910,
+            "total": -6912429
           },
           {
             "d": "2026-04-22",
@@ -6181,24 +6181,24 @@
         "industry": "Airlines"
       },
       "chips": {
-        "foreign_5d": -19822134,
-        "foreign_20d": 5619316,
-        "trust_5d": 14194511,
-        "trust_20d": 6948955,
-        "dealer_5d": -32520,
-        "dealer_20d": 4605377,
-        "total_5d": -5660143,
-        "total_20d": 17173648,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -57472101,
+        "foreign_20d": -31385996,
+        "trust_5d": 15560487,
+        "trust_20d": 5334421,
+        "dealer_5d": -883006,
+        "dealer_20d": 2804531,
+        "total_5d": -42794620,
+        "total_20d": -23247044,
+        "foreign_streak": -5,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -37649967,
+            "trust": 1365976,
+            "dealer": -850486,
+            "total": -37134477
           },
           {
             "d": "2026-04-22",
@@ -6273,24 +6273,24 @@
         "industry": "Auto & Truck Dealerships"
       },
       "chips": {
-        "foreign_5d": -53087,
-        "foreign_20d": 579136,
-        "trust_5d": 119989,
-        "trust_20d": 34339,
-        "dealer_5d": -11883,
-        "dealer_20d": 152943,
-        "total_5d": 55019,
-        "total_20d": 766418,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -136966,
+        "foreign_20d": 354066,
+        "trust_5d": 111930,
+        "trust_20d": 24216,
+        "dealer_5d": -27322,
+        "dealer_20d": 132822,
+        "total_5d": -52358,
+        "total_20d": 511104,
+        "foreign_streak": -2,
+        "trust_streak": -1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -83879,
+            "trust": -8059,
+            "dealer": -15439,
+            "total": -107377
           },
           {
             "d": "2026-04-22",
@@ -6365,24 +6365,24 @@
         "industry": "Apparel Manufacturing"
       },
       "chips": {
-        "foreign_5d": -1624986,
-        "foreign_20d": -2113491,
-        "trust_5d": 1411349,
-        "trust_20d": 1239508,
-        "dealer_5d": -50719,
-        "dealer_20d": 85584,
-        "total_5d": -264356,
-        "total_20d": -788399,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -2111929,
+        "foreign_20d": -3258256,
+        "trust_5d": 1809241,
+        "trust_20d": 1640201,
+        "dealer_5d": -85746,
+        "dealer_20d": 60051,
+        "total_5d": -388434,
+        "total_20d": -1558004,
+        "foreign_streak": -5,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -486943,
+            "trust": 397892,
+            "dealer": -35027,
+            "total": -124078
           },
           {
             "d": "2026-04-22",
@@ -6457,24 +6457,24 @@
         "industry": "Leisure"
       },
       "chips": {
-        "foreign_5d": -123270,
-        "foreign_20d": -2820907,
+        "foreign_5d": -509270,
+        "foreign_20d": -5770309,
         "trust_5d": 0,
-        "trust_20d": 2000,
-        "dealer_5d": 12356,
-        "dealer_20d": 32136,
-        "total_5d": -110914,
-        "total_20d": -2786771,
-        "foreign_streak": 0,
+        "trust_20d": 1000,
+        "dealer_5d": -21881,
+        "dealer_20d": -87399,
+        "total_5d": -531151,
+        "total_20d": -5856708,
+        "foreign_streak": -2,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -386000,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -34237,
+            "total": -420237
           },
           {
             "d": "2026-04-22",
@@ -6549,24 +6549,24 @@
         "industry": "Leisure"
       },
       "chips": {
-        "foreign_5d": -562071,
-        "foreign_20d": 77329,
+        "foreign_5d": -1199541,
+        "foreign_20d": -887138,
         "trust_5d": 0,
-        "trust_20d": -2000,
-        "dealer_5d": 72507,
-        "dealer_20d": 263457,
-        "total_5d": -489564,
-        "total_20d": 338786,
-        "foreign_streak": 0,
+        "trust_20d": -3000,
+        "dealer_5d": 54056,
+        "dealer_20d": 199411,
+        "total_5d": -1145485,
+        "total_20d": -690727,
+        "foreign_streak": -1,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -637470,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -18451,
+            "total": -655921
           },
           {
             "d": "2026-04-22",
@@ -6641,24 +6641,24 @@
         "industry": "Insurance - Life"
       },
       "chips": {
-        "foreign_5d": 9602080,
-        "foreign_20d": -27607205,
-        "trust_5d": -16534651,
-        "trust_20d": -13543420,
-        "dealer_5d": 620854,
-        "dealer_20d": 3778508,
-        "total_5d": -6311717,
-        "total_20d": -37372117,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 15783366,
+        "foreign_20d": -18113785,
+        "trust_5d": -19357546,
+        "trust_20d": -20712948,
+        "dealer_5d": -106515,
+        "dealer_20d": 3202222,
+        "total_5d": -3680695,
+        "total_20d": -35624511,
+        "foreign_streak": 4,
+        "trust_streak": -9,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 6181286,
+            "trust": -2822895,
+            "dealer": -727369,
+            "total": 2631022
           },
           {
             "d": "2026-04-22",
@@ -6733,24 +6733,24 @@
         "industry": "Insurance - Life"
       },
       "chips": {
-        "foreign_5d": -9625711,
-        "foreign_20d": -37532217,
-        "trust_5d": -9773376,
-        "trust_20d": 4704657,
-        "dealer_5d": 713362,
-        "dealer_20d": 4601055,
-        "total_5d": -18685725,
-        "total_20d": -28226505,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -17779759,
+        "foreign_20d": -42294561,
+        "trust_5d": -10600381,
+        "trust_20d": -3677808,
+        "dealer_5d": 567624,
+        "dealer_20d": 4322525,
+        "total_5d": -27812516,
+        "total_20d": -41649844,
+        "foreign_streak": -2,
+        "trust_streak": -9,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -8154048,
+            "trust": -827005,
+            "dealer": -145738,
+            "total": -9126791
           },
           {
             "d": "2026-04-22",
@@ -6825,24 +6825,24 @@
         "industry": "Banks - Regional"
       },
       "chips": {
-        "foreign_5d": 15062118,
-        "foreign_20d": 98503553,
-        "trust_5d": -25599002,
-        "trust_20d": -23858179,
-        "dealer_5d": 2879,
-        "dealer_20d": 11878976,
-        "total_5d": -10534005,
-        "total_20d": 86524350,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 24217825,
+        "foreign_20d": 95140361,
+        "trust_5d": -33515387,
+        "trust_20d": -32890226,
+        "dealer_5d": 252355,
+        "dealer_20d": 9543493,
+        "total_5d": -9045207,
+        "total_20d": 71793628,
+        "foreign_streak": 4,
+        "trust_streak": -10,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 9155707,
+            "trust": -7916385,
+            "dealer": 249476,
+            "total": 1488798
           },
           {
             "d": "2026-04-22",
@@ -6917,24 +6917,24 @@
         "industry": "Banks - Regional"
       },
       "chips": {
-        "foreign_5d": 13629100,
-        "foreign_20d": -30615577,
-        "trust_5d": -43743784,
-        "trust_20d": -33982662,
-        "dealer_5d": 502053,
-        "dealer_20d": 10487495,
-        "total_5d": -29612631,
-        "total_20d": -54110744,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 4785518,
+        "foreign_20d": -55099380,
+        "trust_5d": -53989248,
+        "trust_20d": -44064264,
+        "dealer_5d": 1769171,
+        "dealer_20d": 11566893,
+        "total_5d": -47434559,
+        "total_20d": -87596751,
+        "foreign_streak": -1,
+        "trust_streak": -9,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -8843582,
+            "trust": -10245464,
+            "dealer": 1267118,
+            "total": -17821928
           },
           {
             "d": "2026-04-22",
@@ -7009,24 +7009,24 @@
         "industry": "Banks - Regional"
       },
       "chips": {
-        "foreign_5d": 55210747,
-        "foreign_20d": 97439036,
-        "trust_5d": -46445074,
-        "trust_20d": -55245618,
-        "dealer_5d": 1138065,
-        "dealer_20d": 12811695,
-        "total_5d": 9903738,
-        "total_20d": 55005113,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 56256183,
+        "foreign_20d": 90216446,
+        "trust_5d": -56268802,
+        "trust_20d": -68268849,
+        "dealer_5d": 1488622,
+        "dealer_20d": 10955195,
+        "total_5d": 1476003,
+        "total_20d": 32902792,
+        "foreign_streak": 9,
+        "trust_streak": -12,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 1045436,
+            "trust": -9823728,
+            "dealer": 350557,
+            "total": -8427735
           },
           {
             "d": "2026-04-22",
@@ -7101,24 +7101,24 @@
         "industry": "Specialty Chemicals"
       },
       "chips": {
-        "foreign_5d": 196068,
-        "foreign_20d": 170908755,
-        "trust_5d": 870848,
-        "trust_20d": 5460084,
-        "dealer_5d": -727038,
-        "dealer_20d": 2473211,
-        "total_5d": 339878,
-        "total_20d": 178842050,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 2674660,
+        "foreign_20d": 173391771,
+        "trust_5d": 854967,
+        "trust_20d": 3554246,
+        "dealer_5d": -1595343,
+        "dealer_20d": 1154844,
+        "total_5d": 1934284,
+        "total_20d": 178100861,
+        "foreign_streak": 2,
+        "trust_streak": -2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 2478592,
+            "trust": -15881,
+            "dealer": -868305,
+            "total": 1594406
           },
           {
             "d": "2026-04-22",
@@ -7193,24 +7193,24 @@
         "industry": "Specialty Chemicals"
       },
       "chips": {
-        "foreign_5d": 23422530,
-        "foreign_20d": 162386346,
-        "trust_5d": -13254063,
-        "trust_20d": -20261074,
-        "dealer_5d": -186715,
-        "dealer_20d": 15665981,
-        "total_5d": 9981752,
-        "total_20d": 157791253,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 18172288,
+        "foreign_20d": 110187315,
+        "trust_5d": -20130098,
+        "trust_20d": -34873505,
+        "dealer_5d": -974515,
+        "dealer_20d": 8773943,
+        "total_5d": -2932325,
+        "total_20d": 84087753,
+        "foreign_streak": -1,
+        "trust_streak": -2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -5250242,
+            "trust": -6876035,
+            "dealer": -787800,
+            "total": -12914077
           },
           {
             "d": "2026-04-22",
@@ -7285,24 +7285,24 @@
         "industry": "Steel"
       },
       "chips": {
-        "foreign_5d": 1022951,
-        "foreign_20d": 201698142,
-        "trust_5d": -276404,
-        "trust_20d": -2024495,
-        "dealer_5d": -1821382,
-        "dealer_20d": 6741542,
-        "total_5d": -1074835,
-        "total_20d": 206415189,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -36426664,
+        "foreign_20d": 163549241,
+        "trust_5d": -319751,
+        "trust_20d": -2064358,
+        "dealer_5d": -3870539,
+        "dealer_20d": 4577282,
+        "total_5d": -40616954,
+        "total_20d": 166062165,
+        "foreign_streak": -2,
+        "trust_streak": -2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -37449615,
+            "trust": -43347,
+            "dealer": -2049157,
+            "total": -39542119
           },
           {
             "d": "2026-04-22",
@@ -7377,24 +7377,24 @@
         "industry": "Packaged Foods"
       },
       "chips": {
-        "foreign_5d": 18670126,
-        "foreign_20d": 25030113,
-        "trust_5d": -21229306,
-        "trust_20d": -31134429,
-        "dealer_5d": 441945,
-        "dealer_20d": 5450762,
-        "total_5d": -2117235,
-        "total_20d": -653554,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 18534177,
+        "foreign_20d": 27008594,
+        "trust_5d": -25348340,
+        "trust_20d": -36898072,
+        "dealer_5d": 761648,
+        "dealer_20d": 4488458,
+        "total_5d": -6052515,
+        "total_20d": -5401020,
+        "foreign_streak": -1,
+        "trust_streak": -12,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -135949,
+            "trust": -4119034,
+            "dealer": 319703,
+            "total": -3935280
           },
           {
             "d": "2026-04-22",
@@ -7469,24 +7469,24 @@
         "industry": "Grocery Stores"
       },
       "chips": {
-        "foreign_5d": 2103874,
-        "foreign_20d": 8997724,
-        "trust_5d": -1428236,
-        "trust_20d": -2260039,
-        "dealer_5d": 31003,
-        "dealer_20d": 180281,
-        "total_5d": 706641,
-        "total_20d": 6917966,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 1653850,
+        "foreign_20d": 8154476,
+        "trust_5d": -1646427,
+        "trust_20d": -2370066,
+        "dealer_5d": 6135,
+        "dealer_20d": 174188,
+        "total_5d": 13558,
+        "total_20d": 5958598,
+        "foreign_streak": -1,
+        "trust_streak": -8,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -450024,
+            "trust": -218191,
+            "dealer": -24868,
+            "total": -693083
           },
           {
             "d": "2026-04-22",
@@ -7561,24 +7561,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 3981873,
-        "foreign_20d": 11009765,
-        "trust_5d": -205016,
-        "trust_20d": -883230,
-        "dealer_5d": 12045,
-        "dealer_20d": 362098,
-        "total_5d": 3788902,
-        "total_20d": 10488633,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 4564207,
+        "foreign_20d": 11276045,
+        "trust_5d": -211412,
+        "trust_20d": -920618,
+        "dealer_5d": -51315,
+        "dealer_20d": 331975,
+        "total_5d": 4301480,
+        "total_20d": 10687402,
+        "foreign_streak": 13,
+        "trust_streak": -13,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 582334,
+            "trust": -6396,
+            "dealer": -63360,
+            "total": 512578
           },
           {
             "d": "2026-04-22",
@@ -7653,24 +7653,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 4846761,
-        "foreign_20d": 7924447,
-        "trust_5d": -806000,
-        "trust_20d": -667071,
-        "dealer_5d": -98155,
-        "dealer_20d": -86490,
-        "total_5d": 3942606,
-        "total_20d": 7170886,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 5712771,
+        "foreign_20d": 9223310,
+        "trust_5d": -926000,
+        "trust_20d": -837071,
+        "dealer_5d": -168232,
+        "dealer_20d": -123137,
+        "total_5d": 4618539,
+        "total_20d": 8263102,
+        "foreign_streak": 10,
+        "trust_streak": -8,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 866010,
+            "trust": -120000,
+            "dealer": -70077,
+            "total": 675933
           },
           {
             "d": "2026-04-22",
@@ -7745,24 +7745,24 @@
         "industry": "Tools & Accessories"
       },
       "chips": {
-        "foreign_5d": 4359928,
-        "foreign_20d": 12319793,
-        "trust_5d": 234,
-        "trust_20d": -180928,
-        "dealer_5d": 35690,
-        "dealer_20d": 1122783,
-        "total_5d": 4395852,
-        "total_20d": 13261648,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 8269676,
+        "foreign_20d": 12240956,
+        "trust_5d": -4487,
+        "trust_20d": -199928,
+        "dealer_5d": -254923,
+        "dealer_20d": 602317,
+        "total_5d": 8010266,
+        "total_20d": 12643345,
+        "foreign_streak": 1,
+        "trust_streak": -1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 3909748,
+            "trust": -4721,
+            "dealer": -290613,
+            "total": 3614414
           },
           {
             "d": "2026-04-22",
@@ -7837,24 +7837,24 @@
         "industry": "Specialty Industrial Machinery"
       },
       "chips": {
-        "foreign_5d": 199704,
-        "foreign_20d": -15665,
-        "trust_5d": 225000,
-        "trust_20d": 60087,
-        "dealer_5d": 41671,
-        "dealer_20d": 351440,
-        "total_5d": 466375,
-        "total_20d": 395862,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 578734,
+        "foreign_20d": 502403,
+        "trust_5d": 281000,
+        "trust_20d": 38087,
+        "dealer_5d": -50586,
+        "dealer_20d": 157703,
+        "total_5d": 809148,
+        "total_20d": 698193,
+        "foreign_streak": 1,
+        "trust_streak": 2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 379030,
+            "trust": 56000,
+            "dealer": -92257,
+            "total": 342773
           },
           {
             "d": "2026-04-22",
@@ -7929,24 +7929,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": -94939,
-        "foreign_20d": -6253616,
-        "trust_5d": 279492,
-        "trust_20d": 1963494,
-        "dealer_5d": 152745,
-        "dealer_20d": 1133628,
-        "total_5d": 337298,
-        "total_20d": -3156494,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -1772024,
+        "foreign_20d": -6837334,
+        "trust_5d": 631345,
+        "trust_20d": 1634070,
+        "dealer_5d": 116965,
+        "dealer_20d": 908280,
+        "total_5d": -1023714,
+        "total_20d": -4294984,
+        "foreign_streak": -1,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -1677085,
+            "trust": 351853,
+            "dealer": -35780,
+            "total": -1361012
           },
           {
             "d": "2026-04-22",
@@ -8021,24 +8021,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 9952263,
-        "foreign_20d": 29748830,
-        "trust_5d": 2801877,
-        "trust_20d": -283725,
-        "dealer_5d": 486756,
-        "dealer_20d": 3809859,
-        "total_5d": 13240896,
-        "total_20d": 33274964,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 5541209,
+        "foreign_20d": 24526195,
+        "trust_5d": 5281268,
+        "trust_20d": 2575452,
+        "dealer_5d": 282075,
+        "dealer_20d": 2547686,
+        "total_5d": 11104552,
+        "total_20d": 29649333,
+        "foreign_streak": -2,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -4411054,
+            "trust": 2479391,
+            "dealer": -204681,
+            "total": -2136344
           },
           {
             "d": "2026-04-22",
@@ -8113,24 +8113,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 48748629,
-        "foreign_20d": 85410231,
-        "trust_5d": -3385908,
-        "trust_20d": -12903814,
-        "dealer_5d": 1854855,
-        "dealer_20d": 8965307,
-        "total_5d": 47217576,
-        "total_20d": 81471724,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 46604776,
+        "foreign_20d": 94599472,
+        "trust_5d": -655267,
+        "trust_20d": -10552173,
+        "dealer_5d": 1892772,
+        "dealer_20d": 9870896,
+        "total_5d": 47842281,
+        "total_20d": 93918195,
+        "foreign_streak": -1,
+        "trust_streak": 3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -2143853,
+            "trust": 2730641,
+            "dealer": 37917,
+            "total": 624705
           },
           {
             "d": "2026-04-22",
@@ -8205,24 +8205,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": -4144243,
-        "foreign_20d": 8000639,
-        "trust_5d": 10130579,
-        "trust_20d": 8577550,
-        "dealer_5d": -1350710,
-        "dealer_20d": 2919906,
-        "total_5d": 4635626,
-        "total_20d": 19498095,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -16805828,
+        "foreign_20d": 9548267,
+        "trust_5d": 14435602,
+        "trust_20d": 12615895,
+        "dealer_5d": -1846613,
+        "dealer_20d": 2933805,
+        "total_5d": -4216839,
+        "total_20d": 25097967,
+        "foreign_streak": -4,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -12661585,
+            "trust": 4305023,
+            "dealer": -495903,
+            "total": -8852465
           },
           {
             "d": "2026-04-22",
@@ -8297,24 +8297,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 15956779,
-        "foreign_20d": -33038198,
-        "trust_5d": -1536870,
-        "trust_20d": -34262644,
-        "dealer_5d": -349766,
-        "dealer_20d": 256070,
-        "total_5d": 14070143,
-        "total_20d": -67044772,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -1467576,
+        "foreign_20d": -59575451,
+        "trust_5d": -2867422,
+        "trust_20d": -32690080,
+        "dealer_5d": -371541,
+        "dealer_20d": -1504130,
+        "total_5d": -4706539,
+        "total_20d": -93769661,
+        "foreign_streak": -1,
+        "trust_streak": -1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -17424355,
+            "trust": -1330552,
+            "dealer": -21775,
+            "total": -18776682
           },
           {
             "d": "2026-04-22",
@@ -8573,24 +8573,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 1921434,
-        "foreign_20d": 5949768,
-        "trust_5d": 2256000,
-        "trust_20d": 1463649,
-        "dealer_5d": -11539,
-        "dealer_20d": 232674,
-        "total_5d": 4165895,
-        "total_20d": 7646091,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 5944896,
+        "foreign_20d": 12174134,
+        "trust_5d": 2721000,
+        "trust_20d": 1737905,
+        "dealer_5d": -74773,
+        "dealer_20d": 423291,
+        "total_5d": 8591123,
+        "total_20d": 14335330,
+        "foreign_streak": 1,
+        "trust_streak": 3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 4023462,
+            "trust": 465000,
+            "dealer": -63234,
+            "total": 4425228
           },
           {
             "d": "2026-04-22",
@@ -8665,24 +8665,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -2635978,
-        "foreign_20d": -17681805,
-        "trust_5d": -8294469,
-        "trust_20d": -24367698,
-        "dealer_5d": 126808,
-        "dealer_20d": 3964218,
-        "total_5d": -10803639,
-        "total_20d": -38085285,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -4748757,
+        "foreign_20d": -13024042,
+        "trust_5d": -8792132,
+        "trust_20d": -20013252,
+        "dealer_5d": -440819,
+        "dealer_20d": 3394474,
+        "total_5d": -13981708,
+        "total_20d": -29642820,
+        "foreign_streak": -1,
+        "trust_streak": -8,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -2112779,
+            "trust": -497663,
+            "dealer": -567627,
+            "total": -3178069
           },
           {
             "d": "2026-04-22",
@@ -8757,24 +8757,24 @@
         "industry": "Metal Fabrication"
       },
       "chips": {
-        "foreign_5d": 4348623,
-        "foreign_20d": -242245,
-        "trust_5d": -8012151,
-        "trust_20d": -9471206,
-        "dealer_5d": -255655,
-        "dealer_20d": -3860,
-        "total_5d": -3919183,
-        "total_20d": -9717311,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 7605620,
+        "foreign_20d": 4336117,
+        "trust_5d": -9979214,
+        "trust_20d": -11996271,
+        "dealer_5d": -13667,
+        "dealer_20d": 76234,
+        "total_5d": -2387261,
+        "total_20d": -7583920,
+        "foreign_streak": 5,
+        "trust_streak": -14,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 3256997,
+            "trust": -1967063,
+            "dealer": 241988,
+            "total": 1531922
           },
           {
             "d": "2026-04-22",
@@ -8941,24 +8941,24 @@
         "industry": "Specialty Industrial Machinery"
       },
       "chips": {
-        "foreign_5d": -4065622,
-        "foreign_20d": -8401254,
-        "trust_5d": -193830,
-        "trust_20d": -1733365,
-        "dealer_5d": -5688,
-        "dealer_20d": 263505,
-        "total_5d": -4265140,
-        "total_20d": -9871114,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -5677596,
+        "foreign_20d": -13596220,
+        "trust_5d": -189184,
+        "trust_20d": -1561245,
+        "dealer_5d": -190963,
+        "dealer_20d": -26860,
+        "total_5d": -6057743,
+        "total_20d": -15184325,
+        "foreign_streak": -2,
+        "trust_streak": 2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -1611974,
+            "trust": 4646,
+            "dealer": -185275,
+            "total": -1792603
           },
           {
             "d": "2026-04-22",
@@ -9033,24 +9033,24 @@
         "industry": "Electrical Equipment & Parts"
       },
       "chips": {
-        "foreign_5d": -174317,
-        "foreign_20d": -1043737,
-        "trust_5d": 454699,
-        "trust_20d": -1513065,
-        "dealer_5d": 81346,
-        "dealer_20d": 272165,
-        "total_5d": 361728,
-        "total_20d": -2284637,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -309610,
+        "foreign_20d": -2585512,
+        "trust_5d": 483699,
+        "trust_20d": -970318,
+        "dealer_5d": -19302,
+        "dealer_20d": 195501,
+        "total_5d": 154787,
+        "total_20d": -3360329,
+        "foreign_streak": -2,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -135293,
+            "trust": 29000,
+            "dealer": -100648,
+            "total": -206941
           },
           {
             "d": "2026-04-22",
@@ -9125,24 +9125,24 @@
         "industry": "Electrical Equipment & Parts"
       },
       "chips": {
-        "foreign_5d": 677929,
-        "foreign_20d": -382215,
+        "foreign_5d": 564741,
+        "foreign_20d": -14384,
         "trust_5d": -2000,
-        "trust_20d": -1101,
-        "dealer_5d": 71259,
-        "dealer_20d": 378025,
-        "total_5d": 747188,
-        "total_20d": -5291,
-        "foreign_streak": 0,
+        "trust_20d": 1000,
+        "dealer_5d": -24377,
+        "dealer_20d": 337349,
+        "total_5d": 538364,
+        "total_20d": 323965,
+        "foreign_streak": -1,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -113188,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -95636,
+            "total": -208824
           },
           {
             "d": "2026-04-22",
@@ -9217,24 +9217,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -23610270,
-        "foreign_20d": -27738912,
-        "trust_5d": 14000,
-        "trust_20d": 3511489,
-        "dealer_5d": -1416319,
-        "dealer_20d": 1620900,
-        "total_5d": -25012589,
-        "total_20d": -22606523,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -23655078,
+        "foreign_20d": -27460070,
+        "trust_5d": 105000,
+        "trust_20d": 3640894,
+        "dealer_5d": -1321400,
+        "dealer_20d": 1547082,
+        "total_5d": -24871478,
+        "total_20d": -22272094,
+        "foreign_streak": -1,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -44808,
+            "trust": 91000,
+            "dealer": 94919,
+            "total": 141111
           },
           {
             "d": "2026-04-22",
@@ -9493,24 +9493,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 1838817,
-        "foreign_20d": 3921622,
-        "trust_5d": -771557,
-        "trust_20d": -3452894,
-        "dealer_5d": 283172,
-        "dealer_20d": 1487477,
-        "total_5d": 1350432,
-        "total_20d": 1956205,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 3233185,
+        "foreign_20d": 6231970,
+        "trust_5d": -1029855,
+        "trust_20d": -3407387,
+        "dealer_5d": 52849,
+        "dealer_20d": 1126067,
+        "total_5d": 2256179,
+        "total_20d": 3950650,
+        "foreign_streak": 4,
+        "trust_streak": -1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 1394368,
+            "trust": -258298,
+            "dealer": -230323,
+            "total": 905747
           },
           {
             "d": "2026-04-22",
@@ -9585,24 +9585,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -496857,
-        "foreign_20d": -33306475,
-        "trust_5d": -7198000,
-        "trust_20d": -9089912,
-        "dealer_5d": 1531712,
-        "dealer_20d": 3322885,
-        "total_5d": -6163145,
-        "total_20d": -39073502,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -6396124,
+        "foreign_20d": -41086516,
+        "trust_5d": -8080000,
+        "trust_20d": -10407189,
+        "dealer_5d": 1671357,
+        "dealer_20d": 3911535,
+        "total_5d": -12804767,
+        "total_20d": -47582170,
+        "foreign_streak": -2,
+        "trust_streak": -11,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -5899267,
+            "trust": -882000,
+            "dealer": 139645,
+            "total": -6641622
           },
           {
             "d": "2026-04-22",
@@ -9677,24 +9677,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -12038,
-        "foreign_20d": 3700910,
-        "trust_5d": 26355,
-        "trust_20d": 2627683,
-        "dealer_5d": -503735,
-        "dealer_20d": 2982391,
-        "total_5d": -489418,
-        "total_20d": 9310984,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -1950295,
+        "foreign_20d": -8058019,
+        "trust_5d": 444449,
+        "trust_20d": 2908801,
+        "dealer_5d": -601552,
+        "dealer_20d": 2443476,
+        "total_5d": -2107398,
+        "total_20d": -2705742,
+        "foreign_streak": -2,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -1938257,
+            "trust": 418094,
+            "dealer": -97817,
+            "total": -1617980
           },
           {
             "d": "2026-04-22",
@@ -9861,24 +9861,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 2299473,
-        "foreign_20d": 28279055,
+        "foreign_5d": 8248449,
+        "foreign_20d": 31840495,
         "trust_5d": 17000,
-        "trust_20d": 476554,
-        "dealer_5d": -155796,
-        "dealer_20d": 4036153,
-        "total_5d": 2160677,
-        "total_20d": 32791762,
-        "foreign_streak": 0,
+        "trust_20d": 205554,
+        "dealer_5d": -1695203,
+        "dealer_20d": 2594817,
+        "total_5d": 6570246,
+        "total_20d": 34640866,
+        "foreign_streak": -1,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -5369460,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -2095411,
+            "total": -7464871
           },
           {
             "d": "2026-04-22",
@@ -9889,10 +9889,10 @@
           },
           {
             "d": "2026-04-21",
-            "foreign": 0,
+            "foreign": 11318436,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": 556004,
+            "total": 11874440
           },
           {
             "d": "2026-04-20",
@@ -10045,24 +10045,24 @@
         "industry": "Marine Shipping"
       },
       "chips": {
-        "foreign_5d": -1134062,
-        "foreign_20d": 651033,
+        "foreign_5d": -1950062,
+        "foreign_20d": -792967,
         "trust_5d": 0,
         "trust_20d": 0,
-        "dealer_5d": -36761,
-        "dealer_20d": -87593,
-        "total_5d": -1170823,
-        "total_20d": 563440,
-        "foreign_streak": 0,
+        "dealer_5d": -125683,
+        "dealer_20d": -161850,
+        "total_5d": -2075745,
+        "total_20d": -954817,
+        "foreign_streak": -2,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -816000,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -88922,
+            "total": -904922
           },
           {
             "d": "2026-04-22",
@@ -10137,24 +10137,24 @@
         "industry": "Scientific & Technical Instruments"
       },
       "chips": {
-        "foreign_5d": -4414690,
-        "foreign_20d": -10300397,
-        "trust_5d": -152855,
-        "trust_20d": 2793447,
-        "dealer_5d": 430516,
-        "dealer_20d": 139106,
-        "total_5d": -4137029,
-        "total_20d": -7367844,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -4214760,
+        "foreign_20d": -10867114,
+        "trust_5d": -519846,
+        "trust_20d": 2644264,
+        "dealer_5d": 371097,
+        "dealer_20d": 294356,
+        "total_5d": -4363509,
+        "total_20d": -7928494,
+        "foreign_streak": 2,
+        "trust_streak": -4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 199930,
+            "trust": -366991,
+            "dealer": -59419,
+            "total": -226480
           },
           {
             "d": "2026-04-22",
@@ -10229,24 +10229,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -713897,
-        "foreign_20d": 4843609,
-        "trust_5d": 114000,
-        "trust_20d": 1467885,
-        "dealer_5d": -19178,
-        "dealer_20d": -81276,
-        "total_5d": -619075,
-        "total_20d": 6230218,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -826038,
+        "foreign_20d": 6200050,
+        "trust_5d": -276000,
+        "trust_20d": 893448,
+        "dealer_5d": -79616,
+        "dealer_20d": -129092,
+        "total_5d": -1181654,
+        "total_20d": 6964406,
+        "foreign_streak": -1,
+        "trust_streak": -1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -112141,
+            "trust": -390000,
+            "dealer": -60438,
+            "total": -562579
           },
           {
             "d": "2026-04-22",
@@ -10349,24 +10349,24 @@
         "industry": "Consumer Electronics"
       },
       "chips": {
-        "foreign_5d": -22518,
-        "foreign_20d": -174518,
+        "foreign_5d": -78518,
+        "foreign_20d": -199518,
         "trust_5d": 0,
         "trust_20d": 0,
-        "dealer_5d": 6000,
-        "dealer_20d": 11000,
-        "total_5d": -16518,
-        "total_20d": -163518,
-        "foreign_streak": 0,
+        "dealer_5d": 3000,
+        "dealer_20d": 5000,
+        "total_5d": -75518,
+        "total_20d": -194518,
+        "foreign_streak": -2,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -56000,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -3000,
+            "total": -59000
           },
           {
             "d": "2026-04-22",
@@ -10441,24 +10441,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -505710,
-        "foreign_20d": 4306628,
-        "trust_5d": -222280,
-        "trust_20d": -402086,
-        "dealer_5d": 76472,
-        "dealer_20d": 258387,
-        "total_5d": -651518,
-        "total_20d": 4162929,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 369700,
+        "foreign_20d": 5478737,
+        "trust_5d": -285280,
+        "trust_20d": -465982,
+        "dealer_5d": -227591,
+        "dealer_20d": -27564,
+        "total_5d": -143171,
+        "total_20d": 4985191,
+        "foreign_streak": 1,
+        "trust_streak": -12,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 875410,
+            "trust": -63000,
+            "dealer": -304063,
+            "total": 508347
           },
           {
             "d": "2026-04-22",
@@ -10533,24 +10533,24 @@
         "industry": "Computer Hardware"
       },
       "chips": {
-        "foreign_5d": 215392,
-        "foreign_20d": 231913,
+        "foreign_5d": -75438,
+        "foreign_20d": -379683,
         "trust_5d": -35000,
-        "trust_20d": -169781,
-        "dealer_5d": 9567,
-        "dealer_20d": 67539,
-        "total_5d": 189959,
-        "total_20d": 129671,
-        "foreign_streak": 0,
+        "trust_20d": -170525,
+        "dealer_5d": -8088,
+        "dealer_20d": 41787,
+        "total_5d": -118526,
+        "total_20d": -508421,
+        "foreign_streak": -2,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -290830,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -17655,
+            "total": -308485
           },
           {
             "d": "2026-04-22",
@@ -10625,24 +10625,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -2820761,
-        "foreign_20d": 1986223,
-        "trust_5d": 1373580,
-        "trust_20d": 2492646,
-        "dealer_5d": 127401,
-        "dealer_20d": 5301783,
-        "total_5d": -1319780,
-        "total_20d": 9780652,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -7342408,
+        "foreign_20d": -747976,
+        "trust_5d": 1740844,
+        "trust_20d": 2340505,
+        "dealer_5d": -55585,
+        "dealer_20d": 4694199,
+        "total_5d": -5657149,
+        "total_20d": 6286728,
+        "foreign_streak": -2,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -4521647,
+            "trust": 367264,
+            "dealer": -182986,
+            "total": -4337369
           },
           {
             "d": "2026-04-22",
@@ -10717,24 +10717,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 1351143,
-        "foreign_20d": 5409028,
+        "foreign_5d": 1060701,
+        "foreign_20d": 6290632,
         "trust_5d": 0,
-        "trust_20d": -301000,
-        "dealer_5d": 578006,
-        "dealer_20d": 585457,
-        "total_5d": 1929149,
-        "total_20d": 5693485,
-        "foreign_streak": 0,
+        "trust_20d": -305828,
+        "dealer_5d": 247566,
+        "dealer_20d": 410351,
+        "total_5d": 1308267,
+        "total_20d": 6395155,
+        "foreign_streak": -1,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -290442,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -330440,
+            "total": -620882
           },
           {
             "d": "2026-04-22",
@@ -10809,24 +10809,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": 632193,
-        "foreign_20d": -12963372,
-        "trust_5d": -101000,
-        "trust_20d": -656946,
-        "dealer_5d": 161201,
-        "dealer_20d": -1679790,
-        "total_5d": 692394,
-        "total_20d": -15300108,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -3105487,
+        "foreign_20d": -17605579,
+        "trust_5d": -156000,
+        "trust_20d": -714529,
+        "dealer_5d": -227637,
+        "dealer_20d": -2452241,
+        "total_5d": -3489124,
+        "total_20d": -20772349,
+        "foreign_streak": -1,
+        "trust_streak": -3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -3737680,
+            "trust": -55000,
+            "dealer": -388838,
+            "total": -4181518
           },
           {
             "d": "2026-04-22",
@@ -10901,24 +10901,24 @@
         "industry": "Semiconductors"
       },
       "chips": {
-        "foreign_5d": -144208,
-        "foreign_20d": 226884,
-        "trust_5d": -45000,
-        "trust_20d": -48642,
-        "dealer_5d": 113491,
-        "dealer_20d": 229284,
-        "total_5d": -75717,
-        "total_20d": 407526,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -622617,
+        "foreign_20d": -69272,
+        "trust_5d": -41040,
+        "trust_20d": -51716,
+        "dealer_5d": -7489,
+        "dealer_20d": 167716,
+        "total_5d": -671146,
+        "total_20d": 46728,
+        "foreign_streak": -1,
+        "trust_streak": 2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -478409,
+            "trust": 3960,
+            "dealer": -120980,
+            "total": -595429
           },
           {
             "d": "2026-04-22",
@@ -10993,24 +10993,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -4089888,
-        "foreign_20d": -22198625,
-        "trust_5d": -1715000,
-        "trust_20d": -2231718,
-        "dealer_5d": 463201,
-        "dealer_20d": -138287,
-        "total_5d": -5341687,
-        "total_20d": -24568630,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -4147421,
+        "foreign_20d": 17143931,
+        "trust_5d": -2368000,
+        "trust_20d": -1542077,
+        "dealer_5d": 418501,
+        "dealer_20d": 485348,
+        "total_5d": -6096920,
+        "total_20d": 16087202,
+        "foreign_streak": -2,
+        "trust_streak": -3,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -57533,
+            "trust": -653000,
+            "dealer": -44700,
+            "total": -755233
           },
           {
             "d": "2026-04-22",
@@ -11177,24 +11177,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -631172,
-        "foreign_20d": 3173542,
-        "trust_5d": 360735,
-        "trust_20d": 170812,
-        "dealer_5d": 1153405,
-        "dealer_20d": 2101575,
-        "total_5d": 882968,
-        "total_20d": 5445929,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -11383852,
+        "foreign_20d": 2284329,
+        "trust_5d": 447651,
+        "trust_20d": 242702,
+        "dealer_5d": -451016,
+        "dealer_20d": 354153,
+        "total_5d": -11387217,
+        "total_20d": 2881184,
+        "foreign_streak": -2,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": -10752680,
+            "trust": 86916,
+            "dealer": -1604421,
+            "total": -12270185
           },
           {
             "d": "2026-04-22",
@@ -11545,24 +11545,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 3125436,
-        "foreign_20d": 3023436,
+        "foreign_5d": 1095266,
+        "foreign_20d": 1146266,
         "trust_5d": 0,
         "trust_20d": 0,
-        "dealer_5d": 17428,
-        "dealer_20d": 27265,
-        "total_5d": 3142864,
-        "total_20d": 3050701,
-        "foreign_streak": 0,
+        "dealer_5d": 32128,
+        "dealer_20d": 45504,
+        "total_5d": 1127394,
+        "total_20d": 1191770,
+        "foreign_streak": -1,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": -2030170,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": 14700,
+            "total": -2015470
           },
           {
             "d": "2026-04-22",
@@ -11637,24 +11637,24 @@
         "industry": "Electronics & Computer Distribution"
       },
       "chips": {
-        "foreign_5d": 18298303,
-        "foreign_20d": 78391251,
-        "trust_5d": -17970907,
-        "trust_20d": -22828267,
-        "dealer_5d": -1271726,
-        "dealer_20d": -1628181,
-        "total_5d": -944330,
-        "total_20d": 53934803,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 19887304,
+        "foreign_20d": 93656634,
+        "trust_5d": -22053907,
+        "trust_20d": -33353267,
+        "dealer_5d": -998478,
+        "dealer_20d": -2974355,
+        "total_5d": -3165081,
+        "total_20d": 57329012,
+        "foreign_streak": 14,
+        "trust_streak": -10,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 1589001,
+            "trust": -4083000,
+            "dealer": 273248,
+            "total": -2220751
           },
           {
             "d": "2026-04-22",
@@ -11729,24 +11729,24 @@
         "industry": "Electrical Equipment & Parts"
       },
       "chips": {
-        "foreign_5d": 853795,
-        "foreign_20d": -2068183,
-        "trust_5d": 160215,
-        "trust_20d": 4154377,
-        "dealer_5d": -87120,
-        "dealer_20d": -270025,
-        "total_5d": 926890,
-        "total_20d": 1816169,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 1391385,
+        "foreign_20d": -2400815,
+        "trust_5d": 397128,
+        "trust_20d": 3608618,
+        "dealer_5d": -111787,
+        "dealer_20d": -251036,
+        "total_5d": 1676726,
+        "total_20d": 956767,
+        "foreign_streak": 2,
+        "trust_streak": 2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 537590,
+            "trust": 236913,
+            "dealer": -24667,
+            "total": 749836
           },
           {
             "d": "2026-04-22",
@@ -11821,24 +11821,24 @@
         "industry": "Electrical Equipment & Parts"
       },
       "chips": {
-        "foreign_5d": 153526,
-        "foreign_20d": -1161906,
+        "foreign_5d": 359526,
+        "foreign_20d": -1020706,
         "trust_5d": 0,
         "trust_20d": 0,
-        "dealer_5d": -788,
-        "dealer_20d": 19478,
-        "total_5d": 152738,
-        "total_20d": -1142428,
-        "foreign_streak": 0,
+        "dealer_5d": -1671,
+        "dealer_20d": 11708,
+        "total_5d": 357855,
+        "total_20d": -1008998,
+        "foreign_streak": 1,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": 206000,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -883,
+            "total": 205117
           },
           {
             "d": "2026-04-22",
@@ -11913,24 +11913,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": -1774904,
-        "foreign_20d": 1036985,
-        "trust_5d": 149700,
-        "trust_20d": 147900,
-        "dealer_5d": 41619,
-        "dealer_20d": 1794931,
-        "total_5d": -1583585,
-        "total_20d": 2979816,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": -1633219,
+        "foreign_20d": 3244200,
+        "trust_5d": 195700,
+        "trust_20d": 191788,
+        "dealer_5d": 147210,
+        "dealer_20d": 1996366,
+        "total_5d": -1290309,
+        "total_20d": 5432354,
+        "foreign_streak": 1,
+        "trust_streak": 4,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 141685,
+            "trust": 46000,
+            "dealer": 105591,
+            "total": 293276
           },
           {
             "d": "2026-04-22",
@@ -12097,24 +12097,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 33457,
-        "foreign_20d": 6549264,
-        "trust_5d": -411000,
-        "trust_20d": -1967391,
-        "dealer_5d": 2455567,
-        "dealer_20d": 8386511,
-        "total_5d": 2078024,
-        "total_20d": 12968384,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 67432,
+        "foreign_20d": 6663265,
+        "trust_5d": -611000,
+        "trust_20d": -2152786,
+        "dealer_5d": 2590967,
+        "dealer_20d": 8493594,
+        "total_5d": 2047399,
+        "total_20d": 13004073,
+        "foreign_streak": 2,
+        "trust_streak": -2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 33975,
+            "trust": -200000,
+            "dealer": 135400,
+            "total": -30625
           },
           {
             "d": "2026-04-22",
@@ -12189,24 +12189,24 @@
         "industry": "Specialty Industrial Machinery"
       },
       "chips": {
-        "foreign_5d": -788070,
-        "foreign_20d": 333871,
+        "foreign_5d": -172070,
+        "foreign_20d": 1203870,
         "trust_5d": 0,
         "trust_20d": 0,
-        "dealer_5d": -23381,
-        "dealer_20d": -121931,
-        "total_5d": -811451,
-        "total_20d": 211940,
-        "foreign_streak": 0,
+        "dealer_5d": -37382,
+        "dealer_20d": -114559,
+        "total_5d": -209452,
+        "total_20d": 1089311,
+        "foreign_streak": 1,
         "trust_streak": 0,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
+            "foreign": 616000,
             "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "dealer": -14001,
+            "total": 601999
           },
           {
             "d": "2026-04-22",
@@ -12557,24 +12557,24 @@
         "industry": "Electronic Components"
       },
       "chips": {
-        "foreign_5d": 4408943,
-        "foreign_20d": 22671551,
-        "trust_5d": -2183937,
-        "trust_20d": -9785100,
-        "dealer_5d": 79180,
-        "dealer_20d": 1602781,
-        "total_5d": 2304186,
-        "total_20d": 14489232,
-        "foreign_streak": 0,
-        "trust_streak": 0,
+        "foreign_5d": 5249731,
+        "foreign_20d": 22012002,
+        "trust_5d": -2139579,
+        "trust_20d": -8493675,
+        "dealer_5d": -13934,
+        "dealer_20d": 1233923,
+        "total_5d": 3096218,
+        "total_20d": 14752250,
+        "foreign_streak": 4,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-04-23",
-            "foreign": 0,
-            "trust": 0,
-            "dealer": 0,
-            "total": 0
+            "foreign": 840788,
+            "trust": 44358,
+            "dealer": -93114,
+            "total": 792032
           },
           {
             "d": "2026-04-22",

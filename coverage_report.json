@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-23T16:05:03.979598+08:00",
+  "fetched_at": "2026-04-23T18:58:13.338282+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -21,7 +21,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -63,7 +63,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
@@ -76,35 +76,35 @@
   "added_from_chains": [],
   "news_frequency": {
     "5607": 90,
-    "2330": 60,
-    "0050": 51,
-    "3081": 41,
-    "3189": 33,
-    "3017": 26,
-    "3019": 20,
-    "3324": 17,
+    "2330": 66,
+    "0050": 54,
+    "3081": 34,
+    "3019": 21,
+    "3583": 18,
+    "2317": 17,
     "2303": 16,
-    "3583": 14,
-    "2317": 13,
+    "4958": 16,
+    "3017": 15,
+    "3324": 14,
     "2454": 13,
-    "4958": 12,
-    "6658": 10,
+    "2028": 13,
+    "6146": 12,
     "2383": 10,
-    "6173": 10,
+    "2327": 9,
+    "2492": 8,
+    "6173": 7,
+    "3037": 7,
+    "3189": 7,
     "3363": 7,
-    "2327": 7,
-    "6213": 7,
-    "3665": 6,
     "2368": 6,
-    "2492": 6,
-    "8358": 6,
-    "2028": 6,
-    "3008": 5,
+    "6658": 6,
     "3702": 5,
     "2449": 5,
-    "3037": 5,
-    "2360": 4,
-    "6515": 4
+    "3338": 5,
+    "2025": 5,
+    "3653": 4,
+    "4566": 4,
+    "3008": 3
   },
   "missing_from_chains": [
     {
@@ -115,37 +115,37 @@
       "in_chains": false
     },
     {
-      "symbol": "3189",
-      "name": "景碩",
-      "mentions": 33,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "3019",
       "name": "亞光",
-      "mentions": 20,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6658",
-      "name": "聯策",
-      "mentions": 10,
+      "mentions": 21,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2028",
       "name": "威致",
+      "mentions": 13,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6658",
+      "name": "聯策",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "7788",
-      "name": "松川精密",
-      "mentions": 4,
+      "symbol": "2025",
+      "name": "千興",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -153,6 +153,13 @@
       "symbol": "3653",
       "name": "健策",
       "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00981A",
+      "name": "主動統一台股增長",
+      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -171,71 +178,43 @@
       "in_chains": false
     },
     {
-      "symbol": "6715",
-      "name": "嘉基",
+      "symbol": "2324",
+      "name": "仁寶",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6442",
-      "name": "光聖",
+      "symbol": "8021",
+      "name": "尖點",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6291",
-      "name": "沛亨",
+      "symbol": "3071",
+      "name": "協禧",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "7769",
-      "name": "鴻勁",
+      "symbol": "2323",
+      "name": "中環",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6223",
-      "name": "旺矽",
+      "symbol": "3023",
+      "name": "信邦",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6907",
-      "name": "雅特力-KY",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2542",
-      "name": "興富發",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2535",
-      "name": "達欣工",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "1808",
-      "name": "潤隆",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2501",
-      "name": "國建",
+      "symbol": "6117",
+      "name": "迎廣",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
