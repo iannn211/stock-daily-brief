@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-24T18:55:08.008255+08:00",
+  "fetched_at": "2026-04-27T20:11:35.407280+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -28,7 +28,7 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 5
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
@@ -42,21 +42,21 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 4
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 1
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 106,
-    "5607": 104,
-    "0050": 67,
-    "3324": 41,
-    "3081": 38,
+    "5607": 103,
+    "2330": 97,
+    "0050": 52,
+    "3324": 33,
+    "3081": 29,
     "3019": 29,
-    "2368": 26,
     "3017": 26,
+    "3189": 24,
+    "4958": 21,
     "3131": 21,
-    "2454": 20,
-    "4958": 20,
-    "6173": 20,
-    "2317": 17,
-    "3189": 17,
     "8155": 17,
-    "2303": 14,
-    "3037": 12,
-    "3715": 11,
-    "2383": 10,
+    "2454": 16,
+    "2368": 16,
+    "2317": 14,
+    "3037": 14,
+    "6173": 13,
+    "8046": 11,
     "6669": 10,
-    "3363": 10,
-    "2327": 9,
-    "2308": 9,
+    "3715": 10,
     "3583": 8,
+    "2025": 7,
+    "2303": 7,
     "4938": 6,
-    "2492": 6,
-    "8046": 6,
-    "4979": 6,
+    "2308": 6,
+    "3443": 6,
+    "3665": 6,
+    "3363": 6,
     "6196": 6,
-    "2028": 5
+    "2028": 5,
+    "3105": 5
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 104,
+      "mentions": 103,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -124,7 +124,14 @@
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 17,
+      "mentions": 24,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2025",
+      "name": "千興",
+      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -132,6 +139,13 @@
       "symbol": "2028",
       "name": "威致",
       "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6658",
+      "name": "聯策",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -150,29 +164,22 @@
       "in_chains": false
     },
     {
-      "symbol": "2025",
-      "name": "千興",
-      "mentions": 3,
+      "symbol": "00878",
+      "name": "國泰永續高股息",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2029",
-      "name": "盛餘",
-      "mentions": 3,
+      "symbol": "6155",
+      "name": "鈞寶",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "00981A",
       "name": "主動統一台股增長",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6658",
-      "name": "聯策",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false

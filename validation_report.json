@@ -1,97 +1,41 @@
 {
-  "validated_at": "2026-04-24T19:01:17.584529+08:00",
-  "analysis_file": "analyses/2026-04-24.json",
-  "analysis_date": "2026-04-24",
+  "validated_at": "2026-04-27T20:18:14.034319+08:00",
+  "analysis_file": "analyses/2026-04-27.json",
+  "analysis_date": "2026-04-27",
   "analysis_model": "gemini-2.5-flash-lite",
   "issues": [
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
+      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 35000.0
+        "total_cost": 30000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
+      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
       "context": {
         "claimed": 0,
-        "expected": -30000.0
+        "expected": -25000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "topics[0]",
-      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=17.4（屬於合理區） — 題材「AI 伺服器與半導體設備動能延續」",
-      "context": {
-        "symbol": "6669",
-        "pe": 17.449083,
-        "tier": "fair"
-      },
-      "headline": "6669 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=17.4（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
-      "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[1].why",
-      "message": "3019 描述提到「昂貴/泡沫」，但實際 PE=21.5（屬於合理區） — 題材「AI 伺服器散熱與液冷」",
-      "context": {
-        "symbol": "3019",
-        "pe": 21.461538,
-        "tier": "fair"
-      },
-      "headline": "3019 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3019 當「昂貴/泡沫」敘述，但實際 PE=21.5（屬於合理區）。如果原本因此不考慮 3019，可能低估機會。",
-      "next_step": "重新評估 3019 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[3].why",
-      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=21.0（屬於合理區） — 題材「半導體設備」",
-      "context": {
-        "symbol": "6146",
-        "pe": 20.969246,
-        "tier": "fair"
-      },
-      "headline": "6146 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=21.0（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
-      "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[3].headline",
-      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=21.0（屬於合理區） — 題材「半導體設備」",
-      "context": {
-        "symbol": "6146",
-        "pe": 20.969246,
-        "tier": "fair"
-      },
-      "headline": "6146 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=21.0（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
-      "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
     }
   ],
   "summary": {
     "errors": 1,
-    "warnings": 5,
+    "warnings": 1,
     "infos": 0,
-    "total": 6,
+    "total": 2,
     "suppressed": 0
   }
 }
