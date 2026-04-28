@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-28T10:04:02.880834+08:00",
+  "fetched_at": "2026-04-28T20:16:17.970806+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 14
+      "mentioned_in_window": 15
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -42,14 +42,14 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 127,
-    "5607": 110,
-    "0050": 62,
-    "3324": 50,
-    "3081": 42,
-    "3017": 36,
+    "2330": 146,
+    "5607": 96,
+    "0050": 87,
+    "3324": 52,
+    "3081": 51,
+    "3017": 38,
     "3019": 29,
     "8155": 26,
     "3189": 23,
-    "3131": 21,
-    "2454": 18,
-    "4958": 18,
-    "6669": 17,
+    "4958": 22,
+    "3131": 22,
+    "2454": 21,
+    "6669": 19,
+    "2303": 18,
+    "2317": 18,
+    "2492": 18,
     "6173": 16,
-    "2303": 15,
     "2368": 15,
-    "2317": 14,
+    "3026": 15,
+    "3715": 15,
+    "2327": 14,
     "3037": 13,
-    "3715": 13,
     "2356": 9,
     "3363": 9,
-    "3583": 8,
-    "3026": 8,
     "8046": 8,
+    "3583": 8,
+    "5328": 8,
+    "3665": 7,
     "6147": 7,
-    "4938": 6,
-    "2308": 6,
-    "3338": 6,
-    "6230": 6,
-    "6196": 6
+    "6230": 7
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 110,
+      "mentions": 96,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -129,15 +129,29 @@
       "in_chains": false
     },
     {
-      "symbol": "2025",
-      "name": "千興",
-      "mentions": 5,
+      "symbol": "5328",
+      "name": "華容",
+      "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2028",
       "name": "威致",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2059",
+      "name": "川湖",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2025",
+      "name": "千興",
       "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
@@ -150,37 +164,23 @@
       "in_chains": false
     },
     {
-      "symbol": "3023",
-      "name": "信邦",
+      "symbol": "2027",
+      "name": "大成鋼",
       "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2059",
-      "name": "川湖",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "5328",
-      "name": "華容",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6016",
       "name": "康和證",
-      "mentions": 2,
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3023",
+      "name": "信邦",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
