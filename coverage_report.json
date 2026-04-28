@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-27T20:11:35.407280+08:00",
+  "fetched_at": "2026-04-28T10:04:02.880834+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,14 +7,14 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 16
+      "mentioned_in_window": 14
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
@@ -28,14 +28,14 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 4
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 3
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -56,7 +56,7 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -70,47 +70,47 @@
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 1
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "5607": 103,
-    "2330": 97,
-    "0050": 52,
-    "3324": 33,
-    "3081": 29,
+    "2330": 127,
+    "5607": 110,
+    "0050": 62,
+    "3324": 50,
+    "3081": 42,
+    "3017": 36,
     "3019": 29,
-    "3017": 26,
-    "3189": 24,
-    "4958": 21,
+    "8155": 26,
+    "3189": 23,
     "3131": 21,
-    "8155": 17,
-    "2454": 16,
-    "2368": 16,
+    "2454": 18,
+    "4958": 18,
+    "6669": 17,
+    "6173": 16,
+    "2303": 15,
+    "2368": 15,
     "2317": 14,
-    "3037": 14,
-    "6173": 13,
-    "8046": 11,
-    "6669": 10,
-    "3715": 10,
+    "3037": 13,
+    "3715": 13,
+    "2356": 9,
+    "3363": 9,
     "3583": 8,
-    "2025": 7,
-    "2303": 7,
+    "3026": 8,
+    "8046": 8,
+    "6147": 7,
     "4938": 6,
     "2308": 6,
-    "3443": 6,
-    "3665": 6,
-    "3363": 6,
-    "6196": 6,
-    "2028": 5,
-    "3105": 5
+    "3338": 6,
+    "6230": 6,
+    "6196": 6
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 103,
+      "mentions": 110,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -124,14 +124,14 @@
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 24,
+      "mentions": 23,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2025",
       "name": "千興",
-      "mentions": 7,
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -157,36 +157,29 @@
       "in_chains": false
     },
     {
-      "symbol": "3653",
-      "name": "健策",
+      "symbol": "2059",
+      "name": "川湖",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "00878",
-      "name": "國泰永續高股息",
+      "symbol": "5328",
+      "name": "華容",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6155",
-      "name": "鈞寶",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
+      "symbol": "6770",
+      "name": "力積電",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6432",
-      "name": "今展科",
+      "symbol": "6016",
+      "name": "康和證",
       "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
