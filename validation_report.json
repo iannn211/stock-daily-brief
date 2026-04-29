@@ -1,48 +1,30 @@
 {
-  "validated_at": "2026-04-28T20:21:40.750842+08:00",
-  "analysis_file": "analyses/2026-04-28.json",
-  "analysis_date": "2026-04-28",
-  "analysis_model": "gemini-2.5-flash",
+  "validated_at": "2026-04-29T20:13:16.397855+08:00",
+  "analysis_file": "analyses/2026-04-29.json",
+  "analysis_date": "2026-04-29",
+  "analysis_model": "gemini-2.5-flash-lite",
   "issues": [
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI 電力 / 重電» → lead_stocks[2]",
-      "message": "代號 1722 (台肥 (mid)) 本站無資料，無法驗證數字是否正確",
-      "headline": "1722 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 1722 → 去 inspect.html?sym=1722 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[4] «記憶體超級循環» → lead_stocks[0]",
-      "message": "代號 4967 (十銓 (small)) 本站無資料，無法驗證數字是否正確",
-      "headline": "4967 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 4967 → 去 inspect.html?sym=4967 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
+      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 35000.0
+        "total_cost": 30000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
+      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
       "context": {
         "claimed": 0,
-        "expected": -30000.0
+        "expected": -25000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
@@ -50,44 +32,108 @@
     },
     {
       "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[0]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1519 (華城 (mid)) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[0]",
+      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=18.3（屬於合理區） — 題材「AI 伺服器與散熱需求持續，但市場情緒轉趨謹慎」",
       "context": {
-        "symbol": "1519",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
+        "symbol": "6669",
+        "pe": 18.252712,
+        "tier": "fair"
       },
-      "headline": "1519 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
+      "headline": "6669 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=18.3（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
+      "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[1]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1503 (士電 (mid)) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[2]",
+      "message": "3081 描述提到「便宜/低估」，但實際 PE=542.1（屬於昂貴/泡沫區） — 題材「光通訊題材熱度不減，但需留意個股估值與漲幅」",
       "context": {
-        "symbol": "1503",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
+        "symbol": "3081",
+        "pe": 542.1286,
+        "tier": "bubble"
       },
-      "headline": "1503 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
+      "headline": "3081 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 3081 當「便宜」敘述，但實際 PE=542.1（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 3081 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[2]",
+      "message": "3163 描述提到「便宜/低估」，但實際 PE=168.3（屬於昂貴/泡沫區） — 題材「光通訊題材熱度不減，但需留意個股估值與漲幅」",
+      "context": {
+        "symbol": "3163",
+        "pe": 168.27698,
+        "tier": "bubble"
+      },
+      "headline": "3163 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 3163 當「便宜」敘述，但實際 PE=168.3（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 3163 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[2]",
+      "message": "3363 描述提到「便宜/低估」，但實際 PE=5026.7（屬於昂貴/泡沫區） — 題材「光通訊題材熱度不減，但需留意個股估值與漲幅」",
+      "context": {
+        "symbol": "3363",
+        "pe": 5026.6665,
+        "tier": "bubble"
+      },
+      "headline": "3363 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 3363 當「便宜」敘述，但實際 PE=5026.7（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 3363 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[2]",
+      "message": "4979 描述提到「便宜/低估」，但實際 PE=105.1（屬於昂貴/泡沫區） — 題材「光通訊題材熱度不減，但需留意個股估值與漲幅」",
+      "context": {
+        "symbol": "4979",
+        "pe": 105.06567,
+        "tier": "bubble"
+      },
+      "headline": "4979 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 4979 當「便宜」敘述，但實際 PE=105.1（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 4979 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[3].why",
+      "message": "3163 描述提到「便宜/低估」，但實際 PE=168.3（屬於昂貴/泡沫區） — 題材「光通訊題材熱度不減，但需留意個股估值與漲幅」",
+      "context": {
+        "symbol": "3163",
+        "pe": 168.27698,
+        "tier": "bubble"
+      },
+      "headline": "3163 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 3163 當「便宜」敘述，但實際 PE=168.3（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 3163 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[3].why",
+      "message": "3363 描述提到「便宜/低估」，但實際 PE=5026.7（屬於昂貴/泡沫區） — 題材「光通訊題材熱度不減，但需留意個股估值與漲幅」",
+      "context": {
+        "symbol": "3363",
+        "pe": 5026.6665,
+        "tier": "bubble"
+      },
+      "headline": "3363 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 3363 當「便宜」敘述，但實際 PE=5026.7（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 3363 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 3,
+    "errors": 7,
+    "warnings": 2,
     "infos": 0,
-    "total": 4,
-    "suppressed": 2
+    "total": 9,
+    "suppressed": 0
   }
 }
