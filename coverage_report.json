@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-29T20:07:02.703695+08:00",
+  "fetched_at": "2026-04-30T20:04:16.707147+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 14
+      "mentioned_in_window": 12
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -42,7 +42,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
@@ -63,7 +63,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 5
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 140,
-    "5607": 89,
-    "0050": 81,
-    "3324": 54,
-    "3081": 49,
-    "3017": 41,
+    "2330": 151,
+    "0050": 92,
+    "5607": 84,
+    "3324": 68,
+    "3081": 55,
+    "3017": 46,
+    "2303": 40,
+    "6173": 30,
     "3019": 29,
     "8155": 27,
-    "2303": 26,
-    "6173": 22,
-    "4958": 21,
-    "3189": 21,
+    "3189": 23,
+    "6669": 23,
     "3131": 21,
-    "6669": 20,
+    "4958": 20,
+    "2327": 20,
+    "3026": 20,
     "2317": 18,
-    "3026": 18,
-    "2327": 16,
-    "2492": 16,
     "3715": 16,
+    "2492": 15,
     "2368": 15,
+    "3363": 15,
     "3037": 14,
     "2356": 14,
-    "2454": 13,
-    "3338": 12,
+    "2027": 11,
+    "3163": 11,
+    "3338": 11,
+    "6196": 10,
     "4967": 9,
-    "3363": 9,
-    "3583": 8,
-    "2027": 8,
-    "8046": 8,
-    "6230": 8
+    "6230": 9,
+    "3583": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 89,
+      "mentions": 84,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -124,7 +124,14 @@
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 21,
+      "mentions": 23,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,16 +143,9 @@
       "in_chains": false
     },
     {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 8,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "2025",
       "name": "千興",
-      "mentions": 5,
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -178,16 +178,37 @@
       "in_chains": false
     },
     {
-      "symbol": "1722",
-      "name": "台肥",
+      "symbol": "00990A",
+      "name": "主動元大AI新經濟",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6016",
-      "name": "康和證",
-      "mentions": 3,
+      "symbol": "8074",
+      "name": "鉅橡",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6224",
+      "name": "聚鼎",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2486",
+      "name": "一詮",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "1722",
+      "name": "台肥",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
