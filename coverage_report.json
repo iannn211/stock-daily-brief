@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-04T20:14:02.391421+08:00",
+  "fetched_at": "2026-05-05T19:44:23.125476+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 14
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -75,36 +75,36 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 130,
-    "0050": 97,
+    "2330": 129,
+    "0050": 98,
     "5607": 64,
-    "3017": 60,
-    "3081": 50,
-    "2303": 47,
-    "3324": 45,
-    "3163": 30,
-    "3715": 30,
-    "2327": 29,
-    "4908": 27,
-    "6173": 27,
-    "2492": 23,
-    "3037": 22,
-    "2486": 21,
-    "3026": 20,
-    "6230": 20,
+    "3017": 54,
+    "2303": 50,
+    "3081": 44,
+    "2486": 41,
+    "2327": 35,
+    "3324": 34,
+    "6173": 32,
+    "4908": 30,
+    "3026": 29,
+    "3163": 29,
+    "3715": 27,
+    "2492": 26,
     "8074": 19,
+    "6230": 18,
+    "4919": 17,
+    "2317": 17,
     "2027": 17,
-    "3665": 16,
-    "6669": 16,
-    "3363": 15,
-    "3189": 14,
+    "3037": 15,
+    "2454": 14,
     "3105": 14,
-    "2356": 14,
-    "8155": 14,
-    "2317": 13,
-    "8046": 13,
     "5269": 13,
-    "3443": 10
+    "3363": 12,
+    "3665": 11,
+    "4958": 10,
+    "8046": 10,
+    "6669": 10,
+    "3189": 9
   },
   "missing_from_chains": [
     {
@@ -117,7 +117,7 @@
     {
       "symbol": "2486",
       "name": "一詮",
-      "mentions": 21,
+      "mentions": 41,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -125,6 +125,13 @@
       "symbol": "8074",
       "name": "鉅橡",
       "mentions": 19,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "4919",
+      "name": "新唐",
+      "mentions": 17,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -138,7 +145,7 @@
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 14,
+      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -146,6 +153,27 @@
       "symbol": "4967",
       "name": "十銓",
       "mentions": 9,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6224",
+      "name": "聚鼎",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3264",
+      "name": "欣銓",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3167",
+      "name": "大量",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -164,50 +192,29 @@
       "in_chains": false
     },
     {
-      "symbol": "009816",
-      "name": "凱基台灣TOP50",
+      "symbol": "6526",
+      "name": "達發",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "4919",
-      "name": "新唐",
+      "symbol": "2464",
+      "name": "盟立",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3167",
-      "name": "大量",
+      "symbol": "5464",
+      "name": "霖宏",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6548",
-      "name": "長科*",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6224",
-      "name": "聚鼎",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "7769",
-      "name": "鴻勁",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "1722",
-      "name": "台肥",
+      "symbol": "8042",
+      "name": "金山電",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
