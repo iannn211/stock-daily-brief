@@ -1,48 +1,57 @@
 {
-  "validated_at": "2026-05-05T19:50:41.779024+08:00",
-  "analysis_file": "analyses/2026-05-05.json",
-  "analysis_date": "2026-05-05",
-  "analysis_model": "gemini-2.5-flash-lite",
+  "validated_at": "2026-05-06T20:29:08.090294+08:00",
+  "analysis_file": "analyses/2026-05-06.json",
+  "analysis_date": "2026-05-06",
+  "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI 伺服器與光通訊題材延續，但評價已高» → lead_stocks[0]",
-      "message": "代號 6526 (達發) 本站無資料，無法驗證數字是否正確",
-      "headline": "6526 本站沒資料",
+      "location": "opportunities[1] «CPO 光通訊 / 檢測» → lead_stocks[1]",
+      "message": "代號 2426 (鼎元 (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "2426 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6526 → 去 inspect.html?sym=6526 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 2426 → 去 inspect.html?sym=2426 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
-      "severity": "warning",
+      "severity": "error",
       "category": "ticker-not-in-data",
-      "location": "opportunities[4] «IC 設計廠營收成長，留意評價與 EPS 趨勢» → lead_stocks[2]",
-      "message": "代號 2436 (偉詮電) 本站無資料，無法驗證數字是否正確",
-      "headline": "2436 本站沒資料",
+      "location": "budget_allocation.allocations[3]",
+      "message": "配置建議的代號 8042 (金山電) 本站無資料，價格與基本面無法核對",
+      "headline": "8042 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 2436 → 去 inspect.html?sym=2436 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 8042 → 去 inspect.html?sym=8042 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[5]",
+      "message": "配置建議的代號 CASH (保留現金) 本站無資料，價格與基本面無法核對",
+      "headline": "CASH 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 CASH → 去 inspect.html?sym=CASH 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
+      "message": "配置加總 NT$32,175 超過預算 NT$5,000（差 NT$27,175）",
       "context": {
         "budget": 5000,
-        "total_cost": 30000.0
+        "total_cost": 32175.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
+      "impact": "Gemini 的 allocations 加總 NT$32,175 > 預算 NT$5,000，代表要全買得多湊 NT$27,175。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-27,175",
       "context": {
         "claimed": 0,
-        "expected": -25000.0
+        "expected": -27175.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
@@ -51,135 +60,109 @@
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[0]",
-      "message": "2317 描述提到「昂貴/泡沫」，但實際 PE=17.0（屬於合理區） — 題材「AI 伺服器與光通訊題材延續，但評價已高」",
+      "location": "topics[2]",
+      "message": "2356 描述提到「昂貴/泡沫」，但實際 PE=20.4（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
+      "context": {
+        "symbol": "2356",
+        "pe": 20.414938,
+        "tier": "fair"
+      },
+      "headline": "2356 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 2356 當「昂貴/泡沫」敘述，但實際 PE=20.4（屬於合理區）。如果原本因此不考慮 2356，可能低估機會。",
+      "next_step": "重新評估 2356 — 估值其實還好，不必因「昂貴」這句就跳過。"
+    },
+    {
+      "severity": "warning",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[2]",
+      "message": "2317 描述提到「昂貴/泡沫」，但實際 PE=18.8（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
       "context": {
         "symbol": "2317",
-        "pe": 16.977612,
+        "pe": 18.820015,
         "tier": "fair"
       },
       "headline": "2317 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2317 當「昂貴/泡沫」敘述，但實際 PE=17.0（屬於合理區）。如果原本因此不考慮 2317，可能低估機會。",
+      "impact": "Gemini 把 2317 當「昂貴/泡沫」敘述，但實際 PE=18.8（屬於合理區）。如果原本因此不考慮 2317，可能低估機會。",
       "next_step": "重新評估 2317 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[1]",
-      "message": "2303 描述提到「昂貴/泡沫」，但實際 PE=20.6（屬於合理區） — 題材「半導體產業營收普遍成長，但需留意評價與成長性」",
+      "location": "topics[2]",
+      "message": "2382 描述提到「昂貴/泡沫」，但實際 PE=18.3（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
       "context": {
-        "symbol": "2303",
-        "pe": 20.609137,
+        "symbol": "2382",
+        "pe": 18.323639,
         "tier": "fair"
       },
-      "headline": "2303 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2303 當「昂貴/泡沫」敘述，但實際 PE=20.6（屬於合理區）。如果原本因此不考慮 2303，可能低估機會。",
-      "next_step": "重新評估 2303 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "2382 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 2382 當「昂貴/泡沫」敘述，但實際 PE=18.3（屬於合理區）。如果原本因此不考慮 2382，可能低估機會。",
+      "next_step": "重新評估 2382 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[1]",
-      "message": "6414 描述提到「昂貴/泡沫」，但實際 PE=16.7（屬於合理區） — 題材「半導體產業營收普遍成長，但需留意評價與成長性」",
+      "location": "opportunities[0].why",
+      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=18.7（屬於合理區） — 題材「AI 伺服器 / 高速傳輸」",
       "context": {
-        "symbol": "6414",
-        "pe": 16.725088,
+        "symbol": "6669",
+        "pe": 18.731392,
         "tier": "fair"
       },
-      "headline": "6414 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6414 當「昂貴/泡沫」敘述，但實際 PE=16.7（屬於合理區）。如果原本因此不考慮 6414，可能低估機會。",
-      "next_step": "重新評估 6414 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "6669 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=18.7（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
+      "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[1]",
-      "message": "3036 描述提到「昂貴/泡沫」，但實際 PE=20.5（屬於合理區） — 題材「半導體產業營收普遍成長，但需留意評價與成長性」",
+      "location": "opportunities[0].why",
+      "message": "2356 描述提到「昂貴/泡沫」，但實際 PE=20.4（屬於合理區） — 題材「AI 伺服器 / 高速傳輸」",
       "context": {
-        "symbol": "3036",
-        "pe": 20.456755,
+        "symbol": "2356",
+        "pe": 20.414938,
         "tier": "fair"
       },
-      "headline": "3036 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3036 當「昂貴/泡沫」敘述，但實際 PE=20.5（屬於合理區）。如果原本因此不考慮 3036，可能低估機會。",
-      "next_step": "重新評估 3036 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "2356 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 2356 當「昂貴/泡沫」敘述，但實際 PE=20.4（屬於合理區）。如果原本因此不考慮 2356，可能低估機會。",
+      "next_step": "重新評估 2356 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[1]",
-      "message": "3044 描述提到「昂貴/泡沫」，但實際 PE=24.0（屬於合理區） — 題材「半導體產業營收普遍成長，但需留意評價與成長性」",
+      "location": "opportunities[3].why",
+      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=20.6（屬於合理區） — 題材「半導體設備 / 資安標準」",
       "context": {
-        "symbol": "3044",
-        "pe": 24.04442,
+        "symbol": "6146",
+        "pe": 20.59646,
         "tier": "fair"
       },
-      "headline": "3044 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3044 當「昂貴/泡沫」敘述，但實際 PE=24.0（屬於合理區）。如果原本因此不考慮 3044，可能低估機會。",
-      "next_step": "重新評估 3044 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "6146 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=20.6（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
+      "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "topics[3]",
-      "message": "2376 描述提到「昂貴/泡沫」，但實際 PE=16.2（屬於合理區） — 題材「散熱族群受 AI 題材帶動，但部分個股評價已高」",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[0]",
+      "message": "題材「AI 伺服器 / 高速傳輸」的 lead stock 3665 (貿聯-KY (hidden)) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
       "context": {
-        "symbol": "2376",
-        "pe": 16.230366,
-        "tier": "fair"
+        "symbol": "3665",
+        "theme": "AI 伺服器 / 高速傳輸",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": "connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍"
       },
-      "headline": "2376 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2376 當「昂貴/泡沫」敘述，但實際 PE=16.2（屬於合理區）。如果原本因此不考慮 2376，可能低估機會。",
-      "next_step": "重新評估 2376 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[1].why",
-      "message": "2303 描述提到「昂貴/泡沫」，但實際 PE=20.6（屬於合理區） — 題材「半導體產業營收普遍成長，但需留意評價與成長性」",
-      "context": {
-        "symbol": "2303",
-        "pe": 20.609137,
-        "tier": "fair"
-      },
-      "headline": "2303 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2303 當「昂貴/泡沫」敘述，但實際 PE=20.6（屬於合理區）。如果原本因此不考慮 2303，可能低估機會。",
-      "next_step": "重新評估 2303 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[1].headline",
-      "message": "2303 描述提到「昂貴/泡沫」，但實際 PE=20.6（屬於合理區） — 題材「半導體產業營收普遍成長，但需留意評價與成長性」",
-      "context": {
-        "symbol": "2303",
-        "pe": 20.609137,
-        "tier": "fair"
-      },
-      "headline": "2303 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2303 當「昂貴/泡沫」敘述，但實際 PE=20.6（屬於合理區）。如果原本因此不考慮 2303，可能低估機會。",
-      "next_step": "重新評估 2303 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[4].why",
-      "message": "3034 描述提到「昂貴/泡沫」，但實際 PE=15.5（屬於合理區） — 題材「IC 設計廠營收成長，留意評價與 EPS 趨勢」",
-      "context": {
-        "symbol": "3034",
-        "pe": 15.480626,
-        "tier": "fair"
-      },
-      "headline": "3034 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3034 當「昂貴/泡沫」敘述，但實際 PE=15.5（屬於合理區）。如果原本因此不考慮 3034，可能低估機會。",
-      "next_step": "重新評估 3034 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "3665 貿聯-KY (hidden) 被放錯題材",
+      "impact": "Gemini 把 3665 列為「AI 伺服器 / 高速傳輸」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器 / 高速傳輸」這個題材想買 3665，這個理由不成立。",
+      "next_step": "想布局「AI 伺服器 / 高速傳輸」→ 同題材的 6669 緯穎 (small)、2356 英業達 (large) 才是真的相關股。\n想買 3665 貿聯-KY (hidden) → 要從它真正的業務角度（connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍）去找對的題材，不是用「AI 伺服器 / 高速傳輸」當理由。"
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 12,
+    "errors": 3,
+    "warnings": 9,
     "infos": 0,
-    "total": 13,
+    "total": 12,
     "suppressed": 0
   }
 }
