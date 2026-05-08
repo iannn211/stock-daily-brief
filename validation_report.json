@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-07T20:29:15.439167+08:00",
+  "validated_at": "2026-05-08T19:04:27.279319+08:00",
   "analysis_file": "analyses/2026-05-06.json",
   "analysis_date": "2026-05-06",
   "analysis_model": "gemini-2.5-flash",
@@ -43,84 +43,84 @@
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "topics[2]",
-      "message": "2356 描述提到「昂貴/泡沫」，但實際 PE=20.7（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
+      "message": "2356 描述提到「昂貴/泡沫」，但實際 PE=20.6（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
       "context": {
         "symbol": "2356",
-        "pe": 20.726141,
+        "pe": 20.560165,
         "tier": "fair"
       },
       "headline": "2356 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2356 當「昂貴/泡沫」敘述，但實際 PE=20.7（屬於合理區）。如果原本因此不考慮 2356，可能低估機會。",
+      "impact": "Gemini 把 2356 當「昂貴/泡沫」敘述，但實際 PE=20.6（屬於合理區）。如果原本因此不考慮 2356，可能低估機會。",
       "next_step": "重新評估 2356 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "topics[2]",
-      "message": "2317 描述提到「昂貴/泡沫」，但實際 PE=18.9（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
+      "message": "2317 描述提到「昂貴/泡沫」，但實際 PE=18.6（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
       "context": {
         "symbol": "2317",
-        "pe": 18.903803,
+        "pe": 18.642803,
         "tier": "fair"
       },
       "headline": "2317 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2317 當「昂貴/泡沫」敘述，但實際 PE=18.9（屬於合理區）。如果原本因此不考慮 2317，可能低估機會。",
+      "impact": "Gemini 把 2317 當「昂貴/泡沫」敘述，但實際 PE=18.6（屬於合理區）。如果原本因此不考慮 2317，可能低估機會。",
       "next_step": "重新評估 2317 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "topics[2]",
-      "message": "2382 描述提到「昂貴/泡沫」，但實際 PE=18.2（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
+      "message": "2382 描述提到「昂貴/泡沫」，但實際 PE=18.0（屬於合理區） — 題材「AI 伺服器動能續強，老 AI 股回神」",
       "context": {
         "symbol": "2382",
-        "pe": 18.181818,
+        "pe": 17.996828,
         "tier": "fair"
       },
       "headline": "2382 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2382 當「昂貴/泡沫」敘述，但實際 PE=18.2（屬於合理區）。如果原本因此不考慮 2382，可能低估機會。",
+      "impact": "Gemini 把 2382 當「昂貴/泡沫」敘述，但實際 PE=18.0（屬於合理區）。如果原本因此不考慮 2382，可能低估機會。",
       "next_step": "重新評估 2382 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "opportunities[0].why",
-      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=18.4（屬於合理區） — 題材「AI 伺服器 / 高速傳輸」",
+      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=19.6（屬於合理區） — 題材「AI 伺服器 / 高速傳輸」",
       "context": {
         "symbol": "6669",
-        "pe": 18.38734,
+        "pe": 19.5879,
         "tier": "fair"
       },
       "headline": "6669 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=18.4（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
+      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=19.6（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
       "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "opportunities[0].why",
-      "message": "2356 描述提到「昂貴/泡沫」，但實際 PE=20.7（屬於合理區） — 題材「AI 伺服器 / 高速傳輸」",
+      "message": "2356 描述提到「昂貴/泡沫」，但實際 PE=20.6（屬於合理區） — 題材「AI 伺服器 / 高速傳輸」",
       "context": {
         "symbol": "2356",
-        "pe": 20.726141,
+        "pe": 20.560165,
         "tier": "fair"
       },
       "headline": "2356 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2356 當「昂貴/泡沫」敘述，但實際 PE=20.7（屬於合理區）。如果原本因此不考慮 2356，可能低估機會。",
+      "impact": "Gemini 把 2356 當「昂貴/泡沫」敘述，但實際 PE=20.6（屬於合理區）。如果原本因此不考慮 2356，可能低估機會。",
       "next_step": "重新評估 2356 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "opportunities[3].why",
-      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=21.0（屬於合理區） — 題材「半導體設備 / 資安標準」",
+      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=20.3（屬於合理區） — 題材「半導體設備 / 資安標準」",
       "context": {
         "symbol": "6146",
-        "pe": 21.042831,
+        "pe": 20.251396,
         "tier": "fair"
       },
       "headline": "6146 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=21.0（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
+      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=20.3（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
       "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {

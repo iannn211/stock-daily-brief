@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-07T20:23:05.032328+08:00",
+  "fetched_at": "2026-05-08T18:58:59.684901+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,21 +7,21 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 19
+      "mentioned_in_window": 17
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 7
+      "mentioned_in_window": 6
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 5
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -35,7 +35,7 @@
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 2
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -49,7 +49,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 3
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
@@ -70,54 +70,54 @@
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 145,
-    "0050": 144,
-    "3081": 64,
-    "5607": 47,
-    "3017": 45,
-    "2486": 45,
-    "3026": 40,
-    "2303": 40,
-    "3324": 37,
-    "4908": 36,
-    "6173": 34,
-    "2327": 29,
-    "2317": 27,
-    "3715": 26,
-    "3163": 22,
+    "2330": 131,
+    "0050": 130,
+    "3081": 54,
+    "3026": 46,
+    "5607": 44,
+    "2303": 42,
+    "3017": 38,
+    "3324": 35,
+    "2486": 30,
+    "2317": 25,
+    "6173": 25,
+    "4908": 24,
+    "2327": 24,
+    "2454": 22,
     "4919": 21,
-    "2492": 20,
-    "3665": 20,
     "2360": 19,
-    "8074": 19,
     "8042": 18,
     "3037": 18,
-    "2454": 18,
+    "8155": 17,
     "3443": 17,
-    "6230": 16,
     "6274": 15,
-    "8155": 15,
+    "2492": 15,
+    "3665": 15,
     "2426": 13,
+    "3715": 12,
     "6831": 11,
-    "6224": 11
+    "6526": 11,
+    "8046": 10,
+    "3163": 10,
+    "5269": 10
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 47,
+      "mentions": 44,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2486",
       "name": "一詮",
-      "mentions": 45,
+      "mentions": 30,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -125,13 +125,6 @@
       "symbol": "4919",
       "name": "新唐",
       "mentions": 21,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "8074",
-      "name": "鉅橡",
-      "mentions": 19,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -157,30 +150,9 @@
       "in_chains": false
     },
     {
-      "symbol": "6224",
-      "name": "聚鼎",
-      "mentions": 11,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "6526",
       "name": "達發",
       "mentions": 11,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3653",
-      "name": "健策",
-      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -199,9 +171,37 @@
       "in_chains": false
     },
     {
-      "symbol": "3189",
-      "name": "景碩",
-      "mentions": 5,
+      "symbol": "3653",
+      "name": "健策",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6224",
+      "name": "聚鼎",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6291",
+      "name": "沛亨",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00991A",
+      "name": "主動復華未來50",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
