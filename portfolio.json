@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-05-12T17:54:01.297596+08:00",
-  "fx_usdtwd": 31.524,
+  "as_of": "2026-05-12T21:26:17.105207+08:00",
+  "fx_usdtwd": 31.502,
   "risk_profile": {
     "style": "snowball-growth",
     "target_allocation": {
@@ -96,53 +96,53 @@
       "pct_52w": 68.29
     },
     "vix": {
-      "close": 18.83,
-      "day_change_pct": 2.4483,
-      "ret_30d": 2.56,
-      "ret_ytd": 29.77,
-      "pct_52w": 24.86
+      "close": 18.67,
+      "day_change_pct": 1.5778,
+      "ret_30d": 1.69,
+      "ret_ytd": 28.67,
+      "pct_52w": 24.13
     },
     "usdtwd": {
-      "close": 31.524,
-      "day_change_pct": 0.7124,
-      "ret_30d": -0.37,
-      "ret_ytd": 0.7,
-      "pct_52w": 71.95
+      "close": 31.502,
+      "day_change_pct": 0.6422,
+      "ret_30d": -0.44,
+      "ret_ytd": 0.63,
+      "pct_52w": 71.46
     },
     "dxy": {
-      "close": 98.256,
-      "day_change_pct": 0.3226,
-      "ret_30d": 0.14,
-      "ret_ytd": -0.17,
-      "pct_52w": 43.57
+      "close": 98.272,
+      "day_change_pct": 0.339,
+      "ret_30d": 0.15,
+      "ret_ytd": -0.15,
+      "pct_52w": 43.83
     },
     "us10y": {
-      "close": 4.41,
-      "day_change_pct": 1.0541,
-      "ret_30d": 2.63,
-      "ret_ytd": 5.33,
-      "pct_52w": 67.89
+      "close": 4.433,
+      "day_change_pct": 0.5215,
+      "ret_30d": 4.16,
+      "ret_ytd": 5.88,
+      "pct_52w": 71.26
     },
     "gold": {
-      "close": 4708.6001,
-      "day_change_pct": -0.214,
-      "ret_30d": -2.41,
-      "ret_ytd": 9.14,
-      "pct_52w": 64.34
+      "close": 4699.2002,
+      "day_change_pct": -0.4132,
+      "ret_30d": -2.61,
+      "ret_ytd": 8.92,
+      "pct_52w": 63.96
     },
     "oil": {
-      "close": 101.35,
-      "day_change_pct": 3.3445,
-      "ret_30d": 11.03,
-      "ret_ytd": 76.81,
-      "pct_52w": 71.89
+      "close": 101.29,
+      "day_change_pct": 3.2834,
+      "ret_30d": 10.97,
+      "ret_ytd": 76.71,
+      "pct_52w": 71.8
     },
     "btc": {
-      "close": 80865.2422,
-      "day_change_pct": -1.056,
-      "ret_30d": 3.4,
-      "ret_ytd": -8.87,
-      "pct_52w": 31.44
+      "close": 80680.5625,
+      "day_change_pct": -1.282,
+      "ret_30d": 3.17,
+      "ret_ytd": -9.07,
+      "pct_52w": 31.16
     }
   },
   "holdings": [
@@ -1420,12 +1420,12 @@
       "chips": {
         "foreign_5d": 70513521,
         "foreign_20d": 339170354,
-        "trust_5d": 37342674,
-        "trust_20d": 74809566,
+        "trust_5d": 37168674,
+        "trust_20d": 74635566,
         "dealer_5d": 5408287,
         "dealer_20d": 15885839,
-        "total_5d": 113264482,
-        "total_20d": 429865759,
+        "total_5d": 113090482,
+        "total_20d": 429691759,
         "foreign_streak": 2,
         "trust_streak": 6,
         "days_included": 20,
@@ -1433,9 +1433,9 @@
           {
             "d": "2026-05-12",
             "foreign": 35286536,
-            "trust": 9600907,
+            "trust": 9426907,
             "dealer": 5198987,
-            "total": 50086430
+            "total": 49912430
           },
           {
             "d": "2026-05-11",
@@ -2058,13 +2058,13 @@
       },
       "chips": {
         "foreign_5d": -2929972,
-        "foreign_20d": -7184536,
+        "foreign_20d": -6347579,
         "trust_5d": -2673734,
-        "trust_20d": -1092565,
+        "trust_20d": -1375008,
         "dealer_5d": 118038,
-        "dealer_20d": 221907,
+        "dealer_20d": 279189,
         "total_5d": -5485668,
-        "total_20d": -8055194,
+        "total_20d": -7443398,
         "foreign_streak": -6,
         "trust_streak": 3,
         "days_included": 20,
@@ -2245,12 +2245,12 @@
       "chips": {
         "foreign_5d": 70513521,
         "foreign_20d": 339170354,
-        "trust_5d": 37342674,
-        "trust_20d": 74809566,
+        "trust_5d": 37168674,
+        "trust_20d": 74635566,
         "dealer_5d": 5408287,
         "dealer_20d": 15885839,
-        "total_5d": 113264482,
-        "total_20d": 429865759,
+        "total_5d": 113090482,
+        "total_20d": 429691759,
         "foreign_streak": 2,
         "trust_streak": 6,
         "days_included": 20,
@@ -2258,9 +2258,9 @@
           {
             "d": "2026-05-12",
             "foreign": 35286536,
-            "trust": 9600907,
+            "trust": 9426907,
             "dealer": 5198987,
-            "total": 50086430
+            "total": 49912430
           },
           {
             "d": "2026-05-11",
@@ -2337,12 +2337,12 @@
       "chips": {
         "foreign_5d": 742551,
         "foreign_20d": 19136575,
-        "trust_5d": 611216,
-        "trust_20d": 12958392,
+        "trust_5d": 636916,
+        "trust_20d": 12984092,
         "dealer_5d": -216613,
         "dealer_20d": 1912425,
-        "total_5d": 1137154,
-        "total_20d": 34007392,
+        "total_5d": 1162854,
+        "total_20d": 34033092,
         "foreign_streak": -4,
         "trust_streak": -1,
         "days_included": 20,
@@ -2350,9 +2350,9 @@
           {
             "d": "2026-05-12",
             "foreign": -1730262,
-            "trust": -124349,
+            "trust": -98649,
             "dealer": 28330,
-            "total": -1826281
+            "total": -1800581
           },
           {
             "d": "2026-05-11",
@@ -3257,12 +3257,12 @@
       "chips": {
         "foreign_5d": 287159,
         "foreign_20d": 2967572,
-        "trust_5d": 737425,
-        "trust_20d": 3394741,
+        "trust_5d": 730425,
+        "trust_20d": 3387741,
         "dealer_5d": 210902,
         "dealer_20d": 311943,
-        "total_5d": 1235486,
-        "total_20d": 6674256,
+        "total_5d": 1228486,
+        "total_20d": 6667256,
         "foreign_streak": -1,
         "trust_streak": 2,
         "days_included": 20,
@@ -3270,9 +3270,9 @@
           {
             "d": "2026-05-12",
             "foreign": -1153370,
-            "trust": 468107,
+            "trust": 461107,
             "dealer": -60586,
-            "total": -745849
+            "total": -752849
           },
           {
             "d": "2026-05-11",
@@ -3348,13 +3348,13 @@
       },
       "chips": {
         "foreign_5d": -2929972,
-        "foreign_20d": -7184536,
+        "foreign_20d": -6347579,
         "trust_5d": -2673734,
-        "trust_20d": -1092565,
+        "trust_20d": -1375008,
         "dealer_5d": 118038,
-        "dealer_20d": 221907,
+        "dealer_20d": 279189,
         "total_5d": -5485668,
-        "total_20d": -8055194,
+        "total_20d": -7443398,
         "foreign_streak": -6,
         "trust_streak": 3,
         "days_included": 20,
@@ -4361,12 +4361,12 @@
       "chips": {
         "foreign_5d": 2989357,
         "foreign_20d": -3915673,
-        "trust_5d": 46331,
-        "trust_20d": 9398439,
+        "trust_5d": -92669,
+        "trust_20d": 9259439,
         "dealer_5d": -663232,
         "dealer_20d": -857617,
-        "total_5d": 2372456,
-        "total_20d": 4625149,
+        "total_5d": 2233456,
+        "total_20d": 4486149,
         "foreign_streak": -1,
         "trust_streak": 1,
         "days_included": 20,
@@ -4374,9 +4374,9 @@
           {
             "d": "2026-05-12",
             "foreign": -228047,
-            "trust": 1398330,
+            "trust": 1259330,
             "dealer": -115569,
-            "total": 1054714
+            "total": 915714
           },
           {
             "d": "2026-05-11",
@@ -4453,12 +4453,12 @@
       "chips": {
         "foreign_5d": 665234,
         "foreign_20d": 288779,
-        "trust_5d": 765401,
-        "trust_20d": 1540104,
+        "trust_5d": 753401,
+        "trust_20d": 1528104,
         "dealer_5d": -24048,
         "dealer_20d": 106630,
-        "total_5d": 1406587,
-        "total_20d": 1935513,
+        "total_5d": 1394587,
+        "total_20d": 1923513,
         "foreign_streak": 2,
         "trust_streak": 8,
         "days_included": 20,
@@ -4466,9 +4466,9 @@
           {
             "d": "2026-05-12",
             "foreign": 395606,
-            "trust": 289715,
+            "trust": 277715,
             "dealer": -32157,
-            "total": 653164
+            "total": 641164
           },
           {
             "d": "2026-05-11",
@@ -4712,9 +4712,9 @@
       "yf_ticker": "6515.TW",
       "fundamentals": {
         "pe_ttm": 214.39345,
-        "pe_forward": 55.47502,
+        "pe_forward": 55.001457,
         "eps_ttm": 46.41,
-        "eps_forward": 179.36,
+        "eps_forward": 180.9043,
         "pb": 55.640057,
         "roe": 0.27916,
         "profit_margin": 0.21291,
@@ -4729,12 +4729,12 @@
       "chips": {
         "foreign_5d": 112393,
         "foreign_20d": 377680,
-        "trust_5d": -51083,
-        "trust_20d": 250213,
+        "trust_5d": -52083,
+        "trust_20d": 249213,
         "dealer_5d": -2452,
         "dealer_20d": -85903,
-        "total_5d": 58858,
-        "total_20d": 541990,
+        "total_5d": 57858,
+        "total_20d": 540990,
         "foreign_streak": 3,
         "trust_streak": -1,
         "days_included": 20,
@@ -4742,9 +4742,9 @@
           {
             "d": "2026-05-12",
             "foreign": 34015,
-            "trust": -1076,
+            "trust": -2076,
             "dealer": -5229,
-            "total": 27710
+            "total": 26710
           },
           {
             "d": "2026-05-11",
@@ -4821,12 +4821,12 @@
       "chips": {
         "foreign_5d": 409473,
         "foreign_20d": 1116280,
-        "trust_5d": 594585,
-        "trust_20d": 922757,
+        "trust_5d": 602585,
+        "trust_20d": 930757,
         "dealer_5d": -16999,
         "dealer_20d": 38615,
-        "total_5d": 987059,
-        "total_20d": 2077652,
+        "total_5d": 995059,
+        "total_20d": 2085652,
         "foreign_streak": -2,
         "trust_streak": 5,
         "days_included": 20,
@@ -4834,9 +4834,9 @@
           {
             "d": "2026-05-12",
             "foreign": -161705,
-            "trust": 70098,
+            "trust": 78098,
             "dealer": -937,
-            "total": -92544
+            "total": -84544
           },
           {
             "d": "2026-05-11",
@@ -5950,12 +5950,12 @@
       "chips": {
         "foreign_5d": 408706,
         "foreign_20d": 2928678,
-        "trust_5d": 132354,
-        "trust_20d": -973977,
+        "trust_5d": 129354,
+        "trust_20d": -976977,
         "dealer_5d": 150970,
         "dealer_20d": 392210,
-        "total_5d": 692030,
-        "total_20d": 2346911,
+        "total_5d": 689030,
+        "total_20d": 2343911,
         "foreign_streak": 2,
         "trust_streak": 1,
         "days_included": 20,
@@ -5963,9 +5963,9 @@
           {
             "d": "2026-05-12",
             "foreign": 228006,
-            "trust": 157000,
+            "trust": 154000,
             "dealer": 202506,
-            "total": 587512
+            "total": 584512
           },
           {
             "d": "2026-05-11",
@@ -6134,12 +6134,12 @@
       "chips": {
         "foreign_5d": 20204443,
         "foreign_20d": 10678050,
-        "trust_5d": 854478,
-        "trust_20d": 1318960,
+        "trust_5d": 885478,
+        "trust_20d": 1349960,
         "dealer_5d": 1225265,
         "dealer_20d": 1208584,
-        "total_5d": 22284186,
-        "total_20d": 13205594,
+        "total_5d": 22315186,
+        "total_20d": 13236594,
         "foreign_streak": 1,
         "trust_streak": 1,
         "days_included": 20,
@@ -6147,9 +6147,9 @@
           {
             "d": "2026-05-12",
             "foreign": 18750868,
-            "trust": 874540,
+            "trust": 905540,
             "dealer": 352013,
-            "total": 19977421
+            "total": 20008421
           },
           {
             "d": "2026-05-11",
@@ -6961,13 +6961,13 @@
       },
       "chips": {
         "foreign_5d": 10251169,
-        "foreign_20d": 35061871,
+        "foreign_20d": 40778242,
         "trust_5d": -16888600,
-        "trust_20d": -79166908,
+        "trust_20d": -74911846,
         "dealer_5d": -752435,
-        "dealer_20d": 1588354,
+        "dealer_20d": 1658040,
         "total_5d": -7389866,
-        "total_20d": -42516683,
+        "total_20d": -32475564,
         "foreign_streak": -2,
         "trust_streak": -3,
         "days_included": 20,
@@ -7054,12 +7054,12 @@
       "chips": {
         "foreign_5d": 22974617,
         "foreign_20d": 59967928,
-        "trust_5d": 341483,
-        "trust_20d": -49006826,
+        "trust_5d": 93483,
+        "trust_20d": -49254826,
         "dealer_5d": -1875335,
         "dealer_20d": -7226616,
-        "total_5d": 21440765,
-        "total_20d": 3734486,
+        "total_5d": 21192765,
+        "total_20d": 3486486,
         "foreign_streak": -1,
         "trust_streak": -2,
         "days_included": 20,
@@ -7067,9 +7067,9 @@
           {
             "d": "2026-05-12",
             "foreign": -7427375,
-            "trust": -237803,
+            "trust": -485803,
             "dealer": -1142996,
-            "total": -8808174
+            "total": -9056174
           },
           {
             "d": "2026-05-11",
@@ -7237,15 +7237,15 @@
       },
       "chips": {
         "foreign_5d": 27838416,
-        "foreign_20d": 79198858,
+        "foreign_20d": 99619230,
         "trust_5d": -26794925,
-        "trust_20d": -135828473,
+        "trust_20d": -146354038,
         "dealer_5d": -3490311,
-        "dealer_20d": -7968870,
+        "dealer_20d": -7751848,
         "total_5d": -2446820,
-        "total_20d": -64598485,
+        "total_20d": -54486656,
         "foreign_streak": -2,
-        "trust_streak": -13,
+        "trust_streak": -20,
         "days_included": 20,
         "daily": [
           {
@@ -8433,15 +8433,15 @@
       },
       "chips": {
         "foreign_5d": 10100601,
-        "foreign_20d": 6460401,
+        "foreign_20d": 9916289,
         "trust_5d": -6712718,
-        "trust_20d": -6730224,
+        "trust_20d": -5808958,
         "dealer_5d": -34318,
-        "dealer_20d": -2607343,
+        "dealer_20d": -1841381,
         "total_5d": 3353565,
-        "total_20d": -2877166,
+        "total_20d": 2265950,
         "foreign_streak": -1,
-        "trust_streak": -12,
+        "trust_streak": -10,
         "days_included": 20,
         "daily": [
           {
@@ -8618,12 +8618,12 @@
       "chips": {
         "foreign_5d": 20204443,
         "foreign_20d": 10678050,
-        "trust_5d": 854478,
-        "trust_20d": 1318960,
+        "trust_5d": 885478,
+        "trust_20d": 1349960,
         "dealer_5d": 1225265,
         "dealer_20d": 1208584,
-        "total_5d": 22284186,
-        "total_20d": 13205594,
+        "total_5d": 22315186,
+        "total_20d": 13236594,
         "foreign_streak": 1,
         "trust_streak": 1,
         "days_included": 20,
@@ -8631,9 +8631,9 @@
           {
             "d": "2026-05-12",
             "foreign": 18750868,
-            "trust": 874540,
+            "trust": 905540,
             "dealer": 352013,
-            "total": 19977421
+            "total": 20008421
           },
           {
             "d": "2026-05-11",
@@ -8802,12 +8802,12 @@
       "chips": {
         "foreign_5d": -124598,
         "foreign_20d": 14695876,
-        "trust_5d": 690238,
-        "trust_20d": 3958648,
+        "trust_5d": 879238,
+        "trust_20d": 4147648,
         "dealer_5d": 59327,
         "dealer_20d": 316417,
-        "total_5d": 624967,
-        "total_20d": 18970941,
+        "total_5d": 813967,
+        "total_20d": 19159941,
         "foreign_streak": -3,
         "trust_streak": 5,
         "days_included": 20,
@@ -8815,9 +8815,9 @@
           {
             "d": "2026-05-12",
             "foreign": -281656,
-            "trust": 166238,
+            "trust": 355238,
             "dealer": -42959,
-            "total": -158377
+            "total": 30623
           },
           {
             "d": "2026-05-11",
@@ -9521,10 +9521,10 @@
       "yf_ticker": "6274.TWO",
       "fundamentals": {
         "pe_ttm": 120.03311,
-        "pe_forward": 26.511242,
+        "pe_forward": 26.150208,
         "eps_ttm": 12.08,
-        "eps_forward": 54.69378,
-        "pb": 22.489338,
+        "eps_forward": 55.44889,
+        "pb": 25.289522,
         "roe": 0.25398,
         "profit_margin": 0.11748999,
         "rev_growth": 0.578,
@@ -9538,22 +9538,22 @@
       "chips": {
         "foreign_5d": -3393789,
         "foreign_20d": -1748621,
-        "trust_5d": 2977793,
-        "trust_20d": 5905156,
+        "trust_5d": 3023793,
+        "trust_20d": 5951156,
         "dealer_5d": -2,
         "dealer_20d": -791903,
-        "total_5d": -415998,
-        "total_20d": 3364632,
+        "total_5d": -369998,
+        "total_20d": 3410632,
         "foreign_streak": -1,
-        "trust_streak": -2,
+        "trust_streak": 1,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-05-12",
             "foreign": -311324,
-            "trust": -4000,
+            "trust": 42000,
             "dealer": 282773,
-            "total": -32551
+            "total": 13449
           },
           {
             "d": "2026-05-11",
@@ -9630,12 +9630,12 @@
       "chips": {
         "foreign_5d": 8824124,
         "foreign_20d": 20501809,
-        "trust_5d": -2676928,
-        "trust_20d": -5351496,
+        "trust_5d": -2984928,
+        "trust_20d": -5659496,
         "dealer_5d": 1294131,
         "dealer_20d": 1978522,
-        "total_5d": 7441327,
-        "total_20d": 17128835,
+        "total_5d": 7133327,
+        "total_20d": 16820835,
         "foreign_streak": 3,
         "trust_streak": 1,
         "days_included": 20,
@@ -9643,9 +9643,9 @@
           {
             "d": "2026-05-12",
             "foreign": 2706379,
-            "trust": 409198,
+            "trust": 101198,
             "dealer": 116959,
-            "total": 3232536
+            "total": 2924536
           },
           {
             "d": "2026-05-11",
@@ -10182,22 +10182,22 @@
       "chips": {
         "foreign_5d": 112129,
         "foreign_20d": -223094,
-        "trust_5d": -82724,
-        "trust_20d": 243420,
+        "trust_5d": 60276,
+        "trust_20d": 386420,
         "dealer_5d": 21304,
         "dealer_20d": 212906,
-        "total_5d": 50709,
-        "total_20d": 233232,
+        "total_5d": 193709,
+        "total_20d": 376232,
         "foreign_streak": -1,
-        "trust_streak": -1,
+        "trust_streak": 2,
         "days_included": 20,
         "daily": [
           {
             "d": "2026-05-12",
             "foreign": -71920,
-            "trust": -8900,
+            "trust": 134100,
             "dealer": -1251,
-            "total": -82071
+            "total": 60929
           },
           {
             "d": "2026-05-11",
@@ -10826,12 +10826,12 @@
       "chips": {
         "foreign_5d": -3252809,
         "foreign_20d": -14802069,
-        "trust_5d": 1705143,
-        "trust_20d": 3934458,
+        "trust_5d": 1693143,
+        "trust_20d": 3922458,
         "dealer_5d": -805395,
         "dealer_20d": -335617,
-        "total_5d": -2353061,
-        "total_20d": -11203228,
+        "total_5d": -2365061,
+        "total_20d": -11215228,
         "foreign_streak": -1,
         "trust_streak": 10,
         "days_included": 20,
@@ -10839,9 +10839,9 @@
           {
             "d": "2026-05-12",
             "foreign": -4268042,
-            "trust": 268861,
+            "trust": 256861,
             "dealer": -283309,
-            "total": -4282490
+            "total": -4294490
           },
           {
             "d": "2026-05-11",
@@ -12574,12 +12574,12 @@
       "chips": {
         "foreign_5d": 443187,
         "foreign_20d": 421108,
-        "trust_5d": -377786,
-        "trust_20d": -782539,
+        "trust_5d": -379786,
+        "trust_20d": -784539,
         "dealer_5d": -23752,
         "dealer_20d": -147528,
-        "total_5d": 41649,
-        "total_20d": -508959,
+        "total_5d": 39649,
+        "total_20d": -510959,
         "foreign_streak": 2,
         "trust_streak": -2,
         "days_included": 20,
@@ -12587,9 +12587,9 @@
           {
             "d": "2026-05-12",
             "foreign": 108975,
-            "trust": -102773,
+            "trust": -104773,
             "dealer": -4071,
-            "total": 2131
+            "total": 131
           },
           {
             "d": "2026-05-11",
