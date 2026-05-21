@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-20T18:03:33.277360+08:00",
+  "fetched_at": "2026-05-21T18:24:27.291074+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 15
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -75,49 +75,49 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 102,
-    "5607": 61,
-    "0050": 54,
-    "3090": 39,
-    "3081": 36,
+    "2330": 103,
+    "5607": 83,
+    "0050": 55,
+    "3081": 37,
+    "3090": 33,
     "3715": 32,
-    "2327": 21,
+    "2327": 25,
+    "3324": 24,
+    "2317": 21,
     "6173": 19,
-    "2317": 17,
     "2303": 17,
     "3017": 17,
     "6831": 15,
     "6274": 15,
-    "3324": 14,
+    "2454": 12,
     "2027": 12,
     "2421": 12,
     "3008": 11,
+    "2376": 10,
     "5425": 10,
     "6770": 9,
     "2344": 9,
-    "4979": 8,
-    "4908": 8,
+    "3037": 8,
+    "3189": 8,
     "5347": 8,
     "6449": 8,
     "8299": 8,
-    "2454": 7,
-    "2892": 6,
-    "2376": 6,
-    "2360": 6,
-    "3163": 5
+    "2492": 7,
+    "3481": 6,
+    "4908": 6
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 61,
+      "mentions": 83,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3090",
       "name": "日電貿",
-      "mentions": 39,
+      "mentions": 33,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -164,6 +164,13 @@
       "in_chains": false
     },
     {
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "5347",
       "name": "世界",
       "mentions": 8,
@@ -185,13 +192,6 @@
       "in_chains": false
     },
     {
-      "symbol": "2892",
-      "name": "第一金",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "7751",
       "name": "竑騰",
       "mentions": 5,
@@ -199,50 +199,22 @@
       "in_chains": false
     },
     {
-      "symbol": "2243",
-      "name": "宏旭-KY",
+      "symbol": "2426",
+      "name": "鼎元",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "4971",
-      "name": "IET-KY",
+      "symbol": "2458",
+      "name": "義隆",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3450",
-      "name": "聯鈞",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2324",
-      "name": "仁寶",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6202",
-      "name": "盛群",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2228",
-      "name": "劍麟",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6869",
-      "name": "雲豹能源",
+      "symbol": "9911",
+      "name": "櫻花",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -251,6 +223,13 @@
       "symbol": "00940",
       "name": "元大台灣價值高息",
       "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2892",
+      "name": "第一金",
+      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     },
