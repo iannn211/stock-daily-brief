@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-25T18:58:53.012359+08:00",
+  "fetched_at": "2026-05-27T18:41:29.719603+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,21 +7,21 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 11
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -49,14 +49,14 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 3
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -70,88 +70,74 @@
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 1
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 100,
-    "0050": 84,
-    "5607": 80,
-    "3081": 34,
-    "3090": 33,
-    "2327": 32,
-    "3324": 28,
-    "2492": 26,
-    "2421": 25,
-    "3715": 25,
-    "3189": 18,
-    "6831": 18,
-    "4908": 17,
-    "2454": 15,
-    "2303": 15,
-    "2027": 14,
-    "6274": 13,
-    "3481": 11,
-    "2409": 11,
-    "3131": 11,
+    "2330": 102,
+    "0050": 95,
+    "5607": 78,
+    "2327": 30,
+    "2492": 30,
+    "3324": 30,
+    "3081": 28,
+    "3715": 22,
+    "2454": 20,
+    "3189": 20,
+    "4908": 20,
+    "2303": 17,
+    "3131": 16,
+    "3037": 13,
+    "3481": 13,
+    "2421": 13,
+    "2409": 12,
+    "8163": 11,
     "4958": 10,
-    "5425": 10,
+    "6173": 10,
     "3665": 10,
-    "3037": 9,
+    "6831": 10,
+    "2317": 9,
     "3163": 9,
     "2426": 8,
-    "6173": 8,
-    "2317": 7,
-    "2344": 7,
-    "2408": 7
+    "3583": 8,
+    "8358": 8,
+    "2308": 7,
+    "6449": 7,
+    "6290": 6
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 80,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3090",
-      "name": "日電貿",
-      "mentions": 33,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2421",
-      "name": "建準",
-      "mentions": 25,
+      "mentions": 78,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 18,
+      "mentions": 20,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2421",
+      "name": "建準",
+      "mentions": 13,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8163",
+      "name": "達方",
+      "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6831",
       "name": "邁科",
-      "mentions": 18,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 14,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "5425",
-      "name": "台半",
       "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
@@ -164,13 +150,6 @@
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "6449",
       "name": "鈺邦",
       "mentions": 7,
@@ -178,30 +157,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2892",
-      "name": "第一金",
+      "symbol": "6290",
+      "name": "良維",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2324",
-      "name": "仁寶",
+      "symbol": "3090",
+      "name": "日電貿",
       "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00940",
-      "name": "元大台灣價值高息",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2014",
-      "name": "中鴻",
-      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -213,15 +178,43 @@
       "in_chains": false
     },
     {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
+      "symbol": "2892",
+      "name": "第一金",
       "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6869",
-      "name": "雲豹能源",
+      "symbol": "2406",
+      "name": "國碩",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2344",
+      "name": "華邦電",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2375",
+      "name": "凱美",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2324",
+      "name": "仁寶",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -230,6 +223,13 @@
       "symbol": "2028",
       "name": "威致",
       "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3577",
+      "name": "泓格",
+      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     }
