@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-06-02T19:07:49.962988+08:00",
+  "fetched_at": "2026-06-03T19:30:57.134992+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 14
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -56,7 +56,7 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "0050": 113,
-    "2330": 113,
-    "5607": 73,
-    "2303": 50,
-    "3081": 48,
-    "2454": 29,
-    "3324": 26,
-    "2408": 25,
-    "3715": 25,
-    "6173": 24,
-    "3026": 24,
-    "2382": 23,
+    "2330": 146,
+    "0050": 126,
+    "5607": 78,
+    "3081": 61,
+    "2303": 59,
+    "3324": 44,
+    "2454": 31,
+    "2382": 30,
+    "3715": 30,
+    "3026": 28,
+    "2408": 27,
+    "6173": 27,
+    "2317": 25,
+    "4908": 21,
+    "3017": 21,
     "1409": 19,
-    "3017": 19,
-    "2317": 18,
-    "2327": 18,
-    "2603": 17,
-    "4908": 17,
-    "2344": 15,
+    "2327": 19,
+    "2603": 18,
+    "2344": 17,
+    "2492": 17,
+    "6125": 17,
+    "3665": 16,
     "3624": 15,
     "3037": 14,
     "2375": 14,
-    "2474": 13,
+    "3231": 14,
     "4912": 13,
-    "00878": 12,
-    "3481": 11,
-    "2492": 11,
-    "3019": 10,
-    "3665": 10,
-    "6125": 10
+    "3481": 12,
+    "3564": 12,
+    "2308": 11
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 73,
+      "mentions": 78,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -124,7 +124,7 @@
     {
       "symbol": "2344",
       "name": "華邦電",
-      "mentions": 15,
+      "mentions": 17,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -150,8 +150,8 @@
       "in_chains": false
     },
     {
-      "symbol": "00878",
-      "name": "國泰永續高股息",
+      "symbol": "3564",
+      "name": "其陽",
       "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
@@ -171,29 +171,22 @@
       "in_chains": false
     },
     {
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00878",
+      "name": "國泰永續高股息",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "6770",
       "name": "力積電",
-      "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2880",
-      "name": "華南金",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2887",
-      "name": "台新新光金",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "1402",
-      "name": "遠東新",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -201,7 +194,7 @@
     {
       "symbol": "2324",
       "name": "仁寶",
-      "mentions": 6,
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     }
