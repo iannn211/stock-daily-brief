@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-06-05T18:35:43.761484+08:00",
+  "fetched_at": "2026-06-08T19:29:21.188409+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -35,7 +35,7 @@
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -63,7 +63,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 3
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
@@ -75,42 +75,63 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 144,
-    "0050": 139,
-    "5607": 75,
-    "3081": 61,
-    "2303": 48,
-    "3324": 42,
+    "0050": 185,
+    "2330": 154,
+    "5607": 65,
+    "3081": 60,
+    "2303": 52,
+    "3665": 44,
+    "3324": 39,
     "2382": 35,
-    "3715": 34,
-    "2317": 29,
-    "3665": 24,
-    "3231": 23,
-    "2492": 22,
-    "4908": 22,
-    "2603": 19,
-    "3017": 19,
+    "2492": 35,
+    "8996": 29,
+    "3231": 25,
+    "2317": 22,
+    "4958": 22,
+    "4939": 20,
+    "3624": 19,
+    "3234": 19,
     "2454": 18,
-    "4958": 17,
+    "3017": 18,
+    "3715": 18,
+    "2603": 17,
     "4760": 16,
-    "6125": 16,
     "2408": 15,
-    "3624": 15,
-    "6173": 14,
+    "2327": 15,
+    "2344": 14,
     "4912": 13,
-    "8358": 13,
+    "3026": 13,
     "8299": 12,
-    "6282": 12,
-    "3564": 12,
-    "2327": 12,
-    "5274": 11,
-    "3234": 11
+    "3443": 12,
+    "3189": 12,
+    "6525": 12
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 75,
+      "mentions": 65,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8996",
+      "name": "高力",
+      "mentions": 29,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "4939",
+      "name": "亞電",
+      "mentions": 20,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3624",
+      "name": "光頡",
+      "mentions": 19,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -122,9 +143,9 @@
       "in_chains": false
     },
     {
-      "symbol": "3624",
-      "name": "光頡",
-      "mentions": 15,
+      "symbol": "2344",
+      "name": "華邦電",
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -138,6 +159,20 @@
     {
       "symbol": "8299",
       "name": "群聯",
+      "mentions": 12,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 12,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6525",
+      "name": "捷敏-KY",
       "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
@@ -164,64 +199,22 @@
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3189",
-      "name": "景碩",
-      "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "8996",
-      "name": "高力",
-      "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "0056",
-      "name": "元大高股息",
+      "symbol": "6830",
+      "name": "汎銓",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
-      "mentions": 8,
+      "symbol": "6933",
+      "name": "AMAX-KY",
+      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3706",
       "name": "神達",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6690",
-      "name": "安碁資訊",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00878",
-      "name": "國泰永續高股息",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
