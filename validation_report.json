@@ -1,96 +1,119 @@
 {
-  "validated_at": "2026-06-09T18:31:08.838245+08:00",
-  "analysis_file": "analyses/2026-06-09.json",
-  "analysis_date": "2026-06-09",
-  "analysis_model": "gemini-2.5-flash-lite",
+  "validated_at": "2026-06-10T18:49:12.650932+08:00",
+  "analysis_file": "analyses/2026-06-10.json",
+  "analysis_date": "2026-06-10",
+  "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI 伺服器導軌» → lead_stocks[0]",
-      "message": "代號 待研究 (新聞提到的 AI 伺服器導軌廠) 本站無資料，無法驗證數字是否正確",
-      "headline": "待研究 本站沒資料",
+      "location": "opportunities[4] «AI 散熱模組» → lead_stocks[2]",
+      "message": "代號 8147 (正淩 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "8147 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 待研究 → 去 inspect.html?sym=待研究 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-not-in-data",
-      "location": "budget_allocation.allocations[2]",
-      "message": "配置建議的代號 4537 (旭東機械) 本站無資料，價格與基本面無法核對",
-      "headline": "4537 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 4537 → 去 inspect.html?sym=4537 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 8147 → 去 inspect.html?sym=8147 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
       "category": "ticker-not-in-data",
       "location": "budget_allocation.allocations[6]",
-      "message": "配置建議的代號 新聞提到的 AI 伺服器導軌廠 (待研究) 本站無資料，價格與基本面無法核對",
-      "headline": "新聞提到的 本站沒資料",
+      "message": "配置建議的代號 CASH (保留現金) 本站無資料，價格與基本面無法核對",
+      "headline": "CASH 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 新聞提到的 → 去 inspect.html?sym=新聞提到的 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-name-mismatch",
-      "location": "opportunities[1].lead_stocks[0]",
-      "message": "代號 8046 本站記錄為「南電」，Gemini 標成「建通」— 可能 Gemini 記錯了",
-      "context": {
-        "symbol": "8046",
-        "claimed": "建通",
-        "actual": "南電"
-      },
-      "headline": "8046 股名標錯（不影響決策）",
-      "impact": "代號 8046 本站記錄是「南電」，Gemini 寫成「建通」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 8046 這檔走的。",
-      "next_step": "不用處理。就把 Gemini 寫的「建通」當成「南電」看就好。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-name-mismatch",
-      "location": "opportunities[3].lead_stocks[0]",
-      "message": "代號 2492 本站記錄為「華新科」，Gemini 標成「國巨」— 可能 Gemini 記錯了",
-      "context": {
-        "symbol": "2492",
-        "claimed": "國巨",
-        "actual": "華新科"
-      },
-      "headline": "2492 股名標錯（不影響決策）",
-      "impact": "代號 2492 本站記錄是「華新科」，Gemini 寫成「國巨」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 2492 這檔走的。",
-      "next_step": "不用處理。就把 Gemini 寫的「國巨」當成「華新科」看就好。"
+      "next_step": "想跟進 CASH → 去 inspect.html?sym=CASH 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
+      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 30000.0
+        "total_cost": 35000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
+      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
       "context": {
         "claimed": 0,
-        "expected": -25000.0
+        "expected": -30000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
+    },
+    {
+      "severity": "warning",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[2]",
+      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=19.1（屬於合理區） — 題材「AI 伺服器與 PCB 載板需求強勁」",
+      "context": {
+        "symbol": "6669",
+        "pe": 19.075058,
+        "tier": "fair"
+      },
+      "headline": "6669 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=19.1（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
+      "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
+    },
+    {
+      "severity": "warning",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[3]",
+      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=19.9（屬於合理區） — 題材「半導體設備 WFE 超級週期」",
+      "context": {
+        "symbol": "6146",
+        "pe": 19.944082,
+        "tier": "fair"
+      },
+      "headline": "6146 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=19.9（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
+      "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[2].lead_stocks[0]",
+      "message": "題材「AI 高速連接器」的 lead stock 3665 (貿聯-KY (hidden)) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "3665",
+        "theme": "AI 高速連接器",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": "connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍"
+      },
+      "headline": "3665 貿聯-KY (hidden) 被放錯題材",
+      "impact": "Gemini 把 3665 列為「AI 高速連接器」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 高速連接器」這個題材想買 3665，這個理由不成立。",
+      "next_step": "想布局「AI 高速連接器」→ 同題材的 3092 鴻碩 (hidden) 才是真的相關股。\n想買 3665 貿聯-KY (hidden) → 要從它真正的業務角度（connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍）去找對的題材，不是用「AI 高速連接器」當理由。"
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[2].lead_stocks[1]",
+      "message": "題材「AI 高速連接器」的 lead stock 3092 (鴻碩 (hidden)) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 車用 / 工業連接器小型股」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "3092",
+        "theme": "AI 高速連接器",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": "connectors 連接器 / 纜線 車用 / 工業連接器小型股"
+      },
+      "headline": "3092 鴻碩 (hidden) 被放錯題材",
+      "impact": "Gemini 把 3092 列為「AI 高速連接器」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 車用 / 工業連接器小型股」— 跟題材不是同一回事。如果你原本因為「AI 高速連接器」這個題材想買 3092，這個理由不成立。",
+      "next_step": "想布局「AI 高速連接器」→ 同題材的 3665 貿聯-KY (hidden) 才是真的相關股。\n想買 3092 鴻碩 (hidden) → 要從它真正的業務角度（connectors 連接器 / 纜線 車用 / 工業連接器小型股）去找對的題材，不是用「AI 高速連接器」當理由。"
     }
   ],
   "summary": {
-    "errors": 5,
-    "warnings": 2,
+    "errors": 2,
+    "warnings": 6,
     "infos": 0,
-    "total": 7,
+    "total": 8,
     "suppressed": 0
   }
 }
