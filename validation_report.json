@@ -1,26 +1,45 @@
 {
-  "validated_at": "2026-06-10T18:49:12.650932+08:00",
-  "analysis_file": "analyses/2026-06-10.json",
-  "analysis_date": "2026-06-10",
-  "analysis_model": "gemini-2.5-flash",
+  "validated_at": "2026-06-11T19:20:46.222900+08:00",
+  "analysis_file": "analyses/2026-06-11.json",
+  "analysis_date": "2026-06-11",
+  "analysis_model": "gemini-2.5-flash-lite",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[4] «AI 散熱模組» → lead_stocks[2]",
-      "message": "代號 8147 (正淩 (small)) 本站無資料，無法驗證數字是否正確",
-      "headline": "8147 本站沒資料",
+      "location": "opportunities[1] «半導體設備» → lead_stocks[1]",
+      "message": "代號 1939 (漢唐) 本站無資料，無法驗證數字是否正確",
+      "headline": "1939 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 8147 → 去 inspect.html?sym=8147 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 1939 → 去 inspect.html?sym=1939 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
-      "category": "ticker-not-in-data",
-      "location": "budget_allocation.allocations[6]",
-      "message": "配置建議的代號 CASH (保留現金) 本站無資料，價格與基本面無法核對",
-      "headline": "CASH 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 CASH → 去 inspect.html?sym=CASH 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "category": "ticker-name-mismatch",
+      "location": "opportunities[0].lead_stocks[0]",
+      "message": "代號 2376 本站記錄為「技嘉」，Gemini 標成「廣達」— 可能 Gemini 記錯了",
+      "context": {
+        "symbol": "2376",
+        "claimed": "廣達",
+        "actual": "技嘉"
+      },
+      "headline": "2376 股名標錯（不影響決策）",
+      "impact": "代號 2376 本站記錄是「技嘉」，Gemini 寫成「廣達」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 2376 這檔走的。",
+      "next_step": "不用處理。就把 Gemini 寫的「廣達」當成「技嘉」看就好。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-name-mismatch",
+      "location": "budget_allocation.allocations[1]",
+      "message": "代號 2376 本站記錄為「技嘉」，Gemini 標成「廣達」— 可能 Gemini 記錯了",
+      "context": {
+        "symbol": "2376",
+        "claimed": "廣達",
+        "actual": "技嘉"
+      },
+      "headline": "2376 股名標錯（不影響決策）",
+      "impact": "代號 2376 本站記錄是「技嘉」，Gemini 寫成「廣達」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 2376 這檔走的。",
+      "next_step": "不用處理。就把 Gemini 寫的「廣達」當成「技嘉」看就好。"
     },
     {
       "severity": "error",
@@ -51,69 +70,39 @@
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[2]",
-      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=19.1（屬於合理區） — 題材「AI 伺服器與 PCB 載板需求強勁」",
-      "context": {
-        "symbol": "6669",
-        "pe": 19.075058,
-        "tier": "fair"
-      },
-      "headline": "6669 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=19.1（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
-      "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "topics[3]",
-      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=19.9（屬於合理區） — 題材「半導體設備 WFE 超級週期」",
+      "location": "topics[1]",
+      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=18.2（屬於合理區） — 題材「半導體設備」",
       "context": {
         "symbol": "6146",
-        "pe": 19.944082,
+        "pe": 18.23694,
         "tier": "fair"
       },
       "headline": "6146 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=19.9（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
+      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=18.2（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
       "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "theme-industry-mismatch",
-      "location": "opportunities[2].lead_stocks[0]",
-      "message": "題材「AI 高速連接器」的 lead stock 3665 (貿聯-KY (hidden)) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "location": "opportunities[0].lead_stocks[2]",
+      "message": "題材「AI 伺服器供應鏈」的 lead stock 3665 (貿聯-KY) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
       "context": {
         "symbol": "3665",
-        "theme": "AI 高速連接器",
+        "theme": "AI 伺服器供應鏈",
         "industry": "Electrical Equipment & Parts",
         "sector": "Industrials",
         "sc_roles": "connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍"
       },
-      "headline": "3665 貿聯-KY (hidden) 被放錯題材",
-      "impact": "Gemini 把 3665 列為「AI 高速連接器」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 高速連接器」這個題材想買 3665，這個理由不成立。",
-      "next_step": "想布局「AI 高速連接器」→ 同題材的 3092 鴻碩 (hidden) 才是真的相關股。\n想買 3665 貿聯-KY (hidden) → 要從它真正的業務角度（connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍）去找對的題材，不是用「AI 高速連接器」當理由。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[2].lead_stocks[1]",
-      "message": "題材「AI 高速連接器」的 lead stock 3092 (鴻碩 (hidden)) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 車用 / 工業連接器小型股」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "3092",
-        "theme": "AI 高速連接器",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": "connectors 連接器 / 纜線 車用 / 工業連接器小型股"
-      },
-      "headline": "3092 鴻碩 (hidden) 被放錯題材",
-      "impact": "Gemini 把 3092 列為「AI 高速連接器」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 車用 / 工業連接器小型股」— 跟題材不是同一回事。如果你原本因為「AI 高速連接器」這個題材想買 3092，這個理由不成立。",
-      "next_step": "想布局「AI 高速連接器」→ 同題材的 3665 貿聯-KY (hidden) 才是真的相關股。\n想買 3092 鴻碩 (hidden) → 要從它真正的業務角度（connectors 連接器 / 纜線 車用 / 工業連接器小型股）去找對的題材，不是用「AI 高速連接器」當理由。"
+      "headline": "3665 貿聯-KY 被放錯題材",
+      "impact": "Gemini 把 3665 列為「AI 伺服器供應鏈」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器供應鏈」這個題材想買 3665，這個理由不成立。",
+      "next_step": "想布局「AI 伺服器供應鏈」→ 同題材的 2376 廣達、2376 技嘉 才是真的相關股。\n想買 3665 貿聯-KY → 要從它真正的業務角度（connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍）去找對的題材，不是用「AI 伺服器供應鏈」當理由。"
     }
   ],
   "summary": {
-    "errors": 2,
-    "warnings": 6,
+    "errors": 3,
+    "warnings": 4,
     "infos": 0,
-    "total": 8,
+    "total": 7,
     "suppressed": 0
   }
 }
