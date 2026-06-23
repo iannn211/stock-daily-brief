@@ -1,30 +1,84 @@
 {
-  "validated_at": "2026-06-22T20:45:19.881208+08:00",
-  "analysis_file": "analyses/2026-06-19.json",
-  "analysis_date": "2026-06-19",
+  "validated_at": "2026-06-23T18:27:24.733151+08:00",
+  "analysis_file": "analyses/2026-06-23.json",
+  "analysis_date": "2026-06-23",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[1] «AI 伺服器底層軟體與服務» → lead_stocks[0]",
+      "message": "代號 6231 (系微 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6231 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6231 → 去 inspect.html?sym=6231 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[1] «AI 伺服器底層軟體與服務» → lead_stocks[1]",
+      "message": "代號 6947 (台鎔科技 (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6947 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6947 → 去 inspect.html?sym=6947 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[2] «AI 散熱液冷技術» → lead_stocks[2]",
+      "message": "代號 6525 (捷敏-KY (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6525 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6525 → 去 inspect.html?sym=6525 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[3] «AI 帶動 PCB / 載板上游» → lead_stocks[0]",
+      "message": "代號 1717 (長興 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "1717 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 1717 → 去 inspect.html?sym=1717 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[2]",
+      "message": "配置建議的代號 6947 (台鎔科技) 本站無資料，價格與基本面無法核對",
+      "headline": "6947 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6947 → 去 inspect.html?sym=6947 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[3]",
+      "message": "配置建議的代號 6231 (系微) 本站無資料，價格與基本面無法核對",
+      "headline": "6231 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6231 → 去 inspect.html?sym=6231 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
+      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 30000.0
+        "total_cost": 35000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
+      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
       "context": {
         "claimed": 0,
-        "expected": -25000.0
+        "expected": -30000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
@@ -33,94 +87,26 @@
     {
       "severity": "warning",
       "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[0]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1503 (士電（mid）) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "1503",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "1503 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[1]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1519 (華城（large）) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "1519",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "1519 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[2]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 8996 (高力（hidden）) 產業標為「Specialty Industrial Machinery」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "location": "opportunities[2].lead_stocks[1]",
+      "message": "題材「AI 散熱液冷技術」的 lead stock 8996 (高力 (small)) 產業標為「Specialty Industrial Machinery」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
       "context": {
         "symbol": "8996",
-        "theme": "AI 電力 / 重電",
+        "theme": "AI 散熱液冷技術",
         "industry": "Specialty Industrial Machinery",
         "sector": "Industrials",
         "sc_roles": null
       },
       "headline": "8996 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[1].lead_stocks[0]",
-      "message": "題材「AI 散熱 / 液冷」的 lead stock 8996 (高力（hidden）) 產業標為「Specialty Industrial Machinery」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "8996",
-        "theme": "AI 散熱 / 液冷",
-        "industry": "Specialty Industrial Machinery",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "8996 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[1].lead_stocks[2]",
-      "message": "題材「AI 散熱 / 液冷」的 lead stock 2421 (建準（mid）) 產業標為「Specialty Industrial Machinery」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "2421",
-        "theme": "AI 散熱 / 液冷",
-        "industry": "Specialty Industrial Machinery",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "2421 題材分類不確定（已自動忽略）",
       "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
       "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
       "suppress": true
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 1,
+    "errors": 3,
+    "warnings": 5,
     "infos": 0,
-    "total": 2,
-    "suppressed": 5
+    "total": 8,
+    "suppressed": 1
   }
 }
