@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-06-24T18:05:51.388834+08:00",
+  "validated_at": "2026-06-25T18:05:00.768571+08:00",
   "analysis_file": "analyses/2026-06-23.json",
   "analysis_date": "2026-06-23",
   "analysis_model": "gemini-2.5-flash",
@@ -34,14 +34,14 @@
       "severity": "error",
       "category": "pe-claim-contradicts-data",
       "location": "opportunities[1].why",
-      "message": "6947 描述提到「便宜/低估」，但實際 PE=138.0（屬於昂貴/泡沫區） — 題材「AI 伺服器底層軟體與服務」",
+      "message": "6947 描述提到「便宜/低估」，但實際 PE=138.4（屬於昂貴/泡沫區） — 題材「AI 伺服器底層軟體與服務」",
       "context": {
         "symbol": "6947",
-        "pe": 138.0,
+        "pe": 138.42857,
         "tier": "bubble"
       },
       "headline": "6947 估值 Gemini 看錯方向",
-      "impact": "Gemini 把 6947 當「便宜」敘述，但實際 PE=138.0（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "impact": "Gemini 把 6947 當「便宜」敘述，但實際 PE=138.4（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
       "next_step": "別把「估值便宜」當成 6947 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
     },
     {
