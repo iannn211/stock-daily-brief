@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-06-29T19:34:29.157752+08:00",
+  "fetched_at": "2026-06-30T18:18:05.108928+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,21 +7,21 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 10
+      "mentioned_in_window": 15
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -35,7 +35,7 @@
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -49,68 +49,82 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 4
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 5
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 90,
-    "5607": 81,
-    "0050": 75,
-    "2303": 25,
-    "3081": 21,
+    "2330": 115,
+    "5607": 96,
+    "0050": 86,
+    "3081": 30,
+    "2454": 26,
+    "2472": 26,
+    "2303": 24,
+    "8046": 23,
     "2327": 21,
-    "2454": 20,
-    "8046": 19,
+    "3189": 19,
     "5285": 16,
+    "2233": 14,
+    "3711": 13,
+    "3324": 13,
+    "2308": 11,
     "6231": 11,
     "6525": 11,
-    "3324": 11,
     "6146": 11,
-    "3189": 9,
-    "2472": 8,
-    "00400A": 8,
+    "3131": 10,
+    "2027": 9,
+    "2409": 9,
+    "2344": 9,
+    "3017": 9,
+    "2317": 8,
+    "3450": 8,
     "8996": 8,
     "2360": 8,
-    "2308": 7,
-    "6138": 7,
-    "6442": 6,
-    "2317": 6,
-    "2409": 6,
-    "0056": 6,
-    "6426": 6,
-    "1717": 6,
-    "2344": 5,
-    "3231": 5,
-    "3661": 5,
-    "3017": 4
+    "3231": 7,
+    "3037": 7,
+    "3026": 7
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 81,
+      "mentions": 96,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2472",
+      "name": "立隆電",
+      "mentions": 26,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 19,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -118,6 +132,13 @@
       "symbol": "5285",
       "name": "界霖",
       "mentions": 16,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2233",
+      "name": "宇隆",
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,22 +157,22 @@
       "in_chains": false
     },
     {
-      "symbol": "3189",
-      "name": "景碩",
+      "symbol": "2027",
+      "name": "大成鋼",
       "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2472",
-      "name": "立隆電",
-      "mentions": 8,
+      "symbol": "2344",
+      "name": "華邦電",
+      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "00400A",
-      "name": "主動國泰動能高息",
+      "symbol": "3450",
+      "name": "聯鈞",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
@@ -164,6 +185,13 @@
       "in_chains": false
     },
     {
+      "symbol": "6442",
+      "name": "光聖",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "6138",
       "name": "茂達",
       "mentions": 7,
@@ -171,15 +199,15 @@
       "in_chains": false
     },
     {
-      "symbol": "6442",
-      "name": "光聖",
+      "symbol": "6126",
+      "name": "信音",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "0056",
-      "name": "元大高股息",
+      "symbol": "6831",
+      "name": "邁科",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -199,16 +227,30 @@
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 5,
+      "symbol": "7822",
+      "name": "倍利科",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3661",
-      "name": "世芯-KY",
-      "mentions": 5,
+      "symbol": "6658",
+      "name": "聯策",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2406",
+      "name": "國碩",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2023",
+      "name": "燁輝",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -220,15 +262,8 @@
       "in_chains": false
     },
     {
-      "symbol": "00991A",
-      "name": "主動復華未來50",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2426",
-      "name": "鼎元",
+      "symbol": "0056",
+      "name": "元大高股息",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -244,41 +279,6 @@
       "symbol": "2072",
       "name": "世紀風電",
       "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2610",
-      "name": "華航",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "5425",
-      "name": "台半",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3501",
-      "name": "維熹",
-      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     }
