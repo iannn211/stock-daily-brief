@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-01T18:31:47.551121+08:00",
+  "fetched_at": "2026-07-02T17:46:40.061909+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -42,7 +42,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "5607": 96,
-    "2330": 92,
-    "0050": 62,
+    "2330": 90,
+    "5607": 87,
+    "0050": 56,
+    "8046": 27,
     "3081": 24,
     "2472": 24,
-    "8046": 23,
-    "2454": 21,
-    "3189": 18,
+    "2454": 22,
+    "3189": 20,
+    "3037": 16,
     "5285": 16,
+    "2344": 14,
+    "2327": 14,
     "2233": 14,
-    "2303": 13,
+    "2409": 12,
     "6146": 11,
-    "3037": 10,
-    "2409": 10,
-    "2344": 10,
-    "2327": 10,
+    "3711": 10,
+    "2303": 10,
     "3131": 10,
-    "3711": 9,
-    "2317": 8,
-    "3231": 8,
+    "2317": 9,
     "3450": 8,
     "2360": 8,
-    "2308": 7,
-    "3017": 7,
+    "2030": 7,
+    "3231": 7,
+    "2492": 7,
     "6442": 7,
     "6138": 7,
-    "2882": 6,
-    "2449": 6,
-    "6658": 6,
-    "3324": 6
+    "2308": 6,
+    "3324": 6,
+    "2882": 5,
+    "3017": 5
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 96,
+      "mentions": 87,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -124,7 +124,7 @@
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 18,
+      "mentions": 20,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,6 +136,13 @@
       "in_chains": false
     },
     {
+      "symbol": "2344",
+      "name": "華邦電",
+      "mentions": 14,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "2233",
       "name": "宇隆",
       "mentions": 14,
@@ -143,16 +150,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 10,
+      "symbol": "3450",
+      "name": "聯鈞",
+      "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3450",
-      "name": "聯鈞",
-      "mentions": 8,
+      "symbol": "2030",
+      "name": "彰源",
+      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -173,41 +180,6 @@
     {
       "symbol": "6658",
       "name": "聯策",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2478",
-      "name": "大毅",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "8043",
-      "name": "蜜望實",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00930",
-      "name": "永豐ESG低碳高息",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2302",
-      "name": "麗正",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -220,13 +192,6 @@
       "in_chains": false
     },
     {
-      "symbol": "6831",
-      "name": "邁科",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "5347",
       "name": "世界",
       "mentions": 4,
@@ -234,9 +199,37 @@
       "in_chains": false
     },
     {
-      "symbol": "2072",
-      "name": "世紀風電",
+      "symbol": "5439",
+      "name": "高技",
       "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2486",
+      "name": "一詮",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6525",
+      "name": "捷敏-KY",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2478",
+      "name": "大毅",
+      "mentions": 3,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8043",
+      "name": "蜜望實",
+      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -272,6 +265,13 @@
       "symbol": "2250",
       "name": "IKKA-KY",
       "mentions": 3,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00930",
+      "name": "永豐ESG低碳高息",
+      "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     }
