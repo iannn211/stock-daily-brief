@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-02T17:46:40.061909+08:00",
+  "fetched_at": "2026-07-03T17:44:24.522710+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,14 +7,14 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 11
+      "mentioned_in_window": 14
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
@@ -28,14 +28,14 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -49,7 +49,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
@@ -63,7 +63,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 90,
-    "5607": 87,
-    "0050": 56,
-    "8046": 27,
-    "3081": 24,
+    "2330": 117,
+    "5607": 93,
+    "0050": 70,
+    "3081": 43,
+    "8046": 30,
+    "3037": 25,
+    "2454": 24,
     "2472": 24,
-    "2454": 22,
-    "3189": 20,
-    "3037": 16,
+    "3189": 18,
+    "2409": 16,
+    "2327": 16,
     "5285": 16,
-    "2344": 14,
-    "2327": 14,
+    "6146": 15,
     "2233": 14,
-    "2409": 12,
-    "6146": 11,
-    "3711": 10,
+    "5439": 12,
+    "2344": 11,
+    "2486": 11,
     "2303": 10,
+    "3324": 10,
     "3131": 10,
+    "3711": 9,
     "2317": 9,
+    "2492": 9,
+    "3017": 9,
     "3450": 8,
+    "3363": 8,
     "2360": 8,
-    "2030": 7,
     "3231": 7,
-    "2492": 7,
     "6442": 7,
-    "6138": 7,
-    "2308": 6,
-    "3324": 6,
-    "2882": 5,
-    "3017": 5
+    "6138": 7
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 87,
+      "mentions": 93,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -124,7 +124,7 @@
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 20,
+      "mentions": 18,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,13 +136,6 @@
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 14,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "2233",
       "name": "宇隆",
       "mentions": 14,
@@ -150,16 +143,30 @@
       "in_chains": false
     },
     {
-      "symbol": "3450",
-      "name": "聯鈞",
-      "mentions": 8,
+      "symbol": "5439",
+      "name": "高技",
+      "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 7,
+      "symbol": "2344",
+      "name": "華邦電",
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2486",
+      "name": "一詮",
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3450",
+      "name": "聯鈞",
+      "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -178,6 +185,34 @@
       "in_chains": false
     },
     {
+      "symbol": "2450",
+      "name": "神腦",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6525",
+      "name": "捷敏-KY",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2030",
+      "name": "彰源",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2465",
+      "name": "麗臺",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "6658",
       "name": "聯策",
       "mentions": 4,
@@ -192,86 +227,16 @@
       "in_chains": false
     },
     {
+      "symbol": "1617",
+      "name": "榮星",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "5347",
       "name": "世界",
       "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "5439",
-      "name": "高技",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2486",
-      "name": "一詮",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6525",
-      "name": "捷敏-KY",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2478",
-      "name": "大毅",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "8043",
-      "name": "蜜望實",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6126",
-      "name": "信音",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2377",
-      "name": "微星",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6451",
-      "name": "訊芯-KY",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2250",
-      "name": "IKKA-KY",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00930",
-      "name": "永豐ESG低碳高息",
-      "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     }

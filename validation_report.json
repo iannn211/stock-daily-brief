@@ -1,101 +1,81 @@
 {
-  "validated_at": "2026-07-02T17:57:17.556911+08:00",
-  "analysis_file": "analyses/2026-07-02.json",
-  "analysis_date": "2026-07-02",
-  "analysis_model": "gemini-2.5-flash-lite",
+  "validated_at": "2026-07-03T17:50:01.061524+08:00",
+  "analysis_file": "analyses/2026-07-03.json",
+  "analysis_date": "2026-07-03",
+  "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI 伺服器與 PCB 題材» → lead_stocks[0]",
-      "message": "代號 5439 (高技) 本站無資料，無法驗證數字是否正確",
-      "headline": "5439 本站沒資料",
+      "location": "opportunities[1] «光通訊 CPO» → lead_stocks[3]",
+      "message": "代號 6442 (光聖 (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6442 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 5439 → 去 inspect.html?sym=5439 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 6442 → 去 inspect.html?sym=6442 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI 伺服器與 PCB 題材» → lead_stocks[1]",
-      "message": "代號 2486 (一詮) 本站無資料，無法驗證數字是否正確",
-      "headline": "2486 本站沒資料",
+      "location": "opportunities[2] «AI 散熱新技術» → lead_stocks[0]",
+      "message": "代號 1617 (榮星 (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "1617 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 2486 → 去 inspect.html?sym=2486 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 1617 → 去 inspect.html?sym=1617 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
-      "severity": "error",
-      "category": "ticker-name-mismatch",
-      "location": "budget_allocation.allocations[5]",
-      "message": "代號 00679B 本站記錄為「元大美債20年」，Gemini 標成「元大 7-10 年期美國國債 ETF」— 可能 Gemini 記錯了",
-      "context": {
-        "symbol": "00679B",
-        "claimed": "元大 7-10 年期美國國債 ETF",
-        "actual": "元大美債20年"
-      },
-      "headline": "00679B 股名標錯（不影響決策）",
-      "impact": "代號 00679B 本站記錄是「元大美債20年」，Gemini 寫成「元大 7-10 年期美國國債 ETF」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 00679B 這檔走的。",
-      "next_step": "不用處理。就把 Gemini 寫的「元大 7-10 年期美國國債 ETF」當成「元大美債20年」看就好。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-name-mismatch",
-      "location": "budget_allocation.allocations[6]",
-      "message": "代號 0050 本站記錄為「元大台灣50」，Gemini 標成「元大台灣 50」— 可能 Gemini 記錯了",
-      "context": {
-        "symbol": "0050",
-        "claimed": "元大台灣 50",
-        "actual": "元大台灣50"
-      },
-      "headline": "0050 股名標錯（不影響決策）",
-      "impact": "代號 0050 本站記錄是「元大台灣50」，Gemini 寫成「元大台灣 50」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 0050 這檔走的。",
-      "next_step": "不用處理。就把 Gemini 寫的「元大台灣 50」當成「元大台灣50」看就好。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-name-mismatch",
-      "location": "holdings_analysis[0]",
-      "message": "代號 0050 本站記錄為「元大台灣50」，Gemini 標成「元大台灣 50」— 可能 Gemini 記錯了",
-      "context": {
-        "symbol": "0050",
-        "claimed": "元大台灣 50",
-        "actual": "元大台灣50"
-      },
-      "headline": "0050 股名標錯（不影響決策）",
-      "impact": "代號 0050 本站記錄是「元大台灣50」，Gemini 寫成「元大台灣 50」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 0050 這檔走的。",
-      "next_step": "不用處理。就把 Gemini 寫的「元大台灣 50」當成「元大台灣50」看就好。"
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[2] «AI 散熱新技術» → lead_stocks[2]",
+      "message": "代號 6525 (捷敏-KY (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6525 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6525 → 去 inspect.html?sym=6525 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
+      "message": "配置加總 NT$27,090 超過預算 NT$5,000（差 NT$22,090）",
       "context": {
         "budget": 5000,
-        "total_cost": 35000.0
+        "total_cost": 27090.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
+      "impact": "Gemini 的 allocations 加總 NT$27,090 > 預算 NT$5,000，代表要全買得多湊 NT$22,090。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-22,090",
       "context": {
         "claimed": 0,
-        "expected": -30000.0
+        "expected": -22090.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
+    },
+    {
+      "severity": "warning",
+      "category": "growth-claim-contradicts-data",
+      "location": "topics[1]",
+      "message": "3363 描述提到「高成長」，但營收 YoY -7.2% — 可能是錯判 — 題材「光通訊 CPO 題材」",
+      "context": {
+        "symbol": "3363",
+        "rev_growth": -0.072
+      },
+      "headline": "3363 成長性 Gemini 吹過頭",
+      "impact": "Gemini 說 3363 是「高成長」，但實際 營收 YoY -7.2% — 數字在衰退。「成長股」論點不成立。",
+      "next_step": "別把 3363 當成長股看。若仍有興趣買，要有別的理由（谷底反轉、題材催化、股價被低估等），不能套「高成長」敘述。"
     }
   ],
   "summary": {
-    "errors": 4,
-    "warnings": 3,
+    "errors": 1,
+    "warnings": 5,
     "infos": 0,
-    "total": 7,
+    "total": 6,
     "suppressed": 0
   }
 }
