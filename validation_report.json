@@ -1,81 +1,126 @@
 {
-  "validated_at": "2026-07-03T17:50:01.061524+08:00",
-  "analysis_file": "analyses/2026-07-03.json",
-  "analysis_date": "2026-07-03",
+  "validated_at": "2026-07-06T19:20:42.490647+08:00",
+  "analysis_file": "analyses/2026-07-06.json",
+  "analysis_date": "2026-07-06",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[1] «光通訊 CPO» → lead_stocks[3]",
-      "message": "代號 6442 (光聖 (hidden)) 本站無資料，無法驗證數字是否正確",
-      "headline": "6442 本站沒資料",
+      "location": "opportunities[4] «IC 設計 / 功率半導體» → lead_stocks[2]",
+      "message": "代號 8261 (富鼎 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "8261 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6442 → 去 inspect.html?sym=6442 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[2] «AI 散熱新技術» → lead_stocks[0]",
-      "message": "代號 1617 (榮星 (hidden)) 本站無資料，無法驗證數字是否正確",
-      "headline": "1617 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 1617 → 去 inspect.html?sym=1617 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[2] «AI 散熱新技術» → lead_stocks[2]",
-      "message": "代號 6525 (捷敏-KY (hidden)) 本站無資料，無法驗證數字是否正確",
-      "headline": "6525 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6525 → 去 inspect.html?sym=6525 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 8261 → 去 inspect.html?sym=8261 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$27,090 超過預算 NT$5,000（差 NT$22,090）",
+      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 27090.0
+        "total_cost": 30000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$27,090 > 預算 NT$5,000，代表要全買得多湊 NT$22,090。",
+      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-22,090",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
       "context": {
         "claimed": 0,
-        "expected": -22090.0
+        "expected": -25000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
     },
     {
-      "severity": "warning",
-      "category": "growth-claim-contradicts-data",
-      "location": "topics[1]",
-      "message": "3363 描述提到「高成長」，但營收 YoY -7.2% — 可能是錯判 — 題材「光通訊 CPO 題材」",
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[1].why",
+      "message": "3081 描述提到「便宜/低估」，但實際 PE=264.6（屬於昂貴/泡沫區） — 題材「光通訊 CPO」",
       "context": {
-        "symbol": "3363",
-        "rev_growth": -0.072
+        "symbol": "3081",
+        "pe": 264.55026,
+        "tier": "bubble"
       },
-      "headline": "3363 成長性 Gemini 吹過頭",
-      "impact": "Gemini 說 3363 是「高成長」，但實際 營收 YoY -7.2% — 數字在衰退。「成長股」論點不成立。",
-      "next_step": "別把 3363 當成長股看。若仍有興趣買，要有別的理由（谷底反轉、題材催化、股價被低估等），不能套「高成長」敘述。"
+      "headline": "3081 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 3081 當「便宜」敘述，但實際 PE=264.6（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 3081 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[1].why",
+      "message": "3163 描述提到「便宜/低估」，但實際 PE=128.5（屬於昂貴/泡沫區） — 題材「光通訊 CPO」",
+      "context": {
+        "symbol": "3163",
+        "pe": 128.45659,
+        "tier": "bubble"
+      },
+      "headline": "3163 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 3163 當「便宜」敘述，但實際 PE=128.5（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 3163 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[1].why",
+      "message": "6442 描述提到「便宜/低估」，但實際 PE=70.0（屬於昂貴/泡沫區） — 題材「光通訊 CPO」",
+      "context": {
+        "symbol": "6442",
+        "pe": 69.95615,
+        "tier": "expensive"
+      },
+      "headline": "6442 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 6442 當「便宜」敘述，但實際 PE=70.0（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 6442 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[2]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1519 (華城 (large)) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1519",
+        "theme": "AI 電力 / 重電",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": null
+      },
+      "headline": "1519 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[3]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1503 (士電 (mid)) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1503",
+        "theme": "AI 電力 / 重電",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": null
+      },
+      "headline": "1503 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 5,
+    "errors": 4,
+    "warnings": 2,
     "infos": 0,
     "total": 6,
-    "suppressed": 0
+    "suppressed": 2
   }
 }
