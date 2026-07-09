@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-08T17:11:15.052528+08:00",
+  "fetched_at": "2026-07-09T18:16:49.386791+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 132,
-    "0050": 96,
-    "5607": 63,
-    "3081": 56,
-    "3037": 27,
+    "2330": 147,
+    "0050": 114,
+    "3081": 63,
+    "5607": 53,
+    "3363": 31,
+    "3715": 28,
     "2486": 27,
-    "3363": 26,
+    "8046": 26,
     "3324": 25,
-    "3026": 20,
+    "3037": 24,
+    "2327": 23,
+    "3026": 21,
     "6525": 19,
-    "2327": 18,
-    "8046": 17,
-    "6146": 17,
+    "6146": 18,
     "3163": 16,
-    "3715": 16,
+    "3338": 16,
+    "2409": 15,
+    "4908": 15,
+    "2492": 14,
     "5439": 14,
-    "4908": 14,
     "6442": 14,
-    "2409": 13,
-    "6173": 12,
-    "2454": 11,
-    "2492": 11,
+    "4958": 12,
+    "3162": 12,
+    "6862": 11,
+    "3131": 11,
     "3583": 11,
     "3017": 11,
-    "2030": 10,
-    "3189": 10,
-    "4958": 10,
     "3665": 10,
     "6510": 10,
-    "6862": 8
+    "6173": 10
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 63,
+      "mentions": 53,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -143,36 +143,57 @@
       "in_chains": false
     },
     {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3189",
-      "name": "景碩",
-      "mentions": 10,
+      "symbol": "3162",
+      "name": "精確",
+      "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6862",
       "name": "三集瑞-KY",
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2030",
+      "name": "彰源",
+      "mentions": 9,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 7,
+      "symbol": "6658",
+      "name": "聯策",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2465",
+      "name": "麗臺",
+      "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "1617",
       "name": "榮星",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "7751",
+      "name": "竑騰",
       "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
@@ -192,23 +213,16 @@
       "in_chains": false
     },
     {
-      "symbol": "3587",
-      "name": "閎康",
+      "symbol": "2472",
+      "name": "立隆電",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2465",
-      "name": "麗臺",
-      "mentions": 5,
+      "symbol": "2324",
+      "name": "仁寶",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     }
