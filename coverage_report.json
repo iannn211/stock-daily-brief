@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-16T16:59:49.134003+08:00",
+  "fetched_at": "2026-07-17T16:54:17.859990+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 11
+      "mentioned_in_window": 12
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -56,7 +56,7 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,56 +75,63 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 127,
-    "0050": 101,
-    "5607": 75,
-    "3081": 49,
-    "2303": 41,
-    "3324": 39,
-    "3715": 34,
+    "2330": 126,
+    "0050": 110,
+    "5607": 92,
+    "3081": 41,
+    "3324": 40,
+    "2303": 35,
     "4566": 33,
-    "8046": 32,
-    "3026": 29,
-    "2492": 26,
+    "3715": 30,
     "4958": 24,
-    "6770": 19,
-    "6146": 19,
-    "2467": 17,
-    "3017": 17,
-    "2327": 16,
+    "2492": 22,
+    "3017": 21,
+    "3131": 21,
+    "6146": 21,
+    "3026": 19,
+    "2467": 18,
+    "8046": 18,
+    "6770": 13,
+    "2327": 13,
     "2317": 12,
-    "3338": 12,
-    "3008": 12,
-    "2308": 11,
+    "3037": 12,
+    "3653": 11,
     "6213": 11,
-    "3131": 11,
-    "3037": 10,
+    "8155": 11,
+    "3152": 11,
+    "3583": 10,
     "2027": 10,
-    "2408": 9,
+    "3338": 9,
     "2351": 9,
-    "3665": 9,
-    "6658": 8,
-    "8155": 8
+    "2408": 8,
+    "2486": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 75,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 19,
+      "mentions": 92,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2467",
       "name": "志聖",
-      "mentions": 17,
+      "mentions": 18,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6770",
+      "name": "力積電",
+      "mentions": 13,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3653",
+      "name": "健策",
+      "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -143,22 +150,29 @@
       "in_chains": false
     },
     {
-      "symbol": "6658",
-      "name": "聯策",
-      "mentions": 8,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "2486",
       "name": "一詮",
-      "mentions": 7,
+      "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6831",
       "name": "邁科",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3706",
+      "name": "神達",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -171,43 +185,8 @@
       "in_chains": false
     },
     {
-      "symbol": "2301",
-      "name": "光寶科",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3653",
-      "name": "健策",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "4905",
-      "name": "台聯電",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6202",
-      "name": "盛群",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "6278",
       "name": "台表科",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2465",
-      "name": "麗臺",
       "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
@@ -220,8 +199,8 @@
       "in_chains": false
     },
     {
-      "symbol": "6525",
-      "name": "捷敏-KY",
+      "symbol": "2324",
+      "name": "仁寶",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -234,8 +213,8 @@
       "in_chains": false
     },
     {
-      "symbol": "2421",
-      "name": "建準",
+      "symbol": "2440",
+      "name": "太空梭",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
