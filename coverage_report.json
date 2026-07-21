@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-20T17:44:34.830154+08:00",
+  "fetched_at": "2026-07-21T17:15:00.851755+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -28,14 +28,14 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 5
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -49,7 +49,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
@@ -75,56 +75,49 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 144,
-    "0050": 132,
-    "5607": 92,
-    "3081": 46,
-    "3324": 41,
-    "4566": 37,
-    "2303": 36,
-    "3715": 30,
-    "6770": 24,
-    "4958": 24,
-    "2492": 24,
-    "3026": 22,
-    "3017": 21,
+    "2330": 157,
+    "0050": 127,
+    "5607": 112,
+    "2303": 55,
+    "3081": 42,
+    "3324": 40,
+    "4566": 39,
+    "3715": 38,
+    "3017": 33,
+    "6770": 26,
+    "2327": 22,
+    "2492": 21,
     "3131": 21,
-    "6146": 21,
-    "2467": 18,
-    "8046": 18,
-    "3037": 16,
-    "2327": 16,
+    "3026": 19,
+    "6213": 16,
     "3706": 15,
-    "2317": 12,
+    "2317": 14,
+    "6146": 14,
+    "3653": 13,
+    "2454": 12,
+    "6669": 12,
     "8155": 12,
-    "3653": 11,
+    "8046": 11,
+    "3037": 11,
     "2027": 11,
-    "6213": 11,
+    "3583": 11,
     "3152": 11,
-    "2351": 10,
-    "3583": 10,
-    "3338": 9,
-    "3665": 9
+    "2486": 10,
+    "2308": 9,
+    "3338": 9
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 92,
+      "mentions": 112,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6770",
       "name": "力積電",
-      "mentions": 24,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2467",
-      "name": "志聖",
-      "mentions": 18,
+      "mentions": 26,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -138,7 +131,7 @@
     {
       "symbol": "3653",
       "name": "健策",
-      "mentions": 11,
+      "mentions": 13,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -150,16 +143,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2351",
-      "name": "順德",
+      "symbol": "2486",
+      "name": "一詮",
       "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2486",
-      "name": "一詮",
-      "mentions": 8,
+      "symbol": "2030",
+      "name": "彰源",
+      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -171,16 +164,16 @@
       "in_chains": false
     },
     {
-      "symbol": "3189",
-      "name": "景碩",
+      "symbol": "6278",
+      "name": "台表科",
       "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 6,
+      "symbol": "3675",
+      "name": "德微",
+      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -192,15 +185,8 @@
       "in_chains": false
     },
     {
-      "symbol": "6278",
-      "name": "台表科",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3675",
-      "name": "德微",
+      "symbol": "8043",
+      "name": "蜜望實",
       "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
@@ -215,6 +201,13 @@
     {
       "symbol": "6933",
       "name": "AMAX-KY",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2467",
+      "name": "志聖",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
