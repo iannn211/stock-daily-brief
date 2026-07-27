@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-24T17:08:20.832679+08:00",
+  "fetched_at": "2026-07-27T18:29:15.045592+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,14 +7,14 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 17
+      "mentioned_in_window": 15
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 4
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
@@ -75,42 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 153,
-    "0050": 126,
-    "5607": 106,
-    "3081": 77,
-    "3324": 47,
-    "2327": 38,
+    "2330": 124,
+    "0050": 109,
+    "5607": 83,
+    "3081": 73,
+    "3324": 40,
     "3715": 38,
     "3017": 36,
-    "3026": 29,
-    "2303": 27,
-    "6669": 27,
-    "3163": 25,
-    "2492": 25,
-    "4979": 21,
+    "2327": 32,
+    "3026": 28,
+    "3163": 27,
+    "2303": 25,
+    "6669": 24,
+    "2492": 23,
+    "3665": 22,
     "6442": 21,
-    "3665": 20,
+    "4979": 20,
     "4566": 19,
-    "4958": 18,
-    "2317": 16,
-    "3706": 15,
+    "3131": 17,
+    "4958": 15,
     "2486": 15,
-    "6770": 13,
-    "2454": 12,
+    "2317": 13,
     "3653": 12,
-    "2383": 12,
     "3231": 11,
     "2493": 11,
     "2313": 11,
-    "3037": 11,
-    "6173": 11
+    "2383": 11,
+    "6146": 11,
+    "2454": 10,
+    "6173": 10,
+    "8111": 9
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 106,
+      "mentions": 83,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -122,23 +122,9 @@
       "in_chains": false
     },
     {
-      "symbol": "3706",
-      "name": "神達",
-      "mentions": 15,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "2486",
       "name": "一詮",
       "mentions": 15,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 13,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -166,7 +152,7 @@
     {
       "symbol": "8111",
       "name": "立碁",
-      "mentions": 10,
+      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -178,16 +164,9 @@
       "in_chains": false
     },
     {
-      "symbol": "3675",
-      "name": "德微",
+      "symbol": "5347",
+      "name": "世界",
       "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2324",
-      "name": "仁寶",
-      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -202,6 +181,34 @@
       "symbol": "3211",
       "name": "順達",
       "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3532",
+      "name": "台勝科",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6830",
+      "name": "汎銓",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6781",
+      "name": "AES-KY",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8043",
+      "name": "蜜望實",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     }
