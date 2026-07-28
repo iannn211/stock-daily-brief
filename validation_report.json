@@ -1,93 +1,14 @@
 {
-  "validated_at": "2026-07-27T18:37:47.673888+08:00",
-  "analysis_file": "analyses/2026-07-27.json",
-  "analysis_date": "2026-07-27",
-  "analysis_model": "gemini-2.5-flash",
-  "issues": [
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[1] «低軌衛星» → lead_stocks[0]",
-      "message": "代號 3491 (昇達科 (mid)) 本站無資料，無法驗證數字是否正確",
-      "headline": "3491 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 3491 → 去 inspect.html?sym=3491 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[2] «成熟製程晶圓代工» → lead_stocks[0]",
-      "message": "代號 5347 (世界先進 (mid)) 本站無資料，無法驗證數字是否正確",
-      "headline": "5347 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 5347 → 去 inspect.html?sym=5347 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-not-in-data",
-      "location": "budget_allocation.allocations[1]",
-      "message": "配置建議的代號 3491 (昇達科) 本站無資料，價格與基本面無法核對",
-      "headline": "3491 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 3491 → 去 inspect.html?sym=3491 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-not-in-data",
-      "location": "budget_allocation.allocations[2]",
-      "message": "配置建議的代號 5347 (世界先進) 本站無資料，價格與基本面無法核對",
-      "headline": "5347 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 5347 → 去 inspect.html?sym=5347 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "error",
-      "category": "budget-overflow",
-      "location": "budget_allocation",
-      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
-      "context": {
-        "budget": 5000,
-        "total_cost": 30000.0
-      },
-      "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
-      "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
-    },
-    {
-      "severity": "warning",
-      "category": "budget-unalloc-mismatch",
-      "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
-      "context": {
-        "claimed": 0,
-        "expected": -25000.0
-      },
-      "headline": "unallocated_twd 對不上",
-      "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
-      "next_step": "忽略即可，實際下單用籃子合計。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[3].lead_stocks[0]",
-      "message": "題材「AI 連接器 / 線束」的 lead stock 3665 (貿聯-KY (hidden)) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "3665",
-        "theme": "AI 連接器 / 線束",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": "connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍"
-      },
-      "headline": "3665 貿聯-KY (hidden) 被放錯題材",
-      "impact": "Gemini 把 3665 列為「AI 連接器 / 線束」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 連接器 / 線束」這個題材想買 3665，這個理由不成立。",
-      "next_step": "想布局「AI 連接器 / 線束」→ 同題材的 （同題材無其他 lead，需要另找） 才是真的相關股。\n想買 3665 貿聯-KY (hidden) → 要從它真正的業務角度（connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍）去找對的題材，不是用「AI 連接器 / 線束」當理由。"
-    }
-  ],
+  "validated_at": "2026-07-28T17:32:10.189853+08:00",
+  "analysis_file": "analyses/2026-07-28.json",
+  "analysis_date": "2026-07-28",
+  "analysis_model": "gemini-2.5-flash-lite",
+  "issues": [],
   "summary": {
-    "errors": 3,
-    "warnings": 4,
+    "errors": 0,
+    "warnings": 0,
     "infos": 0,
-    "total": 7,
+    "total": 0,
     "suppressed": 0
   }
 }

@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-27T18:29:15.045592+08:00",
+  "fetched_at": "2026-07-28T17:21:38.544297+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,21 +7,21 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 15
+      "mentioned_in_window": 13
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 3
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -63,7 +63,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 4
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
@@ -75,34 +75,34 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 124,
+    "2330": 136,
     "0050": 109,
-    "5607": 83,
+    "5607": 96,
     "3081": 73,
-    "3324": 40,
-    "3715": 38,
-    "3017": 36,
-    "2327": 32,
-    "3026": 28,
-    "3163": 27,
-    "2303": 25,
-    "6669": 24,
+    "3324": 37,
+    "3017": 33,
+    "3715": 29,
+    "2303": 27,
+    "3163": 25,
+    "2327": 24,
     "2492": 23,
-    "3665": 22,
+    "3026": 22,
     "6442": 21,
-    "4979": 20,
-    "4566": 19,
-    "3131": 17,
+    "5347": 20,
+    "3665": 19,
+    "6669": 18,
+    "4979": 18,
+    "2454": 16,
+    "2317": 15,
     "4958": 15,
-    "2486": 15,
-    "2317": 13,
-    "3653": 12,
-    "3231": 11,
+    "3131": 14,
+    "2486": 13,
+    "3231": 12,
+    "3491": 12,
     "2493": 11,
     "2313": 11,
     "2383": 11,
-    "6146": 11,
-    "2454": 10,
+    "3653": 10,
     "6173": 10,
     "8111": 9
   },
@@ -110,7 +110,7 @@
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 83,
+      "mentions": 96,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -122,15 +122,22 @@
       "in_chains": false
     },
     {
-      "symbol": "2486",
-      "name": "一詮",
-      "mentions": 15,
+      "symbol": "5347",
+      "name": "世界",
+      "mentions": 20,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3653",
-      "name": "健策",
+      "symbol": "2486",
+      "name": "一詮",
+      "mentions": 13,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3491",
+      "name": "昇達科",
       "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
@@ -150,23 +157,16 @@
       "in_chains": false
     },
     {
+      "symbol": "3653",
+      "name": "健策",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "8111",
       "name": "立碁",
       "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "5347",
-      "name": "世界",
-      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -206,9 +206,9 @@
       "in_chains": false
     },
     {
-      "symbol": "8043",
-      "name": "蜜望實",
-      "mentions": 5,
+      "symbol": "2377",
+      "name": "微星",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
