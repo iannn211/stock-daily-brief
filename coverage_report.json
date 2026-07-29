@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-28T17:21:38.544297+08:00",
+  "fetched_at": "2026-07-29T17:26:06.666845+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,21 +7,21 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 11
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 2
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -35,7 +35,7 @@
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 1
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -49,75 +49,75 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 3
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 2
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 3
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 136,
-    "0050": 109,
-    "5607": 96,
-    "3081": 73,
-    "3324": 37,
-    "3017": 33,
-    "3715": 29,
-    "2303": 27,
+    "2330": 127,
+    "0050": 105,
+    "3081": 77,
+    "5607": 72,
+    "2303": 34,
     "3163": 25,
     "2327": 24,
-    "2492": 23,
-    "3026": 22,
-    "6442": 21,
+    "3026": 23,
+    "6442": 22,
+    "3324": 21,
     "5347": 20,
-    "3665": 19,
-    "6669": 18,
+    "2492": 19,
     "4979": 18,
-    "2454": 16,
-    "2317": 15,
+    "3017": 18,
+    "6146": 17,
+    "3715": 17,
+    "3131": 16,
+    "3665": 15,
     "4958": 15,
-    "3131": 14,
-    "2486": 13,
-    "3231": 12,
+    "2486": 14,
+    "6669": 13,
     "3491": 12,
+    "2317": 12,
+    "6173": 12,
     "2493": 11,
+    "3653": 11,
     "2313": 11,
-    "2383": 11,
-    "3653": 10,
-    "6173": 10,
+    "3231": 10,
+    "2454": 9,
     "8111": 9
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 96,
+      "mentions": 72,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6442",
       "name": "光聖",
-      "mentions": 21,
+      "mentions": 22,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -131,7 +131,7 @@
     {
       "symbol": "2486",
       "name": "一詮",
-      "mentions": 13,
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -150,16 +150,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2313",
-      "name": "華通",
+      "symbol": "3653",
+      "name": "健策",
       "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3653",
-      "name": "健策",
-      "mentions": 10,
+      "symbol": "2313",
+      "name": "華通",
+      "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -171,15 +171,15 @@
       "in_chains": false
     },
     {
-      "symbol": "8996",
-      "name": "高力",
+      "symbol": "0056",
+      "name": "元大高股息",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3211",
-      "name": "順達",
+      "symbol": "8996",
+      "name": "高力",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -199,15 +199,22 @@
       "in_chains": false
     },
     {
-      "symbol": "6781",
-      "name": "AES-KY",
-      "mentions": 5,
+      "symbol": "009816",
+      "name": "凱基台灣TOP50",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2377",
-      "name": "微星",
+      "symbol": "6199",
+      "name": "天品",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6432",
+      "name": "今展科",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
