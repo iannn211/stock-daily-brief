@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-31T17:30:55.836287+08:00",
+  "fetched_at": "2026-08-03T18:26:07.336568+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,14 +7,14 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 10
+      "mentioned_in_window": 13
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 7
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
@@ -35,7 +35,7 @@
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -75,42 +75,56 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 111,
-    "0050": 71,
-    "5607": 70,
-    "3081": 46,
-    "2303": 43,
-    "2327": 21,
-    "6669": 18,
-    "3026": 16,
+    "2330": 128,
+    "0050": 96,
+    "5607": 68,
+    "3081": 52,
+    "2303": 46,
+    "2454": 24,
+    "2327": 23,
+    "3026": 23,
+    "6669": 19,
+    "6831": 19,
+    "3324": 19,
+    "3017": 18,
+    "6217": 17,
     "5347": 15,
+    "3131": 14,
     "2492": 14,
-    "2454": 13,
-    "3017": 13,
-    "3324": 12,
+    "2301": 12,
     "6199": 11,
     "3163": 11,
     "3491": 11,
-    "3131": 10,
+    "2486": 10,
+    "6173": 10,
     "6146": 10,
+    "3037": 9,
+    "2317": 9,
     "2382": 8,
     "3653": 8,
+    "4908": 8,
     "2408": 7,
-    "3665": 7,
-    "2317": 6,
-    "2301": 6,
-    "3715": 6,
-    "3711": 5,
-    "2486": 5,
-    "2308": 5,
-    "6274": 5,
-    "4979": 5
+    "2368": 7
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 70,
+      "mentions": 68,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6831",
+      "name": "邁科",
+      "mentions": 19,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6217",
+      "name": "中探針",
+      "mentions": 17,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -118,6 +132,13 @@
       "symbol": "5347",
       "name": "世界",
       "mentions": 15,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2301",
+      "name": "光寶科",
+      "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,6 +157,13 @@
       "in_chains": false
     },
     {
+      "symbol": "2486",
+      "name": "一詮",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "3653",
       "name": "健策",
       "mentions": 8,
@@ -143,30 +171,44 @@
       "in_chains": false
     },
     {
-      "symbol": "2301",
-      "name": "光寶科",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2486",
-      "name": "一詮",
+      "symbol": "2027",
+      "name": "大成鋼",
       "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6831",
-      "name": "邁科",
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00878",
+      "name": "國泰永續高股息",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2027",
-      "name": "大成鋼",
+      "symbol": "00992A",
+      "name": "主動群益科技創新",
       "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00989B",
+      "name": "台新美國非投等債",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "7714",
+      "name": "創泓科技",
+      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -174,41 +216,6 @@
       "symbol": "2377",
       "name": "微星",
       "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2015",
-      "name": "豐興",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2025",
-      "name": "千興",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "7714",
-      "name": "創泓科技",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "0056",
-      "name": "元大高股息",
-      "mentions": 2,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "009816",
-      "name": "凱基台灣TOP50",
-      "mentions": 2,
       "in_portfolio": false,
       "in_chains": false
     }
