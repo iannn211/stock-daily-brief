@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-08-04T17:26:25.519919+08:00",
+  "fetched_at": "2026-08-05T17:22:28.014541+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 14
+      "mentioned_in_window": 15
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -42,14 +42,14 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 2
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
@@ -75,49 +75,49 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 134,
-    "0050": 113,
-    "5607": 60,
-    "3081": 46,
-    "2303": 41,
-    "2454": 40,
+    "2330": 130,
+    "0050": 108,
+    "3081": 47,
+    "5607": 46,
+    "6669": 43,
+    "2454": 38,
+    "2303": 38,
     "2327": 34,
+    "3653": 31,
     "3026": 30,
-    "6669": 27,
-    "3324": 26,
-    "3037": 23,
-    "3653": 21,
-    "3017": 21,
+    "3037": 28,
+    "3324": 25,
+    "2408": 23,
     "6831": 21,
-    "2408": 20,
+    "3017": 20,
+    "3715": 20,
+    "2492": 19,
     "4908": 19,
     "6217": 19,
-    "2492": 18,
-    "2486": 16,
-    "2301": 16,
+    "2301": 18,
+    "2486": 17,
+    "2383": 12,
+    "6933": 12,
     "2317": 11,
     "6199": 11,
     "2028": 11,
-    "6173": 10,
-    "6146": 10,
-    "2383": 9,
+    "4760": 10,
+    "8996": 10,
     "2027": 9,
-    "3034": 8,
-    "8996": 8,
     "2382": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 60,
+      "mentions": 46,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3653",
       "name": "健策",
-      "mentions": 21,
+      "mentions": 31,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,16 +136,23 @@
       "in_chains": false
     },
     {
-      "symbol": "2486",
-      "name": "一詮",
-      "mentions": 16,
+      "symbol": "2301",
+      "name": "光寶科",
+      "mentions": 18,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2301",
-      "name": "光寶科",
-      "mentions": 16,
+      "symbol": "2486",
+      "name": "一詮",
+      "mentions": 17,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6933",
+      "name": "AMAX-KY",
+      "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -164,6 +171,20 @@
       "in_chains": false
     },
     {
+      "symbol": "4760",
+      "name": "勤凱",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8996",
+      "name": "高力",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "2027",
       "name": "大成鋼",
       "mentions": 9,
@@ -171,9 +192,23 @@
       "in_chains": false
     },
     {
-      "symbol": "8996",
-      "name": "高力",
-      "mentions": 8,
+      "symbol": "6821",
+      "name": "聯寶",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6830",
+      "name": "汎銓",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2250",
+      "name": "IKKA-KY",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -185,36 +220,8 @@
       "in_chains": false
     },
     {
-      "symbol": "00919",
-      "name": "群益台灣精選高息",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "4760",
-      "name": "勤凱",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6933",
-      "name": "AMAX-KY",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2498",
-      "name": "宏達電",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2250",
-      "name": "IKKA-KY",
+      "symbol": "3189",
+      "name": "景碩",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
