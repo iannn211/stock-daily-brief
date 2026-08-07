@@ -1,44 +1,53 @@
 {
-  "validated_at": "2026-08-06T17:34:56.203081+08:00",
-  "analysis_file": "analyses/2026-08-06.json",
-  "analysis_date": "2026-08-06",
+  "validated_at": "2026-08-07T16:08:01.181089+08:00",
+  "analysis_file": "analyses/2026-08-07.json",
+  "analysis_date": "2026-08-07",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[1] «二線晶圓代工修復之旅» → lead_stocks[1]",
-      "message": "代號 2344 (華邦電（mid）) 本站無資料，無法驗證數字是否正確",
-      "headline": "2344 本站沒資料",
+      "location": "opportunities[0] «AI 伺服器上游材料» → lead_stocks[0]",
+      "message": "代號 6967 (汎瑋材料 (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6967 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 2344 → 去 inspect.html?sym=2344 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 6967 → 去 inspect.html?sym=6967 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[1] «二線晶圓代工修復之旅» → lead_stocks[2]",
-      "message": "代號 6770 (力積電（small）) 本站無資料，無法驗證數字是否正確",
-      "headline": "6770 本站沒資料",
+      "location": "opportunities[0] «AI 伺服器上游材料» → lead_stocks[1]",
+      "message": "代號 3162 (精確 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "3162 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6770 → 去 inspect.html?sym=6770 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 3162 → 去 inspect.html?sym=3162 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[4] «AI 伺服器 IC 設計 / 儲存» → lead_stocks[0]",
-      "message": "代號 8299 (群聯（mid）) 本站無資料，無法驗證數字是否正確",
-      "headline": "8299 本站沒資料",
+      "location": "opportunities[3] «半導體設備與檢測» → lead_stocks[0]",
+      "message": "代號 3413 (京鼎 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "3413 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 8299 → 去 inspect.html?sym=8299 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 3413 → 去 inspect.html?sym=3413 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
-      "severity": "warning",
+      "severity": "error",
       "category": "ticker-not-in-data",
-      "location": "opportunities[4] «AI 伺服器 IC 設計 / 儲存» → lead_stocks[2]",
-      "message": "代號 6643 (M31（small）) 本站無資料，無法驗證數字是否正確",
-      "headline": "6643 本站沒資料",
+      "location": "budget_allocation.allocations[1]",
+      "message": "配置建議的代號 6967 (汎瑋材料) 本站無資料，價格與基本面無法核對",
+      "headline": "6967 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6643 → 去 inspect.html?sym=6643 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 6967 → 去 inspect.html?sym=6967 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[2]",
+      "message": "配置建議的代號 3162 (精確) 本站無資料，價格與基本面無法核對",
+      "headline": "3162 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 3162 → 去 inspect.html?sym=3162 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
@@ -65,44 +74,13 @@
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[0].why",
-      "message": "2421 描述提到「昂貴/泡沫」，但實際 PE=18.1（屬於合理區） — 題材「AI 伺服器散熱 / 液冷」",
-      "context": {
-        "symbol": "2421",
-        "pe": 18.112545,
-        "tier": "fair"
-      },
-      "headline": "2421 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 2421 當「昂貴/泡沫」敘述，但實際 PE=18.1（屬於合理區）。如果原本因此不考慮 2421，可能低估機會。",
-      "next_step": "重新評估 2421 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[2]",
-      "message": "題材「AI 伺服器散熱 / 液冷」的 lead stock 2421 (建準（small）) 產業標為「Specialty Industrial Machinery」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "2421",
-        "theme": "AI 伺服器散熱 / 液冷",
-        "industry": "Specialty Industrial Machinery",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "2421 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 6,
+    "errors": 3,
+    "warnings": 4,
     "infos": 0,
     "total": 7,
-    "suppressed": 1
+    "suppressed": 0
   }
 }
