@@ -1,30 +1,48 @@
 {
-  "validated_at": "2026-08-11T15:56:25.477750+08:00",
-  "analysis_file": "analyses/2026-08-11.json",
-  "analysis_date": "2026-08-11",
+  "validated_at": "2026-08-12T16:10:52.946016+08:00",
+  "analysis_file": "analyses/2026-08-12.json",
+  "analysis_date": "2026-08-12",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[0] «AI 電力 / 重電» → lead_stocks[1]",
+      "message": "代號 3653 (健策 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "3653 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 3653 → 去 inspect.html?sym=3653 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[2] «半導體設備» → lead_stocks[2]",
+      "message": "代號 6953 (家碩 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6953 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6953 → 去 inspect.html?sym=6953 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
+      "message": "配置加總 NT$34,080 超過預算 NT$5,000（差 NT$29,080）",
       "context": {
         "budget": 5000,
-        "total_cost": 35000.0
+        "total_cost": 34080.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
+      "impact": "Gemini 的 allocations 加總 NT$34,080 > 預算 NT$5,000，代表要全買得多湊 NT$29,080。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-29,080",
       "context": {
         "claimed": 0,
-        "expected": -30000.0
+        "expected": -29080.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
@@ -33,51 +51,37 @@
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[3]",
-      "message": "3044 描述提到「昂貴/泡沫」，但實際 PE=21.6（屬於合理區） — 題材「PCB 產業獲利創高，AI 應用帶動成長」",
+      "location": "topics[5]",
+      "message": "3413 描述提到「昂貴/泡沫」，但實際 PE=16.0（屬於合理區） — 題材「半導體設備商機火熱」",
       "context": {
-        "symbol": "3044",
-        "pe": 21.557617,
+        "symbol": "3413",
+        "pe": 16.04971,
         "tier": "fair"
       },
-      "headline": "3044 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3044 當「昂貴/泡沫」敘述，但實際 PE=21.6（屬於合理區）。如果原本因此不考慮 3044，可能低估機會。",
-      "next_step": "重新評估 3044 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "3413 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 3413 當「昂貴/泡沫」敘述，但實際 PE=16.0（屬於合理區）。如果原本因此不考慮 3413，可能低估機會。",
+      "next_step": "重新評估 3413 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "opportunities[2].why",
-      "message": "3044 描述提到「昂貴/泡沫」，但實際 PE=21.6（屬於合理區） — 題材「PCB 載板 AI 應用」",
+      "message": "3413 描述提到「昂貴/泡沫」，但實際 PE=16.0（屬於合理區） — 題材「半導體設備」",
       "context": {
-        "symbol": "3044",
-        "pe": 21.557617,
+        "symbol": "3413",
+        "pe": 16.04971,
         "tier": "fair"
       },
-      "headline": "3044 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3044 當「昂貴/泡沫」敘述，但實際 PE=21.6（屬於合理區）。如果原本因此不考慮 3044，可能低估機會。",
-      "next_step": "重新評估 3044 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "opportunities[4].why",
-      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=17.7（屬於合理區） — 題材「半導體設備新技術」",
-      "context": {
-        "symbol": "6146",
-        "pe": 17.695852,
-        "tier": "fair"
-      },
-      "headline": "6146 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=17.7（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
-      "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "3413 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 3413 當「昂貴/泡沫」敘述，但實際 PE=16.0（屬於合理區）。如果原本因此不考慮 3413，可能低估機會。",
+      "next_step": "重新評估 3413 — 估值其實還好，不必因「昂貴」這句就跳過。"
     }
   ],
   "summary": {
     "errors": 1,
-    "warnings": 4,
+    "warnings": 5,
     "infos": 0,
-    "total": 5,
+    "total": 6,
     "suppressed": 0
   }
 }
