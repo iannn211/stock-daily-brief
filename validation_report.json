@@ -1,69 +1,133 @@
 {
-  "validated_at": "2026-08-13T16:14:29.912412+08:00",
-  "analysis_file": "analyses/2026-08-12.json",
-  "analysis_date": "2026-08-12",
+  "validated_at": "2026-08-14T16:07:50.368646+08:00",
+  "analysis_file": "analyses/2026-08-14.json",
+  "analysis_date": "2026-08-14",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[0] «AI 伺服器 / 液冷散熱» → lead_stocks[0]",
+      "message": "代號 2324 (仁寶 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "2324 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 2324 → 去 inspect.html?sym=2324 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[3] «半導體設備 / 特用化學品» → lead_stocks[1]",
+      "message": "代號 4755 (三福化 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "4755 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 4755 → 去 inspect.html?sym=4755 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[4] «傳產轉機 / 併購效益» → lead_stocks[0]",
+      "message": "代號 4306 (炎洲 (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "4306 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 4306 → 去 inspect.html?sym=4306 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[1]",
+      "message": "配置建議的代號 2324 (仁寶) 本站無資料，價格與基本面無法核對",
+      "headline": "2324 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 2324 → 去 inspect.html?sym=2324 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$34,080 超過預算 NT$5,000（差 NT$29,080）",
+      "message": "配置加總 NT$25,000 超過預算 NT$5,000（差 NT$20,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 34080.0
+        "total_cost": 25000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$34,080 > 預算 NT$5,000，代表要全買得多湊 NT$29,080。",
+      "impact": "Gemini 的 allocations 加總 NT$25,000 > 預算 NT$5,000，代表要全買得多湊 NT$20,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-29,080",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-20,000",
       "context": {
         "claimed": 0,
-        "expected": -29080.0
+        "expected": -20000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
     },
     {
-      "severity": "warning",
+      "severity": "error",
       "category": "pe-claim-contradicts-data",
-      "location": "topics[5]",
-      "message": "3413 描述提到「昂貴/泡沫」，但實際 PE=16.0（屬於合理區） — 題材「半導體設備商機火熱」",
+      "location": "topics[4]",
+      "message": "2492 描述提到「便宜/低估」，但實際 PE=58.0（屬於昂貴/泡沫區） — 題材「被動元件市場分歧，部分個股逆勢上漲」",
       "context": {
-        "symbol": "3413",
-        "pe": 15.9703865,
-        "tier": "fair"
+        "symbol": "2492",
+        "pe": 57.950195,
+        "tier": "expensive"
       },
-      "headline": "3413 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3413 當「昂貴/泡沫」敘述，但實際 PE=16.0（屬於合理區）。如果原本因此不考慮 3413，可能低估機會。",
-      "next_step": "重新評估 3413 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "2492 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 2492 當「便宜」敘述，但實際 PE=58.0（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 2492 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+    },
+    {
+      "severity": "error",
+      "category": "pe-claim-contradicts-data",
+      "location": "topics[4]",
+      "message": "6173 描述提到「便宜/低估」，但實際 PE=56.3（屬於昂貴/泡沫區） — 題材「被動元件市場分歧，部分個股逆勢上漲」",
+      "context": {
+        "symbol": "6173",
+        "pe": 56.300266,
+        "tier": "expensive"
+      },
+      "headline": "6173 估值 Gemini 看錯方向",
+      "impact": "Gemini 把 6173 當「便宜」敘述，但實際 PE=56.3（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "next_step": "別把「估值便宜」當成 6173 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
     },
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "opportunities[2].why",
-      "message": "3413 描述提到「昂貴/泡沫」，但實際 PE=16.0（屬於合理區） — 題材「半導體設備」",
+      "message": "3152 描述提到「昂貴/泡沫」，但實際 PE=13.6（屬於合理區） — 題材「光通訊 / 矽光子」",
       "context": {
-        "symbol": "3413",
-        "pe": 15.9703865,
+        "symbol": "3152",
+        "pe": 13.644633,
+        "tier": "cheap"
+      },
+      "headline": "3152 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 3152 當「昂貴/泡沫」敘述，但實際 PE=13.6（屬於合理區）。如果原本因此不考慮 3152，可能低估機會。",
+      "next_step": "重新評估 3152 — 估值其實還好，不必因「昂貴」這句就跳過。"
+    },
+    {
+      "severity": "warning",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[3].why",
+      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=17.9（屬於合理區） — 題材「半導體設備 / 特用化學品」",
+      "context": {
+        "symbol": "6146",
+        "pe": 17.86372,
         "tier": "fair"
       },
-      "headline": "3413 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 3413 當「昂貴/泡沫」敘述，但實際 PE=16.0（屬於合理區）。如果原本因此不考慮 3413，可能低估機會。",
-      "next_step": "重新評估 3413 — 估值其實還好，不必因「昂貴」這句就跳過。"
+      "headline": "6146 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=17.9（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
+      "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 3,
+    "errors": 4,
+    "warnings": 6,
     "infos": 0,
-    "total": 4,
+    "total": 10,
     "suppressed": 0
   }
 }

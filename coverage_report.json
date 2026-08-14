@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-08-13T16:03:33.438227+08:00",
+  "fetched_at": "2026-08-14T16:00:53.399062+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 18
+      "mentioned_in_window": 17
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -63,7 +63,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 4
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
@@ -75,63 +75,56 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 142,
-    "0050": 137,
-    "3081": 53,
-    "3324": 50,
-    "5607": 48,
-    "3017": 43,
-    "3715": 39,
-    "2327": 30,
-    "2303": 27,
-    "2317": 25,
+    "2330": 124,
+    "0050": 122,
+    "5607": 64,
+    "3081": 48,
+    "3324": 32,
+    "3715": 32,
+    "2327": 31,
+    "3017": 26,
     "3131": 24,
-    "8299": 23,
-    "3026": 23,
+    "2317": 23,
     "6173": 22,
-    "3711": 19,
-    "4958": 18,
     "8155": 17,
-    "2344": 16,
-    "3044": 14,
-    "2383": 13,
-    "2408": 13,
-    "2421": 12,
-    "2454": 11,
+    "3044": 16,
+    "3711": 16,
+    "3026": 16,
+    "4958": 15,
+    "8299": 15,
+    "2344": 11,
     "3653": 11,
     "6967": 11,
     "3162": 11,
-    "6146": 11,
     "6669": 11,
-    "3037": 10,
-    "6274": 10
+    "2454": 10,
+    "00981A": 10,
+    "3413": 10,
+    "1303": 8,
+    "3231": 8,
+    "2408": 8,
+    "6830": 8,
+    "3037": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 48,
+      "mentions": 64,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "8299",
       "name": "群聯",
-      "mentions": 23,
+      "mentions": 15,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2344",
       "name": "華邦電",
-      "mentions": 16,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2421",
-      "name": "建準",
-      "mentions": 12,
+      "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -157,30 +150,16 @@
       "in_chains": false
     },
     {
-      "symbol": "3413",
-      "name": "京鼎",
+      "symbol": "00981A",
+      "name": "主動統一台股增長",
       "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6805",
-      "name": "富世達",
-      "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "4760",
-      "name": "勤凱",
-      "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 8,
+      "symbol": "3413",
+      "name": "京鼎",
+      "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -192,8 +171,8 @@
       "in_chains": false
     },
     {
-      "symbol": "2324",
-      "name": "仁寶",
+      "symbol": "6770",
+      "name": "力積電",
       "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
@@ -213,15 +192,15 @@
       "in_chains": false
     },
     {
-      "symbol": "6933",
-      "name": "AMAX-KY",
+      "symbol": "2324",
+      "name": "仁寶",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6789",
-      "name": "采鈺",
+      "symbol": "6933",
+      "name": "AMAX-KY",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -237,6 +216,20 @@
       "symbol": "7823",
       "name": "奧義賽博-KY創",
       "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2352",
+      "name": "佳世達",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8042",
+      "name": "金山電",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     }
