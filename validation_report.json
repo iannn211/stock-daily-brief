@@ -1,66 +1,39 @@
 {
-  "validated_at": "2026-08-20T15:36:18.982423+08:00",
-  "analysis_file": "analyses/2026-08-20.json",
-  "analysis_date": "2026-08-20",
-  "analysis_model": "gemini-2.5-flash",
+  "validated_at": "2026-08-21T15:37:14.233271+08:00",
+  "analysis_file": "analyses/2026-08-21.json",
+  "analysis_date": "2026-08-21",
+  "analysis_model": "gemini-2.5-flash-lite",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI CPO 設備與測試鏈» → lead_stocks[0]",
-      "message": "代號 6187 (萬潤 (small)) 本站無資料，無法驗證數字是否正確",
-      "headline": "6187 本站沒資料",
+      "location": "opportunities[4] «航運股» → lead_stocks[0]",
+      "message": "代號 2615 (萬海) 本站無資料，無法驗證數字是否正確",
+      "headline": "2615 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6187 → 去 inspect.html?sym=6187 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI CPO 設備與測試鏈» → lead_stocks[1]",
-      "message": "代號 6223 (旺矽 (mid)) 本站無資料，無法驗證數字是否正確",
-      "headline": "6223 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6223 → 去 inspect.html?sym=6223 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[1] «PCB/載板上游材料與設備» → lead_stocks[0]",
-      "message": "代號 1717 (長興 (mid)) 本站無資料，無法驗證數字是否正確",
-      "headline": "1717 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 1717 → 去 inspect.html?sym=1717 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[4] «傳產股資金轉移» → lead_stocks[2]",
-      "message": "代號 2014 (中鴻 (mid)) 本站無資料，無法驗證數字是否正確",
-      "headline": "2014 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 2014 → 去 inspect.html?sym=2014 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 2615 → 去 inspect.html?sym=2615 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
+      "message": "配置加總 NT$14,000 超過預算 NT$5,000（差 NT$9,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 35000.0
+        "total_cost": 14000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
+      "impact": "Gemini 的 allocations 加總 NT$14,000 > 預算 NT$5,000，代表要全買得多湊 NT$9,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-9,000",
       "context": {
         "claimed": 0,
-        "expected": -30000.0
+        "expected": -9000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
@@ -69,71 +42,55 @@
     {
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
-      "location": "opportunities[0].why",
-      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=16.9（屬於合理區） — 題材「AI CPO 設備與測試鏈」",
+      "location": "topics[3]",
+      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=16.8（屬於合理區） — 題材「半導體設備廠營運成長，但部分個股股價已高」",
       "context": {
         "symbol": "6146",
-        "pe": 16.915642,
+        "pe": 16.827768,
         "tier": "fair"
       },
       "headline": "6146 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=16.9（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
+      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=16.8（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
       "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
       "severity": "warning",
       "category": "theme-industry-mismatch",
-      "location": "opportunities[3].lead_stocks[0]",
-      "message": "題材「AI 機器人與自動化」的 lead stock 4566 (時碩工業 (hidden)) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "location": "opportunities[0].lead_stocks[0]",
+      "message": "題材「AI 伺服器與連接器」的 lead stock 3665 (貿聯-KY) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
       "context": {
-        "symbol": "4566",
-        "theme": "AI 機器人與自動化",
-        "industry": "Specialty Industrial Machinery",
+        "symbol": "3665",
+        "theme": "AI 伺服器與連接器",
+        "industry": "Electrical Equipment & Parts",
         "sector": "Industrials",
-        "sc_roles": "robotics 關鍵零組件 機器人諧波減速機、隱形冠軍"
+        "sc_roles": "connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍"
       },
-      "headline": "4566 時碩工業 (hidden) 被放錯題材",
-      "impact": "Gemini 把 4566 列為「AI 機器人與自動化」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 機器人與自動化」這個題材想買 4566，這個理由不成立。",
-      "next_step": "想布局「AI 機器人與自動化」→ 同題材的 6125 廣運 (hidden)、2049 上銀 (large) 才是真的相關股。\n想買 4566 時碩工業 (hidden) → 要從它真正的業務角度（robotics 關鍵零組件 機器人諧波減速機、隱形冠軍）去找對的題材，不是用「AI 機器人與自動化」當理由。"
+      "headline": "3665 貿聯-KY 被放錯題材",
+      "impact": "Gemini 把 3665 列為「AI 伺服器與連接器」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器與連接器」這個題材想買 3665，這個理由不成立。",
+      "next_step": "想布局「AI 伺服器與連接器」→ 同題材的 3092 鴻碩 才是真的相關股。\n想買 3665 貿聯-KY → 要從它真正的業務角度（connectors 連接器 / 纜線 NVIDIA GB200 高速線束、隱形冠軍）去找對的題材，不是用「AI 伺服器與連接器」當理由。"
     },
     {
       "severity": "warning",
       "category": "theme-industry-mismatch",
-      "location": "opportunities[3].lead_stocks[1]",
-      "message": "題材「AI 機器人與自動化」的 lead stock 6125 (廣運 (hidden)) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 工業電腦 / 控制器 AGV / 自動化搬運、小型標的」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "location": "opportunities[0].lead_stocks[1]",
+      "message": "題材「AI 伺服器與連接器」的 lead stock 3092 (鴻碩) 產業標為「Electrical Equipment & Parts」；supply_chains 登記的角色為「connectors 連接器 / 纜線 車用 / 工業連接器小型股」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
       "context": {
-        "symbol": "6125",
-        "theme": "AI 機器人與自動化",
-        "industry": "Specialty Industrial Machinery",
+        "symbol": "3092",
+        "theme": "AI 伺服器與連接器",
+        "industry": "Electrical Equipment & Parts",
         "sector": "Industrials",
-        "sc_roles": "robotics 工業電腦 / 控制器 AGV / 自動化搬運、小型標的"
+        "sc_roles": "connectors 連接器 / 纜線 車用 / 工業連接器小型股"
       },
-      "headline": "6125 廣運 (hidden) 被放錯題材",
-      "impact": "Gemini 把 6125 列為「AI 機器人與自動化」的 lead stock，但這檔實際做的是「robotics 工業電腦 / 控制器 AGV / 自動化搬運、小型標的」— 跟題材不是同一回事。如果你原本因為「AI 機器人與自動化」這個題材想買 6125，這個理由不成立。",
-      "next_step": "想布局「AI 機器人與自動化」→ 同題材的 4566 時碩工業 (hidden)、2049 上銀 (large) 才是真的相關股。\n想買 6125 廣運 (hidden) → 要從它真正的業務角度（robotics 工業電腦 / 控制器 AGV / 自動化搬運、小型標的）去找對的題材，不是用「AI 機器人與自動化」當理由。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[3].lead_stocks[2]",
-      "message": "題材「AI 機器人與自動化」的 lead stock 2049 (上銀 (large)) 產業標為「Tools & Accessories」；supply_chains 登記的角色為「robotics 關鍵零組件 線性傳動 / 滾珠螺桿」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "2049",
-        "theme": "AI 機器人與自動化",
-        "industry": "Tools & Accessories",
-        "sector": "Industrials",
-        "sc_roles": "robotics 關鍵零組件 線性傳動 / 滾珠螺桿"
-      },
-      "headline": "2049 上銀 (large) 被放錯題材",
-      "impact": "Gemini 把 2049 列為「AI 機器人與自動化」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 線性傳動 / 滾珠螺桿」— 跟題材不是同一回事。如果你原本因為「AI 機器人與自動化」這個題材想買 2049，這個理由不成立。",
-      "next_step": "想布局「AI 機器人與自動化」→ 同題材的 4566 時碩工業 (hidden)、6125 廣運 (hidden) 才是真的相關股。\n想買 2049 上銀 (large) → 要從它真正的業務角度（robotics 關鍵零組件 線性傳動 / 滾珠螺桿）去找對的題材，不是用「AI 機器人與自動化」當理由。"
+      "headline": "3092 鴻碩 被放錯題材",
+      "impact": "Gemini 把 3092 列為「AI 伺服器與連接器」的 lead stock，但這檔實際做的是「connectors 連接器 / 纜線 車用 / 工業連接器小型股」— 跟題材不是同一回事。如果你原本因為「AI 伺服器與連接器」這個題材想買 3092，這個理由不成立。",
+      "next_step": "想布局「AI 伺服器與連接器」→ 同題材的 3665 貿聯-KY 才是真的相關股。\n想買 3092 鴻碩 → 要從它真正的業務角度（connectors 連接器 / 纜線 車用 / 工業連接器小型股）去找對的題材，不是用「AI 伺服器與連接器」當理由。"
     }
   ],
   "summary": {
     "errors": 1,
-    "warnings": 9,
+    "warnings": 5,
     "infos": 0,
-    "total": 10,
+    "total": 6,
     "suppressed": 0
   }
 }
