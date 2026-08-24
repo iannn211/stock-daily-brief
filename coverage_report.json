@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-08-21T15:27:01.551529+08:00",
+  "fetched_at": "2026-08-24T15:42:46.363159+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -14,21 +14,21 @@
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 7
+      "mentioned_in_window": 6
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 3
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
@@ -75,63 +75,56 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 157,
-    "0050": 125,
-    "3081": 90,
-    "5607": 86,
+    "2330": 156,
+    "0050": 115,
+    "5607": 91,
+    "3081": 89,
     "3037": 44,
-    "3653": 41,
-    "3324": 31,
-    "3026": 30,
-    "6146": 29,
-    "2327": 28,
-    "2383": 26,
-    "6173": 26,
-    "8155": 26,
-    "3017": 25,
-    "4908": 22,
-    "3715": 20,
-    "00981A": 19,
-    "4958": 19,
-    "2454": 18,
-    "3665": 18,
-    "2324": 17,
+    "6146": 40,
+    "3026": 34,
+    "3653": 31,
+    "3665": 29,
+    "3324": 28,
+    "2327": 23,
+    "2303": 22,
+    "2408": 22,
+    "6173": 21,
+    "8155": 21,
+    "4908": 21,
+    "00981A": 20,
+    "2383": 19,
+    "3715": 19,
+    "3044": 18,
     "3189": 17,
-    "2303": 16,
-    "2492": 16,
+    "3017": 17,
+    "2454": 16,
+    "2609": 16,
     "3131": 16,
-    "2408": 15,
-    "2609": 15,
+    "1303": 15,
+    "2492": 15,
     "6805": 14,
-    "2059": 12,
-    "2603": 12
+    "3583": 14,
+    "2059": 12
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 86,
+      "mentions": 91,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3653",
       "name": "健策",
-      "mentions": 41,
+      "mentions": 31,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "00981A",
       "name": "主動統一台股增長",
-      "mentions": 19,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2324",
-      "name": "仁寶",
-      "mentions": 17,
+      "mentions": 20,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -159,7 +152,7 @@
     {
       "symbol": "2615",
       "name": "萬海",
-      "mentions": 10,
+      "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -167,13 +160,6 @@
       "symbol": "2027",
       "name": "大成鋼",
       "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -227,9 +213,30 @@
       "in_chains": false
     },
     {
+      "symbol": "2637",
+      "name": "慧洋-KY",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3162",
+      "name": "精確",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "6187",
       "name": "萬潤",
       "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00881",
+      "name": "國泰台灣科技龍頭",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     }
