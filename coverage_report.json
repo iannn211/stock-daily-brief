@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-08-24T15:42:46.363159+08:00",
+  "fetched_at": "2026-08-25T15:28:34.710199+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 16
+      "mentioned_in_window": 18
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -42,7 +42,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
@@ -75,77 +75,77 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 156,
-    "0050": 115,
-    "5607": 91,
-    "3081": 89,
-    "3037": 44,
-    "6146": 40,
-    "3026": 34,
-    "3653": 31,
-    "3665": 29,
-    "3324": 28,
-    "2327": 23,
-    "2303": 22,
-    "2408": 22,
-    "6173": 21,
-    "8155": 21,
-    "4908": 21,
-    "00981A": 20,
-    "2383": 19,
-    "3715": 19,
+    "2330": 163,
+    "0050": 117,
+    "5607": 102,
+    "3081": 75,
+    "6146": 45,
+    "3026": 35,
+    "2303": 29,
+    "3715": 29,
+    "3162": 25,
+    "3665": 24,
+    "3653": 23,
+    "3017": 22,
+    "3324": 20,
+    "3037": 19,
+    "2383": 18,
+    "2327": 18,
     "3044": 18,
-    "3189": 17,
-    "3017": 17,
-    "2454": 16,
-    "2609": 16,
-    "3131": 16,
-    "1303": 15,
-    "2492": 15,
-    "6805": 14,
+    "3131": 18,
+    "8155": 18,
+    "2454": 17,
+    "2408": 17,
+    "6173": 17,
+    "2609": 17,
+    "4908": 17,
+    "00981A": 16,
+    "3234": 15,
+    "2059": 14,
+    "3189": 14,
     "3583": 14,
-    "2059": 12
+    "2615": 12
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 91,
+      "mentions": 102,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3162",
+      "name": "精確",
+      "mentions": 25,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3653",
       "name": "健策",
-      "mentions": 31,
+      "mentions": 23,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "00981A",
       "name": "主動統一台股增長",
-      "mentions": 20,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3189",
-      "name": "景碩",
-      "mentions": 17,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6805",
-      "name": "富世達",
-      "mentions": 14,
+      "mentions": 16,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2059",
       "name": "川湖",
-      "mentions": 12,
+      "mentions": 14,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -157,23 +157,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2455",
-      "name": "全新",
+      "symbol": "6805",
+      "name": "富世達",
       "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 8,
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -199,13 +192,6 @@
       "in_chains": false
     },
     {
-      "symbol": "00878",
-      "name": "國泰永續高股息",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "6924",
       "name": "榮惠-KY創",
       "mentions": 6,
@@ -220,16 +206,16 @@
       "in_chains": false
     },
     {
-      "symbol": "3162",
-      "name": "精確",
+      "symbol": "6187",
+      "name": "萬潤",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6187",
-      "name": "萬潤",
-      "mentions": 6,
+      "symbol": "5434",
+      "name": "崇越",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
