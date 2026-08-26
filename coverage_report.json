@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-08-25T15:28:34.710199+08:00",
+  "fetched_at": "2026-08-26T15:30:00.350196+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -28,7 +28,7 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
@@ -75,91 +75,98 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 163,
-    "0050": 117,
-    "5607": 102,
-    "3081": 75,
-    "6146": 45,
-    "3026": 35,
-    "2303": 29,
+    "2330": 181,
+    "0050": 134,
+    "5607": 97,
+    "3081": 57,
+    "2303": 45,
+    "3162": 36,
+    "3026": 32,
+    "3653": 29,
     "3715": 29,
-    "3162": 25,
-    "3665": 24,
-    "3653": 23,
-    "3017": 22,
-    "3324": 20,
-    "3037": 19,
-    "2383": 18,
-    "2327": 18,
+    "4908": 26,
+    "3017": 25,
+    "3665": 25,
+    "6146": 25,
+    "2609": 24,
+    "00981A": 22,
+    "2408": 20,
+    "3189": 18,
     "3044": 18,
-    "3131": 18,
     "8155": 18,
-    "2454": 17,
-    "2408": 17,
-    "6173": 17,
-    "2609": 17,
-    "4908": 17,
-    "00981A": 16,
-    "3234": 15,
-    "2059": 14,
-    "3189": 14,
+    "2454": 16,
+    "6173": 16,
+    "3131": 16,
+    "2327": 15,
+    "2059": 15,
+    "3234": 14,
     "3583": 14,
-    "2615": 12
+    "1303": 13,
+    "4979": 13,
+    "3443": 12,
+    "2492": 12
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 102,
+      "mentions": 97,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3162",
       "name": "精確",
-      "mentions": 25,
+      "mentions": 36,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3653",
       "name": "健策",
-      "mentions": 23,
+      "mentions": 29,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "00981A",
       "name": "主動統一台股增長",
-      "mentions": 16,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2059",
-      "name": "川湖",
-      "mentions": 14,
+      "mentions": 22,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3189",
       "name": "景碩",
-      "mentions": 14,
+      "mentions": 18,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2615",
-      "name": "萬海",
-      "mentions": 12,
+      "symbol": "2059",
+      "name": "川湖",
+      "mentions": 15,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6805",
       "name": "富世達",
-      "mentions": 9,
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2615",
+      "name": "萬海",
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "8103",
+      "name": "瀚荃",
+      "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -167,20 +174,6 @@
       "symbol": "2027",
       "name": "大成鋼",
       "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6953",
-      "name": "家碩",
-      "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "1717",
-      "name": "長興",
-      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -206,23 +199,16 @@
       "in_chains": false
     },
     {
-      "symbol": "6187",
-      "name": "萬潤",
+      "symbol": "3260",
+      "name": "威剛",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "5434",
-      "name": "崇越",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00881",
-      "name": "國泰台灣科技龍頭",
-      "mentions": 5,
+      "symbol": "6187",
+      "name": "萬潤",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     }
