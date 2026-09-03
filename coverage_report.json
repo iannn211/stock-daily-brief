@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-02T19:42:53.816243+08:00",
+  "fetched_at": "2026-09-03T19:42:33.898336+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 11
+      "mentioned_in_window": 10
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -28,7 +28,7 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
@@ -70,54 +70,68 @@
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 0
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 92,
-    "0050": 73,
-    "5607": 51,
-    "2454": 41,
-    "3081": 39,
-    "3653": 33,
+    "2330": 95,
+    "0050": 80,
+    "5607": 41,
+    "2454": 40,
+    "3081": 34,
     "3324": 31,
     "3037": 27,
-    "2327": 25,
-    "4908": 23,
+    "4908": 27,
+    "2327": 23,
+    "6146": 18,
+    "2455": 14,
+    "3563": 14,
+    "3715": 14,
     "3131": 14,
-    "3026": 13,
+    "2028": 13,
     "6197": 12,
-    "6146": 12,
-    "3543": 11,
-    "2455": 10,
-    "6173": 10,
-    "3715": 10,
-    "3017": 9,
+    "3653": 12,
+    "8155": 10,
     "3363": 9,
-    "8155": 9,
+    "3026": 9,
     "2408": 8,
-    "00981A": 8,
-    "1303": 8,
-    "2028": 8,
     "3042": 8,
+    "6669": 7,
+    "2030": 7,
     "3006": 7,
-    "3163": 7,
-    "2492": 7,
-    "6669": 6
+    "8046": 6,
+    "00981A": 6,
+    "00878": 6,
+    "6442": 6,
+    "6173": 6
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 51,
+      "mentions": 41,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3653",
-      "name": "健策",
-      "mentions": 33,
+      "symbol": "2455",
+      "name": "全新",
+      "mentions": 14,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3563",
+      "name": "牧德",
+      "mentions": 14,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 13,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -129,30 +143,23 @@
       "in_chains": false
     },
     {
-      "symbol": "3543",
-      "name": "州巧",
-      "mentions": 11,
+      "symbol": "3653",
+      "name": "健策",
+      "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2455",
-      "name": "全新",
-      "mentions": 10,
+      "symbol": "2030",
+      "name": "彰源",
+      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "00981A",
       "name": "主動統一台股增長",
-      "mentions": 8,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 8,
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -164,36 +171,36 @@
       "in_chains": false
     },
     {
-      "symbol": "3563",
-      "name": "牧德",
+      "symbol": "6442",
+      "name": "光聖",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "8039",
-      "name": "台虹",
+      "symbol": "2486",
+      "name": "一詮",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "4939",
-      "name": "亞電",
-      "mentions": 6,
+      "symbol": "4551",
+      "name": "智伸科",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2451",
+      "name": "創見",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "0056",
       "name": "元大高股息",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6805",
-      "name": "富世達",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
