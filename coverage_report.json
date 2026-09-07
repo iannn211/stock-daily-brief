@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-04T19:43:32.946776+08:00",
+  "fetched_at": "2026-09-07T21:00:18.908869+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 15
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -56,7 +56,7 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,48 +75,55 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 120,
-    "0050": 98,
-    "3081": 56,
-    "5607": 54,
-    "3324": 52,
+    "2330": 140,
+    "0050": 119,
+    "3324": 64,
+    "3081": 60,
+    "5607": 51,
+    "2327": 39,
     "2454": 39,
+    "6146": 35,
     "4908": 33,
     "3037": 27,
-    "2327": 23,
-    "6146": 22,
+    "3715": 24,
+    "2303": 19,
     "2455": 18,
-    "3715": 18,
-    "3363": 15,
+    "2486": 18,
+    "3131": 17,
+    "3026": 16,
+    "3583": 15,
     "3563": 14,
-    "3131": 14,
-    "2303": 13,
+    "3042": 14,
+    "3363": 13,
     "2028": 13,
+    "6173": 13,
     "3653": 12,
     "6197": 12,
-    "2486": 12,
-    "3026": 12,
     "8155": 11,
     "6669": 10,
-    "6173": 10,
+    "2492": 10,
     "2376": 10,
-    "3231": 8,
-    "8046": 8,
-    "6442": 8,
-    "3042": 8,
-    "2030": 7
+    "6213": 9,
+    "00919": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 54,
+      "mentions": 51,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2455",
       "name": "全新",
+      "mentions": 18,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2486",
+      "name": "一詮",
       "mentions": 18,
       "in_portfolio": false,
       "in_chains": false
@@ -150,9 +157,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2486",
-      "name": "一詮",
-      "mentions": 12,
+      "symbol": "00919",
+      "name": "群益台灣精選高息",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2436",
+      "name": "偉詮電",
+      "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -178,6 +192,13 @@
       "in_chains": false
     },
     {
+      "symbol": "2545",
+      "name": "皇翔",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "00981A",
       "name": "主動統一台股增長",
       "mentions": 5,
@@ -192,15 +213,8 @@
       "in_chains": false
     },
     {
-      "symbol": "0056",
-      "name": "元大高股息",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2324",
-      "name": "仁寶",
+      "symbol": "00400A",
+      "name": "主動國泰動能高息",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
