@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-09T19:49:51.722205+08:00",
+  "fetched_at": "2026-09-10T19:49:16.817556+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 12
+      "mentioned_in_window": 11
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -21,21 +21,21 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 7
+      "mentioned_in_window": 8
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 2
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -49,14 +49,14 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 3
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,97 +75,83 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "0050": 116,
-    "2330": 112,
-    "3081": 49,
-    "3324": 44,
-    "5607": 32,
-    "2303": 30,
-    "6146": 24,
-    "3715": 21,
-    "2486": 19,
-    "4908": 18,
+    "2330": 98,
+    "0050": 92,
+    "3081": 58,
+    "3324": 46,
+    "2303": 29,
+    "6146": 27,
+    "5607": 25,
+    "3715": 23,
+    "6173": 21,
+    "8299": 18,
+    "3026": 17,
+    "2486": 16,
     "2327": 15,
-    "2454": 15,
-    "2455": 14,
-    "3563": 14,
-    "3583": 13,
-    "00919": 12,
-    "3017": 12,
-    "3026": 11,
-    "2376": 10,
-    "6173": 10,
-    "3234": 9,
-    "2344": 8,
-    "8299": 8,
-    "3231": 8,
+    "3583": 14,
+    "4566": 14,
+    "2492": 13,
+    "3042": 12,
+    "3234": 11,
+    "2376": 11,
+    "00919": 10,
+    "3017": 10,
+    "3131": 9,
+    "2436": 8,
+    "2455": 8,
     "8046": 8,
-    "6442": 8,
     "6213": 8,
+    "4908": 8,
     "6414": 7,
-    "2492": 7,
-    "4566": 7
+    "3231": 7,
+    "8155": 7
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 32,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2486",
-      "name": "一詮",
-      "mentions": 19,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2455",
-      "name": "全新",
-      "mentions": 14,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3563",
-      "name": "牧德",
-      "mentions": 14,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00919",
-      "name": "群益台灣精選高息",
-      "mentions": 12,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 8,
+      "mentions": 25,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "8299",
       "name": "群聯",
-      "mentions": 8,
+      "mentions": 18,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6442",
-      "name": "光聖",
-      "mentions": 8,
+      "symbol": "2486",
+      "name": "一詮",
+      "mentions": 16,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00919",
+      "name": "群益台灣精選高息",
+      "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2436",
       "name": "偉詮電",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2455",
+      "name": "全新",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2344",
+      "name": "華邦電",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -178,27 +164,6 @@
       "in_chains": false
     },
     {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "4551",
-      "name": "智伸科",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "2460",
       "name": "建通",
       "mentions": 5,
@@ -206,8 +171,8 @@
       "in_chains": false
     },
     {
-      "symbol": "0052",
-      "name": "富邦科技",
+      "symbol": "6442",
+      "name": "光聖",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
