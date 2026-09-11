@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-10T19:49:16.817556+08:00",
+  "fetched_at": "2026-09-11T19:47:41.458485+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,14 +7,14 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 11
+      "mentioned_in_window": 10
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 7
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
@@ -49,7 +49,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
@@ -75,42 +75,49 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 98,
-    "0050": 92,
-    "3081": 58,
-    "3324": 46,
-    "2303": 29,
-    "6146": 27,
-    "5607": 25,
-    "3715": 23,
-    "6173": 21,
+    "0050": 110,
+    "2330": 103,
+    "3081": 47,
+    "5607": 41,
+    "2303": 33,
+    "3324": 33,
+    "3026": 31,
+    "6173": 26,
+    "3715": 24,
+    "6146": 21,
+    "2327": 19,
+    "00919": 18,
     "8299": 18,
-    "3026": 17,
-    "2486": 16,
-    "2327": 15,
+    "2492": 16,
+    "2486": 14,
     "3583": 14,
+    "3017": 14,
     "4566": 14,
-    "2492": 13,
     "3042": 12,
+    "1815": 11,
     "3234": 11,
-    "2376": 11,
-    "00919": 10,
-    "3017": 10,
+    "2317": 10,
+    "00878": 10,
+    "2454": 9,
+    "2382": 9,
     "3131": 9,
+    "2383": 8,
     "2436": 8,
-    "2455": 8,
-    "8046": 8,
-    "6213": 8,
-    "4908": 8,
-    "6414": 7,
-    "3231": 7,
-    "8155": 7
+    "3665": 8,
+    "6414": 7
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 25,
+      "mentions": 41,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00919",
+      "name": "群益台灣精選高息",
+      "mentions": 18,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -124,13 +131,20 @@
     {
       "symbol": "2486",
       "name": "一詮",
-      "mentions": 16,
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "00919",
-      "name": "群益台灣精選高息",
+      "symbol": "1815",
+      "name": "富喬",
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00878",
+      "name": "國泰永續高股息",
       "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
@@ -143,9 +157,9 @@
       "in_chains": false
     },
     {
-      "symbol": "2455",
-      "name": "全新",
-      "mentions": 8,
+      "symbol": "6706",
+      "name": "惠特",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -157,8 +171,15 @@
       "in_chains": false
     },
     {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6182",
+      "name": "合晶",
       "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
@@ -173,6 +194,13 @@
     {
       "symbol": "6442",
       "name": "光聖",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3624",
+      "name": "光頡",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
