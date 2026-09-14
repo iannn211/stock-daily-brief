@@ -232,11 +232,159 @@
         </section>
         
 
-        <section class="wrap dd-stub" data-dd-panel="hold">
-          <div class="dd-stub-box">
-            <div class="dd-stub-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="icon"><rect x="3" y="7" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 7 V5 a1 1 0 0 1 1 -1 h4 a1 1 0 0 1 1 1 V7" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/></svg></div>
-            <div class="dd-stub-title">Holders · 籌碼資料暫缺</div>
-            <div class="muted small">尚未抓到這檔的三大法人買賣超資料（可能是 ETF 成分以外 / 新上市 / 資料延遲）。</div>
+        <section class="wrap dd-chip-panel" data-dd-panel="hold">
+          <div class="dd-chip-head">
+            <div>
+              <div class="dd-chip-title mono">三大法人買賣超 · HOLDERS</div>
+              <div class="muted small mono">過去 20 個交易日 · 單位：張 · 正值（<span class="up">紅</span>）買超、負值（<span class="dn">綠</span>）賣超</div>
+            </div>
+            <div class="dd-chip-summary mono small">20 日外資＋投信同步買超</div>
+          </div>
+
+          <div class="dd-chip-grid">
+            
+            <div class="dd-chip-card">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">外資</span>
+                <span class="chip-streak chip-streak-buy mono small">連買1日</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md dn">-484<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md up">+236<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-buy" x="0.0" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-sell" x="24.4" y="15.0" width="22.4" height="14.0" rx="0.5"/><rect class="chip-spark-buy" x="48.8" y="6.3" width="22.4" height="8.7" rx="0.5"/><rect class="chip-spark-sell" x="73.2" y="15.0" width="22.4" height="8.0" rx="0.5"/><rect class="chip-spark-buy" x="97.6" y="9.5" width="22.4" height="5.5" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日每日買賣超</div>
+              </div>
+            </div>
+            
+            <div class="dd-chip-card">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">投信</span>
+                <span class="muted small">—</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md up">+300<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md up">+235<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-buy" x="0.0" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="24.4" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="48.8" y="1.0" width="22.4" height="14.0" rx="0.5"/><rect class="chip-spark-buy" x="73.2" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="97.6" y="15.0" width="22.4" height="1.0" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日每日買賣超</div>
+              </div>
+            </div>
+            
+            <div class="dd-chip-card">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">自營商</span>
+                <span class="muted small">—</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md dn">-3<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md up">+6<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-buy" x="0.0" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-buy" x="24.4" y="1.0" width="22.4" height="14.0" rx="0.5"/><rect class="chip-spark-sell" x="48.8" y="15.0" width="22.4" height="8.4" rx="0.5"/><rect class="chip-spark-sell" x="73.2" y="15.0" width="22.4" height="6.2" rx="0.5"/><rect class="chip-spark-sell" x="97.6" y="15.0" width="22.4" height="4.6" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日每日買賣超</div>
+              </div>
+            </div>
+            <div class="dd-chip-card dd-chip-card-total">
+              <div class="dd-chip-card-head">
+                <span class="dd-chip-card-title mono">三大法人合計</span>
+              </div>
+              <div class="dd-chip-card-stats">
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">5 日累計</div>
+                  <div class="mono tnum val-md dn">-187<span class="muted small"> 張</span></div>
+                </div>
+                <div class="dd-chip-stat">
+                  <div class="muted small mono">20 日累計</div>
+                  <div class="mono tnum val-md up">+477<span class="muted small"> 張</span></div>
+                </div>
+              </div>
+              <div class="dd-chip-spark-wrap">
+                <svg class="chip-spark" viewBox="0 0 120 30" width="120" height="30" xmlns="http://www.w3.org/2000/svg"><rect class="chip-spark-buy" x="0.0" y="15.0" width="22.4" height="1.0" rx="0.5"/><rect class="chip-spark-sell" x="24.4" y="15.0" width="22.4" height="14.0" rx="0.5"/><rect class="chip-spark-buy" x="48.8" y="1.4" width="22.4" height="13.6" rx="0.5"/><rect class="chip-spark-sell" x="73.2" y="15.0" width="22.4" height="8.2" rx="0.5"/><rect class="chip-spark-buy" x="97.6" y="9.5" width="22.4" height="5.5" rx="0.5"/><line class="chip-spark-mid" x1="0" y1="15.0" x2="120" y2="15.0"/></svg>
+                <div class="muted small mono">近 5 日三大法人合計</div>
+              </div>
+            </div>
+          </div>
+
+          
+            <div class="dd-chip-section">
+              <div class="dd-chip-section-head mono small muted">每日買賣超明細 · 最近 5 日</div>
+              <div class="dd-chip-daily-wrap">
+                <table class="dd-chip-daily">
+                  <thead>
+                    <tr>
+                      <th class="mono small">日期</th>
+                      <th class="mono small">外資</th>
+                      <th class="mono small">投信</th>
+                      <th class="mono small">自營商</th>
+                      <th class="mono small">三大法人</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+            <tr>
+              <td class="mono small">2026-09-14</td>
+              <td><span class="mono tnum up">+338</span></td>
+              <td><span class="muted mono tnum small">—</span></td>
+              <td><span class="mono tnum dn">-3</span></td>
+              <td><span class="mono tnum up">+335</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-09-11</td>
+              <td><span class="mono tnum dn">-496</span></td>
+              <td><span class="muted mono tnum small">—</span></td>
+              <td><span class="mono tnum dn">-4</span></td>
+              <td><span class="mono tnum dn">-500</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-09-10</td>
+              <td><span class="mono tnum up">+540</span></td>
+              <td><span class="mono tnum up">+300</span></td>
+              <td><span class="mono tnum dn">-5</span></td>
+              <td><span class="mono tnum up">+834</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-09-09</td>
+              <td><span class="mono tnum dn">-866</span></td>
+              <td><span class="muted mono tnum small">—</span></td>
+              <td><span class="mono tnum up">+9</span></td>
+              <td><span class="mono tnum dn">-857</span></td>
+            </tr>
+            <tr>
+              <td class="mono small">2026-09-08</td>
+              <td><span class="muted mono tnum small">—</span></td>
+              <td><span class="muted mono tnum small">—</span></td>
+              <td><span class="muted mono tnum small">—</span></td>
+              <td><span class="muted mono tnum small">—</span></td>
+            </tr></tbody>
+                </table>
+              </div>
+            </div>
+
+          <div class="dd-chip-disclaimer muted small">
+            <strong>怎麼看：</strong>外資＋投信同步買超（且連續多日），通常代表機構認同，但短線可能已漲多；
+            反之外資連續賣超可能是風險訊號，但也可能只是匯率避險或 ETF 調整。籌碼面只是拼圖的一片，
+            搭配基本面（AI 評分／FINANCIALS 分頁）與位階（52 週區間）一起看。
+            資料來自 TWSE + TPEx 三大法人統計，滯後 1 個交易日。
           </div>
         </section>
         
@@ -248,6 +396,16 @@
     <h2>相關新聞 · <span class="sec-en">NEWS</span> <span class="muted small">(10 則)</span></h2>
   </div>
   <ul class="dd-news-list">
+            <li class="dd-news-item">
+              <a href="https://money.udn.com/money/story/5607/9753950" target="_blank" rel="noopener" class="dd-news-title">大廠瘋搶 AI「算力高速公路」！高盛喊「買」這二家台系企業</a>
+              <div class="dd-news-meta muted small mono">經濟日報 證券 · 2026-09-14 09-14 17:29</div>
+              <div class="dd-news-summary muted small">近來亞洲區各項科技大展接連登場，高盛率團積極參訪，並得出「光通訊產業十大要點」結論。台廠中，高盛看好受惠規格升級趨勢的全新（2455）、上詮（3363），均建議「買進」，目標價分別上看793元及833元。</div>
+            </li>
+            <li class="dd-news-item">
+              <a href="https://news.google.com/rss/articles/CBMiX0FVX3lxTFBBdV90Y3pxSHhPX2NfcmxsZ2lJOGxmZVNhbmN4S2VNcUdzbm1iaEM3M2VQdTNfM3paZl8yd0t0Z1FzRGFUSVJTQzBBTks5djhtbjE2bjFTaDdiR21xV1Jv?oc=5" target="_blank" rel="noopener" class="dd-news-title">光、電、熱三合一成新門檻！CPO量產測試升級上詮、漢測、高明鐵、萬潤、鴻勁卡位- 日報 - 工商時報</a>
+              <div class="dd-news-meta muted small mono">GNews AI光通訊 · 2026-09-14 09-14 03:00</div>
+              <div class="dd-news-summary muted small">光、電、熱三合一成新門檻！CPO量產測試升級上詮、漢測、高明鐵、萬潤、鴻勁卡位- 日報 工商時報</div>
+            </li>
             <li class="dd-news-item">
               <a href="https://money.udn.com/money/story/5607/9742029" target="_blank" rel="noopener" class="dd-news-title">光收發模組「黃金大周期」全面啟動！外資按讚三台廠</a>
               <div class="dd-news-meta muted small mono">經濟日報 證券 · 2026-09-08 09-08 17:35</div>
@@ -267,16 +425,6 @@
               <a href="https://money.udn.com/money/story/11074/9735104" target="_blank" rel="noopener" class="dd-news-title">上詮獲利／自結7月虧損3,300萬元 EPS -0.29元</a>
               <div class="dd-news-meta muted small mono">經濟日報 證券 · 2026-09-04 09-04 17:50</div>
               <div class="dd-news-summary muted small">上詮（3363）4日達公布注意交易資訊標準，公布2026年7月單月自結獲利，歸屬母公司業主淨損3,300萬元，較去年同期由盈轉虧，EPS -0.29元。2026年第2季歸屬母公司業主淨損2,500萬元，EPS -0.22元，同樣較去年同期由盈轉虧。</div>
-            </li>
-            <li class="dd-news-item">
-              <a href="https://news.google.com/rss/articles/CBMiqANBVV95cUxQWURvM2ZnNnlJX2tGVlNVUURTdmF3eVgyNktvMUFNNUFJVmpmbW1HOVBWbHVFeTZvSDNfYUJpWXREOXlPLXM0MEY5bmR5cFpUd09YV0xlb2tPQVYtdzQ1LWoza0hvNWMyZzNETWNVaGsyVThhOW5jQWt0d1JMOWR3a1VJdG93akNTQWZxYXoyOTdKRXctTUhyWjA1QUhrNDNVWlJnQmxqbjNkRmJxdk1KWVFObmtzWVcxOEF0UGMwMFg3dVl2QllIUkgtbU1rTXQzV3A4czMyTmV4OTBtbVc2T2xnS0tFUlpaWWNURnN5QTJFQVVLUTFxei1tUVlFWUpJNVpKbG44MUR4ZUd3WXgtUl9OS3pIdlQwcFhSQ2NyNXFxdjk5TkRiSTViOS00Q0gxV1JBMWl6Q3VQcFNBcjhaaDI4N2dtSmNWOUtQazhlVGd4WVdwRUJWVHJCV0YwVW00UVdReGpxOWo4MkU4ZGs0RmlPWWJxQ2htUEZhdHFDVkhQUlVYVzY3NUZXa0NnUVFaZF95aXJ3UXlNbkprd3hhOGxxSWd4OHpY?oc=5" target="_blank" rel="noopener" class="dd-news-title">台股尾盤反攻跌點收斂！矽光子估明年市占過半 全新、聯亞、上詮走紅 - Yahoo新聞</a>
-              <div class="dd-news-meta muted small mono">GNews 台股 · 2026-08-31 08-31 18:53</div>
-              <div class="dd-news-summary muted small">台股尾盤反攻跌點收斂！矽光子估明年市占過半 全新、聯亞、上詮走紅 Yahoo新聞</div>
-            </li>
-            <li class="dd-news-item">
-              <a href="https://money.udn.com/money/story/5710/9725250" target="_blank" rel="noopener" class="dd-news-title">光通訊族群支撐力道強 法人看好明年規格升級將持續成長</a>
-              <div class="dd-news-meta muted small mono">經濟日報 證券 · 2026-08-31 08-31 18:03</div>
-              <div class="dd-news-summary muted small">今日受國際情勢影響下，大盤小幅回檔，光通訊族群表現相對亮眼，模組廠前鼎（4908）強攻漲停，FAU重要供應鏈上詮（3363）尾盤拉升逾6%，其餘供應鏈股價也相對有撐。法人指出，隨著AI伺服器持續帶動光通訊規格升級，明年光收發模組出貨量將持續成長，加上規格提升，光通訊族群將迎來爆發性成長。</div>
             </li></ul>
 </section>
 
@@ -304,7 +452,7 @@
 </script>
 
 <footer class="wrap">
-  <p>生成於 2026-09-14 11:09 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
+  <p>生成於 2026-09-14 21:26 · <a href="https://github.com/iannn211/stock-daily-brief" target="_blank">source</a></p>
 </footer>
 <script>
 /* Time-aware greeting — overrides the static 早安 baked in at 07:30 build time
