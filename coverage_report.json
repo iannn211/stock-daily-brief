@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-14T21:20:17.139832+08:00",
+  "fetched_at": "2026-09-15T20:06:03.015309+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 11
+      "mentioned_in_window": 14
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -56,7 +56,7 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 3
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -70,47 +70,47 @@
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 1
+      "mentioned_in_window": 2
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "0050": 117,
-    "2330": 114,
-    "3026": 54,
-    "3081": 53,
-    "5607": 51,
-    "2303": 48,
-    "6173": 45,
-    "3715": 21,
-    "3324": 20,
-    "2492": 18,
+    "2330": 115,
+    "0050": 96,
+    "5607": 61,
+    "3026": 60,
+    "6173": 54,
+    "3081": 49,
+    "2303": 41,
+    "2492": 21,
+    "3324": 21,
+    "3715": 17,
+    "3443": 16,
     "6199": 16,
-    "00919": 14,
+    "3017": 15,
     "8299": 14,
-    "4566": 14,
-    "3017": 13,
-    "3665": 12,
-    "2327": 12,
-    "3443": 11,
+    "2028": 13,
+    "4908": 13,
+    "2454": 11,
     "1815": 11,
-    "4908": 11,
+    "3665": 10,
+    "6603": 10,
+    "00919": 10,
+    "5269": 10,
     "6706": 10,
-    "5269": 9,
-    "3234": 9,
-    "2383": 8,
-    "2454": 8,
+    "6146": 9,
+    "3363": 8,
+    "2327": 8,
     "2408": 8,
     "2317": 8,
-    "6146": 8,
-    "6414": 7,
-    "8358": 6
+    "4566": 8,
+    "2455": 7
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 51,
+      "mentions": 61,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -122,16 +122,16 @@
       "in_chains": false
     },
     {
-      "symbol": "00919",
-      "name": "群益台灣精選高息",
+      "symbol": "8299",
+      "name": "群聯",
       "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "8299",
-      "name": "群聯",
-      "mentions": 14,
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 13,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -143,9 +143,30 @@
       "in_chains": false
     },
     {
+      "symbol": "6603",
+      "name": "富強鑫",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00919",
+      "name": "群益台灣精選高息",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "6706",
       "name": "惠特",
       "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2455",
+      "name": "全新",
+      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -160,6 +181,27 @@
       "symbol": "6442",
       "name": "光聖",
       "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2380",
+      "name": "虹光",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2351",
+      "name": "順德",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6112",
+      "name": "邁達特",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -185,23 +227,9 @@
       "in_chains": false
     },
     {
-      "symbol": "6182",
-      "name": "合晶",
+      "symbol": "2030",
+      "name": "彰源",
       "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2460",
-      "name": "建通",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2455",
-      "name": "全新",
-      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
