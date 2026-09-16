@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-15T20:06:03.015309+08:00",
+  "fetched_at": "2026-09-16T20:01:28.893804+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -75,42 +75,49 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 115,
-    "0050": 96,
-    "5607": 61,
-    "3026": 60,
-    "6173": 54,
-    "3081": 49,
-    "2303": 41,
-    "2492": 21,
-    "3324": 21,
-    "3715": 17,
+    "2330": 146,
+    "0050": 108,
+    "3026": 83,
+    "5607": 66,
+    "3081": 59,
+    "6173": 55,
+    "2303": 44,
+    "3324": 24,
+    "4908": 24,
+    "2492": 23,
+    "3715": 22,
+    "3665": 18,
+    "2028": 17,
+    "8155": 17,
     "3443": 16,
+    "3017": 16,
     "6199": 16,
-    "3017": 15,
     "8299": 14,
-    "2028": 13,
-    "4908": 13,
-    "2454": 11,
+    "2454": 13,
     "1815": 11,
-    "3665": 10,
     "6603": 10,
-    "00919": 10,
+    "6669": 10,
+    "4979": 10,
     "5269": 10,
     "6706": 10,
-    "6146": 9,
-    "3363": 8,
-    "2327": 8,
-    "2408": 8,
-    "2317": 8,
-    "4566": 8,
-    "2455": 7
+    "6146": 10,
+    "4566": 10,
+    "2383": 9,
+    "3234": 9,
+    "00919": 9
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 61,
+      "mentions": 66,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 17,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -129,13 +136,6 @@
       "in_chains": false
     },
     {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 13,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "1815",
       "name": "富喬",
       "mentions": 11,
@@ -150,13 +150,6 @@
       "in_chains": false
     },
     {
-      "symbol": "00919",
-      "name": "群益台灣精選高息",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "6706",
       "name": "惠特",
       "mentions": 10,
@@ -164,15 +157,22 @@
       "in_chains": false
     },
     {
-      "symbol": "2455",
-      "name": "全新",
-      "mentions": 7,
+      "symbol": "00919",
+      "name": "群益台灣精選高息",
+      "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "00878",
-      "name": "國泰永續高股息",
+      "symbol": "2344",
+      "name": "華邦電",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2455",
+      "name": "全新",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -188,48 +188,6 @@
       "symbol": "2380",
       "name": "虹光",
       "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2351",
-      "name": "順德",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6112",
-      "name": "邁達特",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3661",
-      "name": "世芯-KY",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     }
