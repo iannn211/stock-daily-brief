@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-22T20:02:15.079300+08:00",
+  "fetched_at": "2026-09-23T20:07:35.703118+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -56,7 +56,7 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 2
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,42 +75,49 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 131,
-    "5607": 93,
-    "3081": 81,
-    "0050": 73,
-    "3324": 42,
-    "3026": 37,
-    "2303": 35,
-    "3715": 32,
-    "6146": 28,
-    "6669": 22,
-    "3017": 20,
-    "6173": 20,
-    "2454": 19,
-    "2383": 19,
-    "4908": 17,
-    "8155": 16,
+    "2330": 107,
+    "5607": 86,
+    "3081": 70,
+    "0050": 55,
+    "3324": 37,
+    "2303": 29,
+    "3715": 27,
+    "6146": 27,
+    "6173": 19,
+    "6669": 18,
+    "2454": 17,
+    "3017": 17,
+    "3026": 16,
+    "2308": 15,
     "3363": 15,
-    "2308": 14,
-    "6213": 13,
+    "2383": 14,
+    "6213": 14,
+    "6805": 14,
     "4903": 13,
-    "3665": 13,
-    "2317": 11,
-    "6274": 11,
+    "2317": 12,
     "3037": 11,
-    "3131": 11,
-    "6770": 10,
-    "3653": 10,
+    "2368": 10,
     "6834": 10,
-    "6805": 10,
-    "2028": 9
+    "3131": 10,
+    "6770": 9,
+    "3583": 9,
+    "6274": 7,
+    "2409": 7,
+    "3653": 6,
+    "6204": 6
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 93,
+      "mentions": 86,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6805",
+      "name": "富世達",
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -122,20 +129,6 @@
       "in_chains": false
     },
     {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3653",
-      "name": "健策",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "6834",
       "name": "天二科技",
       "mentions": 10,
@@ -143,23 +136,16 @@
       "in_chains": false
     },
     {
-      "symbol": "6805",
-      "name": "富世達",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2028",
-      "name": "威致",
+      "symbol": "6770",
+      "name": "力積電",
       "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 7,
+      "symbol": "3653",
+      "name": "健策",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -171,15 +157,36 @@
       "in_chains": false
     },
     {
-      "symbol": "00919",
-      "name": "群益台灣精選高息",
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2023",
+      "name": "燁輝",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "8996",
-      "name": "高力",
+      "symbol": "6199",
+      "name": "天品",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -187,6 +194,13 @@
     {
       "symbol": "2344",
       "name": "華邦電",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6118",
+      "name": "建達",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
