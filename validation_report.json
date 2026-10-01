@@ -1,45 +1,9 @@
 {
-  "validated_at": "2026-09-30T21:06:01.913926+08:00",
+  "validated_at": "2026-10-01T22:02:00.528416+08:00",
   "analysis_file": "analyses/2026-09-30.json",
   "analysis_date": "2026-09-30",
   "analysis_model": "gemini-2.5-flash-lite",
   "issues": [
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI 伺服器散熱規格升級» → lead_stocks[0]",
-      "message": "代號 3653 (健策) 本站無資料，無法驗證數字是否正確",
-      "headline": "3653 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 3653 → 去 inspect.html?sym=3653 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[0] «AI 伺服器散熱規格升級» → lead_stocks[2]",
-      "message": "代號 6805 (富世達) 本站無資料，無法驗證數字是否正確",
-      "headline": "6805 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 6805 → 去 inspect.html?sym=6805 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[3] «光通訊 1.6T 產品放量» → lead_stocks[0]",
-      "message": "代號 8147 (正淩) 本站無資料，無法驗證數字是否正確",
-      "headline": "8147 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 8147 → 去 inspect.html?sym=8147 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "error",
-      "category": "ticker-not-in-data",
-      "location": "budget_allocation.allocations[0]",
-      "message": "配置建議的代號 5607 (遠雄港) 本站無資料，價格與基本面無法核對",
-      "headline": "5607 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 5607 → 去 inspect.html?sym=5607 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
     {
       "severity": "error",
       "category": "budget-overflow",
@@ -70,14 +34,14 @@
       "severity": "error",
       "category": "pe-claim-contradicts-data",
       "location": "topics[2]",
-      "message": "2454 描述提到「便宜/低估」，但實際 PE=81.5（屬於昂貴/泡沫區） — 題材「IC 設計族群拉回整理，留意低估值成長股」",
+      "message": "2454 描述提到「便宜/低估」，但實際 PE=82.3（屬於昂貴/泡沫區） — 題材「IC 設計族群拉回整理，留意低估值成長股」",
       "context": {
         "symbol": "2454",
-        "pe": 81.47044,
+        "pe": 82.28685,
         "tier": "expensive"
       },
       "headline": "2454 估值 Gemini 看錯方向",
-      "impact": "Gemini 把 2454 當「便宜」敘述，但實際 PE=81.5（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
+      "impact": "Gemini 把 2454 當「便宜」敘述，但實際 PE=82.3（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
       "next_step": "別把「估值便宜」當成 2454 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
     },
     {
@@ -96,10 +60,10 @@
     }
   ],
   "summary": {
-    "errors": 3,
-    "warnings": 5,
+    "errors": 2,
+    "warnings": 2,
     "infos": 0,
-    "total": 8,
+    "total": 4,
     "suppressed": 0
   }
 }
