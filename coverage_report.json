@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-02T21:09:28.907212+08:00",
+  "fetched_at": "2026-10-05T23:15:28.095366+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 17
+      "mentioned_in_window": 18
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -42,7 +42,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "hbm_memory": {
       "title": "HBM / 記憶體 · 堆疊封裝題材",
@@ -63,7 +63,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
@@ -75,76 +75,83 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "0050": 95,
-    "2330": 87,
-    "5607": 81,
-    "3017": 29,
-    "3081": 26,
-    "2409": 24,
-    "2303": 20,
-    "3653": 20,
-    "2327": 19,
-    "3324": 19,
-    "3715": 16,
+    "2330": 108,
+    "0050": 101,
+    "5607": 91,
+    "3017": 45,
+    "3653": 37,
+    "3081": 33,
+    "3324": 32,
+    "2303": 26,
+    "2492": 22,
+    "3715": 21,
+    "3016": 19,
+    "2409": 17,
+    "2327": 17,
+    "3037": 17,
+    "6953": 17,
     "8155": 15,
-    "3481": 13,
+    "3026": 13,
     "5269": 13,
-    "2454": 12,
-    "00919": 12,
-    "3026": 12,
-    "3016": 11,
+    "8046": 12,
     "4958": 11,
-    "3037": 11,
     "4566": 11,
+    "2027": 10,
+    "8150": 10,
     "2317": 9,
-    "2027": 8,
+    "2454": 9,
+    "6488": 9,
+    "6173": 9,
     "5347": 8,
-    "3105": 8,
-    "2368": 8,
-    "1303": 8,
-    "2408": 7,
-    "6805": 7,
-    "009816": 6
+    "00919": 8,
+    "2408": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 81,
+      "mentions": 91,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3653",
       "name": "健策",
-      "mentions": 20,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00919",
-      "name": "群益台灣精選高息",
-      "mentions": 12,
+      "mentions": 37,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "3016",
       "name": "嘉晶",
-      "mentions": 11,
+      "mentions": 19,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6953",
+      "name": "家碩",
+      "mentions": 17,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2027",
       "name": "大成鋼",
-      "mentions": 8,
+      "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "5347",
       "name": "世界",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00919",
+      "name": "群益台灣精選高息",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
@@ -157,8 +164,15 @@
       "in_chains": false
     },
     {
-      "symbol": "009816",
-      "name": "凱基台灣TOP50",
+      "symbol": "00981A",
+      "name": "主動統一台股增長",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2034",
+      "name": "允強",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -178,22 +192,36 @@
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 4,
+      "symbol": "1815",
+      "name": "富喬",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "4760",
       "name": "勤凱",
+      "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6187",
+      "name": "萬潤",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2020",
-      "name": "美亞",
+      "symbol": "009816",
+      "name": "凱基台灣TOP50",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2344",
+      "name": "華邦電",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
@@ -202,27 +230,6 @@
       "symbol": "4768",
       "name": "晶呈科技",
       "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3717",
-      "name": "聯嘉投控",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2351",
-      "name": "順德",
-      "mentions": 3,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2483",
-      "name": "百容",
-      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     }
