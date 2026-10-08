@@ -1,30 +1,30 @@
 {
-  "validated_at": "2026-10-06T21:49:49.554278+08:00",
-  "analysis_file": "analyses/2026-10-05.json",
-  "analysis_date": "2026-10-05",
+  "validated_at": "2026-10-08T22:09:03.701491+08:00",
+  "analysis_file": "analyses/2026-10-08.json",
+  "analysis_date": "2026-10-08",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$32,150 超過預算 NT$5,000（差 NT$27,150）",
+      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 32150.0
+        "total_cost": 30000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$32,150 > 預算 NT$5,000，代表要全買得多湊 NT$27,150。",
+      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-27,150",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
       "context": {
         "claimed": 0,
-        "expected": -27150.0
+        "expected": -25000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
@@ -34,68 +34,17 @@
       "severity": "warning",
       "category": "theme-industry-mismatch",
       "location": "opportunities[0].lead_stocks[0]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1519 (華城) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "message": "題材「AI 伺服器水冷散熱」的 lead stock 4566 (時碩工業 (hidden)) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
       "context": {
-        "symbol": "1519",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "1519 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[1]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1503 (士電) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "1503",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "1503 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[2]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1590 (亞德客) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 氣壓元件」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "1590",
-        "theme": "AI 電力 / 重電",
+        "symbol": "4566",
+        "theme": "AI 伺服器水冷散熱",
         "industry": "Specialty Industrial Machinery",
         "sector": "Industrials",
-        "sc_roles": "robotics 關鍵零組件 氣壓元件"
+        "sc_roles": "robotics 關鍵零組件 機器人諧波減速機、隱形冠軍"
       },
-      "headline": "1590 亞德客 被放錯題材",
-      "impact": "Gemini 把 1590 列為「AI 電力 / 重電」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 氣壓元件」— 跟題材不是同一回事。如果你原本因為「AI 電力 / 重電」這個題材想買 1590，這個理由不成立。",
-      "next_step": "想布局「AI 電力 / 重電」→ 同題材的 1519 華城、1503 士電 才是真的相關股。\n想買 1590 亞德客 → 要從它真正的業務角度（robotics 關鍵零組件 氣壓元件）去找對的題材，不是用「AI 電力 / 重電」當理由。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[4].lead_stocks[0]",
-      "message": "題材「半導體設備零組件」的 lead stock 6187 (萬潤（hidden）) 產業標為「Specialty Industrial Machinery」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "6187",
-        "theme": "半導體設備零組件",
-        "industry": "Specialty Industrial Machinery",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "6187 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
+      "headline": "4566 時碩工業 (hidden) 被放錯題材",
+      "impact": "Gemini 把 4566 列為「AI 伺服器水冷散熱」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器水冷散熱」這個題材想買 4566，這個理由不成立。",
+      "next_step": "想布局「AI 伺服器水冷散熱」→ 同題材的 3653 健策 (mid)、3324 雙鴻 (mid) 才是真的相關股。\n想買 4566 時碩工業 (hidden) → 要從它真正的業務角度（robotics 關鍵零組件 機器人諧波減速機、隱形冠軍）去找對的題材，不是用「AI 伺服器水冷散熱」當理由。"
     }
   ],
   "summary": {
@@ -103,6 +52,6 @@
     "warnings": 2,
     "infos": 0,
     "total": 3,
-    "suppressed": 3
+    "suppressed": 0
   }
 }
