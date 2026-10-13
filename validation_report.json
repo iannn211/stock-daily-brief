@@ -1,9 +1,81 @@
 {
-  "validated_at": "2026-10-08T22:09:03.701491+08:00",
-  "analysis_file": "analyses/2026-10-08.json",
-  "analysis_date": "2026-10-08",
+  "validated_at": "2026-10-13T22:40:01.384171+08:00",
+  "analysis_file": "analyses/2026-10-13.json",
+  "analysis_date": "2026-10-13",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[0] «AI 伺服器供應鏈升級» → lead_stocks[0]",
+      "message": "代號 6185 (和椿 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6185 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6185 → 去 inspect.html?sym=6185 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[0] «AI 伺服器供應鏈升級» → lead_stocks[1]",
+      "message": "代號 2467 (志聖 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "2467 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 2467 → 去 inspect.html?sym=2467 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[2] «CPO 與玻璃載板新機會» → lead_stocks[0]",
+      "message": "代號 3362 (先進光 (hidden)) 本站無資料，無法驗證數字是否正確",
+      "headline": "3362 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 3362 → 去 inspect.html?sym=3362 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[3] «半導體設備廠獲利倍增» → lead_stocks[0]",
+      "message": "代號 2467 (志聖 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "2467 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 2467 → 去 inspect.html?sym=2467 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[4] «記憶體產業競爭與修正» → lead_stocks[1]",
+      "message": "代號 2344 (華邦電 (large)) 本站無資料，無法驗證數字是否正確",
+      "headline": "2344 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 2344 → 去 inspect.html?sym=2344 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "warning",
+      "category": "ticker-not-in-data",
+      "location": "opportunities[4] «記憶體產業競爭與修正» → lead_stocks[2]",
+      "message": "代號 6770 (力積電 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6770 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6770 → 去 inspect.html?sym=6770 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[1]",
+      "message": "配置建議的代號 6185 (和椿) 本站無資料，價格與基本面無法核對",
+      "headline": "6185 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 6185 → 去 inspect.html?sym=6185 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
+    {
+      "severity": "error",
+      "category": "ticker-not-in-data",
+      "location": "budget_allocation.allocations[2]",
+      "message": "配置建議的代號 2467 (志聖) 本站無資料，價格與基本面無法核對",
+      "headline": "2467 本站沒資料",
+      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
+      "next_step": "想跟進 2467 → 去 inspect.html?sym=2467 的速查頁 / 財報狗 / Goodinfo 驗證。"
+    },
     {
       "severity": "error",
       "category": "budget-overflow",
@@ -29,29 +101,13 @@
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[0]",
-      "message": "題材「AI 伺服器水冷散熱」的 lead stock 4566 (時碩工業 (hidden)) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "4566",
-        "theme": "AI 伺服器水冷散熱",
-        "industry": "Specialty Industrial Machinery",
-        "sector": "Industrials",
-        "sc_roles": "robotics 關鍵零組件 機器人諧波減速機、隱形冠軍"
-      },
-      "headline": "4566 時碩工業 (hidden) 被放錯題材",
-      "impact": "Gemini 把 4566 列為「AI 伺服器水冷散熱」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 伺服器水冷散熱」這個題材想買 4566，這個理由不成立。",
-      "next_step": "想布局「AI 伺服器水冷散熱」→ 同題材的 3653 健策 (mid)、3324 雙鴻 (mid) 才是真的相關股。\n想買 4566 時碩工業 (hidden) → 要從它真正的業務角度（robotics 關鍵零組件 機器人諧波減速機、隱形冠軍）去找對的題材，不是用「AI 伺服器水冷散熱」當理由。"
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 2,
+    "errors": 3,
+    "warnings": 7,
     "infos": 0,
-    "total": 3,
+    "total": 10,
     "suppressed": 0
   }
 }
