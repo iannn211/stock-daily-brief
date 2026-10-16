@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-10-15T20:14:32.160422+08:00",
+  "validated_at": "2026-10-16T20:03:15.610899+08:00",
   "analysis_file": "analyses/2026-10-15.json",
   "analysis_date": "2026-10-15",
   "analysis_model": "gemini-2.5-flash",
@@ -34,14 +34,14 @@
       "severity": "warning",
       "category": "pe-claim-contradicts-data",
       "location": "topics[3]",
-      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=19.4（屬於合理區） — 題材「AI 伺服器散熱與 CPO 技術進展」",
+      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=18.8（屬於合理區） — 題材「AI 伺服器散熱與 CPO 技術進展」",
       "context": {
         "symbol": "6669",
-        "pe": 19.42292,
+        "pe": 18.811174,
         "tier": "fair"
       },
       "headline": "6669 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=19.4（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
+      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=18.8（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
       "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
     },
     {
