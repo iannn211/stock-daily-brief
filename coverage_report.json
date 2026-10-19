@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-16T19:53:39.547139+08:00",
+  "fetched_at": "2026-10-19T21:55:49.202622+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 12
+      "mentioned_in_window": 13
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -28,7 +28,7 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
@@ -75,33 +75,33 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 109,
-    "0050": 88,
-    "5607": 67,
-    "3081": 37,
+    "0050": 113,
+    "2330": 107,
+    "5607": 79,
+    "3081": 38,
     "3026": 37,
-    "6669": 23,
+    "6669": 29,
     "2467": 21,
+    "2027": 17,
     "6173": 16,
     "6185": 16,
     "2492": 15,
     "3715": 15,
     "3617": 14,
     "4979": 14,
-    "2027": 13,
     "6146": 13,
     "2327": 12,
     "3008": 11,
     "3362": 11,
-    "2408": 10,
+    "00991A": 10,
+    "6770": 10,
     "8155": 10,
     "2324": 9,
-    "2344": 8,
-    "3234": 8,
-    "3406": 8,
-    "6770": 8,
-    "2317": 7,
-    "3017": 7,
+    "2317": 8,
+    "2408": 8,
+    "0056": 8,
+    "2344": 7,
+    "3234": 7,
     "3443": 7,
     "6269": 7,
     "3131": 7
@@ -110,7 +110,7 @@
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 67,
+      "mentions": 79,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -118,6 +118,13 @@
       "symbol": "2467",
       "name": "志聖",
       "mentions": 21,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 17,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,16 +143,23 @@
       "in_chains": false
     },
     {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 13,
+      "symbol": "3362",
+      "name": "先進光",
+      "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3362",
-      "name": "先進光",
-      "mentions": 11,
+      "symbol": "00991A",
+      "name": "主動復華未來50",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6770",
+      "name": "力積電",
+      "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -157,22 +171,29 @@
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
+      "symbol": "0056",
+      "name": "元大高股息",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 8,
+      "symbol": "2344",
+      "name": "華邦電",
+      "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "6409",
       "name": "旭隼",
+      "mentions": 6,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00878",
+      "name": "國泰永續高股息",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -215,13 +236,6 @@
     {
       "symbol": "6187",
       "name": "萬潤",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "8299",
-      "name": "群聯",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false

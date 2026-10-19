@@ -1,89 +1,55 @@
 {
-  "validated_at": "2026-10-16T20:03:15.610899+08:00",
-  "analysis_file": "analyses/2026-10-15.json",
-  "analysis_date": "2026-10-15",
-  "analysis_model": "gemini-2.5-flash",
+  "validated_at": "2026-10-19T22:02:02.729741+08:00",
+  "analysis_file": "analyses/2026-10-19.json",
+  "analysis_date": "2026-10-19",
+  "analysis_model": "gemini-2.5-flash-lite",
   "issues": [
+    {
+      "severity": "error",
+      "category": "ticker-name-mismatch",
+      "location": "opportunities[3].lead_stocks[1]",
+      "message": "代號 2355 本站記錄為「敬鵬」，Gemini 標成「國巨」— 可能 Gemini 記錯了",
+      "context": {
+        "symbol": "2355",
+        "claimed": "國巨",
+        "actual": "敬鵬"
+      },
+      "headline": "2355 股名標錯（不影響決策）",
+      "impact": "代號 2355 本站記錄是「敬鵬」，Gemini 寫成「國巨」— 純粹名字標錯。代號正確，題材分析、基本面數字都是對著 2355 這檔走的。",
+      "next_step": "不用處理。就把 Gemini 寫的「國巨」當成「敬鵬」看就好。"
+    },
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$28,250 超過預算 NT$5,000（差 NT$23,250）",
+      "message": "配置加總 NT$30,000 超過預算 NT$5,000（差 NT$25,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 28250.0
+        "total_cost": 30000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$28,250 > 預算 NT$5,000，代表要全買得多湊 NT$23,250。",
+      "impact": "Gemini 的 allocations 加總 NT$30,000 > 預算 NT$5,000，代表要全買得多湊 NT$25,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-23,250",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-25,000",
       "context": {
         "claimed": 0,
-        "expected": -23250.0
+        "expected": -25000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
-    },
-    {
-      "severity": "warning",
-      "category": "pe-claim-contradicts-data",
-      "location": "topics[3]",
-      "message": "6669 描述提到「昂貴/泡沫」，但實際 PE=18.8（屬於合理區） — 題材「AI 伺服器散熱與 CPO 技術進展」",
-      "context": {
-        "symbol": "6669",
-        "pe": 18.811174,
-        "tier": "fair"
-      },
-      "headline": "6669 估值 Gemini 看得太悲觀",
-      "impact": "Gemini 把 6669 當「昂貴/泡沫」敘述，但實際 PE=18.8（屬於合理區）。如果原本因此不考慮 6669，可能低估機會。",
-      "next_step": "重新評估 6669 — 估值其實還好，不必因「昂貴」這句就跳過。"
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[0]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 3617 (碩天) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "3617",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "3617 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
-    },
-    {
-      "severity": "warning",
-      "category": "theme-industry-mismatch",
-      "location": "opportunities[0].lead_stocks[1]",
-      "message": "題材「AI 電力 / 重電」的 lead stock 1519 (華城) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
-      "context": {
-        "symbol": "1519",
-        "theme": "AI 電力 / 重電",
-        "industry": "Electrical Equipment & Parts",
-        "sector": "Industrials",
-        "sc_roles": null
-      },
-      "headline": "1519 題材分類不確定（已自動忽略）",
-      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
-      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
-      "suppress": true
     }
   ],
   "summary": {
-    "errors": 1,
-    "warnings": 2,
+    "errors": 2,
+    "warnings": 1,
     "infos": 0,
     "total": 3,
-    "suppressed": 2
+    "suppressed": 0
   }
 }
