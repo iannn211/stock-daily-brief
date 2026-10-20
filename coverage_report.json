@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-19T21:55:49.202622+08:00",
+  "fetched_at": "2026-10-20T20:09:15.672474+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -21,7 +21,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -56,61 +56,61 @@
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "ic_distribution": {
       "title": "IC 通路 / 零組件整合 · AI 料件集散",
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "0050": 113,
-    "2330": 107,
-    "5607": 79,
-    "3081": 38,
-    "3026": 37,
-    "6669": 29,
+    "2330": 132,
+    "0050": 121,
+    "5607": 92,
+    "3081": 55,
+    "3026": 38,
+    "6669": 27,
+    "2492": 27,
+    "6146": 26,
     "2467": 21,
-    "2027": 17,
-    "6173": 16,
+    "3363": 19,
+    "6173": 18,
     "6185": 16,
-    "2492": 15,
-    "3715": 15,
+    "3715": 16,
+    "6196": 16,
+    "2027": 15,
     "3617": 14,
     "4979": 14,
-    "6146": 13,
     "2327": 12,
+    "3234": 11,
     "3008": 11,
     "3362": 11,
-    "00991A": 10,
-    "6770": 10,
     "8155": 10,
     "2324": 9,
-    "2317": 8,
+    "2454": 9,
+    "6213": 9,
+    "6770": 9,
+    "3324": 9,
+    "3131": 9,
     "2408": 8,
-    "0056": 8,
-    "2344": 7,
-    "3234": 7,
-    "3443": 7,
-    "6269": 7,
-    "3131": 7
+    "3189": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 79,
+      "mentions": 92,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -122,16 +122,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 17,
+      "symbol": "6185",
+      "name": "幃翔",
+      "mentions": 16,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6185",
-      "name": "幃翔",
-      "mentions": 16,
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 15,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -150,20 +150,6 @@
       "in_chains": false
     },
     {
-      "symbol": "00991A",
-      "name": "主動復華未來50",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "2324",
       "name": "仁寶",
       "mentions": 9,
@@ -171,8 +157,15 @@
       "in_chains": false
     },
     {
-      "symbol": "0056",
-      "name": "元大高股息",
+      "symbol": "6770",
+      "name": "力積電",
+      "mentions": 9,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
@@ -192,8 +185,8 @@
       "in_chains": false
     },
     {
-      "symbol": "00878",
-      "name": "國泰永續高股息",
+      "symbol": "00991A",
+      "name": "主動復華未來50",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -223,20 +216,6 @@
       "symbol": "2450",
       "name": "神腦",
       "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "4755",
-      "name": "三福化",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6187",
-      "name": "萬潤",
-      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
