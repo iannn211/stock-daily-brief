@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-20T20:09:15.672474+08:00",
+  "fetched_at": "2026-10-21T20:23:09.414125+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -28,14 +28,14 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 6
+      "mentioned_in_window": 5
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -75,56 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 132,
-    "0050": 121,
-    "5607": 92,
-    "3081": 55,
-    "3026": 38,
-    "6669": 27,
-    "2492": 27,
-    "6146": 26,
-    "2467": 21,
-    "3363": 19,
-    "6173": 18,
-    "6185": 16,
-    "3715": 16,
+    "2330": 139,
+    "0050": 131,
+    "5607": 89,
+    "3081": 57,
+    "6669": 35,
+    "3026": 32,
+    "6146": 29,
+    "3715": 26,
+    "3363": 23,
+    "2492": 22,
+    "6213": 21,
+    "6173": 17,
     "6196": 16,
     "2027": 15,
     "3617": 14,
     "4979": 14,
-    "2327": 12,
-    "3234": 11,
-    "3008": 11,
-    "3362": 11,
-    "8155": 10,
+    "2029": 14,
+    "2317": 13,
+    "3234": 13,
+    "8155": 13,
+    "1303": 10,
+    "3324": 10,
+    "4958": 9,
+    "6269": 9,
     "2324": 9,
-    "2454": 9,
-    "6213": 9,
-    "6770": 9,
-    "3324": 9,
+    "8358": 9,
     "3131": 9,
-    "2408": 8,
-    "3189": 8
+    "3231": 8,
+    "00981A": 8,
+    "2303": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 92,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2467",
-      "name": "志聖",
-      "mentions": 21,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6185",
-      "name": "幃翔",
-      "mentions": 16,
+      "mentions": 89,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -143,9 +129,9 @@
       "in_chains": false
     },
     {
-      "symbol": "3362",
-      "name": "先進光",
-      "mentions": 11,
+      "symbol": "2029",
+      "name": "盛餘",
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -157,30 +143,16 @@
       "in_chains": false
     },
     {
-      "symbol": "6770",
-      "name": "力積電",
-      "mentions": 9,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3189",
-      "name": "景碩",
+      "symbol": "00981A",
+      "name": "主動統一台股增長",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2344",
-      "name": "華邦電",
+      "symbol": "6770",
+      "name": "力積電",
       "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6409",
-      "name": "旭隼",
-      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -199,16 +171,16 @@
       "in_chains": false
     },
     {
-      "symbol": "2029",
-      "name": "盛餘",
-      "mentions": 5,
+      "symbol": "6409",
+      "name": "旭隼",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2420",
-      "name": "新巨",
-      "mentions": 5,
+      "symbol": "2467",
+      "name": "志聖",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -216,6 +188,27 @@
       "symbol": "2450",
       "name": "神腦",
       "mentions": 5,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "0056",
+      "name": "元大高股息",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3167",
+      "name": "大量",
+      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
