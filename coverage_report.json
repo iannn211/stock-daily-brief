@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-23T20:05:28.518154+08:00",
+  "fetched_at": "2026-10-26T21:32:37.746521+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 17
+      "mentioned_in_window": 18
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -21,7 +21,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
@@ -49,14 +49,14 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,55 +75,62 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 129,
-    "0050": 120,
-    "5607": 85,
-    "3081": 55,
+    "2330": 149,
+    "0050": 145,
+    "5607": 94,
+    "3081": 71,
     "3715": 39,
-    "6669": 26,
-    "3363": 26,
-    "6146": 25,
-    "2492": 25,
-    "3026": 24,
-    "3037": 19,
-    "6213": 19,
-    "4958": 19,
-    "6173": 19,
-    "2317": 17,
+    "6146": 35,
+    "6669": 31,
+    "2492": 31,
+    "3026": 29,
+    "3037": 28,
+    "3363": 27,
+    "2454": 24,
+    "2027": 24,
+    "2303": 21,
+    "4908": 21,
+    "6173": 20,
+    "6213": 18,
+    "4958": 18,
+    "3324": 16,
     "6196": 16,
-    "3324": 14,
-    "3017": 13,
-    "2303": 12,
-    "2454": 12,
-    "2027": 10,
-    "2028": 10,
-    "3231": 9,
-    "8358": 9,
-    "3234": 9,
-    "4526": 9,
-    "4908": 9,
-    "2029": 9,
-    "6269": 8,
-    "3450": 8
+    "3131": 15,
+    "2317": 14,
+    "8155": 14,
+    "2028": 14,
+    "8358": 13,
+    "2308": 11,
+    "2449": 11,
+    "7769": 10,
+    "3017": 10,
+    "3231": 9
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 85,
+      "mentions": 94,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2027",
       "name": "大成鋼",
-      "mentions": 10,
+      "mentions": 24,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2028",
       "name": "威致",
+      "mentions": 14,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "7769",
+      "name": "鴻勁",
       "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
@@ -143,6 +150,20 @@
       "in_chains": false
     },
     {
+      "symbol": "2337",
+      "name": "旺宏",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3035",
+      "name": "智原",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "3450",
       "name": "聯鈞",
       "mentions": 8,
@@ -150,16 +171,16 @@
       "in_chains": false
     },
     {
-      "symbol": "3189",
-      "name": "景碩",
-      "mentions": 6,
+      "symbol": "3693",
+      "name": "營邦",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "00991A",
-      "name": "主動復華未來50",
-      "mentions": 6,
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -171,15 +192,8 @@
       "in_chains": false
     },
     {
-      "symbol": "3653",
-      "name": "健策",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
+      "symbol": "00991A",
+      "name": "主動復華未來50",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
