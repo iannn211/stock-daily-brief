@@ -1,55 +1,105 @@
 {
-  "validated_at": "2026-10-26T21:37:40.237888+08:00",
-  "analysis_file": "analyses/2026-10-26.json",
-  "analysis_date": "2026-10-26",
+  "validated_at": "2026-10-27T20:44:55.145938+08:00",
+  "analysis_file": "analyses/2026-10-27.json",
+  "analysis_date": "2026-10-27",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$29,800 超過預算 NT$5,000（差 NT$24,800）",
+      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 29800.0
+        "total_cost": 35000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$29,800 > 預算 NT$5,000，代表要全買得多湊 NT$24,800。",
+      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-24,800",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
       "context": {
         "claimed": 0,
-        "expected": -24800.0
+        "expected": -30000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
     },
     {
-      "severity": "error",
-      "category": "growth-claim-contradicts-data",
-      "location": "opportunities[1].why",
-      "message": "3515 描述提到「高成長/營收創高」，但實際營收 YoY -15.9% 且 EPS YoY -11.2% — 都在衰退 — 題材「AI 伺服器 · ODM」",
+      "severity": "warning",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[4].why",
+      "message": "6146 描述提到「昂貴/泡沫」，但實際 PE=17.8（屬於合理區） — 題材「半導體設備耗材」",
       "context": {
-        "symbol": "3515",
-        "rev_growth": -0.159,
-        "earnings_growth": -0.112
+        "symbol": "6146",
+        "pe": 17.838312,
+        "tier": "fair"
       },
-      "headline": "3515 成長性 Gemini 吹過頭",
-      "impact": "Gemini 說 3515 是「高成長」，但實際 營收 YoY -15.9%、EPS YoY -11.2% — 數字在衰退。「成長股」論點不成立。",
-      "next_step": "別把 3515 當成長股看。若仍有興趣買，要有別的理由（谷底反轉、題材催化、股價被低估等），不能套「高成長」敘述。"
+      "headline": "6146 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 6146 當「昂貴/泡沫」敘述，但實際 PE=17.8（屬於合理區）。如果原本因此不考慮 6146，可能低估機會。",
+      "next_step": "重新評估 6146 — 估值其實還好，不必因「昂貴」這句就跳過。"
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[0]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1519 (華城) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1519",
+        "theme": "AI 電力 / 重電",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": null
+      },
+      "headline": "1519 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[1]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1503 (士電) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1503",
+        "theme": "AI 電力 / 重電",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": null
+      },
+      "headline": "1503 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[2]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1590 (亞德客) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 氣壓元件」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1590",
+        "theme": "AI 電力 / 重電",
+        "industry": "Specialty Industrial Machinery",
+        "sector": "Industrials",
+        "sc_roles": "robotics 關鍵零組件 氣壓元件"
+      },
+      "headline": "1590 亞德客 被放錯題材",
+      "impact": "Gemini 把 1590 列為「AI 電力 / 重電」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 氣壓元件」— 跟題材不是同一回事。如果你原本因為「AI 電力 / 重電」這個題材想買 1590，這個理由不成立。",
+      "next_step": "想布局「AI 電力 / 重電」→ 同題材的 1519 華城、1503 士電 才是真的相關股。\n想買 1590 亞德客 → 要從它真正的業務角度（robotics 關鍵零組件 氣壓元件）去找對的題材，不是用「AI 電力 / 重電」當理由。"
     }
   ],
   "summary": {
-    "errors": 2,
-    "warnings": 1,
+    "errors": 1,
+    "warnings": 3,
     "infos": 0,
-    "total": 3,
-    "suppressed": 0
+    "total": 4,
+    "suppressed": 2
   }
 }
