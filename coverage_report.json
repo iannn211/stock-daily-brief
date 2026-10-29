@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-28T21:30:56.896426+08:00",
+  "fetched_at": "2026-10-29T21:42:30.287901+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,7 +7,7 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 17
+      "mentioned_in_window": 15
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
@@ -70,61 +70,75 @@
       "ticker_count": 3,
       "unique_count": 3,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     }
   },
   "added_from_chains": [],
   "news_frequency": {
-    "0050": 148,
-    "2330": 137,
-    "5607": 73,
-    "3081": 69,
+    "0050": 130,
+    "2330": 124,
+    "5607": 65,
+    "3081": 62,
     "3037": 44,
-    "3026": 38,
-    "3715": 37,
-    "6173": 33,
-    "6669": 27,
+    "3026": 41,
+    "2303": 33,
+    "2492": 27,
+    "6173": 27,
+    "3715": 26,
+    "4908": 26,
+    "2027": 25,
+    "2454": 25,
     "6146": 24,
-    "2303": 23,
-    "2028": 23,
-    "2454": 23,
-    "3163": 23,
-    "3324": 23,
-    "4908": 23,
-    "2327": 22,
-    "2492": 20,
-    "4958": 19,
-    "2027": 19,
-    "3131": 16,
-    "3017": 14,
-    "3042": 13,
-    "3363": 11,
+    "2327": 23,
+    "6669": 22,
+    "3163": 21,
+    "3324": 21,
+    "2028": 18,
+    "3131": 17,
+    "8155": 15,
+    "3006": 14,
+    "2308": 13,
+    "3017": 12,
+    "3042": 12,
+    "4526": 11,
     "2449": 11,
-    "8155": 11,
+    "3653": 10,
     "8358": 10,
-    "6230": 10,
-    "2317": 9,
-    "6269": 9
+    "6230": 10
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 73,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 23,
+      "mentions": 65,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2027",
       "name": "大成鋼",
-      "mentions": 19,
+      "mentions": 25,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 18,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "4526",
+      "name": "東台",
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3653",
+      "name": "健策",
+      "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,15 +150,15 @@
       "in_chains": false
     },
     {
-      "symbol": "4526",
-      "name": "東台",
-      "mentions": 9,
+      "symbol": "3035",
+      "name": "智原",
+      "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3653",
-      "name": "健策",
+      "symbol": "7769",
+      "name": "鴻勁",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
@@ -157,44 +171,9 @@
       "in_chains": false
     },
     {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3035",
-      "name": "智原",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "7769",
-      "name": "鴻勁",
-      "mentions": 6,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3693",
-      "name": "營邦",
+      "symbol": "8039",
+      "name": "台虹",
       "mentions": 5,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "00991A",
-      "name": "主動復華未來50",
-      "mentions": 4,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2344",
-      "name": "華邦電",
-      "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     }
