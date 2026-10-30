@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-29T21:42:30.287901+08:00",
+  "fetched_at": "2026-10-30T21:32:18.749823+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -75,63 +75,70 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "0050": 130,
-    "2330": 124,
-    "5607": 65,
-    "3081": 62,
-    "3037": 44,
-    "3026": 41,
-    "2303": 33,
-    "2492": 27,
-    "6173": 27,
-    "3715": 26,
-    "4908": 26,
-    "2027": 25,
-    "2454": 25,
-    "6146": 24,
-    "2327": 23,
-    "6669": 22,
-    "3163": 21,
-    "3324": 21,
-    "2028": 18,
-    "3131": 17,
-    "8155": 15,
+    "0050": 134,
+    "2330": 126,
+    "5607": 82,
+    "3081": 63,
+    "2303": 37,
+    "3037": 35,
+    "2492": 32,
+    "3026": 32,
+    "2327": 31,
+    "2027": 30,
+    "3163": 23,
+    "3324": 23,
+    "4908": 23,
+    "6146": 22,
+    "2454": 21,
+    "6669": 21,
+    "6173": 21,
+    "3715": 19,
+    "3017": 18,
+    "8155": 16,
+    "00981A": 14,
     "3006": 14,
-    "2308": 13,
-    "3017": 12,
-    "3042": 12,
-    "4526": 11,
+    "2317": 12,
+    "2028": 12,
+    "2308": 12,
+    "3131": 12,
+    "8358": 11,
     "2449": 11,
-    "3653": 10,
-    "8358": 10,
-    "6230": 10
+    "0056": 10,
+    "3653": 10
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 65,
+      "mentions": 82,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2027",
       "name": "大成鋼",
-      "mentions": 25,
+      "mentions": 30,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "00981A",
+      "name": "主動統一台股增長",
+      "mentions": 14,
       "in_portfolio": false,
       "in_chains": false
     },
     {
       "symbol": "2028",
       "name": "威致",
-      "mentions": 18,
+      "mentions": 12,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "4526",
-      "name": "東台",
-      "mentions": 11,
+      "symbol": "0056",
+      "name": "元大高股息",
+      "mentions": 10,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -143,8 +150,8 @@
       "in_chains": false
     },
     {
-      "symbol": "3450",
-      "name": "聯鈞",
+      "symbol": "3189",
+      "name": "景碩",
       "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
@@ -167,6 +174,27 @@
       "symbol": "2337",
       "name": "旺宏",
       "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "3162",
+      "name": "精確",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2421",
+      "name": "建準",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "6770",
+      "name": "力積電",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
