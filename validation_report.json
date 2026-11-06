@@ -1,58 +1,49 @@
 {
-  "validated_at": "2026-11-05T23:03:13.434873+08:00",
-  "analysis_file": "analyses/2026-11-05.json",
-  "analysis_date": "2026-11-05",
+  "validated_at": "2026-11-06T22:41:33.372487+08:00",
+  "analysis_file": "analyses/2026-11-06.json",
+  "analysis_date": "2026-11-06",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[0] «8吋晶圓代工漲價潮» → lead_stocks[0]",
-      "message": "代號 5347 (世界先進) 本站無資料，無法驗證數字是否正確",
-      "headline": "5347 本站沒資料",
+      "location": "opportunities[0] «AI 伺服器 / 高階記憶體» → lead_stocks[1]",
+      "message": "代號 5289 (宜鼎 (mid)) 本站無資料，無法驗證數字是否正確",
+      "headline": "5289 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 5347 → 去 inspect.html?sym=5347 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 5289 → 去 inspect.html?sym=5289 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[1] «AI高值物流需求» → lead_stocks[0]",
-      "message": "代號 8367 (建新國際) 本站無資料，無法驗證數字是否正確",
-      "headline": "8367 本站沒資料",
+      "location": "opportunities[0] «AI 伺服器 / 高階記憶體» → lead_stocks[2]",
+      "message": "代號 6215 (和椿 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "6215 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 8367 → 去 inspect.html?sym=8367 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 6215 → 去 inspect.html?sym=6215 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[1] «AI高值物流需求» → lead_stocks[1]",
-      "message": "代號 2643 (捷迅) 本站無資料，無法驗證數字是否正確",
-      "headline": "2643 本站沒資料",
+      "location": "opportunities[1] «AI 散熱 / 液冷» → lead_stocks[1]",
+      "message": "代號 2486 (一詮 (small)) 本站無資料，無法驗證數字是否正確",
+      "headline": "2486 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 2643 → 去 inspect.html?sym=2643 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 2486 → 去 inspect.html?sym=2486 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "warning",
       "category": "ticker-not-in-data",
-      "location": "opportunities[2] «AI伺服器玻纖材料» → lead_stocks[0]",
-      "message": "代號 1475 (業旺) 本站無資料，無法驗證數字是否正確",
-      "headline": "1475 本站沒資料",
+      "location": "opportunities[2] «PCB / 載板上游材料» → lead_stocks[2]",
+      "message": "代號 3189 (景碩 (large)) 本站無資料，無法驗證數字是否正確",
+      "headline": "3189 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 1475 → 去 inspect.html?sym=1475 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "warning",
-      "category": "ticker-not-in-data",
-      "location": "opportunities[3] «AI光通訊CPO» → lead_stocks[0]",
-      "message": "代號 3019 (亞光) 本站無資料，無法驗證數字是否正確",
-      "headline": "3019 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 3019 → 去 inspect.html?sym=3019 的速查頁 / 財報狗 / Goodinfo 驗證。"
+      "next_step": "想跟進 3189 → 去 inspect.html?sym=3189 的速查頁 / 財報狗 / Goodinfo 驗證。"
     },
     {
       "severity": "error",
       "category": "ticker-not-in-data",
-      "location": "budget_allocation.allocations[0]",
+      "location": "budget_allocation.allocations[4]",
       "message": "配置建議的代號 CASH (保留現金) 本站無資料，價格與基本面無法核對",
       "headline": "CASH 本站沒資料",
       "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
@@ -60,57 +51,76 @@
     },
     {
       "severity": "error",
-      "category": "ticker-not-in-data",
-      "location": "budget_allocation.allocations[2]",
-      "message": "配置建議的代號 5347 (世界先進) 本站無資料，價格與基本面無法核對",
-      "headline": "5347 本站沒資料",
-      "impact": "這檔沒有本站的價格/基本面資料，Gemini 講的數字無法核對。",
-      "next_step": "想跟進 5347 → 去 inspect.html?sym=5347 的速查頁 / 財報狗 / Goodinfo 驗證。"
-    },
-    {
-      "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$35,000 超過預算 NT$5,000（差 NT$30,000）",
+      "message": "配置加總 NT$10,000 超過預算 NT$5,000（差 NT$5,000）",
       "context": {
         "budget": 5000,
-        "total_cost": 35000.0
+        "total_cost": 10000.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$35,000 > 預算 NT$5,000，代表要全買得多湊 NT$30,000。",
+      "impact": "Gemini 的 allocations 加總 NT$10,000 > 預算 NT$5,000，代表要全買得多湊 NT$5,000。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-30,000",
+      "message": "unallocated_twd 標 NT$5,000，但實際預算 − 配置 = NT$-5,000",
       "context": {
-        "claimed": 0,
-        "expected": -30000.0
+        "claimed": 5000,
+        "expected": -5000.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
     },
     {
-      "severity": "error",
-      "category": "pe-claim-contradicts-data",
-      "location": "topics[5]",
-      "message": "3026 描述提到「便宜/低估」，但實際 PE=51.9（屬於昂貴/泡沫區） — 題材「被動元件高階需求旺盛，但股價承壓」",
+      "severity": "warning",
+      "category": "growth-claim-contradicts-data",
+      "location": "opportunities[3].why",
+      "message": "3363 描述提到「高成長」，但營收 YoY -26.3% — 可能是錯判 — 題材「CPO 光通訊」",
       "context": {
-        "symbol": "3026",
-        "pe": 51.917404,
-        "tier": "expensive"
+        "symbol": "3363",
+        "rev_growth": -0.263
       },
-      "headline": "3026 估值 Gemini 看錯方向",
-      "impact": "Gemini 把 3026 當「便宜」敘述，但實際 PE=51.9（屬於昂貴/泡沫區）。如果你原本因為「便宜」想買，這個理由不成立。",
-      "next_step": "別把「估值便宜」當成 3026 的進場理由。要買就要有其他論點（成長性、題材、法人動作等）能撐住高 PE。"
+      "headline": "3363 成長性 Gemini 吹過頭",
+      "impact": "Gemini 說 3363 是「高成長」，但實際 營收 YoY -26.3% — 數字在衰退。「成長股」論點不成立。",
+      "next_step": "別把 3363 當成長股看。若仍有興趣買，要有別的理由（谷底反轉、題材催化、股價被低估等），不能套「高成長」敘述。"
+    },
+    {
+      "severity": "warning",
+      "category": "growth-claim-contradicts-data",
+      "location": "topics[2]",
+      "message": "3363 描述提到「高成長」，但營收 YoY -26.3% — 可能是錯判 — 題材「光通訊 CPO 題材持續發酵」",
+      "context": {
+        "symbol": "3363",
+        "rev_growth": -0.263
+      },
+      "headline": "3363 成長性 Gemini 吹過頭",
+      "impact": "Gemini 說 3363 是「高成長」，但實際 營收 YoY -26.3% — 數字在衰退。「成長股」論點不成立。",
+      "next_step": "別把 3363 當成長股看。若仍有興趣買，要有別的理由（谷底反轉、題材催化、股價被低估等），不能套「高成長」敘述。"
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[1].lead_stocks[0]",
+      "message": "題材「AI 散熱 / 液冷」的 lead stock 4566 (時碩工業 (hidden)) 產業標為「Specialty Industrial Machinery」；supply_chains 登記的角色為「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "4566",
+        "theme": "AI 散熱 / 液冷",
+        "industry": "Specialty Industrial Machinery",
+        "sector": "Industrials",
+        "sc_roles": "robotics 關鍵零組件 機器人諧波減速機、隱形冠軍"
+      },
+      "headline": "4566 時碩工業 (hidden) 被放錯題材",
+      "impact": "Gemini 把 4566 列為「AI 散熱 / 液冷」的 lead stock，但這檔實際做的是「robotics 關鍵零組件 機器人諧波減速機、隱形冠軍」— 跟題材不是同一回事。如果你原本因為「AI 散熱 / 液冷」這個題材想買 4566，這個理由不成立。",
+      "next_step": "想布局「AI 散熱 / 液冷」→ 同題材的 2486 一詮 (small)、3338 泰碩 (hidden) 才是真的相關股。\n想買 4566 時碩工業 (hidden) → 要從它真正的業務角度（robotics 關鍵零組件 機器人諧波減速機、隱形冠軍）去找對的題材，不是用「AI 散熱 / 液冷」當理由。"
     }
   ],
   "summary": {
-    "errors": 4,
-    "warnings": 6,
+    "errors": 2,
+    "warnings": 8,
     "infos": 0,
     "total": 10,
     "suppressed": 0
