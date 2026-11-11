@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-10T23:13:29.672622+08:00",
+  "fetched_at": "2026-11-11T22:42:34.854615+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,14 +7,14 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 14
+      "mentioned_in_window": 12
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 7
+      "mentioned_in_window": 6
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
@@ -28,7 +28,7 @@
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 4
+      "mentioned_in_window": 5
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
@@ -49,7 +49,7 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
@@ -75,49 +75,42 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 137,
-    "0050": 132,
-    "5607": 41,
-    "3081": 33,
-    "3324": 23,
-    "4908": 21,
-    "3026": 20,
-    "3715": 19,
-    "6526": 19,
-    "2492": 18,
-    "2303": 18,
-    "3017": 17,
-    "6669": 16,
-    "3131": 16,
-    "6173": 15,
+    "2330": 127,
+    "0050": 114,
+    "5607": 39,
+    "3026": 37,
+    "3081": 34,
+    "3017": 32,
+    "3715": 30,
+    "3324": 28,
+    "2492": 20,
+    "6669": 18,
+    "4908": 17,
+    "3131": 17,
     "5347": 14,
-    "3653": 14,
-    "2027": 13,
-    "1475": 13,
+    "6173": 14,
+    "3653": 13,
     "4566": 13,
-    "8155": 13,
-    "2028": 11,
+    "6146": 13,
+    "6526": 13,
+    "2303": 13,
     "2643": 11,
-    "6146": 11,
-    "2308": 10,
+    "2368": 11,
+    "5289": 11,
+    "1303": 10,
+    "2028": 10,
+    "2027": 10,
     "5291": 10,
-    "3338": 10,
     "2454": 9,
-    "5289": 9,
-    "8046": 9
+    "6215": 9,
+    "2382": 8,
+    "8046": 8
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 41,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6526",
-      "name": "達發",
-      "mentions": 19,
+      "mentions": 39,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -131,28 +124,14 @@
     {
       "symbol": "3653",
       "name": "健策",
-      "mentions": 14,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2027",
-      "name": "大成鋼",
       "mentions": 13,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "1475",
-      "name": "業旺",
+      "symbol": "6526",
+      "name": "達發",
       "mentions": 13,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 11,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -164,6 +143,27 @@
       "in_chains": false
     },
     {
+      "symbol": "5289",
+      "name": "宜鼎",
+      "mentions": 11,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2028",
+      "name": "威致",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2027",
+      "name": "大成鋼",
+      "mentions": 10,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "5291",
       "name": "邑昇",
       "mentions": 10,
@@ -171,8 +171,8 @@
       "in_chains": false
     },
     {
-      "symbol": "5289",
-      "name": "宜鼎",
+      "symbol": "6215",
+      "name": "和椿",
       "mentions": 9,
       "in_portfolio": false,
       "in_chains": false
@@ -185,6 +185,13 @@
       "in_chains": false
     },
     {
+      "symbol": "3019",
+      "name": "亞光",
+      "mentions": 7,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
       "symbol": "8367",
       "name": "建新國際",
       "mentions": 7,
@@ -192,23 +199,9 @@
       "in_chains": false
     },
     {
-      "symbol": "6112",
-      "name": "邁達特",
+      "symbol": "1475",
+      "name": "業旺",
       "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6215",
-      "name": "和椿",
-      "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "3019",
-      "name": "亞光",
-      "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -220,29 +213,43 @@
       "in_chains": false
     },
     {
-      "symbol": "2421",
-      "name": "建準",
+      "symbol": "1569",
+      "name": "濱川",
       "mentions": 5,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "1110",
-      "name": "東泥",
+      "symbol": "2347",
+      "name": "聯強",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "1569",
-      "name": "濱川",
+      "symbol": "2025",
+      "name": "千興",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "1623",
-      "name": "大東電",
+      "symbol": "6237",
+      "name": "驊訊",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2351",
+      "name": "順德",
+      "mentions": 4,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2030",
+      "name": "彰源",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
