@@ -1,41 +1,120 @@
 {
-  "validated_at": "2026-11-11T22:48:18.518841+08:00",
-  "analysis_file": "analyses/2026-11-11.json",
-  "analysis_date": "2026-11-11",
+  "validated_at": "2026-11-12T23:41:39.582591+08:00",
+  "analysis_file": "analyses/2026-11-12.json",
+  "analysis_date": "2026-11-12",
   "analysis_model": "gemini-2.5-flash",
   "issues": [
     {
       "severity": "error",
       "category": "budget-overflow",
       "location": "budget_allocation",
-      "message": "配置加總 NT$20,000 超過預算 NT$5,000（差 NT$15,000）",
+      "message": "配置加總 NT$20,900 超過預算 NT$5,000（差 NT$15,900）",
       "context": {
         "budget": 5000,
-        "total_cost": 20000.0
+        "total_cost": 20900.0
       },
       "headline": "配置金額超過你的預算",
-      "impact": "Gemini 的 allocations 加總 NT$20,000 > 預算 NT$5,000，代表要全買得多湊 NT$15,000。",
+      "impact": "Gemini 的 allocations 加總 NT$20,900 > 預算 NT$5,000，代表要全買得多湊 NT$15,900。",
       "next_step": "若要照原建議執行，挑信心最高的幾檔，讓籃子合計不超過預算。"
     },
     {
       "severity": "warning",
       "category": "budget-unalloc-mismatch",
       "location": "budget_allocation.unallocated_twd",
-      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-15,000",
+      "message": "unallocated_twd 標 NT$0，但實際預算 − 配置 = NT$-15,900",
       "context": {
         "claimed": 0,
-        "expected": -15000.0
+        "expected": -15900.0
       },
       "headline": "unallocated_twd 對不上",
       "impact": "Gemini 標的保留現金數字跟實際差了一些（通常是四捨五入，無害）。",
       "next_step": "忽略即可，實際下單用籃子合計。"
+    },
+    {
+      "severity": "warning",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[0].why",
+      "message": "1503 描述提到「昂貴/泡沫」，但實際 PE=23.2（屬於合理區） — 題材「AI 電力 / 重電」",
+      "context": {
+        "symbol": "1503",
+        "pe": 23.172413,
+        "tier": "fair"
+      },
+      "headline": "1503 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 1503 當「昂貴/泡沫」敘述，但實際 PE=23.2（屬於合理區）。如果原本因此不考慮 1503，可能低估機會。",
+      "next_step": "重新評估 1503 — 估值其實還好，不必因「昂貴」這句就跳過。"
+    },
+    {
+      "severity": "warning",
+      "category": "pe-claim-contradicts-data",
+      "location": "opportunities[0].why",
+      "message": "1504 描述提到「昂貴/泡沫」，但實際 PE=22.4（屬於合理區） — 題材「AI 電力 / 重電」",
+      "context": {
+        "symbol": "1504",
+        "pe": 22.375887,
+        "tier": "fair"
+      },
+      "headline": "1504 估值 Gemini 看得太悲觀",
+      "impact": "Gemini 把 1504 當「昂貴/泡沫」敘述，但實際 PE=22.4（屬於合理區）。如果原本因此不考慮 1504，可能低估機會。",
+      "next_step": "重新評估 1504 — 估值其實還好，不必因「昂貴」這句就跳過。"
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[0]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1519 (華城) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1519",
+        "theme": "AI 電力 / 重電",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": null
+      },
+      "headline": "1519 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[1]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1503 (士電) 產業標為「Electrical Equipment & Parts」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1503",
+        "theme": "AI 電力 / 重電",
+        "industry": "Electrical Equipment & Parts",
+        "sector": "Industrials",
+        "sc_roles": null
+      },
+      "headline": "1503 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
+    },
+    {
+      "severity": "warning",
+      "category": "theme-industry-mismatch",
+      "location": "opportunities[0].lead_stocks[2]",
+      "message": "題材「AI 電力 / 重電」的 lead stock 1504 (東元) 產業標為「Specialty Industrial Machinery」— 跟題材看起來不符，請人工確認（可能 Gemini 劃錯，也可能資料源標籤過時）",
+      "context": {
+        "symbol": "1504",
+        "theme": "AI 電力 / 重電",
+        "industry": "Specialty Industrial Machinery",
+        "sector": "Industrials",
+        "sc_roles": null
+      },
+      "headline": "1504 題材分類不確定（已自動忽略）",
+      "impact": "本站對這檔的產業資料不足（yfinance 標籤可能過時），無法判斷對錯。",
+      "next_step": "已略過。若你對這檔特別有興趣再自己研究。",
+      "suppress": true
     }
   ],
   "summary": {
     "errors": 1,
-    "warnings": 1,
+    "warnings": 3,
     "infos": 0,
-    "total": 2,
-    "suppressed": 0
+    "total": 4,
+    "suppressed": 3
   }
 }
