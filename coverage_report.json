@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-12T23:35:11.962268+08:00",
+  "fetched_at": "2026-11-13T22:54:06.700588+08:00",
   "window_days": 7,
   "chain_totals": {
     "ai_pcb": {
@@ -7,35 +7,35 @@
       "ticker_count": 23,
       "unique_count": 23,
       "layer_count": 6,
-      "mentioned_in_window": 13
+      "mentioned_in_window": 14
     },
     "optics_cpo": {
       "title": "光通訊 / CPO · 2026 夢階段題材",
       "ticker_count": 8,
       "unique_count": 8,
       "layer_count": 2,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "thermal": {
       "title": "AI 散熱 · 氣冷 → 水冷 → 浸沒",
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 4
     },
     "ai_server": {
       "title": "AI 伺服器 · ODM / 系統組裝",
       "ticker_count": 9,
       "unique_count": 9,
       "layer_count": 3,
-      "mentioned_in_window": 5
+      "mentioned_in_window": 6
     },
     "connectors": {
       "title": "AI 連接器 · 高速互連 + 線束",
       "ticker_count": 4,
       "unique_count": 4,
       "layer_count": 1,
-      "mentioned_in_window": 0
+      "mentioned_in_window": 1
     },
     "passives": {
       "title": "AI 被動元件 · MLCC / 電感 / 電阻",
@@ -49,14 +49,14 @@
       "ticker_count": 6,
       "unique_count": 6,
       "layer_count": 2,
-      "mentioned_in_window": 3
+      "mentioned_in_window": 1
     },
     "robotics": {
       "title": "機器人 / 自動化 · 人形 + 產業自動化",
       "ticker_count": 7,
       "unique_count": 7,
       "layer_count": 2,
-      "mentioned_in_window": 2
+      "mentioned_in_window": 3
     },
     "semiconductor_eq": {
       "title": "半導體設備 · 晶圓廠資本支出鏈",
@@ -75,56 +75,49 @@
   },
   "added_from_chains": [],
   "news_frequency": {
-    "2330": 109,
-    "0050": 103,
-    "3017": 36,
+    "0050": 113,
+    "2330": 110,
+    "5607": 50,
+    "3026": 41,
+    "3017": 34,
     "3081": 30,
-    "3026": 30,
-    "5607": 28,
+    "2492": 28,
     "3715": 25,
-    "3324": 23,
-    "6669": 20,
-    "2492": 19,
-    "5347": 14,
-    "4566": 13,
-    "2303": 13,
-    "2028": 12,
-    "4908": 12,
-    "2368": 11,
+    "3324": 24,
+    "2368": 21,
+    "6669": 19,
+    "4566": 18,
+    "2454": 18,
+    "8046": 16,
+    "3189": 16,
+    "6146": 13,
     "5289": 11,
-    "6146": 11,
-    "2027": 10,
-    "1303": 9,
+    "4908": 11,
     "6215": 9,
-    "8046": 8,
-    "3189": 8,
-    "3163": 8,
-    "3131": 8,
-    "3019": 7,
-    "8367": 7,
+    "1303": 9,
+    "3131": 9,
+    "2027": 8,
+    "4760": 8,
     "6173": 7,
     "3363": 7,
-    "1475": 7
+    "2028": 7,
+    "3231": 6,
+    "0056": 6,
+    "1802": 6,
+    "3665": 6
   },
   "missing_from_chains": [
     {
       "symbol": "5607",
       "name": "遠雄港",
-      "mentions": 28,
+      "mentions": 50,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "5347",
-      "name": "世界",
-      "mentions": 14,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2028",
-      "name": "威致",
-      "mentions": 12,
+      "symbol": "3189",
+      "name": "景碩",
+      "mentions": 16,
       "in_portfolio": false,
       "in_chains": false
     },
@@ -136,13 +129,6 @@
       "in_chains": false
     },
     {
-      "symbol": "2027",
-      "name": "大成鋼",
-      "mentions": 10,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
       "symbol": "6215",
       "name": "和椿",
       "mentions": 9,
@@ -150,43 +136,36 @@
       "in_chains": false
     },
     {
-      "symbol": "3189",
-      "name": "景碩",
+      "symbol": "2027",
+      "name": "大成鋼",
       "mentions": 8,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3019",
-      "name": "亞光",
+      "symbol": "4760",
+      "name": "勤凱",
+      "mentions": 8,
+      "in_portfolio": false,
+      "in_chains": false
+    },
+    {
+      "symbol": "2028",
+      "name": "威致",
       "mentions": 7,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "8367",
-      "name": "建新國際",
-      "mentions": 7,
+      "symbol": "0056",
+      "name": "元大高股息",
+      "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "1475",
-      "name": "業旺",
-      "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "2643",
-      "name": "捷迅",
-      "mentions": 7,
-      "in_portfolio": false,
-      "in_chains": false
-    },
-    {
-      "symbol": "6223",
-      "name": "旺矽",
+      "symbol": "1802",
+      "name": "台玻",
       "mentions": 6,
       "in_portfolio": false,
       "in_chains": false
@@ -199,58 +178,58 @@
       "in_chains": false
     },
     {
-      "symbol": "00878",
-      "name": "國泰永續高股息",
+      "symbol": "0052",
+      "name": "富邦科技",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "0056",
-      "name": "元大高股息",
+      "symbol": "5347",
+      "name": "世界",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
+      "symbol": "3661",
+      "name": "世芯-KY",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3227",
-      "name": "原相",
+      "symbol": "6526",
+      "name": "達發",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "1802",
-      "name": "台玻",
+      "symbol": "6442",
+      "name": "光聖",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "6234",
-      "name": "高僑",
+      "symbol": "2493",
+      "name": "揚博",
       "mentions": 4,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "3653",
-      "name": "健策",
-      "mentions": 4,
+      "symbol": "6152",
+      "name": "百一",
+      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     },
     {
-      "symbol": "2030",
-      "name": "彰源",
-      "mentions": 4,
+      "symbol": "6223",
+      "name": "旺矽",
+      "mentions": 3,
       "in_portfolio": false,
       "in_chains": false
     }
